@@ -1,0 +1,64 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.jvnet.hudson.plugins</groupId>
+    <artifactId>plugin</artifactId>
+    <version>1.343</version><!-- which version of Hudson is this plugin built against? -->
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>robot</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>Robot Framework plugin</name>
+  <description>Shows Robot Framework test results in project</description>
+  <packaging>hpi</packaging> 
+  <url>http://wiki.hudson-ci.org/display/HUDSON/Robot+Framework+Plugin</url>
+
+  <developers>
+    <developer>
+      <id>jpiironen</id>
+      <name>Janne Piironen</name>
+      <email>janne.piironen@gmail.com</email>
+    </developer>
+  </developers>
+  
+  <scm>
+    <connection>scm:git:git://github.com/hudson/robot-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:hudson/robot-plugin.git</developerConnection>
+    <url>http://github.com/hudson/robot-plugin</url>
+  </scm>
+  
+  <dependencies>
+    <dependency>
+         <groupId>org.mockito</groupId>
+         <artifactId>mockito-core</artifactId>
+         <version>1.8.0</version>
+         <scope>test</scope>
+      </dependency>
+  </dependencies>
+  
+  <build>
+   <plugins>
+     <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.0</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.scm</groupId>
+            <artifactId>maven-scm-provider-gitexe</artifactId>
+            <version>1.3</version>
+          </dependency>
+        </dependencies>
+	  </plugin>
+    </plugins>
+    
+    <extensions>
+      <extension>
+        <groupId>org.jvnet.wagon-svn</groupId>
+        <artifactId>wagon-svn</artifactId>
+        <version>1.9</version>
+      </extension>
+    </extensions>
+  </build>
+</project>
