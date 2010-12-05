@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.commons.digester.Digester;
+import org.xml.sax.SAXException;
 
 /**
  * A parser for reading Robot Framework XML output into RobotResult object.
@@ -68,8 +69,8 @@ public class RobotParser implements FilePath.FileCallable<RobotResult> {
 
 		try {
 			result = (RobotResult) digester.parse(outputFile);
-		} catch (Exception e) {
-			throw new IOException(e);
+		} catch (SAXException e) {
+			throw new IOException(e.getMessage());
 		}
 		return result;
 	}
