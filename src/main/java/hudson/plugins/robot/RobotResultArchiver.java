@@ -15,24 +15,32 @@
  */
 package hudson.plugins.robot;
 
+import hudson.AbortException;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.matrix.MatrixAggregatable;
+import hudson.matrix.MatrixAggregator;
+import hudson.matrix.MatrixBuild;
 import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.model.Result;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.plugins.robot.model.RobotResult;
-import hudson.plugins.robot.parser.RobotParser;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
+import hudson.tasks.test.TestResultAggregator;
+import hudson.tasks.test.TestResultProjectAction;
 import hudson.util.FormValidation;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
 
 import javax.servlet.ServletException;
 
@@ -40,7 +48,8 @@ import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-public class RobotPublisher extends Recorder {
+public class RobotResultArchiver extends Recorder implements Serializable,
+MatrixAggregatable {
 
 	protected static final String DEFAULT_REPORT_FILE = "report.html";
 	protected static final String FILE_ARCHIVE_DIR = "robot-plugin";
@@ -67,7 +76,7 @@ public class RobotPublisher extends Recorder {
 	 * @param onlyCritical True if only critical tests are included in pass percentage
 	 */
 	@DataBoundConstructor
-	public RobotPublisher(String outputPath, String outputFileName,
+	public RobotResultArchiver(String outputPath, String outputFileName,
 			String reportFileName, String logFileName, double passThreshold,
 			double unstableThreshold, boolean onlyCritical) {
 		this.outputPath = outputPath;
@@ -146,8 +155,8 @@ public class RobotPublisher extends Recorder {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Action getProjectAction(AbstractProject<?, ?> project) {
-		return new RobotProjectAction(project);
+	public Collection<Action> getProjectActions(AbstractProject<?, ?> project) {
+		return Collections.<Action>singleton(new TestResultProjectAction(project));
 	}
 
 	/**
@@ -155,46 +164,47 @@ public class RobotPublisher extends Recorder {
 	 */
 	@Override
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher,
-			BuildListener listener) {
-		if (build.getResult() != Result.ABORTED) {
+			BuildListener listener) throws InterruptedException, IOException {
+			RobotResultAction action;
+			
+			final String expandedFileString = build.getEnvironment(listener).expand(getOutputFileName());
 			PrintStream logger = listener.getLogger();
+			logger.println("trying file"+expandedFileString);
 			logger.println(Messages.robot_publisher_started());
 			logger.println(Messages.robot_publisher_parsing());
 
-			RobotResult result;
 			try {
-				FilePath robotOutputDir = new FilePath(build.getWorkspace(),
-						outputPath);
-				FilePath robotOutputFile = new FilePath(robotOutputDir,
-						getOutputFileName());
-				RobotParser parser = new RobotParser();
-				result = robotOutputFile.act(parser);
+				RobotResult result = new RobotParser().parse(expandedFileString, build, launcher, listener);
+				
+				try{
+					action = new RobotResultAction(build, result, listener);
+				} catch (NullPointerException npe){
+					throw new AbortException("Bad xml to parse!");
+				}
+				result.freeze(action);
+				
 				logger.println(Messages.robot_publisher_done());
 				logger.println(Messages.robot_publisher_copying());
 				copyRobotFilesToBuildDir(build);
 				logger.println(Messages.robot_publisher_done());
 			} catch (Exception e) {
 				logger.println(Messages.robot_publisher_fail());
-				e.getCause().printStackTrace(logger);
+				e.printStackTrace(logger);
 				build.setResult(Result.FAILURE);
 				return true;
 			}
 
 			logger.println(Messages.robot_publisher_assigning());
 
-			RobotBuildAction action = new RobotBuildAction(build, result,
-					FILE_ARCHIVE_DIR, getReportFileName());
-			build.addAction(action);
-
+			build.getActions().add(action);
 			logger.println(Messages.robot_publisher_done());
 			logger.println(Messages.robot_publisher_checking());
 
-			Result buildResult = getBuildResult(build, result);
+			Result buildResult = getBuildResult(build, action.getResult());
 			build.setResult(buildResult);
 			
 			logger.println(Messages.robot_publisher_done());
 			logger.println(Messages.robot_publisher_finished());
-		}
 		return true;
 	}
 
@@ -321,5 +331,11 @@ public class RobotPublisher extends Recorder {
 
 	public BuildStepMonitor getRequiredMonitorService() {
 		return BuildStepMonitor.NONE;
+	}
+
+
+	public MatrixAggregator createAggregator(MatrixBuild build,
+			Launcher launcher, BuildListener listener) {
+		return new TestResultAggregator(build, launcher, listener);
 	}
 }

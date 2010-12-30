@@ -15,9 +15,14 @@
 */
 package hudson.plugins.robot.model;
 
-import java.util.ArrayList;
+import hudson.Util;
+
+import java.io.File;
 
 import junit.framework.TestCase;
+
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.FileSet;
 
 public class RobotResultTest extends TestCase {
 
@@ -25,24 +30,20 @@ public class RobotResultTest extends TestCase {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		result = new RobotResult();
-		RobotResultStatistics criticalStats = new RobotResultStatistics();
-		criticalStats.setPass(5);
-		criticalStats.setFail(4);
-		RobotResultStatistics overallStats = new RobotResultStatistics();
-		overallStats.setPass(1);
-		overallStats.setFail(2);
-		ArrayList<RobotResultStatistics> statsByCategory = new ArrayList<RobotResultStatistics>();
-		statsByCategory.add(criticalStats);
-		statsByCategory.add(overallStats);
-		result.setStatsByCategory(statsByCategory);
+		File reportFile = new File(new RobotTestSuiteTest().getClass().getResource("output.xml").toURI());
+		
+		FileSet fs = Util.createFileSet(reportFile.getParentFile(), "output.xml");
+        DirectoryScanner ds = fs.getDirectoryScanner();
+        String[] files = ds.getIncludedFiles();
+       
+        if(files.length == 0) throw new Exception("No example file found!");
+        
+		result = new RobotResult(ds);	
 	}
 	
-	public void testShouldReturnCriticalPassPercentage(){
-		assertEquals(55.6, result.getPassPercentage(true));
-	}
-	public void testShouldReturnOverallPassPercentage(){
-		assertEquals(33.3, result.getPassPercentage(false));
+	public void testShouldParseSuites(){
+		RobotTestSuite suite = result.getSuite("Othercases & Testcases");
+		assertNotNull(suite);
 	}
 
 }

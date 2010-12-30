@@ -33,8 +33,12 @@ public class RobotParserTest extends TestCase {
 		parserResult = parser.invoke(testOutputFile, null);
 	}
 
-	public void testShouldParseAllPassedTests(){
-		assertEquals(7, parserResult.getOverallPassed());
+	public void testShouldParseTimestamp(){
+		assertEquals("20100629 11:08:54.230", parserResult.getTimeStamp());
+	}
+	
+	public void testShouldParseTestName(){
+		//assertEquals("Othercases & Testcases", parserResult.getTestSuites().get(0).getName());
 	}
 	
 	public void testShouldParseAllFailedTests(){
@@ -47,5 +51,9 @@ public class RobotParserTest extends TestCase {
 
 	public void testShouldParseCriticalFailedTests(){
 		assertEquals(6, parserResult.getCriticalFail());
+	}
+	
+	public void testShouldParseTestSuites(){
+		//assertEquals(2, parserResult.getTestSuites().size());
 	}
 }

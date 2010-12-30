@@ -73,7 +73,7 @@ public class RobotBuildAction extends AbstractRobotAction {
 	 */
 	public String getReportFileName(){
 		//Check for empty name for backwards compatibility
-		return StringUtils.isBlank(reportFileName) ? RobotPublisher.DEFAULT_REPORT_FILE : reportFileName;
+		return StringUtils.isBlank(reportFileName) ? RobotResultArchiver.DEFAULT_REPORT_FILE : reportFileName;
 	}
 	
 	/**
