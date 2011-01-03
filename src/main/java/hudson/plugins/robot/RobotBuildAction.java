@@ -25,10 +25,11 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 
 import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
-public class RobotBuildAction extends AbstractRobotAction {
+public class RobotBuildAction extends AbstractRobotAction implements StaplerProxy{
 
 	private AbstractBuild<?, ?> build;
 	private RobotResult result;
@@ -91,6 +92,10 @@ public class RobotBuildAction extends AbstractRobotAction {
 	public double getCriticalPassPercentage() {
 		return result.getPassPercentage(true);
 	}
+	
+	public Object getTarget(){
+		return result;
+	}
 
 	/**
 	 * Serves Robot html report via robot url. Shows not found page if file is missing.
@@ -100,13 +105,13 @@ public class RobotBuildAction extends AbstractRobotAction {
 	 * @throws ServletException
 	 * @throws InterruptedException
 	 */
-	public void doDynamic(StaplerRequest req, StaplerResponse rsp)
+	public void doReport(StaplerRequest req, StaplerResponse rsp)
 			throws IOException, ServletException, InterruptedException {
 		String indexFile = getReportFileName();
 		FilePath robotDir = getRobotDir();
 		
 		if(!new FilePath(robotDir, indexFile).exists()){
-			rsp.sendRedirect2("notfound");
+			rsp.forward(this, "notfound", req);
 			return;
 		}
 		

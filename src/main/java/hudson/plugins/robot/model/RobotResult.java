@@ -15,121 +15,103 @@
 */
 package hudson.plugins.robot.model;
 
+import hudson.FilePath;
 import hudson.model.AbstractBuild;
-import hudson.plugins.robot.RobotResultAction;
-import hudson.plugins.robot.model.base.AbstractTestResultAction;
-import hudson.plugins.robot.model.base.MetaTabulatedResult;
-import hudson.plugins.robot.model.base.TestObject;
-import hudson.plugins.robot.model.base.TestResult;
-import hudson.util.IOException2;
+import hudson.model.AbstractModelObject;
+import hudson.model.DirectoryBrowserSupport;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.logging.Logger;
+
+import javax.servlet.ServletException;
 
 import org.apache.tools.ant.DirectoryScanner;
+import org.dom4j.Document;
 import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+
 
 /**
  * Class representing Robot Framework test results.
  *
  */
-public class RobotResult extends MetaTabulatedResult implements Serializable {
-    private static final Logger LOGGER = Logger.getLogger(RobotResult.class.getName());
+public class RobotResult extends AbstractModelObject {
 
 	private static final long serialVersionUID = 1L;
 	
 	private String timeStamp;
-	private RobotResultStatistics criticalStatistics;
-	private RobotResultStatistics overallStatistics;
+	private AbstractBuild<?,?> owner;
 	
+	int passed, failed, criticalPassed, criticalFailed;
+
 	//backwards compatibility with old builds
+	private List<RobotResultStatistics> overallStats;
 	private transient List<RobotResultStatistics> statsBySuite;
-	private transient List<RobotResultStatistics> overallStats;
+
+	private Map<String, RobotSuiteResult> suites;
+
+	private transient ArrayList<RobotCaseResult> failedTests;
 	
-    private transient TestObject parent;
+	
+	public RobotResult(DirectoryScanner scanner){
+		parse(scanner);
+	}
+	
+	public void parse(DirectoryScanner scanner) {
+		suites = new HashMap<String, RobotSuiteResult>();
+		String[] files = scanner.getIncludedFiles();
+		File baseDirectory = scanner.getBasedir();
+		
+		for(String file : files){
+			SAXReader reader = new SAXReader();
+			try {
+				File reportFile = new File(baseDirectory, file);
+				Document resultFile = reader.read(reportFile);
+				Element root = resultFile.getRootElement();
+				
+				timeStamp = root.attributeValue("generated");
+				for(Element suite : (List<Element>) root.elements("suite")){
+					RobotSuiteResult suiteResult = new RobotSuiteResult(suite, baseDirectory, "");
+					suites.put(suiteResult.getSafeName(), suiteResult);
+				}
+			} catch (DocumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		tally();
+	}
+	
+	public AbstractBuild<?, ?> getOwner() {
+		return owner;
+	}
 
-	private transient AbstractTestResultAction parentAction;
-
-	private transient int totalTests;
-	private transient int totalCriticalTests;
-	private float duration;
-
-	private transient List<RobotCaseResult> failedTests;
-	private transient List<TestResult> failedCriticalTests;
-
-	private final Map<String, RobotTestSuite> suites = new TreeMap<String, RobotTestSuite>();
+	public void setOwner(AbstractBuild<?, ?> owner) {
+		this.owner = owner;
+	}
 	
 	/*
 	 * The data structure of passed and failed tests is awkward and fragile but
 	 * needs some consideration before migrating so that old builds won't break.
 	 */
-	
-
-	/**
-	 * Empty constructor for dummy result
-	 */
-	public RobotResult() {
-	}
-	
-	public RobotResult(DirectoryScanner resultFiles) throws IOException {
-		parse(resultFiles);
-	}
-
-	public void parse(DirectoryScanner files) throws IOException{
-		String[] includedFiles = files.getIncludedFiles();
-        File baseDir = files.getBasedir();
-
-        for (String value : includedFiles) {
-            File reportFile = new File(baseDir, value);
-                if(reportFile.length()==0) {
-                	//TODO; react to empty files
-                } else {
-                    parse(reportFile);
-                }
-        }
-	}
-
-	private void add(RobotTestSuite suite) {
-        suites.put(suite.getSafeName(), suite);
-        duration += suite.getDuration();
-    }
-
-    /**
-     * Parses an additional report file.
-     */
-    public void parse(File reportFile) throws IOException {
-        try {
-            for (RobotTestSuite suite : RobotTestSuite.parse(reportFile))
-                add(suite);
-        } catch (RuntimeException e) {
-            throw new IOException2("Failed to read " + reportFile, e);
-        } catch (DocumentException e) {
-            if (!reportFile.getPath().endsWith(".xml")) {
-                throw new IOException2("Failed to read " + reportFile + "\n" +
-                    "Is your configuration matching too many files?", e);
-            } else {
-                throw new IOException2("Failed to read " + reportFile, e);
-            }
-        }
-    }
 
 	/**
 	 * Get number of passed critical tests.
 	 * @return
 	 */
 	public long getCriticalPassed(){
-		if(overallStats == null) return criticalStatistics.getPass();
+		if(overallStats == null) return criticalPassed;
+		if(overallStats.isEmpty()) return 0;
 		return overallStats.get(0).getPass();
 	}
 	
@@ -138,7 +120,8 @@ public class RobotResult extends MetaTabulatedResult implements Serializable {
 	 * @return
 	 */
 	public long getCriticalFail(){
-		if(overallStats == null) return criticalStatistics.getFail();
+		if(overallStats == null) return criticalFailed;
+		if( overallStats.isEmpty()) return 0;
 		return overallStats.get(0).getFail();
 	}
 	
@@ -147,7 +130,8 @@ public class RobotResult extends MetaTabulatedResult implements Serializable {
 	 * @return
 	 */
 	public long getCriticalTotal(){
-		if(overallStats == null) return criticalStatistics.getTotal();
+		if(overallStats == null) return criticalFailed + criticalPassed;
+		if(overallStats.isEmpty()) return 0;
 		return overallStats.get(0).getTotal();
 	}
 	
@@ -156,7 +140,8 @@ public class RobotResult extends MetaTabulatedResult implements Serializable {
 	 * @return
 	 */
 	public long getOverallPassed(){
-		if(overallStats == null) return overallStatistics.getPass();
+		if(overallStats == null) return passed;
+		if(overallStats.isEmpty()) return 0;
 		return overallStats.get(1).getPass();
 	}
 	
@@ -165,7 +150,8 @@ public class RobotResult extends MetaTabulatedResult implements Serializable {
 	 * @return
 	 */
 	public long getOverallFailed(){
-		if(overallStats == null) return overallStatistics.getFail();
+		if(overallStats == null) return failed;
+		if(overallStats.isEmpty()) return 0;
 		return overallStats.get(1).getFail();
 	}
 	
@@ -174,21 +160,26 @@ public class RobotResult extends MetaTabulatedResult implements Serializable {
 	 * @return
 	 */
 	public long getOverallTotal(){
-		if(overallStats == null) return overallStatistics.getTotal();
+		if(overallStats == null) return failed + passed;
+		if(overallStats.isEmpty()) return 0;
 		return overallStats.get(1).getTotal();
 	}
 	
-	public void setCriticalStatistics(RobotResultStatistics stats) {
-		this.criticalStatistics = stats;
+	/**
+	 * Get pass/fail stats by category.
+	 * @return List containing 'critical tests' and 'all tests'
+	 */
+	public List<RobotResultStatistics> getStatsByCategory() {
+		return overallStats;
 	}
 
-	public void setOverallStatistics(RobotResultStatistics stats) {
-		this.overallStatistics = stats;
+	public void setStatsByCategory(List<RobotResultStatistics> statsByCategory) {
+		this.overallStats = statsByCategory;
 	}
 
 	/**
 	 * Get the timestamp of the original test run
-	 * @return timestamp in Robot format as string
+	 * @return
 	 */
 	public String getTimeStamp() {
 		return timeStamp;
@@ -204,15 +195,17 @@ public class RobotResult extends MetaTabulatedResult implements Serializable {
 	 * @return Percentage value rounded to 1 decimal
 	 */
 	public double getPassPercentage(boolean onlyCritical) {
-		int passed, total;
+		long passed, total;
 		if(onlyCritical) {
-			passed = totalCriticalTests - failedCriticalTests.size();
-			total = totalCriticalTests;
+			passed = getCriticalPassed();
+			total = getCriticalTotal();
 		} else {
-			//TODO; dummy implementation
-			passed = 100; //totalTests - failedTests.size();
-			total = 100; //totalTests;
+			passed = getOverallPassed();
+			total = getOverallTotal();
 		}
+		
+		if(total == 0) return 0;
+		
 		double percentage = (double) passed / total * 100;
 		return roundToDecimals(percentage, 1);
 	}
@@ -223,171 +216,74 @@ public class RobotResult extends MetaTabulatedResult implements Serializable {
 		return bd.doubleValue();
 	}
 
-
-	@Override
-	public Collection<? extends TestResult> getFailedTests() {
-		return failedTests;
+	public String getDisplayName() {
+		return "Robot result";
 	}
 
-	@Override
-	public Collection<RobotTestSuite> getChildren() {
-		return suites.values();
+	public String getSearchUrl() {
+		return "robot";
 	}
 
-	@Override
-	public boolean hasChildren() {
-		return !suites.isEmpty();
-	}
-	
-	 public Map<String, RobotTestSuite> getSuites() {
-	        return suites;
-	  }
-	 
-	 @Override
-	    public String getName() {
-	        return "robot";
-	    }
-
-	@Override
-	public TestResult findCorrespondingResult(String id) {
-		if (getId().equals(id) || (id == null)) {
-            return this;
-        }
-        
-        String firstElement = null;
-        String subId = null;
-        int sepIndex = id.indexOf('/');
-        if (sepIndex < 0) {
-            firstElement = id;
-            subId = null;
-        } else {
-            firstElement = id.substring(0, sepIndex);
-            subId = id.substring(sepIndex + 1);
-            if (subId.length() == 0) {
-                subId = null;
-            }
-        }
-
-        String packageName = null;
-        if (firstElement.equals(getId())) {
-            sepIndex = subId.indexOf('/');
-            if (sepIndex < 0) {
-                packageName = subId;
-                subId = null; 
-            } else {
-                packageName = subId.substring(0, sepIndex);
-                subId = subId.substring(sepIndex + 1);
-            }
-        } else {
-            packageName = firstElement;
-            subId = null; 
-        }
-        RobotTestSuite child = getSuite(packageName);
-        if (child != null) {
-            if (subId != null) {
-                return child.findCorrespondingResult(subId);
-            } else {
-                return child;
-            }
-        } else {
-            return null;
-    }
-	}
-	
-
-	@Override
-	public AbstractBuild<?, ?> getOwner() {
-	        return (parentAction == null ? null : parentAction.owner);
-	}
-
-	@Override
-	public TestObject getParent() {
-		return this.parent;
-	}
-	
-	
-	public void setParent(TestObject parent){
-		this.parent = parent;
-	}
-	
-	 @Override
-     public void setParentAction(AbstractTestResultAction action) {
-        this.parentAction = action;
-        tally();
-     }
-	
-	public RobotTestSuite getSuite(String name){
+	public RobotSuiteResult getSuite(String name) {
+		if(suites == null) return null;
 		return suites.get(name);
 	}
 	
-	@Override
-    public Object getDynamic(String token, StaplerRequest req, StaplerResponse rsp) {
-        if (token.equals(getId())) {
-            return this;
-        }
-        
-        RobotTestSuite result = suites.get(token);
-        if (result != null) {
-        	return result;
-        } else {
-        	return super.getDynamic(token, req, rsp);
-        }
-    }
+	public Collection<RobotSuiteResult> getSuites(){
+		return suites == null ? null : suites.values();
+	}
 	
-	   /**
-     * Recount my children.
-     */
-    @Override
-    public void tally() {
-        failedTests = new ArrayList<RobotCaseResult>();
-        failedCriticalTests = new ArrayList<TestResult>();
-        
-        totalTests = 0;
-        totalCriticalTests = 0;
-
-        for (RobotTestSuite suite : suites.values()) {
-            suite.setParent(this); // kluge to prevent double-counting the results
-            Collection<RobotCaseResult> cases = suite.getTestCases().values();
-
-            for (RobotCaseResult curCase: cases) {
-                curCase.setParentAction(this.parentAction);
-                curCase.setParentTestSuite(suite);
-                curCase.tally();
-            }
-            suite.tally();
-            failedTests.addAll(suite.getFailedTests());
-            totalTests += suite.getTotalCount();
-        }
-    }
-
-	public void freeze(RobotResultAction parent) {
-		this.parentAction = parent;
-
-        for (RobotTestSuite suite : suites.values()) {
-            if(!suite.freeze(this))      // this is disturbing: has-a-parent is conflated with has-been-counted
-                continue;
-
-            totalTests += suite.getTestCases().values().size();
-            for(RobotCaseResult testCase : suite.getTestCases().values()) {
-               if(!testCase.isPassed())
-                    failedTests.add(testCase);
-            }
-        }
-
-       Collections.sort(failedTests, RobotCaseResult.BY_AGE);	
+	public void tally(){
+		failed = 0;
+		passed = 0;
+		criticalPassed = 0;
+		criticalFailed = 0;
+		failedTests = new ArrayList<RobotCaseResult>();
+		
+		for(RobotSuiteResult suite : suites.values()){
+			suite.tally();
+			failed += suite.getFailed();
+			passed += suite.getPassed();
+			criticalFailed += suite.getCriticalFailed();
+			criticalPassed += suite.getCriticalPassed();
+		}
+	}
+	
+	public Object getDynamic(String token, StaplerRequest req, StaplerResponse rsp){
+		return suites.get(token);
+	}
+	
+	/**
+	 * Serves Robot html report via robot url. Shows not found page if file is missing.
+	 * @param req
+	 * @param rsp
+	 * @throws IOException
+	 * @throws ServletException
+	 * @throws InterruptedException
+	 */
+	public void doReport(StaplerRequest req, StaplerResponse rsp)
+			throws IOException, ServletException, InterruptedException {
+		String indexFile = getReportFileName();
+		FilePath robotDir = getRobotDir();
+		
+		if(!new FilePath(robotDir, indexFile).exists()){
+			rsp.forward(this, "notfound.jelly", req);
+			return;
+		}
+		
+		DirectoryBrowserSupport dbs = new DirectoryBrowserSupport(this,
+				getRobotDir(), getDisplayName(),
+				"folder.gif", false);
+		dbs.setIndexFileName(indexFile);
+		dbs.generateResponse(req, rsp, this);
 	}
 
-	public int getTotalCriticalCount() {
-		return totalCriticalTests;
+	private FilePath getRobotDir() {
+		FilePath rootDir = new FilePath(getOwner().getRootDir());
+		return new FilePath(rootDir, "robot");
 	}
 
-	public int getFailedCriticalCount() {
-		if(failedCriticalTests != null)
-			return failedCriticalTests.size();
-		return 0;
-	}
-
-	public String getDisplayName() {
-		return "Robot result";
+	public String getReportFileName() {
+		return "report.html";
 	}
 }

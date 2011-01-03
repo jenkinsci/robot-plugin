@@ -15,177 +15,34 @@
  */
 package hudson.plugins.robot;
 
-import hudson.XmlFile;
-import hudson.model.BuildListener;
+import hudson.model.Action;
 import hudson.model.AbstractBuild;
 import hudson.plugins.robot.model.RobotResult;
-import hudson.plugins.robot.model.RobotCaseResult;
-import hudson.plugins.robot.model.RobotTestSuite;
-import hudson.plugins.robot.model.base.TestAction;
-import hudson.plugins.robot.model.base.TestObject;
-import hudson.util.HeapSpaceStringConverter;
-import hudson.util.XStream2;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+public class RobotResultAction implements Action {
 
-import org.kohsuke.stapler.StaplerProxy;
-
-import com.thoughtworks.xstream.XStream;
-
-public class RobotResultAction extends
-		hudson.plugins.robot.model.base.AbstractTestResultAction<RobotResultAction> implements StaplerProxy {
-
-	private static final Logger logger = Logger
-			.getLogger(RobotResultAction.class.getName());
-
-	private static final XStream XSTREAM = new XStream2();
-
-	static {
-		XSTREAM.alias("result", RobotResult.class);
-		XSTREAM.alias("suite", RobotTestSuite.class);
-		XSTREAM.alias("case", RobotCaseResult.class);
-		XSTREAM.registerConverter(new HeapSpaceStringConverter(), 100);
-	}
-
-	private transient WeakReference<RobotResult> result;
-
-	private int failedTests;
-	private int failedCriticalTests;
-	private Integer totalTests;
-	private Integer totalCriticalTests;
-	private List<Data> testData = new ArrayList<Data>();
-
-	protected RobotResultAction(AbstractBuild<?, ?> owner, RobotResult result,
-			BuildListener listener) {
-		super(owner);
-		setResult(result, listener);
-	}
 	
-	//TODO; Critical vs. all tests!
+	private AbstractBuild<?, ?> build;
+	private RobotResult result;
+	public AbstractBuild<?,?> owner;
 
-	public synchronized void setResult(RobotResult newResult,
-			BuildListener listener) {
-		newResult.freeze(this);
-
-		totalTests = newResult.getTotalCount();
-		failedTests = newResult.getFailCount();
-		totalCriticalTests = newResult.getTotalCriticalCount();
-		failedCriticalTests = newResult.getFailedCriticalCount();
-
-		try {
-			getDatafile().write(result);
-		} catch (IOException e) {
-			e.printStackTrace(listener
-					.fatalError("Couldn't write Robot result"));
-		}
-		
-		this.result = new WeakReference<RobotResult>(newResult);
+	public RobotResultAction(AbstractBuild<?,?> build, RobotResult result){
+		this.build = build;
+		this.result = result;
 	}
 
-	private XmlFile getDatafile() {
-		return new XmlFile(XSTREAM, new File(owner.getRootDir(),
-				"robotresult.xml"));
+	public String getDisplayName() {
+		// TODO Auto-generated method stub
+		return "robot";
 	}
 
-	public synchronized RobotResult getResult() {
-		RobotResult loadedResult;
-		if (result == null) {
-			loadedResult = load();
-			result = new WeakReference<RobotResult>(loadedResult);
-		} else {
-			loadedResult = result.get();
-		}
-		
-		if(loadedResult == null) {
-			loadedResult = load();
-			result = new WeakReference<RobotResult>(loadedResult);
-		}
-		if (totalTests == null) {
-			totalTests = loadedResult.getTotalCount();
-			failedTests = loadedResult.getFailCount();
-			totalCriticalTests = loadedResult.getTotalCriticalCount();
-			failedCriticalTests = loadedResult.getFailedCriticalCount();
-		}
-		return loadedResult;
+	public String getIconFileName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	private RobotResult load() {
-		RobotResult loadedResult;
-		try {
-			loadedResult = (RobotResult) getDatafile().read();
-		} catch (IOException e) {
-			logger.log(Level.WARNING, "Failed to load " + getDatafile(), e);
-			loadedResult = new RobotResult(); // return a dummy
-		}
-		loadedResult.freeze(this);
-		return loadedResult;
+	public String getUrlName() {
+		// TODO Auto-generated method stub
+		return "robot";
 	}
-
-	@Override
-	public int getFailCount() {
-		if (totalTests == null)
-			getResult();
-		return failedTests;
-	}
-
-	@Override
-	public int getTotalCount() {
-		if (totalTests == null)
-			getResult();
-		return totalTests;
-	}
-
-	public Object getTarget() {
-		return getResult();
-	}
-
-	public Object readResolve() {
-		super.readResolve(); // let it do the post-deserialization work
-		if (testData == null) {
-			testData = new ArrayList<Data>();
-		}
-
-		return this;
-	}
-
-	public List<TestAction> getActions(TestObject object) {
-		List<TestAction> result = new ArrayList<TestAction>();
-		if (testData != null) {
-			for (Data data : testData) {
-				result.addAll(data.getTestAction(object));
-			}
-		}
-		return Collections.unmodifiableList(result);
-
-	}
-
-	public void setData(List<Data> testData) {
-		this.testData = testData;
-	    }
-
-	    /**
-	     * Resolves {@link TestAction}s for the given {@link TestObject}.
-	     *
-	     * <p>
-	     * This object itself is persisted as a part of {@link AbstractBuild}, so it needs to be XStream-serializable.
-	     *
-	     * @see TestDataPublisher
-	     */
-	    public static abstract class Data {
-	    	/**
-	    	 * Returns all TestActions for the testObject.
-	         * 
-	         * @return
-	         *      Can be empty but never null. The caller must assume that the returned list is read-only.
-	    	 */
-	    	public abstract List<? extends TestAction> getTestAction(TestObject testObject);
-	    }
-
 }

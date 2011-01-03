@@ -15,41 +15,91 @@
 */
 package hudson.plugins.robot.model;
 
-import hudson.model.AbstractBuild;
-import hudson.plugins.robot.model.base.TestObject;
-import hudson.plugins.robot.model.base.TestResult;
+import hudson.model.AbstractModelObject;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.logging.Logger;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.dom4j.Element;
 
-public class RobotCaseResult extends TestResult implements Comparable<RobotCaseResult> {
-    private static final Logger LOGGER = Logger.getLogger(RobotCaseResult.class.getName());
+public class RobotCaseResult extends AbstractModelObject{
 
-	private static final long serialVersionUID = 1L;
-
+	private static final Logger LOGGER = Logger.getLogger(RobotCaseResult.class.getName());
+	
 	private String name;
-	private String documentation;
-	private String failMessage;
-	private String startTime;
-	private String endTime;
-	private boolean critical = false;
 	private boolean passed;
-	private Collection<String> tags;
+	private boolean critical;
+	private long duration;
+	private String errorMsg;
+	
+	//Dummy result
+	public RobotCaseResult(String name){
+		this.name = name;
+	}
+	
+	public RobotCaseResult(Element testCase) {
+		parse(testCase);
+	}
 
-	public RobotCaseResult(RobotTestSuite parent, Element testCaseRoot) {
-		String name = testCaseRoot.attributeValue("name");
-		this.name = TestObject.safe(name);
+	private void parse(Element testCase) {
+		name = testCase.attributeValue("name");
 		
-		this.critical = testCaseRoot.attributeValue("critical").equals("yes");
+		Element status = testCase.element("status");
+		passed = status.attributeValue("status").equalsIgnoreCase("pass");
+		if(!passed){
+			errorMsg = status.getTextTrim();
+		}
+		String start = status.attributeValue("starttime");
+		String end = status.attributeValue("endtime");
 		
-		Element status = testCaseRoot.element("status");
-		this.passed = status.attributeValue("status").equals("PASS");
-		this.startTime = status.attributeValue("starttime");
-		this.endTime = status.attributeValue("endtime");
-		this.failMessage = status.getTextTrim();
+		duration =  timeDifference(start, end);
+	}
+	
+	/**
+	 * Difference between string timevalues in format yyyyMMdd HH:mm:ss.SS (Java DateFormat).
+	 * Difference is calculated time2 - time1.
+	 * @param time1
+	 * @param time2
+	 * @return
+	 */
+	protected long timeDifference(String time1, String time2){
+		long difference = 0;
+		DateFormat format = new SimpleDateFormat("yyyyMMdd HH:mm:ss.SS");
+		try {
+			Date startDate = format.parse(time1);
+			Date endDate = format.parse(time2);
+			difference = endDate.getTime() - startDate.getTime();
+		} catch (ParseException e) {
+			LOGGER.warn("Unable to parse testcase \"" + name + "\" start and endtimes", e);
+		}
+		return difference;
+	}
+
+	public long getDuration() {
+		return duration;
+	}
+
+	public void setDuration(long duration) {
+		this.duration = duration;
+	}
+
+	public String getErrorMsg() {
+		return errorMsg;
+	}
+
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = errorMsg;
+	}
+
+	public void setPassed(boolean passed) {
+		this.passed = passed;
+	}
+
+	public void setCritical(boolean critical) {
+		this.critical = critical;
 	}
 
 	public String getName() {
@@ -60,117 +110,22 @@ public class RobotCaseResult extends TestResult implements Comparable<RobotCaseR
 		this.name = name;
 	}
 
-	public String getDocumentation() {
-		return documentation;
+	public String getDisplayName() {
+		//TODO; Check
+		return name;
 	}
 
-	public void setDocumentation(String documentation) {
-		this.documentation = documentation;
+	public String getSearchUrl() {
+		//TODO; Check
+		return name;
 	}
 
-	public String getStatusMessage() {
-		return failMessage;
-	}
-
-	public void setStatusMessage(String statusMessage) {
-		this.failMessage = statusMessage;
+	public boolean isPassed() {
+		return passed;
 	}
 
 	public boolean isCritical() {
 		return critical;
 	}
-
-	public void setCritical(boolean critical) {
-		this.critical = critical;
-	}
-
-	public boolean getPassed() {
-		return passed;
-	}
-
-	public void setPassed(boolean passed) {
-		this.passed = passed;
-	}
-
-	public String getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
-	}
-
-	public String getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
-	}
-
-	public Collection<String> getTags() {
-		return tags;
-	}
-
-	public void addTag(String tag) {
-		tags.add(tag);
-	}
-
-	public String getDisplayName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public TestResult findCorrespondingResult(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AbstractBuild<?, ?> getOwner() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public TestObject getParent() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public int compareTo(RobotCaseResult arg0) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public void setParentTestSuite(RobotTestSuite suite) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	/**
-     * Gets the number of consecutive builds (including this)
-     * that this test case has been failing.
-     */
-    public int getAge() {
-        if(isPassed())
-            return 0;
-        else if (getOwner() != null) {
-            return getOwner().getNumber()-getFailedSince()+1;
-        } else {
-            LOGGER.fine("Trying to get age of a RobotCaseResult without an owner");
-            return 0; 
-    }
-    }
-	
-	/**
-     * For sorting errors by age.
-     */
-    static final Comparator<RobotCaseResult> BY_AGE = new Comparator<RobotCaseResult>() {
-        public int compare(RobotCaseResult lhs, RobotCaseResult rhs) {
-            return lhs.getAge()-rhs.getAge();
-        }
-    };
 
 }

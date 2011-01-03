@@ -15,7 +15,6 @@
  */
 package hudson.plugins.robot;
 
-import hudson.AbortException;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -33,9 +32,9 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import hudson.tasks.test.TestResultAggregator;
-import hudson.tasks.test.TestResultProjectAction;
 import hudson.util.FormValidation;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
@@ -49,7 +48,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
 public class RobotResultArchiver extends Recorder implements Serializable,
-MatrixAggregatable {
+		MatrixAggregatable {
 
 	protected static final String DEFAULT_REPORT_FILE = "report.html";
 	protected static final String FILE_ARCHIVE_DIR = "robot-plugin";
@@ -67,13 +66,21 @@ MatrixAggregatable {
 
 	/**
 	 * Create new publisher for Robot Framework results
-	 * @param outputPath Path to Robot Framework's output files
-	 * @param outputFileName Name of Robot output xml
-	 * @param reportFileName Name of Robot report html
-	 * @param logFileName Name of Robot log html
-	 * @param passThreshold Threshold of test pass percentage for successful builds
-	 * @param unstableThreshold Threhold of test pass percentage for unstable builds
-	 * @param onlyCritical True if only critical tests are included in pass percentage
+	 * 
+	 * @param outputPath
+	 *            Path to Robot Framework's output files
+	 * @param outputFileName
+	 *            Name of Robot output xml
+	 * @param reportFileName
+	 *            Name of Robot report html
+	 * @param logFileName
+	 *            Name of Robot log html
+	 * @param passThreshold
+	 *            Threshold of test pass percentage for successful builds
+	 * @param unstableThreshold
+	 *            Threhold of test pass percentage for unstable builds
+	 * @param onlyCritical
+	 *            True if only critical tests are included in pass percentage
 	 */
 	@DataBoundConstructor
 	public RobotResultArchiver(String outputPath, String outputFileName,
@@ -88,9 +95,9 @@ MatrixAggregatable {
 		this.onlyCritical = onlyCritical;
 	}
 
-	
 	/**
 	 * Gets the output path of Robot files
+	 * 
 	 * @return
 	 */
 	public String getOutputPath() {
@@ -98,7 +105,9 @@ MatrixAggregatable {
 	}
 
 	/**
-	 * Gets the name of output xml file. Reverts to default if empty or whitespace.
+	 * Gets the name of output xml file. Reverts to default if empty or
+	 * whitespace.
+	 * 
 	 * @return
 	 */
 	public String getOutputFileName() {
@@ -108,7 +117,9 @@ MatrixAggregatable {
 	}
 
 	/**
-	 * Gets the name of report html file. Reverts to default if empty or whitespace.
+	 * Gets the name of report html file. Reverts to default if empty or
+	 * whitespace.
+	 * 
 	 * @return
 	 */
 	public String getReportFileName() {
@@ -118,7 +129,9 @@ MatrixAggregatable {
 	}
 
 	/**
-	 * Gets the name of log html file. Reverts to default if empty or whitespace.
+	 * Gets the name of log html file. Reverts to default if empty or
+	 * whitespace.
+	 * 
 	 * @return
 	 */
 	public String getLogFileName() {
@@ -129,6 +142,7 @@ MatrixAggregatable {
 
 	/**
 	 * Gets the test pass percentage threshold for successful builds.
+	 * 
 	 * @return
 	 */
 	public double getPassThreshold() {
@@ -137,6 +151,7 @@ MatrixAggregatable {
 
 	/**
 	 * Gets the test pass percentage threshold for unstable builds.
+	 * 
 	 * @return
 	 */
 	public double getUnstableThreshold() {
@@ -145,6 +160,7 @@ MatrixAggregatable {
 
 	/**
 	 * Gets if only critical tests should be accounted for the thresholds.
+	 * 
 	 * @return
 	 */
 	public boolean getOnlyCritical() {
@@ -156,7 +172,15 @@ MatrixAggregatable {
 	 */
 	@Override
 	public Collection<Action> getProjectActions(AbstractProject<?, ?> project) {
-		return Collections.<Action>singleton(new TestResultProjectAction(project));
+		return Collections.<Action> singleton(new RobotProjectAction(
+				project));
+	}
+
+	protected RobotResult parse(String expandedTestResults, AbstractBuild build,
+			Launcher launcher, BuildListener listener) throws IOException,
+			InterruptedException {
+		return new RobotParser().parse(expandedTestResults, build, launcher,
+				listener);
 	}
 
 	/**
@@ -165,53 +189,54 @@ MatrixAggregatable {
 	@Override
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher,
 			BuildListener listener) throws InterruptedException, IOException {
-			RobotResultAction action;
-			
-			final String expandedFileString = build.getEnvironment(listener).expand(getOutputFileName());
+		if (build.getResult() != Result.ABORTED) {
 			PrintStream logger = listener.getLogger();
-			logger.println("trying file"+expandedFileString);
 			logger.println(Messages.robot_publisher_started());
 			logger.println(Messages.robot_publisher_parsing());
 
+			RobotResult result;
 			try {
-				RobotResult result = new RobotParser().parse(expandedFileString, build, launcher, listener);
-				
-				try{
-					action = new RobotResultAction(build, result, listener);
-				} catch (NullPointerException npe){
-					throw new AbortException("Bad xml to parse!");
-				}
-				result.freeze(action);
-				
+				String separator = StringUtils.isBlank(getOutputPath()) ? "" : File.separator;
+				String outputFile = getOutputPath() + separator + getOutputFileName();
+				result = parse(outputFile, build, launcher, listener);
+				result.setOwner(build);
 				logger.println(Messages.robot_publisher_done());
 				logger.println(Messages.robot_publisher_copying());
 				copyRobotFilesToBuildDir(build);
 				logger.println(Messages.robot_publisher_done());
 			} catch (Exception e) {
 				logger.println(Messages.robot_publisher_fail());
-				e.printStackTrace(logger);
+				e.getCause().printStackTrace(logger);
 				build.setResult(Result.FAILURE);
 				return true;
 			}
 
 			logger.println(Messages.robot_publisher_assigning());
 
-			build.getActions().add(action);
+			RobotBuildAction action = new RobotBuildAction(build, result,
+					FILE_ARCHIVE_DIR, getReportFileName());
+			build.addAction(action);
+
 			logger.println(Messages.robot_publisher_done());
 			logger.println(Messages.robot_publisher_checking());
 
-			Result buildResult = getBuildResult(build, action.getResult());
+			Result buildResult = getBuildResult(build, result);
 			build.setResult(buildResult);
-			
+
 			logger.println(Messages.robot_publisher_done());
 			logger.println(Messages.robot_publisher_finished());
+		}
 		return true;
 	}
 
 	/**
-	 * Determines the build result based on set thresholds. If build is already failed before the tests it won't be changed to successful.
-	 * @param build Build to be evaluated
-	 * @param result Results associated to build
+	 * Determines the build result based on set thresholds. If build is already
+	 * failed before the tests it won't be changed to successful.
+	 * 
+	 * @param build
+	 *            Build to be evaluated
+	 * @param result
+	 *            Results associated to build
 	 * @return Result of build
 	 */
 	protected Result getBuildResult(AbstractBuild<?, ?> build,
@@ -268,7 +293,7 @@ MatrixAggregatable {
 			BuildStepDescriptor<Publisher> {
 
 		/**
-		 * {@inheritDoc}}
+		 * {@inheritDoc}
 		 */
 		@Override
 		public boolean isApplicable(Class<? extends AbstractProject> aClass) {
@@ -276,7 +301,7 @@ MatrixAggregatable {
 		}
 
 		/**
-		 * {@inheritDoc}}
+		 * {@inheritDoc}
 		 */
 		@Override
 		public String getDisplayName() {
@@ -285,6 +310,7 @@ MatrixAggregatable {
 
 		/**
 		 * Validates the unstable threshold input field.
+		 * 
 		 * @param value
 		 * @return
 		 * @throws IOException
@@ -296,12 +322,13 @@ MatrixAggregatable {
 			if (isPercentageValue(value))
 				return FormValidation.ok();
 			else
-				return FormValidation
-						.error(Messages.robot_config_percentvalidation());
+				return FormValidation.error(Messages
+						.robot_config_percentvalidation());
 		}
 
 		/**
 		 * Validates the pass threshold input field.
+		 * 
 		 * @param value
 		 * @return
 		 * @throws IOException
@@ -312,8 +339,8 @@ MatrixAggregatable {
 			if (isPercentageValue(value))
 				return FormValidation.ok();
 			else
-				return FormValidation
-						.error(Messages.robot_config_percentvalidation());
+				return FormValidation.error(Messages
+						.robot_config_percentvalidation());
 		}
 
 		private boolean isPercentageValue(String value) {
@@ -332,7 +359,6 @@ MatrixAggregatable {
 	public BuildStepMonitor getRequiredMonitorService() {
 		return BuildStepMonitor.NONE;
 	}
-
 
 	public MatrixAggregator createAggregator(MatrixBuild build,
 			Launcher launcher, BuildListener listener) {

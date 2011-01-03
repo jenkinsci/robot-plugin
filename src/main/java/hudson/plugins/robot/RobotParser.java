@@ -60,15 +60,12 @@ public class RobotParser {
 
 			String[] files = resultScanner.getIncludedFiles();
 			if (files.length == 0) {
-				// no test result. Most likely a configuration
-				// error or fatal problem
 				throw new AbortException(
 						Messages.JUnitResultArchiver_NoTestReportFound()); // TODO;
 																			// message...
 			}
 
 			RobotResult result = new RobotResult(resultScanner);
-			result.tally();
 			return result;
 
 		}
