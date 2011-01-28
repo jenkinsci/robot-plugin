@@ -16,11 +16,12 @@
 package hudson.plugins.robot.graph;
 
 import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
 import hudson.plugins.robot.Messages;
 import hudson.plugins.robot.RobotBuildAction;
+import hudson.plugins.robot.model.RobotSuiteResult;
 import hudson.util.ChartUtil;
 import hudson.util.ChartUtil.NumberOnlyBuildLabel;
+import hudson.util.DataSetBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +37,12 @@ public class RobotGraphHelper {
 	 * @param project
 	 * @return
 	 */
-	public static CategoryDataset createDataSetForProject(AbstractProject<?,?> project) {
+	public static CategoryDataset createDataSetForBuild(AbstractBuild<?,?> build) {
 		List<Number> values = new ArrayList<Number>();
 		List<String> rows = new ArrayList<String>();
 		List<NumberOnlyBuildLabel> columns = new ArrayList<NumberOnlyBuildLabel>();
 
-		for (AbstractBuild<?, ?> build = project.getLastBuild(); build != null; build = build
+		for (; build != null; build = build
 				.getPreviousBuild()) {
 			RobotBuildAction action = build.getAction(RobotBuildAction.class);
 
@@ -60,6 +61,91 @@ public class RobotGraphHelper {
 
 			ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(
 					build);
+
+			values.add(passed);
+			rows.add(Messages.robot_trendgraph_passed());
+			columns.add(label);
+
+			values.add(failed);
+			rows.add(Messages.robot_trendgraph_failed());
+			columns.add(label);
+		}
+
+		// Code from DataSetBuilder, reversed row order for passed tests to go
+		// first into dataset for nicer order when rendered in chart
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+		TreeSet<String> rowSet = new TreeSet<String>(rows);
+		TreeSet<ChartUtil.NumberOnlyBuildLabel> colSet = new TreeSet<ChartUtil.NumberOnlyBuildLabel>(
+				columns);
+
+		Comparable[] _rows = rowSet.toArray(new Comparable[rowSet.size()]);
+		Comparable[] _cols = colSet.toArray(new Comparable[colSet.size()]);
+
+		// insert rows and columns in the right order, reverse rows
+		for (int i = _rows.length - 1; i >= 0; i--)
+			dataset.setValue(null, _rows[i], _cols[0]);
+		for (Comparable c : _cols)
+			dataset.setValue(null, _rows[0], c);
+
+		for (int i = 0; i < values.size(); i++)
+			dataset.addValue(values.get(i), rows.get(i), columns.get(i));
+		return dataset;
+	}
+	
+	/**
+	 * Create a dataset for the trend graph.
+	 * @param project
+	 * @return
+	 */
+	public static CategoryDataset createDurationDataSetForBuild(AbstractBuild<?,?> build) {
+		List<Number> values = new ArrayList<Number>();
+		List<String> rows = new ArrayList<String>();
+		List<NumberOnlyBuildLabel> columns = new ArrayList<NumberOnlyBuildLabel>();
+		DataSetBuilder<String, NumberOnlyBuildLabel> builder = new DataSetBuilder<String, NumberOnlyBuildLabel>();
+
+		for (; build != null; build = build
+				.getPreviousBuild()) {
+			RobotBuildAction action = build.getAction(RobotBuildAction.class);
+
+			float duration = 0;
+			if (action != null) {
+				duration = action.getResult().getDuration();
+			}
+
+			// default 'zero value' must be set over zero to circumvent
+			// JFreeChart stacked area rendering problem with zero values
+			if (duration < 1)
+				duration = 0.01f;
+
+			ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(
+					build);
+			
+			builder.add(duration, "duration", label);
+		}
+		
+		return builder.build();
+	}
+
+	public static CategoryDataset createDataSetForSuite(RobotSuiteResult suite) {
+		List<Number> values = new ArrayList<Number>();
+		List<String> rows = new ArrayList<String>();
+		List<NumberOnlyBuildLabel> columns = new ArrayList<NumberOnlyBuildLabel>();
+
+		for (; suite != null; suite = (RobotSuiteResult)suite.getPreviousResult()) {
+			Number failed = 0, passed = 0;
+				failed = suite.getFailed();
+				passed = suite.getPassed();
+
+			// default 'zero value' must be set over zero to circumvent
+			// JFreeChart stacked area rendering problem with zero values
+			if (failed.intValue() < 1)
+				failed = 0.01f;
+			if (passed.intValue() < 1)
+				passed = 0.01f;
+
+			ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(
+					suite.getOwner());
 
 			values.add(passed);
 			rows.add(Messages.robot_trendgraph_passed());

@@ -15,44 +15,52 @@
 */
 package hudson.plugins.robot.model;
 
-import hudson.model.AbstractModelObject;
+import hudson.model.AbstractBuild;
+import hudson.plugins.robot.Messages;
+import hudson.plugins.robot.RobotBuildAction;
+import hudson.plugins.robot.graph.RobotGraph;
+import hudson.plugins.robot.graph.RobotGraphHelper;
+import hudson.util.ChartUtil;
+import hudson.util.Graph;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
-public class RobotSuiteResult extends AbstractModelObject {
+public class RobotSuiteResult extends RobotTestObject {
 
 	private Map<String, RobotSuiteResult> children;
-	private RobotSuiteResult parent;
+	private RobotTestObject parent;
 	private String name;
 	private Map<String, RobotCaseResult> caseResults;
 	private File baseDirectory;
-	private String packageName;
+	private long duration;
 	private int failed;
 	private int passed;
 	private int criticalPassed;
 	private int criticalFailed;
 
-	//Dummy result
-	public RobotSuiteResult(String name) {
+
+	public RobotSuiteResult(String name){
 		this.name = name;
 	}
-
-	public RobotSuiteResult(Element suite, File baseDirectory,
-			String packageName) throws DocumentException {
-		this.baseDirectory = baseDirectory;
+	
+	public RobotSuiteResult(RobotTestObject parent, Element suite, File baseDirectory) throws DocumentException {
 		this.name = suite.attributeValue("name");
-		this.packageName = packageName;
+		this.parent = parent;
+		this.baseDirectory = baseDirectory;
 		if (suite.attributeValue("src") != null) {
 			parseExternalFile(suite);
 		} else {
@@ -69,16 +77,16 @@ public class RobotSuiteResult extends AbstractModelObject {
 	}
 
 	private void parseChildren(Element suite) throws DocumentException {
+		
 		for (Element nestedSuite : (List<Element>) suite.elements("suite")) {
-			String separator = StringUtils.isBlank(packageName) ? "" : ".";
-			String newPackageName = packageName + separator + name;
-			RobotSuiteResult suiteResult = new RobotSuiteResult(nestedSuite,
-					baseDirectory, newPackageName);
+			
+			RobotSuiteResult suiteResult = new RobotSuiteResult(this, nestedSuite,
+					baseDirectory);
 			addChild(suiteResult);
 		}
 
 		for (Element testCase : (List<Element>) suite.elements("test")) {
-			RobotCaseResult caseResult = new RobotCaseResult(testCase);
+			RobotCaseResult caseResult = new RobotCaseResult(this, testCase);
 			addCaseResult(caseResult);
 		}
 	}
@@ -95,46 +103,72 @@ public class RobotSuiteResult extends AbstractModelObject {
 		children.put(safe(child.getName()), child);
 	}
 
+	/**
+	 * Get the immediate child suites of this suite
+	 * @return
+	 */
 	public Collection<RobotSuiteResult> getChildSuites() {
 		return children == null ? null : children.values();
 	}
 
-	public RobotSuiteResult getParent() {
+	/**
+	 * Get the parent object of this suite in tree
+	 */
+	public RobotTestObject getParent() {
 		return parent;
 	}
 
-	public void setParent(RobotSuiteResult parent) {
-		this.parent = parent;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getName() {
+	/**
+	 * Get the name of this suite
+	 */
+	public String getName(){
 		return name;
 	}
-
+	
+	/**
+	 * Get all case results belonging to this suite
+	 * @return
+	 */
 	public Collection<RobotCaseResult> getCaseResults() {
 		return caseResults == null ? null : caseResults.values();
 	}
 
-	public String getPackageName() {
-		return packageName;
-	}
-
+	/**
+	 * Get number of all failed tests
+	 * @return
+	 */
 	public int getFailed() {
 		return failed;
 	}
 
+	/**
+	 * Get number of all passed tests
+	 * @return
+	 */
 	public int getPassed() {
 		return passed;
 	}
+	
+	/**
+	 * Get duration of this testsuite run
+	 * @return
+	 */
+	public long getDuration() {
+		return duration;
+	}
 
+	/**
+	 * Get number of passed critical tests
+	 * @return
+	 */
 	public int getCriticalPassed() {
 		return criticalPassed;
 	}
 
+	/**
+	 * Get number of failed critical tests
+	 * @return
+	 */
 	public int getCriticalFailed() {
 		return criticalFailed;
 	}
@@ -152,27 +186,49 @@ public class RobotSuiteResult extends AbstractModelObject {
 	}
 
 	public String getDisplayName() {
-		// TODO; check
-		return name;
+		return getName();
 	}
 
 	public String getSearchUrl() {
-		// TODO; check
 		return getDisplayName();
 	}
 
+	/**
+	 * Get suite result by safe name
+	 * @param name
+	 * @return
+	 */
 	public RobotSuiteResult getSuite(String name) {
 		if (children == null)
 			return null;
 		return children.get(name);
 	}
 
+	/**
+	 * Get case result by safe name
+	 * @param name
+	 * @return
+	 */
 	public RobotCaseResult getCase(String name) {
 		if (caseResults == null)
 			return null;
 		return caseResults.get(name);
 	}
+	
+	/**
+	 * Get build that this result belongs to
+	 */
+	public AbstractBuild<?,?> getOwner(){
+		return getParentAction().getBuild();
+	}
 
+	/**
+	 * Get suite or case result by safe name
+	 * @param token
+	 * @param req
+	 * @param rsp
+	 * @return
+	 */
 	public Object getDynamic(String token, StaplerRequest req,
 			StaplerRequest rsp) {
 		if ((token) == null)
@@ -182,33 +238,52 @@ public class RobotSuiteResult extends AbstractModelObject {
 		return getSuite(token);
 	}
 
-	public Map<String, RobotSuiteResult> getAllChildSuites() {
-		Map<String, RobotSuiteResult> childSuites = new HashMap<String, RobotSuiteResult>();
-		if (children == null)
-			return childSuites;
-		for (RobotSuiteResult suite : children.values()) {
-			childSuites.putAll(suite.getAllChildSuites());
-			String suitePath = getSafeName() + "." + suite.getSafeName();
-			childSuites.put(suitePath, suite);
+	/**
+	 * Get all children of this suite
+	 * @return
+	 */
+	public List<RobotSuiteResult> getAllChildSuites() {
+		List<RobotSuiteResult> allChildSuites = new ArrayList<RobotSuiteResult>();
+		if (children != null){
+			for (RobotSuiteResult suite : children.values()) {
+				allChildSuites.add(suite);
+				List<RobotSuiteResult> childSuites = suite.getAllChildSuites();
+				allChildSuites.addAll(childSuites);
+			}
 		}
-
-		return childSuites;
+		return allChildSuites;
+	}
+	
+	/**
+	 * Get all failed cases below this suite
+	 * @return
+	 */
+	public List<RobotCaseResult> getAllFailedCases() {
+		List<RobotCaseResult> failedCases = new ArrayList<RobotCaseResult>();
+		if(caseResults != null) {
+			for(RobotCaseResult caseResult : caseResults.values()){
+				if(!caseResult.isPassed()) failedCases.add(caseResult);
+			}
+		}
+		if(children != null){
+			for(RobotSuiteResult suite : children.values()){
+				failedCases.addAll(suite.getAllFailedCases());
+			}
+		}
+		return failedCases;
 	}
 
-	private String safe(String unsafeName) {
-		return unsafeName.replace("/", "_").replace("\\", "_")
-		.replace(":", "_").replace(".", "_").replace(" ", "_");
-	}
-
-	public String getSafeName() {
-		return safe(name);
-	}
-
-	public void tally() {
+	/**
+	 * Count total values from children and set same parentaction to all
+	 * @param parentAction
+	 */
+	public void tally(RobotBuildAction parentAction) {
+		setParentAction(parentAction);
 		failed = 0;
 		passed = 0;
 		criticalPassed = 0;
 		criticalFailed = 0;
+		duration = 0;
 
 		if(caseResults != null) {
 			for(RobotCaseResult caseResult : caseResults.values()) {
@@ -219,16 +294,85 @@ public class RobotSuiteResult extends AbstractModelObject {
 					if(caseResult.isCritical()) criticalFailed++;
 					failed++;
 				}
+				duration += caseResult.getDuration();
+				caseResult.setParentAction(parentAction);
 			}
 		}
 		
 		if (children != null) {
 			for (RobotSuiteResult suite : children.values()) {
-				suite.tally();
+				suite.tally(parentAction);
 				failed += suite.getFailed();
 				passed += suite.getPassed();
 				criticalFailed += suite.getCriticalFailed();
 				criticalPassed += suite.getCriticalPassed();
+				duration += suite.getDuration();
+			}
+		}
+	}
+
+	/**
+	 * Get object by path in tree
+	 * @param id
+	 * @return
+	 */
+	public RobotTestObject findObjectById(String id) {
+		if(id.indexOf("/") >= 0){
+			String suiteName = id.substring(0, id.indexOf("/"));
+			String childId = id.substring(id.indexOf("/")+1, id.length());
+			RobotSuiteResult suite = children.get(suiteName);
+			return suite.findObjectById(childId);
+		} else if(getSuite(id) != null){
+			return getSuite(id);
+		} else return getCase(id);
+	}
+	
+	/**
+	 * Return robot trend graph in the request.
+	 * @param req
+	 * @param rsp
+	 * @throws IOException
+	 */
+	public void doGraph(StaplerRequest req, StaplerResponse rsp)
+			throws IOException {
+		if (ChartUtil.awtProblemCause != null) {
+			rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
+			return;
+		}
+		
+		Calendar t = getOwner().getTimestamp();
+
+		if (req.checkIfModified(t, rsp))
+			return;
+		
+		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDataSetForSuite(this), Messages.robot_trendgraph_testcases(),
+				Messages.robot_trendgraph_builds(), 500, 200);
+		g.doPng(req, rsp);
+	}
+
+	/**
+	 * If suites with same name exist, the originals are kept
+	 * @param childSuites
+	 */
+	public void addChildren(Collection<RobotSuiteResult> childSuites) {
+		for(RobotSuiteResult child : childSuites){
+			if(children.get(child.getSafeName()) == null)
+				children.put(child.getSafeName(), child);
+			else{
+				child.addChildren(child.getChildSuites());
+				child.addCaseResults(child.getCaseResults());
+			}
+		}
+	}
+
+	/**
+	 * If cases with same name exist, the originals are kept
+	 * @param caseResults
+	 */
+	public void addCaseResults(Collection<RobotCaseResult> caseResults) {
+		for(RobotCaseResult caseResult : caseResults){
+			if(this.caseResults.get(caseResult) == null){
+				this.caseResults.put(caseResult.getSafeName(), caseResult);
 			}
 		}
 	}

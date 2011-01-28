@@ -18,6 +18,7 @@ package hudson.plugins.robot;
 import hudson.FilePath;
 import hudson.model.AbstractBuild;
 import hudson.model.DirectoryBrowserSupport;
+import hudson.plugins.robot.model.RobotTestObject;
 import hudson.plugins.robot.model.RobotResult;
 
 import java.io.IOException;
@@ -92,6 +93,10 @@ public class RobotBuildAction extends AbstractRobotAction implements StaplerProx
 	public double getCriticalPassPercentage() {
 		return result.getPassPercentage(true);
 	}
+	
+	public RobotTestObject findObjectById(String id) {
+        return getResult().findObjectById(id);
+    }
 	
 	public Object getTarget(){
 		return result;

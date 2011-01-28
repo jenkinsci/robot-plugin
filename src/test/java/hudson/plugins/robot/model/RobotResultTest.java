@@ -16,14 +16,17 @@
 package hudson.plugins.robot.model;
 
 import hudson.Util;
+import hudson.plugins.robot.RobotBuildAction;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
+
 
 public class RobotResultTest extends TestCase {
 
@@ -37,9 +40,11 @@ public class RobotResultTest extends TestCase {
         DirectoryScanner ds = fs.getDirectoryScanner();
         String[] files = ds.getIncludedFiles();
        
+
         if(files.length == 0) throw new Exception("No example file found!");
         
 		result = new RobotResult(ds);	
+		result.tally(new RobotBuildAction(null, result, null, null));
 	}
 	
 	public void testShouldParseSuites(){
@@ -57,6 +62,32 @@ public class RobotResultTest extends TestCase {
 		RobotSuiteResult suite = result.getSuite("Othercases_&_Testcases");
 		RobotCaseResult caseResult = suite.getCase("Hello");
 		assertNotNull(caseResult);
+	}
+	
+	public void testShouldReturnAllFailedCases(){
+		List<RobotCaseResult> failers = result.getAllFailedCases();
+		assertEquals(8, failers.size()
+				);
+	}
+	
+	public void testShouldReturnPackageName(){
+		RobotSuiteResult suite = (RobotSuiteResult)result.findObjectById("Othercases_&_Testcases/Othercases/3rd_level_cases");
+		assertEquals("Othercases & Testcases.Othercases.3rd level cases", suite.getRelativePackageName(result));
+	}
+	
+	public void testShouldReturnSuiteById(){
+		RobotSuiteResult suite = (RobotSuiteResult)result.findObjectById("Othercases_&_Testcases/Othercases/3rd_level_cases");
+		assertEquals("3rd level cases", suite.getName());
+	}
+	
+	public void testShouldReturnIdForSuite(){
+		RobotSuiteResult suite = (RobotSuiteResult)result.findObjectById("Othercases_&_Testcases/Othercases/3rd_level_cases");
+		assertEquals("Othercases_&_Testcases/Othercases/3rd_level_cases", suite.getRelativeId(result));
+	}
+	
+	public void testShouldReturnCaseById(){
+		RobotCaseResult caseResult = (RobotCaseResult)result.findObjectById("Othercases_&_Testcases/Othercases/3rd_level_cases/Hello3rd");
+		assertEquals("Hello3rd", caseResult.getName());
 	}
 	
 	

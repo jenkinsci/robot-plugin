@@ -15,10 +15,22 @@ limitations under the License.
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
   <l:layout>
+  <st:include it="${it.parentAction.build}" page="sidepanel.jelly"/>
     <l:main-panel>
-      <h1>TestCase - "${it.name}"</h1>
-      <h2>Error:</h2>
-      <p>${it.errorMsg}</p>
+      <j:choose>
+      	<j:when test="${it.isPassed()}">
+      		<j:set var="headingColor" value="green"/>
+        </j:when>
+        <j:otherwise>
+			<j:set var="headingColor" value="red"/>
+		</j:otherwise>
+	  </j:choose>
+        	
+      <h1 style="color:${headingColor};">TestCase - "${it.name}"</h1>
+      <j:if test="${!it.isPassed()}">
+     	 <h2>Error message:</h2>
+      	 <p>${it.errorMsg}</p>
+      </j:if>
     </l:main-panel>
   </l:layout>
 </j:jelly>

@@ -30,6 +30,7 @@ import java.io.IOException;
 
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.dom4j.DocumentException;
 
 public class RobotParser {
 
@@ -65,8 +66,12 @@ public class RobotParser {
 																			// message...
 			}
 
+			try{
 			RobotResult result = new RobotResult(resultScanner);
 			return result;
+			} catch (DocumentException e){
+				throw new IOException(e.getMessage());
+			}
 
 		}
 	}

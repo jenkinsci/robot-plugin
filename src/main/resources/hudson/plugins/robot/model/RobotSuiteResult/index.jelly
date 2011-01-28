@@ -15,20 +15,56 @@ limitations under the License.
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
   <l:layout>
+  <st:include it="${it.owner}" page="sidepanel.jelly"/>
     <l:main-panel>
       <h1>Testsuite - "${it.name}"</h1>
-      <h2>Children</h2>
-      <ul>
-      <j:forEach var="suite" items="${it.childSuites}">
-      <li><a href="${suite.safeName}">${suite.name}</a></li>
-      </j:forEach>              
-      </ul>
-      <h2>Testcases</h2>
-      <ul>
+      <j:if test="${!it.allFailedCases.isEmpty()}">
+      <h2>Failed testcases</h2>
+      <table class="pane sortable">
+        <tr>
+     	 <td class="pane-header">Name</td>
+     	 <td class="pane-header">Duration (ms)</td>
+     	</tr>
+      	<j:forEach var="case" items="${it.allFailedCases}">
+      		<tr>
+      			<td class="pane"><a href="${case.getRelativeId(it)}">${case.getRelativePackageName(it)}</a></td>
+      			<td class="pane">${case.duration}</td>
+      		</tr>
+      	</j:forEach>
+      </table>
+      </j:if>
+      <j:if test="${!it.caseResults.isEmpty()}">
+      <h2>All Testcases</h2>
+      <table class="pane sortable">
+      	<tr>
+      		<td class="pane-header">Name</td>
+      		<td class="pane-header">Duration(ms)</td>
+      	</tr>
 		<j:forEach var="case" items="${it.caseResults}">
-		<li><a href="${case.safeName}">${case.name}</a> - pass: ${case.passed} - critical: ${case.critical}</li>
+		<tr>
+		 <td class="pane"><a href="${case.getRelativeId(it)}">${case.name}</a></td>
+		 <td class="pane">${case.duration}</td>
+		</tr>
         </j:forEach>
-       </ul>
+       </table>
+       </j:if>
+      <j:if test="${!it.allChildSuites.isEmpty()}">
+      <h2>Nested suites</h2>
+   	  <table class="pane sortable">
+   	  <td class="pane-header">Name</td>
+   	  <td class="pane-header">Failed tests</td>
+   	  <td class="pane-header">Total tests</td>
+   	  <td class="pane-header">Duration (ms)</td>
+      <j:forEach var="suite" items="${it.allChildSuites}">
+         <tr>
+      		<td class="pane"><a href="${suite.getRelativeId(it)}">${suite.getRelativePackageName(it)}</a></td>
+      		<td class="pane">${suite.failed}</td>
+      		<td class="pane">${suite.failed + suite.passed}</td>
+      		<td class="pane">${suite.duration}</td>
+         </tr>
+      </j:forEach>      
+      </table>     
+      </j:if>   
     </l:main-panel>
   </l:layout>
 </j:jelly>

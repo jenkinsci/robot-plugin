@@ -25,6 +25,8 @@ import hudson.util.Graph;
 import java.io.IOException;
 import java.util.Calendar;
 
+import javax.servlet.ServletException;
+
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -75,9 +77,10 @@ public class RobotProjectAction  extends AbstractRobotAction {
 	 * @param req
 	 * @param rsp
 	 * @throws IOException
+	 * @throws ServletException 
 	 */
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
-			throws IOException {
+			throws IOException, ServletException {
 		if (ChartUtil.awtProblemCause != null) {
 			rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
 			return;
@@ -88,9 +91,8 @@ public class RobotProjectAction  extends AbstractRobotAction {
 		if (req.checkIfModified(t, rsp))
 			return;
 		
-		Graph g = new RobotGraph(project.getLastBuild(), RobotGraphHelper.createDataSetForProject(project), Messages.robot_trendgraph_testcases(),
-				Messages.robot_trendgraph_builds(), 500, 200);
-		g.doPng(req, rsp);
+		AbstractBuild<?,?> lastBuild = getLastBuildWithRobot();
+		rsp.sendRedirect2("../" + lastBuild.getNumber() + "/" + getUrlName() + "/graph");
 	}
 
 	/**

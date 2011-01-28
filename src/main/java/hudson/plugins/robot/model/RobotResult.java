@@ -16,14 +16,19 @@
 package hudson.plugins.robot.model;
 
 import hudson.FilePath;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractModelObject;
 import hudson.model.DirectoryBrowserSupport;
+import hudson.plugins.robot.Messages;
+import hudson.plugins.robot.RobotBuildAction;
+import hudson.plugins.robot.graph.RobotGraph;
+import hudson.plugins.robot.graph.RobotGraphHelper;
+import hudson.util.ChartUtil;
+import hudson.util.Graph;
 
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -44,60 +49,63 @@ import org.kohsuke.stapler.StaplerResponse;
  * Class representing Robot Framework test results.
  *
  */
-public class RobotResult extends AbstractModelObject {
+public class RobotResult extends RobotTestObject {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;	
 	
 	private String timeStamp;
-	private AbstractBuild<?,?> owner;
 	
 	int passed, failed, criticalPassed, criticalFailed;
+	long duration;
 
 	//backwards compatibility with old builds
-	private List<RobotResultStatistics> overallStats;
-	private transient List<RobotResultStatistics> statsBySuite;
+	private transient List<RobotResultStatistics> overallStats;
 
-	private Map<String, RobotSuiteResult> suites;
-
-	private transient ArrayList<RobotCaseResult> failedTests;
+	private Map<String, RobotSuiteResult> suites;	
 	
-	
-	public RobotResult(DirectoryScanner scanner){
+	public RobotResult(DirectoryScanner scanner) throws DocumentException{
 		parse(scanner);
 	}
 	
-	public void parse(DirectoryScanner scanner) {
+	public void parse(DirectoryScanner scanner) throws DocumentException{
 		suites = new HashMap<String, RobotSuiteResult>();
 		String[] files = scanner.getIncludedFiles();
 		File baseDirectory = scanner.getBasedir();
 		
 		for(String file : files){
 			SAXReader reader = new SAXReader();
-			try {
 				File reportFile = new File(baseDirectory, file);
 				Document resultFile = reader.read(reportFile);
 				Element root = resultFile.getRootElement();
 				
 				timeStamp = root.attributeValue("generated");
 				for(Element suite : (List<Element>) root.elements("suite")){
-					RobotSuiteResult suiteResult = new RobotSuiteResult(suite, baseDirectory, "");
-					suites.put(suiteResult.getSafeName(), suiteResult);
+					RobotSuiteResult suiteResult = new RobotSuiteResult(this, suite, baseDirectory);
+					if(suites.get(suiteResult.getSafeName()) == null)
+							suites.put(suiteResult.getSafeName(), suiteResult);
+					else{
+						RobotSuiteResult existingSuite = suites.get(suiteResult.getSafeName());
+						existingSuite.addChildren(suiteResult.getChildSuites());
+						existingSuite.addCaseResults(suiteResult.getCaseResults());
+					}
 				}
-			} catch (DocumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
 			
 		}
-		tally();
 	}
 	
-	public AbstractBuild<?, ?> getOwner() {
-		return owner;
+	public RobotTestObject findObjectById(String id){
+		if(id.indexOf("/") >= 0){
+			String suiteName = id.substring(0, id.indexOf("/"));
+			String childId = id.substring(id.indexOf("/")+1, id.length());
+			RobotSuiteResult suite = suites.get(suiteName);
+			return suite.findObjectById(childId);
+		} else return null;
 	}
-
-	public void setOwner(AbstractBuild<?, ?> owner) {
-		this.owner = owner;
+	
+	@Override
+	public String getName() {
+		return "";
 	}
 	
 	/*
@@ -233,19 +241,41 @@ public class RobotResult extends AbstractModelObject {
 		return suites == null ? null : suites.values();
 	}
 	
-	public void tally(){
+	public List<RobotSuiteResult> getAllSuites(){
+		List<RobotSuiteResult> allSuites = new ArrayList<RobotSuiteResult>();
+		for(RobotSuiteResult suite : getSuites()){
+			allSuites.add(suite);
+			List<RobotSuiteResult> childSuites = suite.getAllChildSuites();
+			if(childSuites != null)
+				allSuites.addAll(childSuites);
+		}
+		return allSuites;
+	}
+	
+	public List<RobotCaseResult> getAllFailedCases(){
+		List<RobotCaseResult> allFailedCases = new ArrayList<RobotCaseResult>();
+		for(RobotSuiteResult suite : getSuites()){
+			List<RobotCaseResult> failedCases = suite.getAllFailedCases();
+			allFailedCases.addAll(failedCases);
+		}
+		return allFailedCases;
+	}
+	
+	public void tally(RobotBuildAction parentAction){
+		setParentAction(parentAction);
 		failed = 0;
 		passed = 0;
 		criticalPassed = 0;
 		criticalFailed = 0;
-		failedTests = new ArrayList<RobotCaseResult>();
+		duration = 0;
 		
 		for(RobotSuiteResult suite : suites.values()){
-			suite.tally();
+			suite.tally(parentAction);
 			failed += suite.getFailed();
 			passed += suite.getPassed();
 			criticalFailed += suite.getCriticalFailed();
 			criticalPassed += suite.getCriticalPassed();
+			duration += suite.getDuration();
 		}
 	}
 	
@@ -267,7 +297,7 @@ public class RobotResult extends AbstractModelObject {
 		FilePath robotDir = getRobotDir();
 		
 		if(!new FilePath(robotDir, indexFile).exists()){
-			rsp.forward(this, "notfound.jelly", req);
+			rsp.sendRedirect2("notfound");
 			return;
 		}
 		
@@ -277,13 +307,68 @@ public class RobotResult extends AbstractModelObject {
 		dbs.setIndexFileName(indexFile);
 		dbs.generateResponse(req, rsp, this);
 	}
+	
+	/**
+	 * Return robot trend graph in the request.
+	 * @param req
+	 * @param rsp
+	 * @throws IOException
+	 */
+	public void doGraph(StaplerRequest req, StaplerResponse rsp)
+			throws IOException {
+		if (ChartUtil.awtProblemCause != null) {
+			rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
+			return;
+		}
+		
+		Calendar t = getOwner().getTimestamp();
+
+		if (req.checkIfModified(t, rsp))
+			return;
+		
+		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDataSetForBuild(getOwner()), Messages.robot_trendgraph_testcases(),
+				Messages.robot_trendgraph_builds(), 500, 200);
+		g.doPng(req, rsp);
+	}
+	
+	/**
+	 * Return robot trend graph in the request.
+	 * @param req
+	 * @param rsp
+	 * @throws IOException
+	 */
+	public void doDurationGraph(StaplerRequest req, StaplerResponse rsp)
+			throws IOException {
+		if (ChartUtil.awtProblemCause != null) {
+			rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
+			return;
+		}
+		
+		Calendar t = getOwner().getTimestamp();
+
+		if (req.checkIfModified(t, rsp))
+			return;
+		
+		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDurationDataSetForBuild(getOwner()), "Duration (ms)",
+				Messages.robot_trendgraph_builds(), 500, 200);
+		g.doPng(req, rsp);
+	}
 
 	private FilePath getRobotDir() {
-		FilePath rootDir = new FilePath(getOwner().getRootDir());
-		return new FilePath(rootDir, "robot");
+		FilePath rootDir = new FilePath(getParentAction().getBuild().getRootDir());
+		return new FilePath(rootDir, "robot-plugin");
 	}
 
 	public String getReportFileName() {
 		return "report.html";
+	}
+
+	@Override
+	public RobotTestObject getParent() {
+		return null;
+	}
+
+	public long getDuration() {
+		return duration;
 	}
 }

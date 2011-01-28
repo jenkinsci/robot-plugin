@@ -15,15 +15,47 @@ limitations under the License.
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
   <l:layout>
-  <st:include it="${it.owner}" page="sidepanel.jelly"/>
+  <st:include it="${it.parentAction.build}" page="sidepanel.jelly"/>
     <l:main-panel>
-      <a href="report" title="Original report file">Original html report</a>
-      <h2>All suites</h2>
-      <ul>
-      <j:forEach var="suite" items="${it.suites}">
-      <li><a href="${suite.safeName}">${suite.name}</a></li>
+    <h1>Robot Framework test results</h1>
+      <div>
+      	<img src="/images/16x16/notepad.gif"/><a href="report" title="Original report file">Original html report</a>
+      </div>
+      <div>
+      	<img src="graph"/><img src="durationGraph"/>
+      </div>
+      <j:if test="${!it.allFailedCases.isEmpty()}">
+      <h2>Failed testcases</h2>
+      <table class="pane sortable">
+        <tr>
+     	 <td class="pane-header">Name</td>
+     	 <td class="pane-header">Duration (ms)</td>
+     	</tr>
+      	<j:forEach var="case" items="${it.allFailedCases}">
+      		<tr>
+      			<td class="pane"><a href="${case.getRelativeId(it)}">${case.getRelativePackageName(it)}</a></td>
+      			<td class="pane">${case.duration}</td>
+      		</tr>
+      	</j:forEach>
+      </table>
+      </j:if>
+      <h2>All test suites</h2>
+   	  <table class="pane sortable">
+   	  <tr>
+   	  	<td class="pane-header">Name</td>
+   	  	<td class="pane-header">Failed tests</td>
+   	  	<td class="pane-header">Total tests</td>
+   	  	<td class="pane-header">Duration (ms)</td>
+   	  </tr>
+      <j:forEach var="suite" items="${it.allSuites}">
+         <tr>
+      		<td class="pane"><a href="${suite.getRelativeId(it)}">${suite.getRelativePackageName(it)}</a></td>
+      		<td class="pane">${suite.failed}</td>
+      		<td class="pane">${suite.failed + suite.passed}</td>
+      		<td class="pane">${suite.duration}</td>
+         </tr>
       </j:forEach>      
-      </ul>        
+      </table>        
     </l:main-panel>
   </l:layout>
 </j:jelly>

@@ -199,7 +199,6 @@ public class RobotResultArchiver extends Recorder implements Serializable,
 				String separator = StringUtils.isBlank(getOutputPath()) ? "" : File.separator;
 				String outputFile = getOutputPath() + separator + getOutputFileName();
 				result = parse(outputFile, build, launcher, listener);
-				result.setOwner(build);
 				logger.println(Messages.robot_publisher_done());
 				logger.println(Messages.robot_publisher_copying());
 				copyRobotFilesToBuildDir(build);
@@ -216,6 +215,7 @@ public class RobotResultArchiver extends Recorder implements Serializable,
 			RobotBuildAction action = new RobotBuildAction(build, result,
 					FILE_ARCHIVE_DIR, getReportFileName());
 			build.addAction(action);
+			result.tally(action);
 
 			logger.println(Messages.robot_publisher_done());
 			logger.println(Messages.robot_publisher_checking());

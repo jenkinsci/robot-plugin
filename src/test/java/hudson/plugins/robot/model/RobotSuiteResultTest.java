@@ -17,6 +17,7 @@ package hudson.plugins.robot.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import org.dom4j.Element;
 
 import org.junit.Test;
 
@@ -56,8 +57,7 @@ public class RobotSuiteResultTest {
 	@Test
 	public void shouldReturnTestCaseByName(){
 		RobotSuiteResult result = new RobotSuiteResult("");
-		RobotCaseResult caseResult = new RobotCaseResult("");
-		caseResult.setName("case1");
+		RobotCaseResult caseResult = new RobotCaseResult("case1");
 		
 		result.addCaseResult(caseResult);
 		assertEquals(caseResult, result.getCase("case1"));
@@ -72,12 +72,8 @@ public class RobotSuiteResultTest {
 	@Test
 	public void shouldAcceptMultipleCaseResults() {
 		RobotSuiteResult result = new RobotSuiteResult("");
-		RobotCaseResult caseResult = new RobotCaseResult("");
-		RobotCaseResult caseResult2 = new RobotCaseResult("");
-		
-		//Robot sibling cases too should have unique names by definition (files in file system)
-		caseResult.setName("case1");
-		caseResult2.setName("case2");
+		RobotCaseResult caseResult = new RobotCaseResult("case1");
+		RobotCaseResult caseResult2 = new RobotCaseResult("case2");
 		
 		result.addCaseResult(caseResult);
 		result.addCaseResult(caseResult2);

@@ -15,8 +15,6 @@
 */
 package hudson.plugins.robot.model;
 
-import hudson.model.AbstractModelObject;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,27 +23,29 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.dom4j.Element;
 
-public class RobotCaseResult extends AbstractModelObject{
+public class RobotCaseResult extends RobotTestObject{
 
 	private static final Logger LOGGER = Logger.getLogger(RobotCaseResult.class.getName());
 	
-	private String name;
 	private boolean passed;
 	private boolean critical;
 	private long duration;
 	private String errorMsg;
+	private String name;
+	private RobotSuiteResult parent;
 	
-	//Dummy result
+	//TODO; dummy constructor remove
 	public RobotCaseResult(String name){
 		this.name = name;
 	}
 	
-	public RobotCaseResult(Element testCase) {
+	public RobotCaseResult(RobotSuiteResult parent, Element testCase) {
+		this.name = testCase.attributeValue("name");
+		this.parent = parent;
 		parse(testCase);
 	}
 
 	private void parse(Element testCase) {
-		name = testCase.attributeValue("name");
 		
 		Element status = testCase.element("status");
 		passed = status.attributeValue("status").equalsIgnoreCase("pass");
@@ -73,11 +73,21 @@ public class RobotCaseResult extends AbstractModelObject{
 			Date endDate = format.parse(time2);
 			difference = endDate.getTime() - startDate.getTime();
 		} catch (ParseException e) {
-			LOGGER.warn("Unable to parse testcase \"" + name + "\" start and endtimes", e);
+			LOGGER.warn("Unable to parse testcase \"" + getName() + "\" start and endtimes", e);
 		}
 		return difference;
 	}
 
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public RobotTestObject getParent() {
+		return parent;
+	}
+	
 	public long getDuration() {
 		return duration;
 	}
@@ -102,22 +112,14 @@ public class RobotCaseResult extends AbstractModelObject{
 		this.critical = critical;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getDisplayName() {
 		//TODO; Check
-		return name;
+		return getName();
 	}
 
 	public String getSearchUrl() {
 		//TODO; Check
-		return name;
+		return getName();
 	}
 
 	public boolean isPassed() {
@@ -127,5 +129,4 @@ public class RobotCaseResult extends AbstractModelObject{
 	public boolean isCritical() {
 		return critical;
 	}
-
 }

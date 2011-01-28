@@ -8,7 +8,7 @@
 			<metadata></metadata><suite source="testcases.html" name="3rd level cases">
 			<doc>Some documentation for testing purposes</doc>
 			<metadata></metadata>
-			<test critical="yes" name="Hello" timeout="">
+			<test critical="yes" name="Hello3rd" timeout="">
 				<doc></doc>
 				<kw type="kw" name="BuiltIn.Should Be Equal" timeout="">
 					<doc>Fails if the given objects are unequal.</doc>
