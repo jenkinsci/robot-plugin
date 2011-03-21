@@ -23,7 +23,6 @@ import org.apache.commons.lang.StringUtils;
 
 public abstract class RobotTestObject extends AbstractModelObject{
 	
-
 	private RobotBuildAction parentAction;
 
 	public RobotBuildAction getParentAction() {
@@ -58,7 +57,7 @@ public abstract class RobotTestObject extends AbstractModelObject{
 	}
 	
 	/**
-	 * Generates the url to suite from packagename
+	 * 
 	 * @return
 	 */
 	public String getRelativeId(RobotTestObject thisObject){
@@ -88,17 +87,14 @@ public abstract class RobotTestObject extends AbstractModelObject{
         if (build == null) {
             return null;
         }
-        while(true) {
-            build = build.getPreviousBuild();
-            if(build == null)
-                return null;
+        while((build = build.getPreviousBuild()) != null) {
             RobotBuildAction parentAction = build.getAction(getParentAction().getClass());
             if(parentAction != null) {
                 RobotTestObject result = parentAction.findObjectById(getRelativeId(getParentAction().getResult()));
-                if (result!=null)
-                    return result;
+                return result;
             }
         }
+        return null;
     }
 	
 	/**

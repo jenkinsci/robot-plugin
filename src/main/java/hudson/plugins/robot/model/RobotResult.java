@@ -16,6 +16,7 @@
 package hudson.plugins.robot.model;
 
 import hudson.FilePath;
+import hudson.model.AbstractBuild;
 import hudson.model.DirectoryBrowserSupport;
 import hudson.plugins.robot.Messages;
 import hudson.plugins.robot.RobotBuildAction;
@@ -127,7 +128,7 @@ public class RobotResult extends RobotTestObject {
 	 * Get number of failed critical tests.
 	 * @return
 	 */
-	public long getCriticalFail(){
+	public long getCriticalFailed(){
 		if(overallStats == null) return criticalFailed;
 		if( overallStats.isEmpty()) return 0;
 		return overallStats.get(0).getFail();
@@ -291,21 +292,16 @@ public class RobotResult extends RobotTestObject {
 	 * @throws ServletException
 	 * @throws InterruptedException
 	 */
-	public void doReport(StaplerRequest req, StaplerResponse rsp)
+	public DirectoryBrowserSupport doReport(StaplerRequest req, StaplerResponse rsp)
 			throws IOException, ServletException, InterruptedException {
 		String indexFile = getReportFileName();
 		FilePath robotDir = getRobotDir();
 		
-		if(!new FilePath(robotDir, indexFile).exists()){
+		if(!robotDir.exists()){
 			rsp.sendRedirect2("notfound");
-			return;
+			return null;
 		}
-		
-		DirectoryBrowserSupport dbs = new DirectoryBrowserSupport(this,
-				getRobotDir(), getDisplayName(),
-				"folder.gif", false);
-		dbs.setIndexFileName(indexFile);
-		dbs.generateResponse(req, rsp, this);
+		return new DirectoryBrowserSupport(this, getRobotDir(), getDisplayName() + " reports", "folder.gif", true);
 	}
 	
 	/**
@@ -355,6 +351,7 @@ public class RobotResult extends RobotTestObject {
 	}
 
 	private FilePath getRobotDir() {
+		if(getParentAction() == null) return null;
 		FilePath rootDir = new FilePath(getParentAction().getBuild().getRootDir());
 		return new FilePath(rootDir, "robot-plugin");
 	}
@@ -370,5 +367,21 @@ public class RobotResult extends RobotTestObject {
 
 	public long getDuration() {
 		return duration;
+	}
+	
+	@Override
+	public RobotResult getPreviousResult(){
+		AbstractBuild<?,?> build = getOwner();
+        if (build == null) {
+            return null;
+        }
+        while((build = build.getPreviousBuild()) != null) {
+            RobotBuildAction parentAction = build.getAction(getParentAction().getClass());
+            if(parentAction != null) {
+                RobotResult result = parentAction.getResult();
+                return result;
+            }
+        }
+        return null;
 	}
 }

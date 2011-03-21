@@ -15,13 +15,25 @@
 */
 package hudson.plugins.robot.model;
 
+import hudson.model.AbstractBuild;
+import hudson.model.Run;
+import hudson.plugins.robot.Messages;
+import hudson.plugins.robot.graph.RobotGraph;
+import hudson.plugins.robot.graph.RobotGraphHelper;
+import hudson.util.ChartUtil;
+import hudson.util.Graph;
+
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.dom4j.Element;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
 public class RobotCaseResult extends RobotTestObject{
 
@@ -33,6 +45,7 @@ public class RobotCaseResult extends RobotTestObject{
 	private String errorMsg;
 	private String name;
 	private RobotSuiteResult parent;
+	private int failedSince;
 	
 	//TODO; dummy constructor remove
 	public RobotCaseResult(String name){
@@ -128,5 +141,73 @@ public class RobotCaseResult extends RobotTestObject{
 
 	public boolean isCritical() {
 		return critical;
+	}
+	
+	/**
+	 * Gives the buildnumber of the build that this case first failed in
+	 * @return number of build
+	 */
+	public int getFailedSince(){
+        if (failedSince == 0 && !isPassed()) {
+            RobotCaseResult previous = getPreviousResult();
+            if(previous != null && !previous.isPassed())
+                this.failedSince = previous.getFailedSince();
+            else if (getOwner() != null) {
+                this.failedSince = getOwner().getNumber();
+            } else {
+                LOGGER.warn("trouble calculating getFailedSince. We've got prev, but no owner.");
+            }
+        }
+        return failedSince;
+	}
+	
+	/**
+	 * Gives the corresponding caseresult from previous build
+	 */
+	@Override
+	public RobotCaseResult getPreviousResult(){
+		if (parent == null) return null;
+		RobotSuiteResult prevParent = parent.getPreviousResult();
+		if(prevParent == null) return null;
+		return prevParent.getCase(safe(getName()));
+	}
+	
+	/**
+	 * Gives the run that this case first failed in
+	 * @return run object
+	 */
+	public Run<?,?> getFailedSinceRun() {
+    	return getOwner().getParent().getBuildByNumber(getFailedSince());
+    }
+	
+	public int getAge(){
+		if(isPassed()) return 0;
+		AbstractBuild<?,?> owner = getOwner();
+		if(owner != null)
+			return getOwner().getNumber() - getFailedSince() + 1;
+		else return 0;
+	}
+	
+	/**
+	 * Return duration graph of the case in the request.
+	 * @param req
+	 * @param rsp
+	 * @throws IOException
+	 */
+	public void doDurationGraph(StaplerRequest req, StaplerResponse rsp)
+			throws IOException {
+		if (ChartUtil.awtProblemCause != null) {
+			rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
+			return;
+		}
+		
+		Calendar t = getOwner().getTimestamp();
+
+		if (req.checkIfModified(t, rsp))
+			return;
+		
+		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDurationDataSetForCase(this), "Duration (ms)",
+				Messages.robot_trendgraph_builds(), 500, 200);
+		g.doPng(req, rsp);
 	}
 }

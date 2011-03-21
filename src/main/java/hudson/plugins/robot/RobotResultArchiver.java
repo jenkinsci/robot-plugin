@@ -176,7 +176,7 @@ public class RobotResultArchiver extends Recorder implements Serializable,
 				project));
 	}
 
-	protected RobotResult parse(String expandedTestResults, AbstractBuild build,
+	protected RobotResult parse(String expandedTestResults, AbstractBuild<?,?> build,
 			Launcher launcher, BuildListener listener) throws IOException,
 			InterruptedException {
 		return new RobotParser().parse(expandedTestResults, build, launcher,

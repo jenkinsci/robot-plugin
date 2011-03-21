@@ -40,7 +40,7 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 public class RobotSuiteResult extends RobotTestObject {
-
+	
 	private Map<String, RobotSuiteResult> children;
 	private RobotTestObject parent;
 	private String name;
@@ -150,6 +150,14 @@ public class RobotSuiteResult extends RobotTestObject {
 	}
 	
 	/**
+	 * Get number of all tests
+	 * @return
+	 */
+	public int getTotal() {
+		return passed + failed;
+	}
+	
+	/**
 	 * Get duration of this testsuite run
 	 * @return
 	 */
@@ -171,6 +179,14 @@ public class RobotSuiteResult extends RobotTestObject {
 	 */
 	public int getCriticalFailed() {
 		return criticalFailed;
+	}
+	
+	/**
+	 * Get number of all critical tests
+	 * @return
+	 */
+	public int getCriticalTotal() {
+		return criticalPassed + criticalFailed;
 	}
 
 	/**
@@ -222,6 +238,18 @@ public class RobotSuiteResult extends RobotTestObject {
 		return getParentAction().getBuild();
 	}
 
+	@Override
+	public RobotSuiteResult getPreviousResult(){
+		if (parent == null) return null;
+		RobotTestObject prevParent = parent.getPreviousResult();
+		if(prevParent instanceof RobotSuiteResult)
+			return ((RobotSuiteResult)prevParent).getSuite(safe(getName()));
+		else if (prevParent instanceof RobotResult) {
+			return ((RobotResult)prevParent).getSuite(safe(getName()));
+		}
+		return null;
+	}
+	
 	/**
 	 * Get suite or case result by safe name
 	 * @param token
@@ -346,6 +374,29 @@ public class RobotSuiteResult extends RobotTestObject {
 			return;
 		
 		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDataSetForSuite(this), Messages.robot_trendgraph_testcases(),
+				Messages.robot_trendgraph_builds(), 500, 200);
+		g.doPng(req, rsp);
+	}
+	
+	/**
+	 * Return duration graph for the suite in the request.
+	 * @param req
+	 * @param rsp
+	 * @throws IOException
+	 */
+	public void doDurationGraph(StaplerRequest req, StaplerResponse rsp)
+			throws IOException {
+		if (ChartUtil.awtProblemCause != null) {
+			rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
+			return;
+		}
+		
+		Calendar t = getOwner().getTimestamp();
+
+		if (req.checkIfModified(t, rsp))
+			return;
+		
+		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDurationDataSetForSuite(this), "Duration (ms)",
 				Messages.robot_trendgraph_builds(), 500, 200);
 		g.doPng(req, rsp);
 	}

@@ -17,42 +17,83 @@ limitations under the License.
   <l:layout>
   <st:include it="${it.parentAction.build}" page="sidepanel.jelly"/>
     <l:main-panel>
+      <script type="text/javascript">
+		function showStackTrace(id,query) {
+			var element = document.getElementById(id)
+			element.style.display = "";
+			document.getElementById(id + "-showlink").style.display = "none";
+			document.getElementById(id + "-hidelink").style.display = "";
+			
+			var rqo = new XMLHttpRequest();
+			rqo.open('GET', query, true);
+			rqo.onreadystatechange = function() { element.innerHTML = rqo.responseText; }  
+			rqo.send(null);
+		}
+		
+		function hideStackTrace(id) {
+			document.getElementById(id).style.display = "none";
+			document.getElementById(id + "-showlink").style.display = "";
+			document.getElementById(id + "-hidelink").style.display = "none";
+		}
+ 	  </script>
     <h1>Robot Framework test results</h1>
-      <div>
-      	<img src="/images/16x16/notepad.gif"/><a href="report" title="Original report file">Original html report</a>
+      <div style="float:right;">
+      	<img src="/images/16x16/notepad.gif"/><a href="report" title="Original report files">Original report files</a>
       </div>
-      <div>
-      	<img src="graph"/><img src="durationGraph"/>
-      </div>
+      <h3>Critical failed: ${it.criticalFailed} | Overall failed: ${it.overallFailed} | Critical total: ${it.criticalTotal}  | Overall total: ${it.overallTotal}</h3>
+      <h4>Took ${it.duration}ms</h4>
       <j:if test="${!it.allFailedCases.isEmpty()}">
-      <h2>Failed testcases</h2>
+      <h2>All failed testcases</h2>
       <table class="pane sortable">
         <tr>
      	 <td class="pane-header">Name</td>
      	 <td class="pane-header">Duration (ms)</td>
+     	 <td class="pane-header">Age</td>
      	</tr>
       	<j:forEach var="case" items="${it.allFailedCases}">
+      	    <j:set var="fullName" value="${case.getRelativePackageName(it)}" />
       		<tr>
-      			<td class="pane"><a href="${case.getRelativeId(it)}">${case.getRelativePackageName(it)}</a></td>
+      			<td class="pane">
+      			<a id="${fullName}-showlink" href="javascript:showStackTrace('${h.jsStringEscape(fullName)}','${case.getRelativeId(it)}/summary')">[+]</a>
+           		<a id="${fullName}-hidelink" style="display:none" href="javascript:hideStackTrace('${h.jsStringEscape(fullName)}')">[-]</a>
+            	<st:nbsp/>
+      			<a href="${case.getRelativeId(it)}">${fullName}</a>
+      			<div id="${fullName}" class="hidden" style="display:none">
+                    ${%Loading...}
+           	    </div>
+      			</td>
       			<td class="pane">${case.duration}</td>
+      			<td class="pane"><a href="${rootURL}${case.failedSinceRun.url}">${case.age}</a></td>
       		</tr>
       	</j:forEach>
       </table>
       </j:if>
+      <div style="border: 1px #aaa solid; margin-top:20px;">
+       <div style="float:left; margin: 20px;">
+       <h3>Pass/fail trend</h3>
+       	<img src="graph"/>
+       </div>
+       <div style="float:left; margin: 20px;">
+      	 <h3>Duration trend</h3>
+     	  <img src="durationGraph"/>
+       </div>
+       <div style="clear:both;"></div>
+      </div>
       <h2>All test suites</h2>
    	  <table class="pane sortable">
    	  <tr>
    	  	<td class="pane-header">Name</td>
-   	  	<td class="pane-header">Failed tests</td>
-   	  	<td class="pane-header">Total tests</td>
-   	  	<td class="pane-header">Duration (ms)</td>
+   	  	<td class="pane-header">Failed tests <span style="font-size:0.8em">(diff)</span></td>
+   	  	<td class="pane-header">Total tests <span style="font-size:0.8em">(diff)</span></td>
+   	  	<td class="pane-header">Duration ms <span style="font-size:0.8em">(diff)</span></td>
    	  </tr>
       <j:forEach var="suite" items="${it.allSuites}">
+      <j:set var="prevsuite" value="${suite.previousResult}" />
          <tr>
       		<td class="pane"><a href="${suite.getRelativeId(it)}">${suite.getRelativePackageName(it)}</a></td>
-      		<td class="pane">${suite.failed}</td>
-      		<td class="pane">${suite.failed + suite.passed}</td>
-      		<td class="pane">${suite.duration}</td>
+      		<td class="pane">${suite.failed} <span style="font-size:0.8em">(${h.getDiffString(suite.failed - prevsuite.failed)})</span></td>
+      		<td class="pane">${suite.failed + suite.passed} <span style="font-size:0.8em">(${h.getDiffString((suite.failed + suite.passed) - (prevsuite.failed + prevsuite.passed))})</span></td>
+      		<td class="pane">${suite.duration} <span style="font-size:0.8em">(${h.getDiffString(suite.duration - prevsuite.duration)})</span></td>
          </tr>
       </j:forEach>      
       </table>        

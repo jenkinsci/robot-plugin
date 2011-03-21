@@ -19,18 +19,28 @@ limitations under the License.
     <l:main-panel>
       <j:choose>
       	<j:when test="${it.isPassed()}">
-      		<j:set var="headingColor" value="green"/>
+      		<j:set var="headingColor" value="#0c0"/>
+      		<j:set var="status" value="Passed!" />
         </j:when>
         <j:otherwise>
-			<j:set var="headingColor" value="red"/>
+			<j:set var="headingColor" value="#c00"/>
+			<j:set var="status" value="Failed!" />
 		</j:otherwise>
 	  </j:choose>
         	
-      <h1 style="color:${headingColor};">TestCase - "${it.name}"</h1>
+      <h1>Test case - "${it.name}"</h1>
+      <h2 style="color:${headingColor};">${status}</h2>
       <j:if test="${!it.isPassed()}">
-     	 <h2>Error message:</h2>
+     	 <h3>Error message:</h3>
       	 <p>${it.errorMsg}</p>
       </j:if>
+      <div style="border: 1px #aaa solid; margin-top:20px; float: left;">
+       <div style="float:left; margin: 20px;">
+      	 <h3>Duration trend</h3>
+     	  <img src="durationGraph"/>
+       </div>
+       <div style="clear:both;"></div>
+      </div>
     </l:main-panel>
   </l:layout>
 </j:jelly>

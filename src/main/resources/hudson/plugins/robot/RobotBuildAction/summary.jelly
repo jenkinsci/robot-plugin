@@ -15,7 +15,7 @@ limitations under the License.
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:u="/hudson/plugins/robot/util">
   <t:summary icon="/plugin/robot/robot-large.png">
-    <h3>${%summary.header}</h3>
+    <h3><a href="${it.urlName}">${%summary.header}</a></h3>
     <u:robotsummary action="${it}"/>
   </t:summary>
 </j:jelly>

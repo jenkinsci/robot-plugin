@@ -1,0 +1,39 @@
+<!--
+Copyright 2008-2010 Nokia Siemens Networks Oyj
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+  <l:header />
+  <l:side-panel>
+    <l:tasks>
+      <j:set var="buildUrl" value="${h.decompose(request)}" />
+      <st:include it="${it.owner}" page="tasks.jelly" optional="true"/>
+      <st:include it="${it.owner}" page="actions.jelly" optional="true" />
+      
+	  <j:forEach var="action" items="${it.testActions}">
+	    <j:if test="${action.iconFileName!=null}">
+	      <l:task icon="${h.getIconFilePath(action)}" title="${action.displayName}"
+	              href="${action.urlName}/" />
+	    </j:if>
+	  </j:forEach>
+      
+      <j:if test="${it.owner.previousBuild!=null}">
+        <l:task icon="images/24x24/previous.gif" href="${buildUrl.previousBuildUrl}" title="${%Previous Build}" />
+      </j:if>
+      <j:if test="${it.owner.nextBuild!=null}">
+        <l:task icon="images/24x24/next.gif" href="${buildUrl.nextBuildUrl}" title="${%Next Build}" />
+      </j:if>
+    </l:tasks>
+  </l:side-panel>
+</j:jelly>

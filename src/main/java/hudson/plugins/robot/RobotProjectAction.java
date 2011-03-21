@@ -17,10 +17,7 @@ package hudson.plugins.robot;
 
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
-import hudson.plugins.robot.graph.RobotGraph;
-import hudson.plugins.robot.graph.RobotGraphHelper;
 import hudson.util.ChartUtil;
-import hudson.util.Graph;
 
 import java.io.IOException;
 import java.util.Calendar;
