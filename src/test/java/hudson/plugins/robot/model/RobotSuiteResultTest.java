@@ -16,9 +16,14 @@
 package hudson.plugins.robot.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import org.dom4j.Element;
+import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.dom4j.DocumentException;
 import org.junit.Test;
 
 
@@ -40,9 +45,10 @@ public class RobotSuiteResultTest {
 	}
 	
 	@Test
-	public void shouldReturnNullIfNoChildren(){
+	public void shouldReturnEmptyCollectionIfNoChildren(){
 		RobotSuiteResult result = new RobotSuiteResult("");
-		assertNull(result.getChildSuites());
+		assertNotNull("Return value was null", result.getChildSuites());
+		assertTrue("Collection was not empty", result.getChildSuites().size() == 0);
 	}
 	
 	@Test
@@ -64,7 +70,7 @@ public class RobotSuiteResultTest {
 	}
 	
 	@Test
-	public void shouldReturnNullIfNoParent() {
+	public void shouldReturnNullIfNoParent() throws DocumentException {
 		RobotSuiteResult rootResult = new RobotSuiteResult("");
 		assertNull(rootResult.getParent());
 	}
@@ -82,8 +88,9 @@ public class RobotSuiteResultTest {
 	}
 	
 	@Test
-	public void shouldReturnNullIfNoTestCases() {
+	public void shouldReturnEmptyCollectionIfNoTestCases() throws DocumentException {
 		RobotSuiteResult result = new RobotSuiteResult("");
-		assertNull(result.getCaseResults());
+		assertNotNull("Return value was null", result.getCaseResults());
+		assertTrue("Collection was not empty", result.getCaseResults().size() == 0);
 	}
 }

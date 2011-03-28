@@ -34,7 +34,6 @@ import hudson.tasks.Recorder;
 import hudson.tasks.test.TestResultAggregator;
 import hudson.util.FormValidation;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
@@ -47,9 +46,11 @@ import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-public class RobotResultArchiver extends Recorder implements Serializable,
+public class RobotPublisher extends Recorder implements Serializable,
 		MatrixAggregatable {
 
+	private static final long serialVersionUID = 1L;
+	
 	protected static final String DEFAULT_REPORT_FILE = "report.html";
 	protected static final String FILE_ARCHIVE_DIR = "robot-plugin";
 
@@ -83,7 +84,7 @@ public class RobotResultArchiver extends Recorder implements Serializable,
 	 *            True if only critical tests are included in pass percentage
 	 */
 	@DataBoundConstructor
-	public RobotResultArchiver(String outputPath, String outputFileName,
+	public RobotPublisher(String outputPath, String outputFileName,
 			String reportFileName, String logFileName, double passThreshold,
 			double unstableThreshold, boolean onlyCritical) {
 		this.outputPath = outputPath;
@@ -176,10 +177,10 @@ public class RobotResultArchiver extends Recorder implements Serializable,
 				project));
 	}
 
-	protected RobotResult parse(String expandedTestResults, AbstractBuild<?,?> build,
+	protected RobotResult parse(String expandedTestResults, String outputPath, AbstractBuild<?,?> build,
 			Launcher launcher, BuildListener listener) throws IOException,
 			InterruptedException {
-		return new RobotParser().parse(expandedTestResults, build, launcher,
+		return new RobotParser().parse(expandedTestResults, outputPath, build, launcher,
 				listener);
 	}
 
@@ -193,19 +194,25 @@ public class RobotResultArchiver extends Recorder implements Serializable,
 			PrintStream logger = listener.getLogger();
 			logger.println(Messages.robot_publisher_started());
 			logger.println(Messages.robot_publisher_parsing());
-
 			RobotResult result;
+			
 			try {
-				String separator = StringUtils.isBlank(getOutputPath()) ? "" : File.separator;
-				String outputFile = getOutputPath() + separator + getOutputFileName();
-				result = parse(outputFile, build, launcher, listener);
+				String expandedOutputFileName = build.getEnvironment(listener).expand(getOutputFileName());
+				String expandedOutputPath = build.getEnvironment(listener).expand(getOutputPath());
+				String expandedReportFileName = build.getEnvironment(listener).expand(getReportFileName());
+				String expandedLogFileName = build.getEnvironment(listener).expand(getLogFileName());
+				
+				result = parse(expandedOutputFileName, expandedOutputPath, build, launcher, listener);
+				
 				logger.println(Messages.robot_publisher_done());
 				logger.println(Messages.robot_publisher_copying());
-				copyRobotFilesToBuildDir(build);
+				
+				copyFilesToBuildDir(build, expandedOutputPath, expandedOutputFileName, expandedReportFileName, expandedLogFileName);
+				
 				logger.println(Messages.robot_publisher_done());
 			} catch (Exception e) {
 				logger.println(Messages.robot_publisher_fail());
-				e.getCause().printStackTrace(logger);
+				e.printStackTrace(logger);
 				build.setResult(Result.FAILURE);
 				return true;
 			}
@@ -213,7 +220,7 @@ public class RobotResultArchiver extends Recorder implements Serializable,
 			logger.println(Messages.robot_publisher_assigning());
 
 			RobotBuildAction action = new RobotBuildAction(build, result,
-					FILE_ARCHIVE_DIR, getReportFileName());
+					FILE_ARCHIVE_DIR);
 			build.addAction(action);
 			result.tally(action);
 
@@ -229,6 +236,61 @@ public class RobotResultArchiver extends Recorder implements Serializable,
 		return true;
 	}
 
+	public static void copyFilesToBuildDir(AbstractBuild<?, ?> build,
+			String expandedOutputPath, String...filemaskToCopy) throws IOException, InterruptedException {
+		FilePath srcDir = new FilePath(build.getWorkspace(), expandedOutputPath);
+		FilePath destDir = new FilePath(new FilePath(build.getRootDir()),
+				FILE_ARCHIVE_DIR);
+		
+		for(String filemask : filemaskToCopy){
+			flattenDirsCopy(filemask, srcDir, destDir);
+		}
+	}
+
+	public static void flattenDirsCopy(String filemask, FilePath srcDir, FilePath destDir) throws IOException, InterruptedException{
+		//take care of splitoutput files not copied by the original filemask (e.g. output-001.xml etc.)
+		if (StringUtils.isNotBlank(getSuffix(filemask))) filemask = trimSuffix(filemask) + "*" + getSuffix(filemask);
+		
+		FilePath[] list = srcDir.list(filemask);
+			for (FilePath file : list) {
+					FilePath destinationFile = new FilePath(destDir, file.getName());
+					String destinationFileName = destinationFile.getName();
+					int i = 1;
+					while(destinationFile.exists()){
+						destinationFile = new FilePath(destDir, trimSuffix(destinationFileName) + "(" + i + ")" + getSuffix(destinationFileName));
+						i++;
+					}
+					
+					file.copyTo(destinationFile);
+			}
+	}
+	
+	/**
+	 * Return filename without file suffix.
+	 * @param filename
+	 * @return filename as string
+	 */
+	public static String trimSuffix(String filename) {
+		int index = filename.lastIndexOf('.');
+		if (index > 0) {
+			filename = filename.substring(0, index);
+		}
+		return filename;
+	}
+
+	/**
+	 * Return file suffix from string.
+	 * @param filename
+	 * @return file suffix as string
+	 */
+	public static String getSuffix(String filename) {
+		int index = filename.lastIndexOf('.');
+		if (index > 0) {
+			return filename.substring(index);
+		}
+		return "";
+	}
+	
 	/**
 	 * Determines the build result based on set thresholds. If build is already
 	 * failed before the tests it won't be changed to successful.
@@ -253,37 +315,6 @@ public class RobotResultArchiver extends Recorder implements Serializable,
 		return Result.FAILURE;
 	}
 
-	private void copyRobotFilesToBuildDir(AbstractBuild<?, ?> build)
-			throws IOException, InterruptedException {
-		FilePath srcDir = new FilePath(build.getWorkspace(), outputPath);
-		FilePath destDir = new FilePath(new FilePath(build.getRootDir()),
-				FILE_ARCHIVE_DIR);
-		copySplittedFiles(srcDir, destDir, getLogFileName());
-		copySplittedFiles(srcDir, destDir, getReportFileName());
-		copySplittedFiles(srcDir, destDir, getOutputFileName());
-	}
-
-	private static void copySplittedFiles(FilePath src, FilePath dest,
-			String filename) throws IOException, InterruptedException {
-		src.copyRecursiveTo(trimSuffix(filename) + "*" + getSuffix(filename),
-				dest);
-	}
-
-	private static String trimSuffix(String filename) {
-		int index = filename.lastIndexOf('.');
-		if (index > 0) {
-			filename = filename.substring(0, index);
-		}
-		return filename;
-	}
-
-	private static String getSuffix(String filename) {
-		int index = filename.lastIndexOf('.');
-		if (index > 0) {
-			return filename.substring(index);
-		}
-		return "";
-	}
 
 	/**
 	 * Descriptor for the publisher

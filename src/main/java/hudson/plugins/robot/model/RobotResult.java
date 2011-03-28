@@ -22,14 +22,12 @@ import hudson.plugins.robot.Messages;
 import hudson.plugins.robot.RobotBuildAction;
 import hudson.plugins.robot.graph.RobotGraph;
 import hudson.plugins.robot.graph.RobotGraphHelper;
-import hudson.util.ChartUtil;
 import hudson.util.Graph;
 
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +35,7 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.DirectoryScanner;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -64,22 +63,34 @@ public class RobotResult extends RobotTestObject {
 
 	private Map<String, RobotSuiteResult> suites;	
 	
-	public RobotResult(DirectoryScanner scanner) throws DocumentException{
+	public RobotResult(DirectoryScanner scanner) throws DocumentException {
 		parse(scanner);
 	}
 	
-	public void parse(DirectoryScanner scanner) throws DocumentException{
+	/**
+	 * Parse robot reports to object tree
+	 * @param scanner contains files to be parsed
+	 * @throws DocumentException if xml parsing fails
+	 */
+	public void parse(DirectoryScanner scanner) throws DocumentException {
 		suites = new HashMap<String, RobotSuiteResult>();
 		String[] files = scanner.getIncludedFiles();
-		File baseDirectory = scanner.getBasedir();
 		
 		for(String file : files){
-			SAXReader reader = new SAXReader();
+				SAXReader reader = new SAXReader();
+				File baseDirectory = scanner.getBasedir();
 				File reportFile = new File(baseDirectory, file);
 				Document resultFile = reader.read(reportFile);
 				Element root = resultFile.getRootElement();
 				
 				timeStamp = root.attributeValue("generated");
+				if(timeStamp == null) continue;
+				
+				//get the potential directories emerging from the use of GLOB filemask accounted in the splitted file parsing
+				String dirFromFileGLOB = new File(file).getParent();
+				if(dirFromFileGLOB != null)
+					baseDirectory = new File(baseDirectory, dirFromFileGLOB.toString());
+				
 				for(Element suite : (List<Element>) root.elements("suite")){
 					RobotSuiteResult suiteResult = new RobotSuiteResult(this, suite, baseDirectory);
 					if(suites.get(suiteResult.getSafeName()) == null)
@@ -95,6 +106,11 @@ public class RobotResult extends RobotTestObject {
 		}
 	}
 	
+	/**
+	 * Find a testobject in the result tree with id-path
+	 * @param id path e.g. "suite/subsuite/testcase"
+	 * @return null if not found
+	 */
 	public RobotTestObject findObjectById(String id){
 		if(id.indexOf("/") >= 0){
 			String suiteName = id.substring(0, id.indexOf("/"));
@@ -108,11 +124,6 @@ public class RobotResult extends RobotTestObject {
 	public String getName() {
 		return "";
 	}
-	
-	/*
-	 * The data structure of passed and failed tests is awkward and fragile but
-	 * needs some consideration before migrating so that old builds won't break.
-	 */
 
 	/**
 	 * Get number of passed critical tests.
@@ -194,6 +205,10 @@ public class RobotResult extends RobotTestObject {
 		return timeStamp;
 	}
 
+	/**
+	 * Set the timestamp of test run
+	 * @param timeStamp
+	 */
 	public void setTimeStamp(String timeStamp) {
 		this.timeStamp = timeStamp;
 	}
@@ -213,7 +228,7 @@ public class RobotResult extends RobotTestObject {
 			total = getOverallTotal();
 		}
 		
-		if(total == 0) return 0;
+		if(total == 0) return 100;
 		
 		double percentage = (double) passed / total * 100;
 		return roundToDecimals(percentage, 1);
@@ -225,23 +240,42 @@ public class RobotResult extends RobotTestObject {
 		return bd.doubleValue();
 	}
 
+	/**
+	 * {@inheritDoc}}
+	 */
 	public String getDisplayName() {
 		return "Robot result";
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getSearchUrl() {
 		return "robot";
 	}
 
+	/**
+	 * Get top level suite by name
+	 * @param name
+	 * @return suite result
+	 */
 	public RobotSuiteResult getSuite(String name) {
 		if(suites == null) return null;
 		return suites.get(name);
 	}
 	
+	/**
+	 * Get all top level suites
+	 * @return Collection of suiteresults
+	 */
 	public Collection<RobotSuiteResult> getSuites(){
 		return suites == null ? null : suites.values();
 	}
 	
+	/**
+	 * Get all testsuites related to result.
+	 * @return List of suiteresults
+	 */
 	public List<RobotSuiteResult> getAllSuites(){
 		List<RobotSuiteResult> allSuites = new ArrayList<RobotSuiteResult>();
 		for(RobotSuiteResult suite : getSuites()){
@@ -253,6 +287,10 @@ public class RobotResult extends RobotTestObject {
 		return allSuites;
 	}
 	
+	/**
+	 * Get all failed test cases related to result.
+	 * @return list of test case results
+	 */
 	public List<RobotCaseResult> getAllFailedCases(){
 		List<RobotCaseResult> allFailedCases = new ArrayList<RobotCaseResult>();
 		for(RobotSuiteResult suite : getSuites()){
@@ -262,6 +300,10 @@ public class RobotResult extends RobotTestObject {
 		return allFailedCases;
 	}
 	
+	/**
+	 * Count the totals in result tree and assign parent action.
+	 * @param parentAction
+	 */
 	public void tally(RobotBuildAction parentAction){
 		setParentAction(parentAction);
 		failed = 0;
@@ -280,12 +322,19 @@ public class RobotResult extends RobotTestObject {
 		}
 	}
 	
+	/**
+	 * Return the object represented by url-string
+	 * @param token
+	 * @param req
+	 * @param rsp
+	 * @return
+	 */
 	public Object getDynamic(String token, StaplerRequest req, StaplerResponse rsp){
 		return suites.get(token);
 	}
 	
 	/**
-	 * Serves Robot html report via robot url. Shows not found page if file is missing.
+	 * Serves Robot html report via robot url. Shows not found page if file is missing. If reportfilename is specified, the report is served (To be compatible with v1.0 builds)
 	 * @param req
 	 * @param rsp
 	 * @throws IOException
@@ -294,14 +343,18 @@ public class RobotResult extends RobotTestObject {
 	 */
 	public DirectoryBrowserSupport doReport(StaplerRequest req, StaplerResponse rsp)
 			throws IOException, ServletException, InterruptedException {
-		String indexFile = getReportFileName();
-		FilePath robotDir = getRobotDir();
+		RobotBuildAction parent = getParentAction();
+		FilePath robotDir = null;
+
+		if(parent != null)		
+			robotDir = parent.getRobotDir();
 		
-		if(!robotDir.exists()){
-			rsp.sendRedirect2("notfound");
-			return null;
+		if(robotDir != null && robotDir.exists()) {
+			if(StringUtils.isBlank(parent.getReportFileName()))
+				return new DirectoryBrowserSupport(this, robotDir, getDisplayName(), "folder.gif", true);
 		}
-		return new DirectoryBrowserSupport(this, getRobotDir(), getDisplayName() + " reports", "folder.gif", true);
+		rsp.sendRedirect("notfound");
+		return null;
 	}
 	
 	/**
@@ -312,15 +365,7 @@ public class RobotResult extends RobotTestObject {
 	 */
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
-		if (ChartUtil.awtProblemCause != null) {
-			rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
-			return;
-		}
-		
-		Calendar t = getOwner().getTimestamp();
-
-		if (req.checkIfModified(t, rsp))
-			return;
+		if(!isNeedToGenerate(req, rsp)) return;
 		
 		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDataSetForBuild(getOwner()), Messages.robot_trendgraph_testcases(),
 				Messages.robot_trendgraph_builds(), 500, 200);
@@ -335,41 +380,32 @@ public class RobotResult extends RobotTestObject {
 	 */
 	public void doDurationGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
-		if (ChartUtil.awtProblemCause != null) {
-			rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
-			return;
-		}
-		
-		Calendar t = getOwner().getTimestamp();
-
-		if (req.checkIfModified(t, rsp))
-			return;
+		if(!isNeedToGenerate(req, rsp)) return;
 		
 		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDurationDataSetForBuild(getOwner()), "Duration (ms)",
 				Messages.robot_trendgraph_builds(), 500, 200);
 		g.doPng(req, rsp);
 	}
 
-	private FilePath getRobotDir() {
-		if(getParentAction() == null) return null;
-		FilePath rootDir = new FilePath(getParentAction().getBuild().getRootDir());
-		return new FilePath(rootDir, "robot-plugin");
-	}
-
-	public String getReportFileName() {
-		return "report.html";
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public RobotTestObject getParent() {
 		return null;
 	}
 
+	/**
+	 * Get the total duration of the test run
+	 * @return duration
+	 */
 	public long getDuration() {
 		return duration;
 	}
 	
-	@Override
+	/**
+	 * {@inheritDoc}
+	 */
 	public RobotResult getPreviousResult(){
 		AbstractBuild<?,?> build = getOwner();
         if (build == null) {

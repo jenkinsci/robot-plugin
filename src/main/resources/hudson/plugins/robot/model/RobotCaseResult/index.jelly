@@ -15,10 +15,10 @@ limitations under the License.
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
   <l:layout>
-  <st:include it="${it.parentAction.build}" page="sidepanel.jelly"/>
+  <st:include it="${it.parentAction.owner}" page="sidepanel.jelly"/>
     <l:main-panel>
       <j:choose>
-      	<j:when test="${it.isPassed()}">
+      	<j:when test="${it.passed}">
       		<j:set var="headingColor" value="#0c0"/>
       		<j:set var="status" value="Passed!" />
         </j:when>
@@ -28,13 +28,17 @@ limitations under the License.
 		</j:otherwise>
 	  </j:choose>
         	
-      <h1>Test case - "${it.name}"</h1>
+      <h1><j:if test="${it.critical}">Critical</j:if> test case: "${it.name}"</h1>
+      <j:set var="prevcase" value="${it.previousResult}" />
+      <div style="float:right;">
+		Test took ${it.duration}ms (${h.getDiffString(it.duration - prevcase.duration)})
+      </div>
       <h2 style="color:${headingColor};">${status}</h2>
-      <j:if test="${!it.isPassed()}">
+       <j:if test="${!it.isPassed()}">
      	 <h3>Error message:</h3>
       	 <p>${it.errorMsg}</p>
       </j:if>
-      <div style="border: 1px #aaa solid; margin-top:20px; float: left;">
+      <div style="margin-top:20px; float: left;">
        <div style="float:left; margin: 20px;">
       	 <h3>Duration trend</h3>
      	  <img src="durationGraph"/>

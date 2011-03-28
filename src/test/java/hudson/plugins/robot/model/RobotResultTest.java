@@ -29,7 +29,6 @@ import junit.framework.TestCase;
 
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
-import org.jvnet.hudson.test.HudsonTestCase;
 import org.jvnet.hudson.test.recipes.LocalData;
 
 
@@ -40,7 +39,7 @@ public class RobotResultTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		File reportFile = new File(new RobotSuiteResultTest().getClass().getResource("output.xml").toURI());
-		
+
 		FileSet fs = Util.createFileSet(reportFile.getParentFile(), "output.xml");
         DirectoryScanner ds = fs.getDirectoryScanner();
         String[] files = ds.getIncludedFiles();
@@ -49,7 +48,7 @@ public class RobotResultTest extends TestCase {
         if(files.length == 0) throw new Exception("No example file found!");
         
 		result = new RobotResult(ds);	
-		result.tally(new RobotBuildAction(null, result, null, null));
+		result.tally(new RobotBuildAction(null, result, null));
 	}
 	
 	public void testShouldParseSuites(){
@@ -67,6 +66,22 @@ public class RobotResultTest extends TestCase {
 		RobotSuiteResult suite = result.getSuite("Othercases_&_Testcases");
 		RobotCaseResult caseResult = suite.getCase("Hello");
 		assertNotNull(caseResult);
+	}
+	
+	public void testShouldParseCriticalCases(){
+		assertEquals(15, result.getCriticalTotal());
+	}
+	
+	public void testShouldParseOverallCases(){
+		assertEquals(17, result.getOverallTotal());
+	}
+	
+	public void testShouldParseFailedCases(){
+		assertEquals(8, result.getOverallFailed());
+	}
+	
+	public void testShouldParseFailedCriticalCases(){
+		assertEquals(7, result.getCriticalFailed());
 	}
 	
 	public void testShouldReturnAllFailedCases(){

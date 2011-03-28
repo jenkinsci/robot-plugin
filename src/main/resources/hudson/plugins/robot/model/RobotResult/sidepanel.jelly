@@ -20,14 +20,6 @@ limitations under the License.
       <j:set var="buildUrl" value="${h.decompose(request)}" />
       <st:include it="${it.owner}" page="tasks.jelly" optional="true"/>
       <st:include it="${it.owner}" page="actions.jelly" optional="true" />
-      
-	  <j:forEach var="action" items="${it.testActions}">
-	    <j:if test="${action.iconFileName!=null}">
-	      <l:task icon="${h.getIconFilePath(action)}" title="${action.displayName}"
-	              href="${action.urlName}/" />
-	    </j:if>
-	  </j:forEach>
-      
       <j:if test="${it.owner.previousBuild!=null}">
         <l:task icon="images/24x24/previous.gif" href="${buildUrl.previousBuildUrl}" title="${%Previous Build}" />
       </j:if>

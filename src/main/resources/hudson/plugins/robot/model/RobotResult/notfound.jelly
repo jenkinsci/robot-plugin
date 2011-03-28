@@ -18,7 +18,7 @@ limitations under the License.
   <st:include it="${it.owner}" page="sidepanel.jelly"/>
     <l:main-panel>
       <h1>${%notfound.header}</h1>   
-      <p>${%notfound.message(it.reportFileName)}</p>                                
+      <p>${%notfound.message(it.parentAction.robotDir)}</p>                                
     </l:main-panel>
   </l:layout>
 </j:jelly>

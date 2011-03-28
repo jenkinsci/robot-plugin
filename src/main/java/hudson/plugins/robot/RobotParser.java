@@ -23,7 +23,6 @@ import hudson.model.TaskListener;
 import hudson.model.AbstractBuild;
 import hudson.plugins.robot.model.RobotResult;
 import hudson.remoting.VirtualChannel;
-import hudson.tasks.junit.Messages;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,36 +33,33 @@ import org.dom4j.DocumentException;
 
 public class RobotParser {
 
-	public RobotResult parse(String testResultLocations, AbstractBuild build,
+	public RobotResult parse(String outputFileLocations, String outputPath, AbstractBuild build,
 			Launcher launcher, TaskListener listener)
 			throws InterruptedException, IOException {
-		RobotResult result = build.getWorkspace().act(
-				new RobotParserCallable(testResultLocations));
+		RobotResult result = new FilePath(build.getWorkspace(), outputPath).act(
+				new RobotParserCallable(outputFileLocations));
 		return result;
 	}
 
 	private static final class RobotParserCallable implements
 			FilePath.FileCallable<RobotResult> {
+		private final String outputFileLocations;
 
-		private final String testResultLocations;
-
-		private RobotParserCallable(String testResultLocations) {
-			this.testResultLocations = testResultLocations;
+		private RobotParserCallable(String outputFileLocations) {
+			this.outputFileLocations = outputFileLocations;
 		}
 
 		public RobotResult invoke(File ws, VirtualChannel channel)
 				throws IOException {
-
 			FileSet setInWorkspace = Util
-					.createFileSet(ws, testResultLocations);
+					.createFileSet(ws, outputFileLocations);
 			DirectoryScanner resultScanner = setInWorkspace
 					.getDirectoryScanner();
 
 			String[] files = resultScanner.getIncludedFiles();
 			if (files.length == 0) {
 				throw new AbortException(
-						Messages.JUnitResultArchiver_NoTestReportFound()); // TODO;
-																			// message...
+						"No files found in path " + ws.getAbsolutePath() + " with configured filemask: " + outputFileLocations);
 			}
 
 			try{

@@ -20,14 +20,12 @@ import hudson.model.Run;
 import hudson.plugins.robot.Messages;
 import hudson.plugins.robot.graph.RobotGraph;
 import hudson.plugins.robot.graph.RobotGraphHelper;
-import hudson.util.ChartUtil;
 import hudson.util.Graph;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -52,9 +50,19 @@ public class RobotCaseResult extends RobotTestObject{
 		this.name = name;
 	}
 	
+	/**
+	 * Create new case result from <testcase> -element
+	 * @param parent parent suite object
+	 * @param testCase testcase elemen in xml
+	 */
 	public RobotCaseResult(RobotSuiteResult parent, Element testCase) {
-		this.name = testCase.attributeValue("name");
 		this.parent = parent;
+
+		this.name = testCase.attributeValue("name");
+		
+		String critical = testCase.attributeValue("critical");
+		this.critical = critical != null ? critical.equalsIgnoreCase("yes") : false;
+		
 		parse(testCase);
 	}
 
@@ -91,11 +99,17 @@ public class RobotCaseResult extends RobotTestObject{
 		return difference;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public RobotTestObject getParent() {
 		return parent;
@@ -126,12 +140,10 @@ public class RobotCaseResult extends RobotTestObject{
 	}
 
 	public String getDisplayName() {
-		//TODO; Check
 		return getName();
 	}
 
 	public String getSearchUrl() {
-		//TODO; Check
 		return getName();
 	}
 
@@ -164,12 +176,11 @@ public class RobotCaseResult extends RobotTestObject{
 	/**
 	 * Gives the corresponding caseresult from previous build
 	 */
-	@Override
 	public RobotCaseResult getPreviousResult(){
 		if (parent == null) return null;
 		RobotSuiteResult prevParent = parent.getPreviousResult();
 		if(prevParent == null) return null;
-		return prevParent.getCase(safe(getName()));
+		return prevParent.getCase(getSafeName());
 	}
 	
 	/**
@@ -180,6 +191,10 @@ public class RobotCaseResult extends RobotTestObject{
     	return getOwner().getParent().getBuildByNumber(getFailedSince());
     }
 	
+	/**
+	 * Get the number of builds this test case has failed for
+	 * @return number of builds
+	 */
 	public int getAge(){
 		if(isPassed()) return 0;
 		AbstractBuild<?,?> owner = getOwner();
@@ -196,15 +211,7 @@ public class RobotCaseResult extends RobotTestObject{
 	 */
 	public void doDurationGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
-		if (ChartUtil.awtProblemCause != null) {
-			rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
-			return;
-		}
-		
-		Calendar t = getOwner().getTimestamp();
-
-		if (req.checkIfModified(t, rsp))
-			return;
+		if(!isNeedToGenerate(req, rsp)) return;
 		
 		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDurationDataSetForCase(this), "Duration (ms)",
 				Messages.robot_trendgraph_builds(), 500, 200);

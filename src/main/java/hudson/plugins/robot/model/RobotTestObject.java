@@ -18,10 +18,17 @@ package hudson.plugins.robot.model;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractModelObject;
 import hudson.plugins.robot.RobotBuildAction;
+import hudson.util.ChartUtil;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Calendar;
 
 import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
-public abstract class RobotTestObject extends AbstractModelObject{
+public abstract class RobotTestObject extends AbstractModelObject implements Serializable{
 	
 	private RobotBuildAction parentAction;
 
@@ -74,28 +81,13 @@ public abstract class RobotTestObject extends AbstractModelObject{
 		return sb.toString();
 	}
 	
-	public AbstractBuild<?,?> getOwner(){
-		return getParentAction().getBuild();
-	}
-	
 	/**
-	 * Get the corresponding result object from previous build
-	 * @return
+	 * Return the build that this result belongs to.
+	 * @return Build object. Null if no build.
 	 */
-	public RobotTestObject getPreviousResult() {
-        AbstractBuild<?,?> build = getOwner();
-        if (build == null) {
-            return null;
-        }
-        while((build = build.getPreviousBuild()) != null) {
-            RobotBuildAction parentAction = build.getAction(getParentAction().getClass());
-            if(parentAction != null) {
-                RobotTestObject result = parentAction.findObjectById(getRelativeId(getParentAction().getResult()));
-                return result;
-            }
-        }
-        return null;
-    }
+	public AbstractBuild<?,?> getOwner(){
+		return getParentAction() == null ? null : getParentAction().getOwner();
+	}
 	
 	/**
 	 * Get the corresponding result object from a given build
@@ -108,7 +100,7 @@ public abstract class RobotTestObject extends AbstractModelObject{
         return (parentAction == null) ? null : parentAction.findObjectById(id);
     }
 
-	public static String safe(String unsafeName) {
+	private static String safe(String unsafeName) {
 		return unsafeName.replace("/", "_").replace("\\", "_")
 		.replace(":", "_").replace(" ", "_");
 	}
@@ -120,5 +112,28 @@ public abstract class RobotTestObject extends AbstractModelObject{
 	public String getSafeName(){
 		return safe(getName());
 	}
+	
+	/**
+	 * Figure out if there's been changes since last request.
+	 * @param req
+	 * @param rsp
+	 * @return
+	 * @throws IOException
+	 */
+	protected boolean isNeedToGenerate(StaplerRequest req, StaplerResponse rsp)
+	throws IOException {
+		if (ChartUtil.awtProblemCause != null) {
+			rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
+			return false;
+		}
+
+		Calendar t = getOwner().getTimestamp();
+
+		if (req.checkIfModified(t, rsp))
+			return false;
+		return true;
+	}
+
+	public abstract RobotTestObject getPreviousResult();
 	
 }

@@ -37,8 +37,14 @@ limitations under the License.
 		}
  	  </script>
       <h1>Testsuite: "${it.name}"</h1>
-   	  <h3>Critical failed: ${it.criticalFailed} | Overall failed: ${it.overallFailed} | Critical total: ${it.criticalTotal}  | Overall total: ${it.overallTotal}</h3>
-      <h4>Took ${it.duration}ms</h4>       
+   	  <j:set var="prevresult" value="${it.previousResult}" />
+   	  <div style="float:right;">
+		Tests took ${it.duration}ms (${h.getDiffString(it.duration - prevresult.duration)})
+      </div>
+      <j:if test="${it.failed > 0}">
+      <h2 style="color:#c00;">${it.failed} failed tests, ${it.criticalFailed} critical</h2>
+      </j:if>
+      <h4>${it.total} tests in total (${h.getDiffString(it.total - prevresult.total)}), ${it.criticalTotal} critical</h4>     
       <j:if test="${!it.allFailedCases.isEmpty()}">
       <h2>Failed testcases</h2>
       <table class="pane sortable">
@@ -65,7 +71,7 @@ limitations under the License.
       	</j:forEach>
       </table>
       </j:if>
-      <div style="border: 1px #aaa solid; margin-top:20px;">
+      <div style="margin-top:20px;">
        <div style="float:left; margin: 20px;">
        <h3>Pass/fail trend</h3>
        	<img src="graph"/>
@@ -76,17 +82,19 @@ limitations under the License.
        </div>
        <div style="clear:both;"></div>
       </div>
-      <j:if test="${it.caseResults != null}">
+      <j:if test="${!it.caseResults.isEmpty()}">
       <h2>All Testcases</h2>
       <table class="pane sortable">
       	<tr>
       		<td class="pane-header">Name</td>
-      		<td class="pane-header">Duration(ms)</td>
+      		<td class="pane-header">Duration(ms) <span style="font-size:0.8em">(diff)</span></td>
       	</tr>
 		<j:forEach var="case" items="${it.caseResults}">
+		<j:set var="prevcase" value="${case.previousResult}" />
+		
 		<tr>
 		 <td class="pane"><a href="${case.getRelativeId(it)}">${case.name}</a></td>
-		 <td class="pane">${case.duration}</td>
+		 <td class="pane">${case.duration}<span style="font-size:0.8em">(${h.getDiffString(case.duration - prevcase.duration)})</span></td>
 		</tr>
         </j:forEach>
        </table>

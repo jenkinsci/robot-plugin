@@ -44,7 +44,7 @@
 					Test failed miserably!
 				</status>
 			</test>
-			<test critical="yes" name="Not equal" timeout="">
+			<test critical="no" name="Not equal" timeout="">
 				<doc></doc>
 				<kw type="kw" name="BuiltIn.Should Be Equal" timeout="">
 					<doc>Fails if the given objects are unequal.</doc>
@@ -340,7 +340,7 @@
 </tags>
 <status status="FAIL" endtime="20100629 11:08:54.406" starttime="20100629 11:08:54.403">Hello, world! != Good bye, world!</status>
 </test>
-<test critical="yes" name="Contains string" timeout="">
+<test critical="no" name="Contains string" timeout="">
 <doc></doc>
 <kw type="kw" name="BuiltIn.Should Contain" timeout="">
 <doc>Fails if `item1` does not contain `item2` one or more times.</doc>

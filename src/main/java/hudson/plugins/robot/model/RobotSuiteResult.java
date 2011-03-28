@@ -1,32 +1,29 @@
 /*
-* Copyright 2008-2010 Nokia Siemens Networks Oyj
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2008-2010 Nokia Siemens Networks Oyj
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package hudson.plugins.robot.model;
 
-import hudson.model.AbstractBuild;
 import hudson.plugins.robot.Messages;
 import hudson.plugins.robot.RobotBuildAction;
 import hudson.plugins.robot.graph.RobotGraph;
 import hudson.plugins.robot.graph.RobotGraphHelper;
-import hudson.util.ChartUtil;
 import hudson.util.Graph;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +37,7 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 public class RobotSuiteResult extends RobotTestObject {
-	
+
 	private Map<String, RobotSuiteResult> children;
 	private RobotTestObject parent;
 	private String name;
@@ -52,11 +49,16 @@ public class RobotSuiteResult extends RobotTestObject {
 	private int criticalPassed;
 	private int criticalFailed;
 
-
 	public RobotSuiteResult(String name){
 		this.name = name;
 	}
-	
+	/**
+	 * Create
+	 * @param parent
+	 * @param suite
+	 * @param baseDirectory
+	 * @throws DocumentException
+	 */
 	public RobotSuiteResult(RobotTestObject parent, Element suite, File baseDirectory) throws DocumentException {
 		this.name = suite.attributeValue("name");
 		this.parent = parent;
@@ -77,9 +79,9 @@ public class RobotSuiteResult extends RobotTestObject {
 	}
 
 	private void parseChildren(Element suite) throws DocumentException {
-		
+
 		for (Element nestedSuite : (List<Element>) suite.elements("suite")) {
-			
+
 			RobotSuiteResult suiteResult = new RobotSuiteResult(this, nestedSuite,
 					baseDirectory);
 			addChild(suiteResult);
@@ -100,7 +102,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	public void addChild(RobotSuiteResult child) {
 		if (children == null)
 			children = new HashMap<String, RobotSuiteResult>();
-		children.put(safe(child.getName()), child);
+		children.put(child.getSafeName(), child);
 	}
 
 	/**
@@ -108,7 +110,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * @return
 	 */
 	public Collection<RobotSuiteResult> getChildSuites() {
-		return children == null ? null : children.values();
+		return children == null ? new ArrayList<RobotSuiteResult>() : children.values();
 	}
 
 	/**
@@ -124,13 +126,13 @@ public class RobotSuiteResult extends RobotTestObject {
 	public String getName(){
 		return name;
 	}
-	
+
 	/**
 	 * Get all case results belonging to this suite
 	 * @return
 	 */
 	public Collection<RobotCaseResult> getCaseResults() {
-		return caseResults == null ? null : caseResults.values();
+		return caseResults == null ? new ArrayList<RobotCaseResult>() : caseResults.values();
 	}
 
 	/**
@@ -148,7 +150,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	public int getPassed() {
 		return passed;
 	}
-	
+
 	/**
 	 * Get number of all tests
 	 * @return
@@ -156,7 +158,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	public int getTotal() {
 		return passed + failed;
 	}
-	
+
 	/**
 	 * Get duration of this testsuite run
 	 * @return
@@ -180,7 +182,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	public int getCriticalFailed() {
 		return criticalFailed;
 	}
-	
+
 	/**
 	 * Get number of all critical tests
 	 * @return
@@ -198,7 +200,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	public void addCaseResult(RobotCaseResult caseResult) {
 		if (caseResults == null)
 			caseResults = new HashMap<String, RobotCaseResult>();
-		caseResults.put(safe(caseResult.getName()), caseResult);
+		caseResults.put(caseResult.getSafeName(), caseResult);
 	}
 
 	public String getDisplayName() {
@@ -230,26 +232,21 @@ public class RobotSuiteResult extends RobotTestObject {
 			return null;
 		return caseResults.get(name);
 	}
-	
-	/**
-	 * Get build that this result belongs to
-	 */
-	public AbstractBuild<?,?> getOwner(){
-		return getParentAction().getBuild();
-	}
 
-	@Override
+	/**
+	 * {@inheritDoc}
+	 */
 	public RobotSuiteResult getPreviousResult(){
 		if (parent == null) return null;
 		RobotTestObject prevParent = parent.getPreviousResult();
 		if(prevParent instanceof RobotSuiteResult)
-			return ((RobotSuiteResult)prevParent).getSuite(safe(getName()));
+			return ((RobotSuiteResult)prevParent).getSuite(getSafeName());
 		else if (prevParent instanceof RobotResult) {
-			return ((RobotResult)prevParent).getSuite(safe(getName()));
+			return ((RobotResult)prevParent).getSuite(getSafeName());
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Get suite or case result by safe name
 	 * @param token
@@ -281,7 +278,7 @@ public class RobotSuiteResult extends RobotTestObject {
 		}
 		return allChildSuites;
 	}
-	
+
 	/**
 	 * Get all failed cases below this suite
 	 * @return
@@ -326,7 +323,7 @@ public class RobotSuiteResult extends RobotTestObject {
 				caseResult.setParentAction(parentAction);
 			}
 		}
-		
+
 		if (children != null) {
 			for (RobotSuiteResult suite : children.values()) {
 				suite.tally(parentAction);
@@ -354,7 +351,7 @@ public class RobotSuiteResult extends RobotTestObject {
 			return getSuite(id);
 		} else return getCase(id);
 	}
-	
+
 	/**
 	 * Return robot trend graph in the request.
 	 * @param req
@@ -362,22 +359,14 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * @throws IOException
 	 */
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
-			throws IOException {
-		if (ChartUtil.awtProblemCause != null) {
-			rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
-			return;
-		}
-		
-		Calendar t = getOwner().getTimestamp();
+	throws IOException {
+		if(!isNeedToGenerate(req, rsp)) return;
 
-		if (req.checkIfModified(t, rsp))
-			return;
-		
 		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDataSetForSuite(this), Messages.robot_trendgraph_testcases(),
 				Messages.robot_trendgraph_builds(), 500, 200);
 		g.doPng(req, rsp);
 	}
-	
+
 	/**
 	 * Return duration graph for the suite in the request.
 	 * @param req
@@ -385,17 +374,9 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * @throws IOException
 	 */
 	public void doDurationGraph(StaplerRequest req, StaplerResponse rsp)
-			throws IOException {
-		if (ChartUtil.awtProblemCause != null) {
-			rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
-			return;
-		}
-		
-		Calendar t = getOwner().getTimestamp();
+	throws IOException {
+		if(!isNeedToGenerate(req, rsp)) return;
 
-		if (req.checkIfModified(t, rsp))
-			return;
-		
 		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDurationDataSetForSuite(this), "Duration (ms)",
 				Messages.robot_trendgraph_builds(), 500, 200);
 		g.doPng(req, rsp);
@@ -409,10 +390,6 @@ public class RobotSuiteResult extends RobotTestObject {
 		for(RobotSuiteResult child : childSuites){
 			if(children.get(child.getSafeName()) == null)
 				children.put(child.getSafeName(), child);
-			else{
-				child.addChildren(child.getChildSuites());
-				child.addCaseResults(child.getCaseResults());
-			}
 		}
 	}
 
@@ -420,10 +397,10 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * If cases with same name exist, the originals are kept
 	 * @param caseResults
 	 */
-	public void addCaseResults(Collection<RobotCaseResult> caseResults) {
-		for(RobotCaseResult caseResult : caseResults){
-			if(this.caseResults.get(caseResult) == null){
-				this.caseResults.put(caseResult.getSafeName(), caseResult);
+	public void addCaseResults(Collection<RobotCaseResult> newCaseResults) {
+		for(RobotCaseResult caseResult : newCaseResults){
+			if(caseResults.get(caseResult.getSafeName()) == null){
+				caseResults.put(caseResult.getSafeName(), caseResult);
 			}
 		}
 	}
