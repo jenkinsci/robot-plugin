@@ -15,7 +15,6 @@
  */
 package hudson.plugins.robot;
 
-import hudson.model.FreeStyleBuild;
 import hudson.model.Result;
 import hudson.model.FreeStyleProject;
 import hudson.model.Hudson;
@@ -24,6 +23,7 @@ import hudson.model.Run;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.jvnet.hudson.test.HudsonTestCase;
@@ -73,7 +73,10 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 	public void testPublish() throws Exception{
 		Hudson hudson = Hudson.getInstance();
 		List<Project> projects = hudson.getProjects();
-		Project testProject = projects.get(0);
+		Project testProject = null;
+		for (Project project : projects){
+			if(project.getName().equals("robot")) testProject = project;
+		}
 		Future<Run> run = testProject.scheduleBuild2(0);
 
 		while(!run.isDone()){
@@ -98,7 +101,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 	}
 
 	@LocalData
-	public void testActionViewsWithNoData() throws Exception{
+	public void testActionViewsWithNoRuns() throws Exception{
 		WebClient wc = new WebClient();
 		HtmlPage page = wc.goTo("job/robot/");
 
@@ -111,63 +114,137 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 	}
 
 	@LocalData
-	public void testActionViewsWithData() throws Exception{
+	public void testOldActionViewsWithData() throws Exception{
+		WebClient wc = new WebClient();
+
+		HtmlPage page = wc.goTo("job/oldrobotbuild/");
+		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/oldrobotbuild/robot']");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/h3[contains(.,'Latest Robot results:')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Pass ratio (Critical tests): 50%')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Pass ratio (All tests): 50%')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Tests passed (Critical tests): 4/8')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Tests passed (All tests): 4/8')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//img[@src='robot/graph']");
+
+		page = wc.goTo("job/oldrobotbuild/robot/");
+		WebAssert.assertTitleEquals(page, "Testcases & Othercases Test Report");
+
+		page = wc.goTo("job/oldrobotbuild/1/");
+		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/oldrobotbuild/1/robot']");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/h3[contains(.,'Robot test summary:')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Pass ratio (Critical tests): 50%')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Pass ratio (All tests): 50%')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Tests passed (Critical tests): 4/8')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Tests passed (All tests): 4/8')]");
+
+		page = wc.goTo("job/oldrobotbuild/1/robot/");	    
+		WebAssert.assertTitleEquals(page, "Testcases & Othercases Test Report");
+	}
+	
+	@LocalData
+	public void testSummariesWithData() throws Exception{
 		Hudson hudson = Hudson.getInstance();
 		List<Project> projects = hudson.getProjects();
-		Project testProject = projects.get(0);
+		Project testProject = null;
+		for (Project project : projects){
+			if(project.getName().equals("robot")) testProject = project;
+		}
+		if(testProject == null) fail("Couldn't find example project");;
 		Future<Run> run = testProject.scheduleBuild2(0);
 
 		while(!run.isDone()){
 			Thread.sleep(5);
 		}
-
+		
 		WebClient wc = new WebClient();
 
 		HtmlPage page = wc.goTo("job/robot/");
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/robot/robot']");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/h3[contains(.,'Latest Robot results:')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Pass ratio (Critical tests): 50%')]");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Pass ratio (All tests): 60%')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Pass ratio (All tests): 50%')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Tests passed (Critical tests): 4/8')]");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Tests passed (All tests): 6/10')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Tests passed (All tests): 4/8')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//img[@src='robot/graph']");
-
-		page = wc.goTo("job/robot/robot/");
-		WebAssert.assertTitleEquals(page, "Testcases & Othercases Test Report");
 
 		page = wc.goTo("job/robot/1/");
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/robot/1/robot']");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/h3[contains(.,'Robot test summary:')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Pass ratio (Critical tests): 50%')]");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Pass ratio (All tests): 60%')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Pass ratio (All tests): 50%')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Tests passed (Critical tests): 4/8')]");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Tests passed (All tests): 6/10')]");
-
-		page = wc.goTo("job/robot/1/robot/");	    
-		WebAssert.assertTitleEquals(page, "Testcases & Othercases Test Report");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Tests passed (All tests): 4/8')]");
 	}
-
+	
 	@LocalData
-	public void testMissingReportFile() throws Exception{
+	public void testReportPage() throws Exception {
 		Hudson hudson = Hudson.getInstance();
 		List<Project> projects = hudson.getProjects();
-		Project testProject = projects.get(0);
+		Project testProject = null;
+		for (Project project : projects){
+			if(project.getName().equals("robot")) testProject = project;
+		}
+		if(testProject == null) fail("Couldn't find example project");;
 		Future<Run> run = testProject.scheduleBuild2(0);
 
 		while(!run.isDone()){
 			Thread.sleep(5);
 		}
+		
+		WebClient wc = new WebClient();
+		HtmlPage page = wc.goTo("job/robot/robot/");
+		WebAssert.assertTextPresent(page, "Robot Framework test results");
+		WebAssert.assertTextPresent(page, "4 failed tests, 4 critical");
+		WebAssert.assertTextPresent(page, "Tests took 9ms (+9)");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Testcases_&_Othercases/Testcases/Not_equal' and contains(.,'Testcases & Othercases.Testcases.Not equal')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Testcases_&_Othercases/Othercases' and contains(.,'Testcases & Othercases.Othercases')]");
+		
+		page = wc.goTo("job/robot/1/robot/report/");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='output.xml' and contains(.,'output.xml')]");
+		
+		page = wc.goTo("job/robot/1/robot/Testcases_&_Othercases");
+		WebAssert.assertTextPresent(page, "4 failed tests, 4 critical");
+		WebAssert.assertTextPresent(page, "Tests took 9ms (+9)");
+		WebAssert.assertTextNotPresent(page, "All Testcases");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Testcases/Not_equal' and contains(.,'Testcases.Not equal')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Othercases' and contains(.,'Othercases')]");
+		
+		page = wc.goTo("job/robot/1/robot/Testcases_&_Othercases/Othercases");
+		WebAssert.assertTextPresent(page, "2 failed tests, 2 critical");
+		WebAssert.assertTextPresent(page, "Tests took 5ms (+5)");
+		WebAssert.assertTextPresent(page, "All Testcases");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Not_equal' and contains(.,'Not equal')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Contains_string' and contains(.,'Contains string')]");
+		
+		page = wc.goTo("job/robot/1/robot/Testcases_&_Othercases/Othercases/Not_equal");
+		WebAssert.assertTextPresent(page, "Critical test case: \"Not equal\"");
+		WebAssert.assertTextPresent(page, "Failed!");
+		WebAssert.assertTextPresent(page, "Error message:");
+		WebAssert.assertTextPresent(page, "Hello, world! != Good bye, world!");
+		WebAssert.assertTextPresent(page, "Test took 1ms (+1)");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//img[@src='durationGraph']");
+	}
 
+	@LocalData
+	public void testMissingReportFileWithOld() throws Exception{
+		Hudson hudson = Hudson.getInstance();
+		List<Project> projects = hudson.getProjects();
+		Project testProject = null;
+		for (Project project : projects){
+			if(project.getName().equals("oldrobotbuild")) testProject = project;
+		}
+		if(testProject == null) fail("Couldn't find example project");
+		
 		WebClient wc = new WebClient();
 		
 		File buildRoot = testProject.getLastBuild().getRootDir();
 		File robotHtmlReport = new File(buildRoot, RobotPublisher.FILE_ARCHIVE_DIR + "/report.html");
 		robotHtmlReport.delete();
 
-		HtmlPage page = wc.goTo("job/robot/robot/");
-		WebAssert.assertTextPresent(page, "No robot report found!");
+		HtmlPage page = wc.goTo("job/oldrobotbuild/robot/");
+		WebAssert.assertTextPresent(page, "No Robot html report found!");
 
-		page = wc.goTo("job/robot/1/robot/");
-		WebAssert.assertTextPresent(page, "No robot report found!");
+		page = wc.goTo("job/oldrobotbuild/1/robot/");
+		WebAssert.assertTextPresent(page, "No Robot html report found!");
 	}
 }
