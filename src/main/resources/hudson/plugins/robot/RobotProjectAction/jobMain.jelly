@@ -19,6 +19,7 @@ limitations under the License.
       <h3><a href="${it.urlName}">${%summary.header}</a></h3>
       <j:choose>
         <j:when test="${it.lastBuildAction != null}">
+        	<p>In build number #${it.lastBuildAction.owner.number}</p>
             <u:robotsummary action="${it.lastBuildAction}"/>
         </j:when>
         <j:otherwise>

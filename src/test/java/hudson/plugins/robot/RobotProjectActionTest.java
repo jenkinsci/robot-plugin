@@ -19,7 +19,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
+import hudson.plugins.robot.model.RobotResult;
 
+import java.io.File;
 import java.io.IOException;
 
 import junit.framework.TestCase;
@@ -27,8 +29,16 @@ import junit.framework.TestCase;
 
 public class RobotProjectActionTest extends TestCase {
 
+	File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+	File robotFile = new File(tmpDir, "robot_results.xml");
+	
 	protected void setUp() throws Exception {
 		super.setUp();
+	}
+	
+	protected void tearDown() {
+		if(robotFile.exists())
+			robotFile.delete();
 	}
 
 	public void testShouldNotDisplayGraph() throws IOException {
@@ -42,23 +52,29 @@ public class RobotProjectActionTest extends TestCase {
 	
 	public void testShouldDisplayGraph() throws IOException {
 		FreeStyleProject p = mock(FreeStyleProject.class);
-		FreeStyleBuild build = new FreeStyleBuild(p);
-		RobotBuildAction buildAction = new RobotBuildAction(build, null, "");
-		build.addAction(buildAction);
+		FreeStyleBuild build = mock(FreeStyleBuild.class);
+		when(build.getProject()).thenReturn(p);
+		when(build.getRootDir()).thenReturn(tmpDir);
+		RobotResult result = mock(RobotResult.class);
+		RobotBuildAction buildAction = new RobotBuildAction(build, result, "", null);
+		when(build.getAction(RobotBuildAction.class)).thenReturn(buildAction);
 		when(p.getLastBuild()).thenReturn(build);
 		
 		RobotProjectAction action = new RobotProjectAction(p);
 		assertTrue(action.isDisplayGraph());
 	}
 
-	public void testShouldGetLastBuildAction(){
+	public void testShouldGetLastBuildAction() throws IOException{
 		FreeStyleProject p = mock(FreeStyleProject.class);
 		
 		FreeStyleBuild lastBuild = mock(FreeStyleBuild.class);
 		FreeStyleBuild buildWithAction = mock(FreeStyleBuild.class);
-		RobotBuildAction buildAction = new RobotBuildAction(null,null,"");
-		
+		when(buildWithAction.getProject()).thenReturn(p);
+		when(buildWithAction.getRootDir()).thenReturn(tmpDir);
+		RobotResult result = mock(RobotResult.class);
+		RobotBuildAction buildAction = new RobotBuildAction(buildWithAction, result,"", null);
 		when(buildWithAction.getAction(RobotBuildAction.class)).thenReturn(buildAction);
+
 		when(p.getLastBuild()).thenReturn(lastBuild);
 		when(lastBuild.getPreviousBuild()).thenReturn(buildWithAction);
 		
@@ -78,5 +94,4 @@ public class RobotProjectActionTest extends TestCase {
 		RobotProjectAction projectAction = new RobotProjectAction(p);
 		assertNull(projectAction.getLastBuildAction());
 	}
-
 }

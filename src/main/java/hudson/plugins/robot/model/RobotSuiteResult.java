@@ -39,18 +39,19 @@ import org.kohsuke.stapler.StaplerResponse;
 public class RobotSuiteResult extends RobotTestObject {
 
 	private Map<String, RobotSuiteResult> children;
-	private RobotTestObject parent;
+	private final RobotTestObject parent;
 	private String name;
 	private Map<String, RobotCaseResult> caseResults;
-	private File baseDirectory;
-	private long duration;
-	private int failed;
-	private int passed;
-	private int criticalPassed;
-	private int criticalFailed;
+	private transient long duration;
+	private transient int failed;
+	private transient int passed;
+	private transient int criticalPassed;
+	private transient int criticalFailed;
+	private transient File baseDirectory;
 
 	public RobotSuiteResult(String name){
 		this.name = name;
+		this.parent = null;
 	}
 	/**
 	 * Create
@@ -311,7 +312,7 @@ public class RobotSuiteResult extends RobotTestObject {
 		duration = 0;
 
 		if(caseResults != null) {
-			for(RobotCaseResult caseResult : caseResults.values()) {
+			for(RobotCaseResult caseResult : getCaseResults()) {
 				if(caseResult.isPassed()) {
 					if(caseResult.isCritical()) criticalPassed++;
 					passed++;
@@ -325,7 +326,7 @@ public class RobotSuiteResult extends RobotTestObject {
 		}
 
 		if (children != null) {
-			for (RobotSuiteResult suite : children.values()) {
+			for (RobotSuiteResult suite : getChildSuites()) {
 				suite.tally(parentAction);
 				failed += suite.getFailed();
 				passed += suite.getPassed();

@@ -42,12 +42,13 @@ public class RobotCaseResult extends RobotTestObject{
 	private long duration;
 	private String errorMsg;
 	private String name;
-	private RobotSuiteResult parent;
+	private final RobotSuiteResult parent;
 	private int failedSince;
 	
 	//TODO; dummy constructor remove
 	public RobotCaseResult(String name){
 		this.name = name;
+		this.parent = null;
 	}
 	
 	/**

@@ -16,7 +16,6 @@
 package hudson.plugins.robot.model;
 
 import hudson.Util;
-import hudson.plugins.robot.RobotBuildAction;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -44,7 +43,7 @@ public class RobotResultTest extends TestCase {
         if(files.length == 0) throw new Exception("No example file found!");
         
 		result = new RobotResult(ds);	
-		result.tally(new RobotBuildAction(null, result, null));
+		result.tally(null);
 	}
 	
 	public void testShouldParseSuites(){

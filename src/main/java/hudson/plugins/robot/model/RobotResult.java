@@ -55,8 +55,8 @@ public class RobotResult extends RobotTestObject {
 	
 	private String timeStamp;
 	
-	int passed, failed, criticalPassed, criticalFailed;
-	long duration;
+	private transient int passed, failed, criticalPassed, criticalFailed;
+	private transient long duration;
 
 	//backwards compatibility with old builds
 	private transient List<RobotResultStatistics> overallStats;
@@ -302,18 +302,18 @@ public class RobotResult extends RobotTestObject {
 	
 	/**
 	 * Count the totals in result tree and assign parent action.
-	 * @param parentAction
+	 * @param robotBuildAction
 	 */
-	public void tally(RobotBuildAction parentAction){
-		setParentAction(parentAction);
+	public void tally(RobotBuildAction robotBuildAction){
+		setParentAction(robotBuildAction);
 		failed = 0;
 		passed = 0;
 		criticalPassed = 0;
 		criticalFailed = 0;
 		duration = 0;
 		
-		for(RobotSuiteResult suite : suites.values()){
-			suite.tally(parentAction);
+		for(RobotSuiteResult suite : getSuites()){
+			suite.tally(robotBuildAction);
 			failed += suite.getFailed();
 			passed += suite.getPassed();
 			criticalFailed += suite.getCriticalFailed();

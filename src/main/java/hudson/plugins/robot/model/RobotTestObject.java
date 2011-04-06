@@ -30,7 +30,7 @@ import org.kohsuke.stapler.StaplerResponse;
 
 public abstract class RobotTestObject extends AbstractModelObject implements Serializable{
 	
-	private RobotBuildAction parentAction;
+	private transient RobotBuildAction parentAction;
 
 	public RobotBuildAction getParentAction() {
 		return parentAction;
@@ -64,7 +64,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	}
 	
 	/**
-	 * 
+	 * Get path in tree relative to given TestObject
 	 * @return
 	 */
 	public String getRelativeId(RobotTestObject thisObject){

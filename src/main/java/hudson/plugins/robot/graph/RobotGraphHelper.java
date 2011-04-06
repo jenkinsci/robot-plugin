@@ -48,7 +48,7 @@ public class RobotGraphHelper {
 			RobotBuildAction action = build.getAction(RobotBuildAction.class);
 
 			Number failed = 0, passed = 0;
-			if (action != null) {
+			if (action != null && action.getResult() != null) {
 				failed = action.getResult().getOverallFailed();
 				passed = action.getResult().getOverallPassed();
 			}
@@ -88,7 +88,7 @@ public class RobotGraphHelper {
 			RobotBuildAction action = build.getAction(RobotBuildAction.class);
 
 			float duration = 0;
-			if (action != null) {
+			if (action != null && action.getResult() != null) {
 				duration = action.getResult().getDuration();
 			}
 
