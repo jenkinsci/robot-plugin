@@ -257,7 +257,7 @@ public class RobotResult extends RobotTestObject {
 	/**
 	 * Get top level suite by name
 	 * @param name
-	 * @return suite result
+	 * @return suite result, null when not found
 	 */
 	public RobotSuiteResult getSuite(String name) {
 		if(suites == null) return null;

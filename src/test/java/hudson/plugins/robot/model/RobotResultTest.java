@@ -16,9 +16,6 @@
 package hudson.plugins.robot.model;
 
 import hudson.Util;
-import hudson.model.Hudson;
-import hudson.model.Project;
-import hudson.model.Run;
 import hudson.plugins.robot.RobotBuildAction;
 
 import java.io.File;
@@ -29,7 +26,6 @@ import junit.framework.TestCase;
 
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
-import org.jvnet.hudson.test.recipes.LocalData;
 
 
 public class RobotResultTest extends TestCase {
@@ -111,7 +107,6 @@ public class RobotResultTest extends TestCase {
 	}
 	
 	
-	//TODO; generate new test files, original ones cannot be published
 	public void testShouldParseSplittedOutput() throws Exception, URISyntaxException{
 		File reportFile = new File(new RobotSuiteResultTest().getClass().getResource("testfile.xml").toURI());
 		
@@ -123,27 +118,11 @@ public class RobotResultTest extends TestCase {
         
 		result = new RobotResult(ds);
 		
-		RobotSuiteResult suite = result.getSuite("Suite");
-		RobotSuiteResult splittedSuite = suite.getSuite("Splitted");
-		RobotSuiteResult splittedNestedSuite = splittedSuite.getSuite("Splittednested");
+		RobotSuiteResult suite = result.getSuite("nestedSuites");
+		RobotSuiteResult splittedSuite = suite.getSuite("subSuite");
+		RobotSuiteResult splittedNestedSuite = splittedSuite.getSuite("Testcases");
 		assertNotNull(splittedNestedSuite);
 	}
 	
-	//TODO; generate new testworkspace, original one can't be published
-	@LocalData
-	public void testFailedSince(){
-		Hudson hudson = Hudson.getInstance();
-		List<Project> projects = hudson.getProjects();
-		Run lastRun = null;
-		for (Project project : projects){
-			if(project.getName().equalsIgnoreCase("robot")){
-				lastRun = project.getLastCompletedBuild();
-			}
-		}
-		
-		RobotBuildAction action = lastRun.getAction(RobotBuildAction.class);
-		RobotResult result = action.getResult();
-		RobotCaseResult firstFailed = result.getAllFailedCases().get(0);
-		assertEquals(63,firstFailed.getFailedSince());
-	}
+	
 }

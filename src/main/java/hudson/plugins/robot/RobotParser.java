@@ -33,7 +33,7 @@ import org.dom4j.DocumentException;
 
 public class RobotParser {
 
-	public RobotResult parse(String outputFileLocations, String outputPath, AbstractBuild build,
+	public RobotResult parse(String outputFileLocations, String outputPath, AbstractBuild<?, ?> build,
 			Launcher launcher, TaskListener listener)
 			throws InterruptedException, IOException {
 		RobotResult result = new FilePath(build.getWorkspace(), outputPath).act(
@@ -43,6 +43,8 @@ public class RobotParser {
 
 	private static final class RobotParserCallable implements
 			FilePath.FileCallable<RobotResult> {
+		
+		private static final long serialVersionUID = 1L;
 		private final String outputFileLocations;
 
 		private RobotParserCallable(String outputFileLocations) {

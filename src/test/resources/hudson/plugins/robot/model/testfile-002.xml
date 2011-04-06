@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot>
+<suite source="/home/jpiironen/robot.workspace/nestedSuites/testcases.html" name="Testcases">
+<doc></doc>
+<metadata>
+</metadata>
+<test critical="yes" name="Failer" timeout="">
+<doc></doc>
+<kw type="kw" name="BuiltIn.Fail" timeout="">
+<doc>Fails the test immediately with the given (optional) message.</doc>
+<arguments>
+<arg>Failed here!</arg>
+</arguments>
+<msg timestamp="20110406 14:04:50.641" level="FAIL">Failed here!</msg>
+<status status="FAIL" endtime="20110406 14:04:50.641" starttime="20110406 14:04:50.640"></status>
+</kw>
+<tags>
+</tags>
+<status status="FAIL" endtime="20110406 14:04:50.641" starttime="20110406 14:04:50.640">Failed here!</status>
+</test>
+<status status="FAIL" endtime="20110406 14:04:50.642" starttime="20110406 14:04:50.638"></status>
+</suite>
+</robot>

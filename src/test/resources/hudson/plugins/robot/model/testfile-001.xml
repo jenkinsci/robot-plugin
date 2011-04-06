@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot>
+<suite source="/home/jpiironen/robot.workspace/nestedSuites/subSuite" name="subSuite">
+<doc></doc>
+<metadata>
+</metadata>
+<suite source="/home/jpiironen/robot.workspace/nestedSuites/subSuite/testcases.html" name="Testcases">
+<doc></doc>
+<metadata>
+</metadata>
+<test critical="yes" name="SubFailer" timeout="">
+<doc></doc>
+<kw type="kw" name="BuiltIn.Fail" timeout="">
+<doc>Fails the test immediately with the given (optional) message.</doc>
+<arguments>
+<arg>I am fail!</arg>
+</arguments>
+<msg timestamp="20110406 14:04:50.623" level="FAIL">I am fail!</msg>
+<status status="FAIL" endtime="20110406 14:04:50.624" starttime="20110406 14:04:50.622"></status>
+</kw>
+<tags>
+</tags>
+<status status="FAIL" endtime="20110406 14:04:50.624" starttime="20110406 14:04:50.622">I am fail!</status>
+</test>
+<status status="FAIL" endtime="20110406 14:04:50.624" starttime="20110406 14:04:50.620"></status>
+</suite>
+<status status="FAIL" endtime="20110406 14:04:50.625" starttime="20110406 14:04:50.619"></status>
+</suite>
+</robot>

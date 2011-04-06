@@ -12,7 +12,7 @@
   <name>Robot Framework plugin</name>
   <description>Shows Robot Framework test results in project</description>
   <packaging>hpi</packaging> 
-  <url>http://wiki.hudson-ci.org/display/HUDSON/Robot+Framework+Plugin</url>
+  <url>http://wiki.jenkins-ci.org/display/HUDSON/Robot+Framework+Plugin</url>
 
   <developers>
     <developer>

@@ -20,10 +20,11 @@ import hudson.model.FreeStyleProject;
 import hudson.model.Hudson;
 import hudson.model.Project;
 import hudson.model.Run;
+import hudson.plugins.robot.model.RobotCaseResult;
+import hudson.plugins.robot.model.RobotResult;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.jvnet.hudson.test.HudsonTestCase;
@@ -239,12 +240,30 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		
 		File buildRoot = testProject.getLastBuild().getRootDir();
 		File robotHtmlReport = new File(buildRoot, RobotPublisher.FILE_ARCHIVE_DIR + "/report.html");
-		robotHtmlReport.delete();
+		if(!robotHtmlReport.delete()) fail("Unable to delete report directory");
 
 		HtmlPage page = wc.goTo("job/oldrobotbuild/robot/");
 		WebAssert.assertTextPresent(page, "No Robot html report found!");
 
 		page = wc.goTo("job/oldrobotbuild/1/robot/");
 		WebAssert.assertTextPresent(page, "No Robot html report found!");
+	}
+	
+	@LocalData
+	public void testFailedSince(){
+		Hudson hudson = Hudson.getInstance();
+		List<Project> projects = hudson.getProjects();
+		Run lastRun = null;
+		for (Project project : projects){
+			if(project.getName().equalsIgnoreCase("failingtests")){
+				lastRun = project.getLastCompletedBuild();
+			}
+		}
+		if (lastRun == null) fail("No build including Robot results was found");
+		
+		RobotBuildAction action = lastRun.getAction(RobotBuildAction.class);
+		RobotResult result = action.getResult();
+		RobotCaseResult firstFailed = result.getAllFailedCases().get(0);
+		assertEquals(2,firstFailed.getFailedSince());
 	}
 }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generated="20110406 14:04:50.590" generator="Robot 2.5.6 (Python 2.6.6 on linux2)">
+<suite source="/home/jpiironen/robot.workspace/nestedSuites" name="nestedSuites">
+<doc></doc>
+<metadata>
+</metadata>
+<suite src="testfile-001.xml" name="subSuite" source="/home/jpiironen/robot.workspace/nestedSuites/subSuite">
+<doc></doc>
+<metadata>
+</metadata>
+<status status="FAIL" endtime="20110406 14:04:50.625" starttime="20110406 14:04:50.619"></status>
+</suite>
+<suite src="testfile-002.xml" name="Testcases" source="/home/jpiironen/robot.workspace/nestedSuites/testcases.html">
+<doc></doc>
+<metadata>
+</metadata>
+<status status="FAIL" endtime="20110406 14:04:50.642" starttime="20110406 14:04:50.638"></status>
+</suite>
+<status status="FAIL" endtime="20110406 14:04:50.654" starttime="20110406 14:04:50.594"></status>
+</suite>
+<statistics>
+<total>
+<stat fail="2" pass="0">Critical Tests</stat>
+<stat fail="2" pass="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat fail="2" doc="nestedSuites" pass="0">nestedSuites</stat>
+<stat fail="1" doc="subSuite" pass="0">subSuite</stat>
+<stat fail="1" doc="subSuite.Testcases" pass="0">subSuite.Testcases</stat>
+<stat fail="1" doc="Testcases" pass="0">Testcases</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

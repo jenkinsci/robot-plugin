@@ -52,7 +52,7 @@ public class RobotProjectAction  extends AbstractRobotAction {
 	 * @return 
 	 */
 	public boolean isDisplayGraph() {
-		if (project.getBuilds().size() > 0) 
+		if (getLastBuildAction() != null) 
 			return true;
 		
 		return false;
