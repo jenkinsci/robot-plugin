@@ -37,7 +37,7 @@ limitations under the License.
            <f:textbox />
     </f:entry>
     <f:entry field="onlyCritical">
-  		<f:checkbox default="false"/>${%thresholds.onlycritical}
+  		<f:checkbox default="true"/>${%thresholds.onlycritical}
 	</f:entry>
     </table>
   </f:entry>

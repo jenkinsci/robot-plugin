@@ -63,7 +63,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	private String outputFileName;
 	private double passThreshold;
 	private double unstableThreshold;
-	private boolean onlyCritical;
+	private boolean onlyCritical = true;
 
 	/**
 	 * Create new publisher for Robot Framework results
