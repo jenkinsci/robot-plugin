@@ -39,6 +39,10 @@ limitations under the License.
       	 <p>${it.errorMsg}</p>
       </j:if>
       <div style="margin-top:20px; float: left;">
+      <div style="float:left; margin: 20px;">
+      		 <h3>Pass/fail trend</h3>
+     	     <img src="graph" />
+       </div>
        <div style="float:left; margin: 20px;">
       	 <h3>Duration trend</h3>
      	  <img src="durationGraph"/>

@@ -147,6 +147,39 @@ public class RobotGraphHelper {
 		
 		return builder.build();
 	}
+	
+	public static CategoryDataset createPassFailDataSetForCase(RobotCaseResult caseResult) {
+		List<Number> values = new ArrayList<Number>();
+		List<String> rows = new ArrayList<String>();
+		List<NumberOnlyBuildLabel> columns = new ArrayList<NumberOnlyBuildLabel>();
+		
+		for (; caseResult != null; caseResult = caseResult.getPreviousResult()) {
+			Number failed = caseResult.isPassed() ? 0 : 1;
+			Number passed = caseResult.isPassed() ? 1 : 0;
+			
+			
+
+			// default 'zero value' must be set over zero to circumvent
+			// JFreeChart stacked area rendering problem with zero values
+			if (failed.intValue() < 1)
+				failed = 0.01f;
+			if (passed.intValue() < 1)
+				passed = 0.01f;
+
+			ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(
+					caseResult.getOwner());
+
+			values.add(passed);
+			rows.add(Messages.robot_trendgraph_passed());
+			columns.add(label);
+
+			values.add(failed);
+			rows.add(Messages.robot_trendgraph_failed());
+			columns.add(label);
+		}
+		
+		return createSortedDataset(values, rows, columns);
+	}
 
 	public static CategoryDataset createDataSetForSuite(RobotSuiteResult suite) {
 		List<Number> values = new ArrayList<Number>();
@@ -154,9 +187,8 @@ public class RobotGraphHelper {
 		List<NumberOnlyBuildLabel> columns = new ArrayList<NumberOnlyBuildLabel>();
 
 		for (; suite != null; suite = (RobotSuiteResult)suite.getPreviousResult()) {
-			Number failed = 0, passed = 0;
-				failed = suite.getFailed();
-				passed = suite.getPassed();
+			Number failed = suite.getFailed();
+			Number passed = suite.getPassed();
 
 			// default 'zero value' must be set over zero to circumvent
 			// JFreeChart stacked area rendering problem with zero values
