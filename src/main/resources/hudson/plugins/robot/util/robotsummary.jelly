@@ -15,6 +15,11 @@ limitations under the License.
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util">
   <st:attribute name="action" use="required"/>
+  <p>
+  <j:if test="${attrs.action.logFileLink != null}">
+  	<a href="${rootUrl}/job/${attrs.action.owner.project.name}/${attrs.action.owner.number}/${attrs.action.urlName}/report/${attrs.action.logFileLink}">Open ${attrs.action.logFileLink}</a>
+  </j:if>
+  </p>
   <ul>
     <li>${%critical.ratio(attrs.action.criticalPassPercentage)}</li>
     <li>${%all.ratio(attrs.action.overallPassPercentage)}</li>

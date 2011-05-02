@@ -22,6 +22,7 @@ import hudson.plugins.robot.graph.RobotGraph;
 import hudson.plugins.robot.graph.RobotGraphHelper;
 import hudson.util.Graph;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -54,30 +55,41 @@ public class RobotCaseResult extends RobotTestObject{
 	/**
 	 * Create new case result from <testcase> -element
 	 * @param parent parent suite object
-	 * @param testCase testcase elemen in xml
+	 * @param testCase testcase element in xml
 	 */
 	public RobotCaseResult(RobotSuiteResult parent, Element testCase) {
 		this.parent = parent;
-
 		this.name = testCase.attributeValue("name");
 		
-		String critical = testCase.attributeValue("critical");
-		this.critical = critical != null ? critical.equalsIgnoreCase("yes") : false;
-		
-		parse(testCase);
+		parseStatus(testCase);
+		parseCriticality(testCase);
 	}
 
-	private void parse(Element testCase) {
+	private void parseStatus(Element testCase) {
 		
 		Element status = testCase.element("status");
 		passed = status.attributeValue("status").equalsIgnoreCase("pass");
+
 		if(!passed){
 			errorMsg = status.getTextTrim();
 		}
+		
+		
 		String start = status.attributeValue("starttime");
 		String end = status.attributeValue("endtime");
-		
 		duration =  timeDifference(start, end);
+	}
+	
+	private void parseCriticality(Element testCase) {
+		Element status = testCase.element("status");
+		String criticality = status.attributeValue("critical");		
+		
+		if(criticality != null)
+			critical = criticality.equalsIgnoreCase("yes");
+		else {
+			criticality = testCase.attributeValue("critical");
+			critical = criticality != null ? criticality.equalsIgnoreCase("yes") : false;		
+		}
 	}
 	
 	/**
@@ -215,7 +227,22 @@ public class RobotCaseResult extends RobotTestObject{
 		if(!isNeedToGenerate(req, rsp)) return;
 		
 		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDurationDataSetForCase(this), "Duration (ms)",
-				Messages.robot_trendgraph_builds(), 500, 200);
+				Messages.robot_trendgraph_builds(), 500, 200, false, Color.cyan);
+		g.doPng(req, rsp);
+	}
+	
+	/**
+	 * Return duration graph of the case in the request.
+	 * @param req
+	 * @param rsp
+	 * @throws IOException
+	 */
+	public void doGraph(StaplerRequest req, StaplerResponse rsp)
+			throws IOException {
+		if(!isNeedToGenerate(req, rsp)) return;
+		
+		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createPassFailDataSetForCase(this), "Pass/fail",
+				Messages.robot_trendgraph_builds(), 500, 200, true, Color.green, Color.red);
 		g.doPng(req, rsp);
 	}
 }

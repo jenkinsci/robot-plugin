@@ -31,6 +31,7 @@ import hudson.util.Graph;
 import hudson.util.HeapSpaceStringConverter;
 import hudson.util.XStream2;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -55,6 +56,7 @@ public class RobotBuildAction extends AbstractRobotAction implements StaplerProx
 	private transient WeakReference<RobotResult> resultReference;
 	private transient String reportFileName;
 	private String outputPath;
+	private String logFileLink;
 	private AbstractBuild<?, ?> build;
 	private RobotResult result;
 	
@@ -74,9 +76,10 @@ public class RobotBuildAction extends AbstractRobotAction implements StaplerProx
 	 * @param reportFileName Name of Robot html report file stored
 	 */
 	public RobotBuildAction(AbstractBuild<?, ?> build, RobotResult result,
-			String outputPath, BuildListener listener) {
+			String outputPath, BuildListener listener, String logFileLink) {
 		this.build = build;
 		this.outputPath = outputPath;
+		this.logFileLink = logFileLink;
 		setResult(result, listener);
 	}
 
@@ -86,6 +89,14 @@ public class RobotBuildAction extends AbstractRobotAction implements StaplerProx
 	 */
 	public AbstractBuild<?, ?> getOwner() {
 		return build;
+	}
+	
+	/**
+	 * Get filename to link to
+	 * @return null if no filename specified
+	 */
+	public String getLogFileLink(){
+		return logFileLink;
 	}
 
     /**
@@ -226,7 +237,7 @@ public class RobotBuildAction extends AbstractRobotAction implements StaplerProx
 			return;
 		
 		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDataSetForBuild(getOwner()), Messages.robot_trendgraph_testcases(),
-				Messages.robot_trendgraph_builds(), 500, 200);
+				Messages.robot_trendgraph_builds(), 500, 200, false, Color.green, Color.red);
 		g.doPng(req, rsp);
 	}
 	

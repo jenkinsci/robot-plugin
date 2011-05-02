@@ -37,7 +37,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 
 	public void testRoundTripConfig() throws Exception{
 		FreeStyleProject p = createFreeStyleProject();
-		RobotPublisher before = new RobotPublisher("a", "b", "c", "d", 11, 27, true);
+		RobotPublisher before = new RobotPublisher("a", "b", "c", "d", 11, 27, true, null);
 		p.getPublishersList().add(before);
 
 		submit(createWebClient().getPage(p, "configure")
@@ -50,7 +50,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 
 	public void testConfigView() throws Exception{
 		FreeStyleProject p = createFreeStyleProject();
-		RobotPublisher before = new RobotPublisher("a", "b", "c", "d", 11, 27, true);
+		RobotPublisher before = new RobotPublisher("a", "b", "c", "d", 11, 27, true, null);
 		p.getPublishersList().add(before);
 		HtmlPage page = createWebClient().getPage(p,"configure");
 		WebAssert.assertTextPresent(page, "Publish Robot Framework");
@@ -78,6 +78,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		for (Project project : projects){
 			if(project.getName().equals("robot")) testProject = project;
 		}
+		if(testProject == null) fail("Couldn't find example project");
 		Future<Run> run = testProject.scheduleBuild2(0);
 
 		while(!run.isDone()){
@@ -120,7 +121,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 
 		HtmlPage page = wc.goTo("job/oldrobotbuild/");
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/oldrobotbuild/robot']");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/h3[contains(.,'Latest Robot results:')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/h3[contains(.,'Latest Robot Results:')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Pass ratio (Critical tests): 50%')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Pass ratio (All tests): 50%')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Tests passed (Critical tests): 4/8')]");
@@ -132,7 +133,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 
 		page = wc.goTo("job/oldrobotbuild/1/");
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/oldrobotbuild/1/robot']");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/h3[contains(.,'Robot test summary:')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/h3[contains(.,'Robot Test Summary:')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Pass ratio (Critical tests): 50%')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Pass ratio (All tests): 50%')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Tests passed (Critical tests): 4/8')]");
@@ -161,7 +162,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 
 		HtmlPage page = wc.goTo("job/robot/");
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/robot/robot']");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/h3[contains(.,'Latest Robot results:')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/h3[contains(.,'Latest Robot Results:')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Pass ratio (Critical tests): 50%')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Pass ratio (All tests): 50%')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Tests passed (Critical tests): 4/8')]");
@@ -170,7 +171,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 
 		page = wc.goTo("job/robot/1/");
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/robot/1/robot']");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/h3[contains(.,'Robot test summary:')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/h3[contains(.,'Robot Test Summary:')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Pass ratio (Critical tests): 50%')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Pass ratio (All tests): 50%')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/ul/li[contains(.,'Tests passed (Critical tests): 4/8')]");

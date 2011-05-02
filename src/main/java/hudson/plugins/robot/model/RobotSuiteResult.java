@@ -21,6 +21,7 @@ import hudson.plugins.robot.graph.RobotGraph;
 import hudson.plugins.robot.graph.RobotGraphHelper;
 import hudson.util.Graph;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -364,7 +365,7 @@ public class RobotSuiteResult extends RobotTestObject {
 		if(!isNeedToGenerate(req, rsp)) return;
 
 		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDataSetForSuite(this), Messages.robot_trendgraph_testcases(),
-				Messages.robot_trendgraph_builds(), 500, 200);
+				Messages.robot_trendgraph_builds(), 500, 200, false, Color.green, Color.red);
 		g.doPng(req, rsp);
 	}
 
@@ -379,7 +380,7 @@ public class RobotSuiteResult extends RobotTestObject {
 		if(!isNeedToGenerate(req, rsp)) return;
 
 		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDurationDataSetForSuite(this), "Duration (ms)",
-				Messages.robot_trendgraph_builds(), 500, 200);
+				Messages.robot_trendgraph_builds(), 500, 200, false, Color.cyan);
 		g.doPng(req, rsp);
 	}
 

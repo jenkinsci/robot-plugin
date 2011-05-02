@@ -40,6 +40,8 @@ public class RobotGraph extends Graph {
 	private final String xLabel;
 
 	private final CategoryDataset categoryDataset;
+	private Color[] colors;
+	private boolean binaryData;
 
 	public static final int DEFAULT_CHART_WIDTH = 500;
 	public static final int DEFAULT_CHART_HEIGHT = 200;
@@ -55,11 +57,13 @@ public class RobotGraph extends Graph {
 	 */
 	public RobotGraph(AbstractBuild<?, ?> owner,
 			CategoryDataset categoryDataset, String yLabel, String xLabel,
-			int chartWidth, int chartHeight) {
+			int chartWidth, int chartHeight, boolean binaryData, Color...colors) {
 		super(owner.getTimestamp(), chartWidth, chartHeight);
 		this.yLabel = yLabel;
 		this.xLabel = xLabel;
 		this.categoryDataset = categoryDataset;
+		this.colors = colors;
+		this.binaryData = binaryData;
 	}
 
 	/**
@@ -91,13 +95,20 @@ public class RobotGraph extends Graph {
 
 		final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
 		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-		rangeAxis.setAutoRange(true);
-		rangeAxis.setAutoRangeMinimumSize(5);
+		if(binaryData){
+			rangeAxis.setUpperBound(1);
+		} else {
+			rangeAxis.setAutoRange(true);
+			rangeAxis.setAutoRangeMinimumSize(5);
+		}
 		rangeAxis.setLowerBound(0);
 
+
 		final CategoryItemRenderer renderer = plot.getRenderer();
-		renderer.setSeriesPaint(0, Color.green);
-		renderer.setSeriesPaint(1, Color.red);
+	
+		for(int i = 0; i < colors.length; i++){
+			renderer.setSeriesPaint(i, colors[i]);
+		}
 
 		plot.setInsets(new RectangleInsets(5.0, 0, 0, 5.0));
 

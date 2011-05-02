@@ -37,8 +37,8 @@ import hudson.util.FormValidation;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 import javax.servlet.ServletException;
 
@@ -63,6 +63,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	private String outputFileName;
 	private double passThreshold;
 	private double unstableThreshold;
+	private String logFileLink;
 	private boolean onlyCritical = true;
 
 	/**
@@ -86,7 +87,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	@DataBoundConstructor
 	public RobotPublisher(String outputPath, String outputFileName,
 			String reportFileName, String logFileName, double passThreshold,
-			double unstableThreshold, boolean onlyCritical) {
+			double unstableThreshold, boolean onlyCritical, String logFileLink) {
 		this.outputPath = outputPath;
 		this.outputFileName = outputFileName;
 		this.reportFileName = reportFileName;
@@ -94,10 +95,11 @@ public class RobotPublisher extends Recorder implements Serializable,
 		this.unstableThreshold = unstableThreshold;
 		this.logFileName = logFileName;
 		this.onlyCritical = onlyCritical;
+		this.logFileLink = logFileLink;
 	}
 
 	/**
-	 * Gets the output path of Robot files
+	 * Gets the output	 path of Robot files
 	 * 
 	 * @return
 	 */
@@ -167,14 +169,46 @@ public class RobotPublisher extends Recorder implements Serializable,
 	public boolean getOnlyCritical() {
 		return onlyCritical;
 	}
+	
+	/**
+	 * Return the filename to be rendered in the job front page
+	 * @return null if empty file configured
+	 */
+	public String getLogFileLink() {
+		if(StringUtils.isBlank(logFileLink))
+			return null;
+		return logFileLink;
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Collection<Action> getProjectActions(AbstractProject<?, ?> project) {
-		return Collections.<Action> singleton(new RobotProjectAction(
-				project));
+		Collection<Action> actions = new ArrayList<Action>();
+		RobotProjectAction roboAction = new RobotProjectAction(project);
+		actions.add(roboAction);
+		
+		RobotBuildAction lastBuildAction = roboAction.getLastBuildAction();
+		if(lastBuildAction == null)
+			return actions;
+		
+		final int buildNumber = lastBuildAction.getOwner().getNumber();
+		final String logFileName = lastBuildAction.getLogFileLink();
+		if(logFileName != null){
+			actions.add(new AbstractRobotAction(){
+
+				public String getDisplayName() {
+					return "Open Latest Robot " + logFileName;
+				}
+
+				public String getUrlName() {
+					return buildNumber + "/robot/report/" + logFileName;
+				}
+
+			});
+		}
+		return actions;
 	}
 
 	protected RobotResult parse(String expandedTestResults, String outputPath, AbstractBuild<?,?> build,
@@ -219,8 +253,22 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 			logger.println(Messages.robot_publisher_assigning());
 
-			RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener);
+			RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener,  getLogFileLink());
 			build.addAction(action);
+			
+			if(getLogFileLink() != null) {
+				build.addAction(new AbstractRobotAction(){
+
+					public String getDisplayName() {
+						return "Open Robot " + getLogFileLink();
+					}
+
+					public String getUrlName() {
+						return "robot/report/" + getLogFileLink();
+					}
+
+				});
+			}
 
 			logger.println(Messages.robot_publisher_done());
 			logger.println(Messages.robot_publisher_checking());
@@ -234,6 +282,14 @@ public class RobotPublisher extends Recorder implements Serializable,
 		return true;
 	}
 
+	/**
+	 * Copy files with given filemasks from outputpath to build specific file archive dir
+	 * @param build
+	 * @param expandedOutputPath
+	 * @param filemaskToCopy
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public static void copyFilesToBuildDir(AbstractBuild<?, ?> build,
 			String expandedOutputPath, String...filemaskToCopy) throws IOException, InterruptedException {
 		FilePath srcDir = new FilePath(build.getWorkspace(), expandedOutputPath);
@@ -245,6 +301,14 @@ public class RobotPublisher extends Recorder implements Serializable,
 		}
 	}
 
+	/**
+	 * Copy files matching given filemask from all subdirectories to destination directory
+	 * @param filemask Ant GLOB style filemask
+	 * @param srcDir source dir as string
+	 * @param destDir destination dir as string
+	 * @throws IOException on copy failure
+	 * @throws InterruptedException
+	 */
 	public static void flattenDirsCopy(String filemask, FilePath srcDir, FilePath destDir) throws IOException, InterruptedException{
 		//take care of splitoutput files not copied by the original filemask (e.g. output-001.xml etc.)
 		if (StringUtils.isNotBlank(getSuffix(filemask))) filemask = trimSuffix(filemask) + "*" + getSuffix(filemask);

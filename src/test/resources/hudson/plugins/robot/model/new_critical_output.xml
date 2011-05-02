@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generated="20100629 11:08:54.230" generator="Robot 2.5 (Python 2.6.2 on linux2)">
+	<suite name="Othercases &amp; Testcases" source="examplesource.html">
+		<doc>Exampledocumentation</doc>
+		<metadata></metadata>
+		<suite source="othercases.html" name="Othercases">
+			<doc>Some documentation for testing purposes</doc>
+			<metadata></metadata><suite source="testcases.html" name="3rd level cases">
+			<doc>Some documentation for testing purposes</doc>
+			<metadata></metadata>
+			<test name="Hello3rd" timeout="">
+				<doc></doc>
+				<kw type="kw" name="BuiltIn.Should Be Equal" timeout="">
+					<doc>Fails if the given objects are unequal.</doc>
+					<arguments>
+						<arg>${HELLO}</arg>
+						<arg>Hello, world!</arg>
+					</arguments>
+					<status status="PASS" endtime="20100629 11:08:54.451" starttime="20100629 11:08:54.451">
+					</status>
+				</kw>
+				<tags></tags>
+				<status status="PASS" endtime="20100629 11:08:54.451" starttime="20100629 11:08:54.450" critical="yes">
+				</status>
+			</test>
+			<test name="Failer" timeout="">
+				<doc></doc>
+				<kw type="kw" name="BuiltIn.Fail" timeout="">
+					<doc>
+						Fails the test immediately with the given
+						(optional) message.
+					</doc>
+					<arguments>
+						<arg>${FAILMSG}</arg>
+					</arguments>
+					<msg timestamp="20100629 11:08:54.453" html="no" level="FAIL">
+						Test failed miserably!
+					</msg>
+					<status status="FAIL" endtime="20100629 11:08:54.453" starttime="20100629 11:08:54.452">
+					</status>
+				</kw>
+				<tags></tags>
+				<status status="FAIL" endtime="20100629 11:08:54.453" starttime="20100629 11:08:54.452" critical="yes">
+					Test failed miserably!
+				</status>
+			</test>
+			<test name="Not equal" timeout="">
+				<doc></doc>
+				<kw type="kw" name="BuiltIn.Should Be Equal" timeout="">
+					<doc>Fails if the given objects are unequal.</doc>
+					<arguments>
+						<arg>Hello, world!</arg>
+						<arg>Good bye, world!</arg>
+					</arguments>
+					<msg timestamp="20100629 11:08:54.454" html="no" level="FAIL">
+						Hello, world! != Good bye, world!
+					</msg>
+					<status status="FAIL" endtime="20100629 11:08:54.455" starttime="20100629 11:08:54.454">
+					</status>
+				</kw>
+				<tags></tags>
+				<status status="FAIL" endtime="20100629 11:08:54.455" starttime="20100629 11:08:54.453" critical="no">
+					Hello, world! != Good bye, world!
+				</status>
+			</test>
+			<test name="Contains string" timeout="">
+				<doc></doc>
+				<kw type="kw" name="BuiltIn.Should Contain" timeout="">
+					<doc>
+						Fails if `item1` does not contain `item2` one or
+						more times.
+					</doc>
+					<arguments>
+						<arg>Hello, world!</arg>
+						<arg>world</arg>
+					</arguments>
+					<status status="PASS" endtime="20100629 11:08:54.456" starttime="20100629 11:08:54.455">
+					</status>
+				</kw>
+				<tags></tags>
+				<status status="PASS" endtime="20100629 11:08:54.456" starttime="20100629 11:08:54.455" critical="yes">
+				</status>
+			</test>
+			<status status="FAIL" endtime="20100629 11:08:54.457" starttime="20100629 11:08:54.408">
+			</status>
+		</suite>
+			<test name="Hello" timeout="">
+				<doc></doc>
+				<kw type="kw" name="BuiltIn.Should Be Equal"
+					timeout="">
+					<doc>Fails if the given objects are unequal.</doc>
+					<arguments>
+						<arg>${HELLO}</arg>
+						<arg>Hello, world!</arg>
+					</arguments>
+					<status status="PASS"
+						endtime="20100629 11:08:54.380"
+						starttime="20100629 11:08:54.379">
+					</status>
+				</kw>
+				<tags></tags>
+				<status status="PASS" endtime="20100629 11:08:54.380"
+					starttime="20100629 11:08:54.379" critical="yes">
+				</status>
+			</test>
+			<test name="Failer" timeout="">
+				<doc></doc>
+				<kw type="kw" name="BuiltIn.Fail" timeout="">
+					<doc>
+						Fails the test immediately with the given
+						(optional) message.
+					</doc>
+					<arguments>
+						<arg>${FAILMSG}</arg>
+					</arguments>
+					<msg timestamp="20100629 11:08:54.402" html="no"
+						level="FAIL">
+						Test failed miserably!
+					</msg>
+					<status status="FAIL"
+						endtime="20100629 11:08:54.402"
+						starttime="20100629 11:08:54.380">
+					</status>
+				</kw>
+				<tags></tags>
+				<status status="FAIL" endtime="20100629 11:08:54.403"
+					starttime="20100629 11:08:54.380" critical="yes">
+					Test failed miserably!
+				</status>
+			</test>
+			<test name="Not equal" timeout="">
+				<doc></doc>
+				<kw type="kw" name="BuiltIn.Should Be Equal"
+					timeout="">
+					<doc>Fails if the given objects are unequal.</doc>
+					<arguments>
+						<arg>Hello, world!</arg>
+						<arg>Good bye, world!</arg>
+					</arguments>
+					<msg timestamp="20100629 11:08:54.405" html="no"
+						level="FAIL">
+						Hello, world! != Good bye, world!
+					</msg>
+					<status status="FAIL"
+						endtime="20100629 11:08:54.405"
+						starttime="20100629 11:08:54.403">
+					</status>
+				</kw>
+				<tags></tags>
+				<status status="FAIL" endtime="20100629 11:08:54.406"
+					starttime="20100629 11:08:54.403" critical="yes">
+					Hello, world! != Good bye, world!
+				</status>
+			</test>
+			<test name="Contains string" timeout="">
+				<doc></doc>
+				<kw type="kw" name="BuiltIn.Should Contain"
+					timeout="">
+					<doc>
+						Fails if `item1` does not contain `item2` one or
+						more times.
+					</doc>
+					<arguments>
+						<arg>Hello, world!</arg>
+						<arg>world</arg>
+					</arguments>
+					<status status="PASS"
+						endtime="20100629 11:08:54.407"
+						starttime="20100629 11:08:54.406">
+					</status>
+				</kw>
+				<tags></tags>
+				<status status="PASS" endtime="20100629 11:08:54.407"
+					starttime="20100629 11:08:54.406" critical="yes">
+				</status>
+			</test>
+			<status status="FAIL" endtime="20100629 11:08:54.408"
+				starttime="20100629 11:08:54.336">
+			</status>
+		</suite>
+		<suite source="testcases.html" name="Testcases">
+			<doc>Some documentation for testing purposes</doc>
+			<metadata></metadata>
+			<test name="Hello" timeout="">
+				<doc></doc>
+				<kw type="kw" name="BuiltIn.Should Be Equal"
+					timeout="">
+					<doc>Fails if the given objects are unequal.</doc>
+					<arguments>
+						<arg>${HELLO}</arg>
+						<arg>Hello, world!</arg>
+					</arguments>
+					<status status="PASS"
+						endtime="20100629 11:08:54.451"
+						starttime="20100629 11:08:54.451">
+					</status>
+				</kw>
+				<tags></tags>
+				<status status="PASS" endtime="20100629 11:08:54.451"
+					starttime="20100629 11:08:54.450" critical="yes">
+				</status>
+			</test>
+			<test name="Failer" timeout="">
+				<doc></doc>
+				<kw type="kw" name="BuiltIn.Fail" timeout="">
+					<doc>
+						Fails the test immediately with the given
+						(optional) message.
+					</doc>
+					<arguments>
+						<arg>${FAILMSG}</arg>
+					</arguments>
+					<msg timestamp="20100629 11:08:54.453" html="no"
+						level="FAIL">
+						Test failed miserably!
+					</msg>
+					<status status="FAIL"
+						endtime="20100629 11:08:54.453"
+						starttime="20100629 11:08:54.452">
+					</status>
+				</kw>
+				<tags></tags>
+				<status status="FAIL" endtime="20100629 11:08:54.453"
+					starttime="20100629 11:08:54.452" critical="yes">
+					Test failed miserably!
+				</status>
+			</test>
+			<test name="Not equal" timeout="">
+				<doc></doc>
+				<kw type="kw" name="BuiltIn.Should Be Equal"
+					timeout="">
+					<doc>Fails if the given objects are unequal.</doc>
+					<arguments>
+						<arg>Hello, world!</arg>
+						<arg>Good bye, world!</arg>
+					</arguments>
+					<msg timestamp="20100629 11:08:54.454" html="no"
+						level="FAIL">
+						Hello, world! != Good bye, world!
+					</msg>
+					<status status="FAIL"
+						endtime="20100629 11:08:54.455"
+						starttime="20100629 11:08:54.454">
+					</status>
+				</kw>
+				<tags></tags>
+				<status status="FAIL" endtime="20100629 11:08:54.455"
+					starttime="20100629 11:08:54.453" critical="yes">
+					Hello, world! != Good bye, world!
+				</status>
+			</test>
+			<test name="Contains string" timeout="">
+				<doc></doc>
+				<kw type="kw" name="BuiltIn.Should Contain"
+					timeout="">
+					<doc>
+						Fails if `item1` does not contain `item2` one or
+						more times.
+					</doc>
+					<arguments>
+						<arg>Hello, world!</arg>
+						<arg>world</arg>
+					</arguments>
+					<status status="PASS"
+						endtime="20100629 11:08:54.456"
+						starttime="20100629 11:08:54.455">
+					</status>
+				</kw>
+				<tags></tags>
+				<status status="PASS" endtime="20100629 11:08:54.456"
+					starttime="20100629 11:08:54.455" critical="yes">
+				</status>
+			</test>
+			<status status="FAIL" endtime="20100629 11:08:54.457"
+				starttime="20100629 11:08:54.408">
+			</status>
+		</suite>
+		<status status="FAIL" endtime="20100629 11:08:54.457"
+			starttime="20100629 11:08:54.306">
+		</status>
+	<test name="Hello" timeout="" critical="yes">
+				<doc></doc>
+				<kw type="kw" name="BuiltIn.Should Be Equal" timeout="">
+					<doc>Fails if the given objects are unequal.</doc>
+					<arguments>
+						<arg>${HELLO}</arg>
+						<arg>Hello, world!</arg>
+					</arguments>
+					<status status="PASS" endtime="20100629 11:08:54.380" starttime="20100629 11:08:54.379">
+					</status>
+				</kw>
+				<tags></tags>
+				<status status="PASS" endtime="20100629 11:08:54.380" starttime="20100629 11:08:54.379" critical="no">
+				</status>
+			</test></suite>
+	<suite source="othercases.html" name="Somecases">
+<doc>Some documentation for testing purposes</doc>
+<metadata>
+</metadata>
+<test name="Hello" timeout="">
+<doc></doc>
+<kw type="kw" name="BuiltIn.Should Be Equal" timeout="">
+<doc>Fails if the given objects are unequal.</doc>
+<arguments>
+<arg>${HELLO}</arg>
+<arg>Hello, world!</arg>
+</arguments>
+<status status="PASS" endtime="20100629 11:08:54.380" starttime="20100629 11:08:54.379"></status>
+</kw>
+<tags>
+</tags>
+<status status="PASS" endtime="20100629 11:08:54.380" starttime="20100629 11:08:54.379" critical="yes"></status>
+</test>
+<test name="Failer" timeout="">
+<doc></doc>
+<kw type="kw" name="BuiltIn.Fail" timeout="">
+<doc>Fails the test immediately with the given (optional) message.</doc>
+<arguments>
+<arg>${FAILMSG}</arg>
+</arguments>
+<msg timestamp="20100629 11:08:54.402" html="no" level="FAIL">Test failed miserably!</msg>
+<status status="FAIL" endtime="20100629 11:08:54.402" starttime="20100629 11:08:54.380"></status>
+</kw>
+<tags>
+</tags>
+<status status="FAIL" endtime="20100629 11:08:54.403" starttime="20100629 11:08:54.380" critical="yes">Test failed miserably!</status>
+</test>
+<test name="Not equal" timeout="">
+<doc></doc>
+<kw type="kw" name="BuiltIn.Should Be Equal" timeout="">
+<doc>Fails if the given objects are unequal.</doc>
+<arguments>
+<arg>Hello, world!</arg>
+<arg>Good bye, world!</arg>
+</arguments>
+<msg timestamp="20100629 11:08:54.405" html="no" level="FAIL">Hello, world! != Good bye, world!</msg>
+<status status="FAIL" endtime="20100629 11:08:54.405" starttime="20100629 11:08:54.403"></status>
+</kw>
+<tags>
+</tags>
+<status status="FAIL" endtime="20100629 11:08:54.406" starttime="20100629 11:08:54.403" critical="yes">Hello, world! != Good bye, world!</status>
+</test>
+<test name="Contains string" timeout="">
+<doc></doc>
+<kw type="kw" name="BuiltIn.Should Contain" timeout="">
+<doc>Fails if `item1` does not contain `item2` one or more times.</doc>
+<arguments>
+<arg>Hello, world!</arg>
+<arg>world</arg>
+</arguments>
+<status status="PASS" endtime="20100629 11:08:54.407" starttime="20100629 11:08:54.406"></status>
+</kw>
+<tags>
+</tags>
+<status status="PASS" endtime="20100629 11:08:54.407" starttime="20100629 11:08:54.406" critical="no"></status>
+</test>
+<status status="FAIL" endtime="20100629 11:08:54.408" starttime="20100629 11:08:54.336"></status>
+</suite>
+<statistics>
+<total>
+<stat fail="6" pass="4">Critical Tests</stat>
+<stat fail="6" pass="7">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat fail="4" doc="Othercases &amp; Testcases" pass="5">Othercases &amp; Testcases</stat>
+<stat fail="2" doc="Othercases &amp; Testcases.Othercases" pass="2">Othercases &amp; Testcases.Othercases</stat>
+<stat fail="2" doc="Othercases &amp; Testcases.Testcases" pass="2">Othercases &amp; Testcases.Testcases</stat>
+<stat fail="2" doc="Somecases" pass="2">Somecases</stat></suite>
+</statistics>
+<errors>
+</errors>
+</robot>

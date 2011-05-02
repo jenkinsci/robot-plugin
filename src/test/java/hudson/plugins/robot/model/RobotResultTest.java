@@ -67,6 +67,22 @@ public class RobotResultTest extends TestCase {
 		assertEquals(15, result.getCriticalTotal());
 	}
 	
+	public void testShouldParseNewCriticalCases() throws Exception{
+		File reportFile = new File(new RobotSuiteResultTest().getClass().getResource("new_critical_output.xml").toURI());
+
+		FileSet fs = Util.createFileSet(reportFile.getParentFile(), "new_critical_output.xml");
+        DirectoryScanner ds = fs.getDirectoryScanner();
+        String[] files = ds.getIncludedFiles();
+       
+
+        if(files.length == 0) throw new Exception("No example file found!");
+        
+		result = new RobotResult(ds);	
+		result.tally(null);
+		
+		assertEquals(14, result.getCriticalTotal());
+	}
+	
 	public void testShouldParseOverallCases(){
 		assertEquals(17, result.getOverallTotal());
 	}
@@ -77,6 +93,41 @@ public class RobotResultTest extends TestCase {
 	
 	public void testShouldParseFailedCriticalCases(){
 		assertEquals(7, result.getCriticalFailed());
+	}
+	
+	public void testShouldParseFailedNewCriticalCases() throws Exception{
+		File reportFile = new File(new RobotSuiteResultTest().getClass().getResource("new_critical_output.xml").toURI());
+
+		FileSet fs = Util.createFileSet(reportFile.getParentFile(), "new_critical_output.xml");
+        DirectoryScanner ds = fs.getDirectoryScanner();
+        String[] files = ds.getIncludedFiles();
+       
+
+        if(files.length == 0) throw new Exception("No example file found!");
+        
+		result = new RobotResult(ds);	
+		result.tally(null);
+		
+		assertEquals(7, result.getCriticalFailed());
+	}
+	
+	public void testShouldParseCriticalityFromStatusInsteadOfTest() throws Exception{
+		File reportFile = new File(new RobotSuiteResultTest().getClass().getResource("new_critical_output.xml").toURI());
+
+		FileSet fs = Util.createFileSet(reportFile.getParentFile(), "new_critical_output.xml");
+        DirectoryScanner ds = fs.getDirectoryScanner();
+        String[] files = ds.getIncludedFiles();
+       
+
+        if(files.length == 0) throw new Exception("No example file found!");
+        
+		result = new RobotResult(ds);	
+		result.tally(null);
+		
+		RobotSuiteResult suite = result.getSuite("Othercases_&_Testcases");
+		RobotCaseResult caseResult = suite.getCase("Hello");
+		
+		assertFalse("Case shouldn't be critical", caseResult.isCritical());
 	}
 	
 	public void testShouldReturnAllFailedCases(){

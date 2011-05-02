@@ -39,7 +39,7 @@ limitations under the License.
     <h1>Robot Framework test results</h1>
       <j:set var="prevresult" value="${it.previousResult}" />
       <div style="float:right;">
-      	<img src="/images/16x16/notepad.gif"/><a href="report" title="Original report files">Original report files</a><br/>
+      	<img src="${rootURL}/images/16x16/notepad.gif"/><a href="report" title="Original report files">Original report files</a><br/>
 		Executed at ${it.timeStamp}<br/>
 		Tests took ${it.duration}ms (${h.getDiffString(it.duration - prevresult.duration)})
       </div>

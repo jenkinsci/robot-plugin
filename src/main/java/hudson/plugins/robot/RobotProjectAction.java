@@ -60,7 +60,7 @@ public class RobotProjectAction  extends AbstractRobotAction {
 	
 	/**
 	 * Return the action of last build associated with robot
-	 * @return
+	 * @return null if action not found or no build
 	 */
 	public RobotBuildAction getLastBuildAction(){
 		AbstractBuild<?, ?> lastBuild = getLastBuildWithRobot();
