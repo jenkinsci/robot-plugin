@@ -235,13 +235,14 @@ public class RobotPublisher extends Recorder implements Serializable,
 				String expandedOutputPath = build.getEnvironment(listener).expand(getOutputPath());
 				String expandedReportFileName = build.getEnvironment(listener).expand(getReportFileName());
 				String expandedLogFileName = build.getEnvironment(listener).expand(getLogFileName());
+				String logFileJavascripts = trimSuffix(expandedLogFileName) + ".js";
 				
 				result = parse(expandedOutputFileName, expandedOutputPath, build, launcher, listener);
 				
 				logger.println(Messages.robot_publisher_done());
 				logger.println(Messages.robot_publisher_copying());
 				
-				copyFilesToBuildDir(build, expandedOutputPath, expandedOutputFileName, expandedReportFileName, expandedLogFileName);
+				copyFilesToBuildDir(build, expandedOutputPath, expandedOutputFileName, expandedReportFileName, expandedLogFileName, logFileJavascripts);
 				
 				logger.println(Messages.robot_publisher_done());
 			} catch (Exception e) {
