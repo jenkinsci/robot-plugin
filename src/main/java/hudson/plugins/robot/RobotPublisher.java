@@ -57,14 +57,18 @@ public class RobotPublisher extends Recorder implements Serializable,
 	private static final String DEFAULT_OUTPUT_FILE = "output.xml";
 	private static final String DEFAULT_LOG_FILE = "log.html";
 
-	private String outputPath;
-	private String reportFileName;
-	private String logFileName;
-	private String outputFileName;
-	private double passThreshold;
-	private double unstableThreshold;
-	private String logFileLink;
+	final private String outputPath;
+	final private String reportFileName;
+	final private String logFileName;
+	final private String outputFileName;
+	final private double passThreshold;
+	final private double unstableThreshold;
+	final private String logFileLink;
+	final private String[] otherFiles;
+	
+	//Default to true
 	private boolean onlyCritical = true;
+
 
 	/**
 	 * Create new publisher for Robot Framework results
@@ -87,7 +91,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	@DataBoundConstructor
 	public RobotPublisher(String outputPath, String outputFileName,
 			String reportFileName, String logFileName, double passThreshold,
-			double unstableThreshold, boolean onlyCritical, String logFileLink) {
+			double unstableThreshold, boolean onlyCritical, String logFileLink, String otherFiles) {
 		this.outputPath = outputPath;
 		this.outputFileName = outputFileName;
 		this.reportFileName = reportFileName;
@@ -96,6 +100,12 @@ public class RobotPublisher extends Recorder implements Serializable,
 		this.logFileName = logFileName;
 		this.onlyCritical = onlyCritical;
 		this.logFileLink = logFileLink;
+		
+		String[] filemasks = otherFiles.split(",");
+		for (int i = 0; i < filemasks.length; i++){
+			filemasks[i] = StringUtils.strip(filemasks[i]);
+		}
+		this.otherFiles = filemasks;
 	}
 
 	/**
@@ -181,6 +191,14 @@ public class RobotPublisher extends Recorder implements Serializable,
 	}
 
 	/**
+	 * Gets the comma separated list of other filemasks to copy into build dir
+	 * @return List of files as string
+	 */
+	public String getOtherFiles() {
+		return StringUtils.join(otherFiles, ",");
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -244,6 +262,13 @@ public class RobotPublisher extends Recorder implements Serializable,
 				
 				copyFilesToBuildDir(build, expandedOutputPath, expandedOutputFileName, expandedReportFileName, expandedLogFileName, logFileJavascripts);
 				
+				if(otherFiles != null) {
+					for(String filemask : otherFiles){
+						filemask = build.getEnvironment(listener).expand(filemask);
+						copyFilesToBuildDir(build, expandedOutputPath, filemask);
+					}
+				}
+				
 				logger.println(Messages.robot_publisher_done());
 			} catch (Exception e) {
 				logger.println(Messages.robot_publisher_fail());
@@ -284,19 +309,18 @@ public class RobotPublisher extends Recorder implements Serializable,
 	}
 
 	/**
-	 * Copy files with given filemasks from outputpath to build specific file archive dir
+	 * Copy files with given filemasks from input path relative to build into specific build file archive dir
 	 * @param build
-	 * @param expandedOutputPath
-	 * @param filemaskToCopy
+	 * @param inputPath Base path for copy. Relative to build workspace.
+	 * @param filemaskToCopy List of Ant GLOB style filemasks to copy from dirs specified at inputPathMask
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
 	public static void copyFilesToBuildDir(AbstractBuild<?, ?> build,
-			String expandedOutputPath, String...filemaskToCopy) throws IOException, InterruptedException {
-		FilePath srcDir = new FilePath(build.getWorkspace(), expandedOutputPath);
+			String inputPath, String...filemaskToCopy) throws IOException, InterruptedException {
+		FilePath srcDir = new FilePath(build.getWorkspace(), inputPath);
 		FilePath destDir = new FilePath(new FilePath(build.getRootDir()),
 				FILE_ARCHIVE_DIR);
-		
 		for(String filemask : filemaskToCopy){
 			flattenDirsCopy(filemask, srcDir, destDir);
 		}
@@ -378,7 +402,6 @@ public class RobotPublisher extends Recorder implements Serializable,
 		return Result.FAILURE;
 	}
 
-
 	/**
 	 * Descriptor for the publisher
 	 */
@@ -389,6 +412,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 		/**
 		 * {@inheritDoc}
 		 */
+		@SuppressWarnings("rawtypes")
 		@Override
 		public boolean isApplicable(Class<? extends AbstractProject> aClass) {
 			return true;

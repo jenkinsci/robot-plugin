@@ -30,6 +30,9 @@ limitations under the License.
   	<f:entry title="${%advanced.loghtml}" description="${%advanced.loghtml.description}" field="logFileName">
   		<f:textbox />
   	</f:entry>
+  	<f:entry title="${%advanced.otherfiles}" description="${%advanced.otherfiles.description}" field="otherFiles">
+        <f:textbox />
+    </f:entry>
   </f:advanced>
   <f:entry title="${%thresholds.label}" help="/plugin/robot/help-thresholds.html">
     <table width="100%">

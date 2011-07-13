@@ -39,6 +39,8 @@ import org.kohsuke.stapler.StaplerResponse;
 
 public class RobotSuiteResult extends RobotTestObject {
 
+	private static final long serialVersionUID = 1L;
+	
 	private Map<String, RobotSuiteResult> children;
 	private final RobotTestObject parent;
 	private String name;

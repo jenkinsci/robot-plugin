@@ -37,7 +37,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 
 	public void testRoundTripConfig() throws Exception{
 		FreeStyleProject p = createFreeStyleProject();
-		RobotPublisher before = new RobotPublisher("a", "b", "c", "d", 11, 27, true, null);
+		RobotPublisher before = new RobotPublisher("a", "b", "c", "d", 11, 27, true, "", "dir1/*.jpg, dir2/*.png");
 		p.getPublishersList().add(before);
 
 		submit(createWebClient().getPage(p, "configure")
@@ -45,12 +45,12 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 
 		RobotPublisher after = p.getPublishersList().get(RobotPublisher.class);
 
-		assertEqualBeans(before, after, "outputPath,outputFileName,reportFileName,logFileName,passThreshold,unstableThreshold,onlyCritical");
+		assertEqualBeans(before, after, "outputPath,outputFileName,reportFileName,logFileName,passThreshold,unstableThreshold,onlyCritical,otherFiles");
 	}
 
 	public void testConfigView() throws Exception{
 		FreeStyleProject p = createFreeStyleProject();
-		RobotPublisher before = new RobotPublisher("a", "b", "c", "d", 11, 27, true, null);
+		RobotPublisher before = new RobotPublisher("a", "b", "c", "d", 11, 27, true, "", "dir1/*.jpg, dir2/*.png");
 		p.getPublishersList().add(before);
 		HtmlPage page = createWebClient().getPage(p,"configure");
 		WebAssert.assertTextPresent(page, "Publish Robot Framework");
@@ -68,6 +68,8 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		WebAssert.assertInputContainsValue(page, "_.passThreshold", "11.0");
 		WebAssert.assertInputPresent(page, "_.onlyCritical");
 		WebAssert.assertInputContainsValue(page, "_.onlyCritical", "on");
+		WebAssert.assertInputPresent(page, "_.otherFiles");
+		WebAssert.assertInputContainsValue(page, "_.otherFiles", "dir1/*.jpg,dir2/*.png");
 	}
 
 	@LocalData
@@ -93,13 +95,22 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		File storedReport = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/report.html");
 		File storedSplitReport = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/report.html");
 		File storedLog = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log.html");
-		File storedSplitLog = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log.html");
+		File storedSplitLog = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log-001.html");
+		File storedJs = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log.js");
+		File storedSplitJs1 = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log-001.js");
+		File storedImage1 = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/screenshot.png");
+		File storedImage2 = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/screenshot2.png");
+
 		assertTrue("output.xml was not stored", storedOutput.exists());
 		assertTrue("output-001.xml was not stored", storedSplitOutput.exists());
 		assertTrue("report.html was not stored", storedReport.exists());
 		assertTrue("report-001.html was not stored", storedSplitReport.exists());
 		assertTrue("log.html was not stored", storedLog.exists());
 		assertTrue("log-001.html was not stored", storedSplitLog.exists());
+		assertTrue("log.js was not stored", storedJs.exists());
+		assertTrue("log-001.js was not stored", storedSplitJs1.exists());
+		assertTrue("screenshot.png was not stored", storedImage1.exists());
+		assertTrue("screenshot2.png was not stored", storedImage2.exists());
 	}
 
 	@LocalData
@@ -158,6 +169,9 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 			Thread.sleep(5);
 		}
 		
+		Run lastBuild = testProject.getLastBuild();
+		assertTrue("Build wasn't a success", lastBuild.getResult() == Result.SUCCESS);
+		
 		WebClient wc = new WebClient();
 
 		HtmlPage page = wc.goTo("job/robot/");
@@ -192,6 +206,8 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		while(!run.isDone()){
 			Thread.sleep(5);
 		}
+		Run lastBuild = testProject.getLastBuild();
+		assertTrue("Build wasn't a success", lastBuild.getResult() == Result.SUCCESS);
 		
 		WebClient wc = new WebClient();
 		HtmlPage page = wc.goTo("job/robot/robot/");
