@@ -45,6 +45,9 @@ limitations under the License.
     <f:entry field="onlyCritical">
   		<f:checkbox default="true"/>${%thresholds.onlycritical}
 	</f:entry>
+        <f:entry field="nonCritical">
+  		<f:checkbox default="true"/>${%thresholds.noncritical}
+	</f:entry>
     </table>
   </f:entry>
 </j:jelly>
