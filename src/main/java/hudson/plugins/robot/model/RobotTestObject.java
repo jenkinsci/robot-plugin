@@ -30,6 +30,8 @@ import org.kohsuke.stapler.StaplerResponse;
 
 public abstract class RobotTestObject extends AbstractModelObject implements Serializable{
 	
+	private static final long serialVersionUID = -3191755290679194469L;
+	
 	private transient RobotBuildAction parentAction;
 
 	public RobotBuildAction getParentAction() {
@@ -101,8 +103,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
     }
 
 	private static String safe(String unsafeName) {
-		return unsafeName.replace("/", "_").replace("\\", "_")
-		.replace(":", "_").replace(" ", "_");
+		return unsafeName.replaceAll("[/\\ :;#?]", "_");
 	}
 	
 	/**
