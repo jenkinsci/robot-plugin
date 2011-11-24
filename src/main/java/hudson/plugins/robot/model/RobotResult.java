@@ -25,11 +25,11 @@ import hudson.plugins.robot.graph.RobotGraphHelper;
 import hudson.util.Graph;
 
 import java.awt.Color;
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,11 +37,6 @@ import java.util.Map;
 import javax.servlet.ServletException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.tools.ant.DirectoryScanner;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -64,48 +59,6 @@ public class RobotResult extends RobotTestObject {
 
 	private Map<String, RobotSuiteResult> suites;	
 	
-	public RobotResult(DirectoryScanner scanner) throws DocumentException {
-		parse(scanner);
-	}
-	
-	/**
-	 * Parse robot reports to object tree
-	 * @param scanner contains files to be parsed
-	 * @throws DocumentException if xml parsing fails
-	 */
-	public void parse(DirectoryScanner scanner) throws DocumentException {
-		suites = new HashMap<String, RobotSuiteResult>();
-		String[] files = scanner.getIncludedFiles();
-		
-		for(String file : files){
-				SAXReader reader = new SAXReader();
-				File baseDirectory = scanner.getBasedir();
-				File reportFile = new File(baseDirectory, file);
-				Document resultFile = reader.read(reportFile);
-				Element root = resultFile.getRootElement();
-				
-				timeStamp = root.attributeValue("generated");
-				if(timeStamp == null) continue;
-				
-				//get the potential directories emerging from the use of GLOB filemask accounted in the splitted file parsing
-				String dirFromFileGLOB = new File(file).getParent();
-				if(dirFromFileGLOB != null)
-					baseDirectory = new File(baseDirectory, dirFromFileGLOB.toString());
-				
-				for(Element suite : (List<Element>) root.elements("suite")){
-					RobotSuiteResult suiteResult = new RobotSuiteResult(this, suite, baseDirectory);
-					if(suites.get(suiteResult.getSafeName()) == null)
-							suites.put(suiteResult.getSafeName(), suiteResult);
-					else{
-						RobotSuiteResult existingSuite = suites.get(suiteResult.getSafeName());
-						existingSuite.addChildren(suiteResult.getChildSuites());
-						existingSuite.addCaseResults(suiteResult.getCaseResults());
-					}
-				}
-
-			
-		}
-	}
 	
 	/**
 	 * Find a testobject in the result tree with id-path
@@ -261,8 +214,25 @@ public class RobotResult extends RobotTestObject {
 	 * @return suite result, null when not found
 	 */
 	public RobotSuiteResult getSuite(String name) {
-		if(suites == null) return null;
 		return suites.get(name);
+	}
+	
+	/**
+	 * Add a suite to this result. If suite with same name exists, add child suites
+	 * and testcases from given suite to that one.
+	 * @param suite
+	 */
+	public void addSuite(RobotSuiteResult suite){
+		if(suites == null)
+			this.suites = new HashMap<String, RobotSuiteResult>();
+		
+		if(suites.get(suite.getSafeName()) == null)
+				suites.put(suite.getSafeName(), suite);
+		else{
+			RobotSuiteResult existingSuite = suites.get(suite.getSafeName());
+			existingSuite.addChildren(suite.getChildSuites());
+			existingSuite.addCaseResults(suite.getCaseResults());
+		}
 	}
 	
 	/**
@@ -270,7 +240,9 @@ public class RobotResult extends RobotTestObject {
 	 * @return Collection of suiteresults
 	 */
 	public Collection<RobotSuiteResult> getSuites(){
-		return suites == null ? null : suites.values();
+		if (suites != null)
+			return suites.values();
+		return Collections.emptyList();
 	}
 	
 	/**
@@ -282,8 +254,7 @@ public class RobotResult extends RobotTestObject {
 		for(RobotSuiteResult suite : getSuites()){
 			allSuites.add(suite);
 			List<RobotSuiteResult> childSuites = suite.getAllChildSuites();
-			if(childSuites != null)
-				allSuites.addAll(childSuites);
+			allSuites.addAll(childSuites);
 		}
 		return allSuites;
 	}

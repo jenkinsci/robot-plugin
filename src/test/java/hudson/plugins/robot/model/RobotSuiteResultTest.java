@@ -29,11 +29,13 @@ public class RobotSuiteResultTest {
 
 	@Test
 	public void shouldAcceptMultipleSuitesAsChildren(){
-		RobotSuiteResult result = new RobotSuiteResult("");
+		RobotSuiteResult result = new RobotSuiteResult();
 		
 		//Robot sibling suites should have unique names by definition (directories / files in file system)
-		RobotSuiteResult child = new RobotSuiteResult("child");
-		RobotSuiteResult child2 = new RobotSuiteResult("child2");
+		RobotSuiteResult child = new RobotSuiteResult();
+		child.setName("child");
+		RobotSuiteResult child2 = new RobotSuiteResult();
+		child2.setName("child2");
 		
 		result.addChild(child);
 		result.addChild(child2);
@@ -43,15 +45,16 @@ public class RobotSuiteResultTest {
 	
 	@Test
 	public void shouldReturnEmptyCollectionIfNoChildren(){
-		RobotSuiteResult result = new RobotSuiteResult("");
+		RobotSuiteResult result = new RobotSuiteResult();
 		assertNotNull("Return value was null", result.getChildSuites());
 		assertTrue("Collection was not empty", result.getChildSuites().size() == 0);
 	}
 	
 	@Test
 	public void shouldReturnChildSuiteByName(){
-		RobotSuiteResult result = new RobotSuiteResult("");
-		RobotSuiteResult child = new RobotSuiteResult("child");
+		RobotSuiteResult result = new RobotSuiteResult();
+		RobotSuiteResult child = new RobotSuiteResult();
+		child.setName("child");
 		result.addChild(child);
 		
 		assertEquals(child, result.getSuite("child"));
@@ -59,8 +62,9 @@ public class RobotSuiteResultTest {
 	
 	@Test
 	public void shouldReturnTestCaseByName(){
-		RobotSuiteResult result = new RobotSuiteResult("");
-		RobotCaseResult caseResult = new RobotCaseResult("case1");
+		RobotSuiteResult result = new RobotSuiteResult();
+		RobotCaseResult caseResult = new RobotCaseResult();
+		caseResult.setName("case1");
 		
 		result.addCaseResult(caseResult);
 		assertEquals(caseResult, result.getCase("case1"));
@@ -68,15 +72,17 @@ public class RobotSuiteResultTest {
 	
 	@Test
 	public void shouldReturnNullIfNoParent() throws DocumentException {
-		RobotSuiteResult rootResult = new RobotSuiteResult("");
+		RobotSuiteResult rootResult = new RobotSuiteResult();
 		assertNull(rootResult.getParent());
 	}
 	
 	@Test
 	public void shouldAcceptMultipleCaseResults() {
-		RobotSuiteResult result = new RobotSuiteResult("");
-		RobotCaseResult caseResult = new RobotCaseResult("case1");
-		RobotCaseResult caseResult2 = new RobotCaseResult("case2");
+		RobotSuiteResult result = new RobotSuiteResult();
+		RobotCaseResult caseResult = new RobotCaseResult();
+		caseResult.setName("case1");
+		RobotCaseResult caseResult2 = new RobotCaseResult();
+		caseResult2.setName("case2");
 		
 		result.addCaseResult(caseResult);
 		result.addCaseResult(caseResult2);
@@ -86,7 +92,7 @@ public class RobotSuiteResultTest {
 	
 	@Test
 	public void shouldReturnEmptyCollectionIfNoTestCases() throws DocumentException {
-		RobotSuiteResult result = new RobotSuiteResult("");
+		RobotSuiteResult result = new RobotSuiteResult();
 		assertNotNull("Return value was null", result.getCaseResults());
 		assertTrue("Collection was not empty", result.getCaseResults().size() == 0);
 	}
