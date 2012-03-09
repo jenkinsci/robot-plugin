@@ -218,21 +218,22 @@ public class RobotResult extends RobotTestObject {
 	}
 	
 	/**
-	 * Add a suite to this result. If suite with same name exists, add child suites
-	 * and testcases from given suite to that one.
+	 * Add a suite to this result. If suite with same name exists, store this
+	 * with sequential numbering
 	 * @param suite
 	 */
 	public void addSuite(RobotSuiteResult suite){
 		if(suites == null)
 			this.suites = new HashMap<String, RobotSuiteResult>();
-		
-		if(suites.get(suite.getSafeName()) == null)
-				suites.put(suite.getSafeName(), suite);
-		else{
-			RobotSuiteResult existingSuite = suites.get(suite.getSafeName());
-			existingSuite.addChildren(suite.getChildSuites());
-			existingSuite.addCaseResults(suite.getCaseResults());
+		int i = 1;
+		String originalName = suite.getSafeName();
+		String checkedSuiteName = originalName;
+		while(suites.get(checkedSuiteName) != null){
+			checkedSuiteName = originalName + "_" + i;
+			i++;
 		}
+		
+		suites.put(checkedSuiteName, suite);
 	}
 	
 	/**

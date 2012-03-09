@@ -356,6 +356,69 @@
 </test>
 <status status="FAIL" endtime="20100629 11:08:54.408" starttime="20100629 11:08:54.336"></status>
 </suite>
+<suite source="othercases.html" name="Somecases">
+<doc>Some documentation for testing purposes</doc>
+<metadata>
+</metadata>
+<test critical="yes" name="Hello" timeout="">
+<doc></doc>
+<kw type="kw" name="BuiltIn.Should Be Equal" timeout="">
+<doc>Fails if the given objects are unequal.</doc>
+<arguments>
+<arg>${HELLO}</arg>
+<arg>Hello, world!</arg>
+</arguments>
+<status status="PASS" endtime="20100629 11:08:54.380" starttime="20100629 11:08:54.379"></status>
+</kw>
+<tags>
+</tags>
+<status status="PASS" endtime="20100629 11:08:54.380" starttime="20100629 11:08:54.379"></status>
+</test>
+<test critical="yes" name="Failer" timeout="">
+<doc></doc>
+<kw type="kw" name="BuiltIn.Fail" timeout="">
+<doc>Fails the test immediately with the given (optional) message.</doc>
+<arguments>
+<arg>${FAILMSG}</arg>
+</arguments>
+<msg timestamp="20100629 11:08:54.402" html="no" level="FAIL">Test failed miserably!</msg>
+<status status="FAIL" endtime="20100629 11:08:54.402" starttime="20100629 11:08:54.380"></status>
+</kw>
+<tags>
+</tags>
+<status status="FAIL" endtime="20100629 11:08:54.403" starttime="20100629 11:08:54.380">Test failed miserably!</status>
+</test>
+<test critical="yes" name="Not equal" timeout="">
+<doc></doc>
+<kw type="kw" name="BuiltIn.Should Be Equal" timeout="">
+<doc>Fails if the given objects are unequal.</doc>
+<arguments>
+<arg>Hello, world!</arg>
+<arg>Good bye, world!</arg>
+</arguments>
+<msg timestamp="20100629 11:08:54.405" html="no" level="FAIL">Hello, world! != Good bye, world!</msg>
+<status status="FAIL" endtime="20100629 11:08:54.405" starttime="20100629 11:08:54.403"></status>
+</kw>
+<tags>
+</tags>
+<status status="FAIL" endtime="20100629 11:08:54.406" starttime="20100629 11:08:54.403">Hello, world! != Good bye, world!</status>
+</test>
+<test critical="no" name="Contains string" timeout="">
+<doc></doc>
+<kw type="kw" name="BuiltIn.Should Contain" timeout="">
+<doc>Fails if `item1` does not contain `item2` one or more times.</doc>
+<arguments>
+<arg>Hello, world!</arg>
+<arg>world</arg>
+</arguments>
+<status status="PASS" endtime="20100629 11:08:54.407" starttime="20100629 11:08:54.406"></status>
+</kw>
+<tags>
+</tags>
+<status status="PASS" endtime="20100629 11:08:54.407" starttime="20100629 11:08:54.406"></status>
+</test>
+<status status="FAIL" endtime="20100629 11:08:54.408" starttime="20100629 11:08:54.336"></status>
+</suite>
 <statistics>
 <total>
 <stat fail="6" pass="4">Critical Tests</stat>

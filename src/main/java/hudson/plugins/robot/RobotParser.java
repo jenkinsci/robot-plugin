@@ -17,9 +17,7 @@ package hudson.plugins.robot;
 
 import hudson.AbortException;
 import hudson.FilePath;
-import hudson.Launcher;
 import hudson.Util;
-import hudson.model.TaskListener;
 import hudson.model.AbstractBuild;
 import hudson.plugins.robot.model.RobotTestObject;
 import hudson.plugins.robot.model.RobotCaseResult;
@@ -42,8 +40,7 @@ import org.apache.tools.ant.types.FileSet;
 
 public class RobotParser {
 
-	public RobotResult parse(String outputFileLocations, String outputPath, AbstractBuild<?, ?> build,
-			Launcher launcher, TaskListener listener)
+	public RobotResult parse(String outputFileLocations, String outputPath, AbstractBuild<?, ?> build)
 	throws InterruptedException, IOException {
 		RobotResult result = new FilePath(build.getWorkspace(), outputPath).act(
 				new RobotParserCallable(outputFileLocations));

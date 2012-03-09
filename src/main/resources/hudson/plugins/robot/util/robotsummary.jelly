@@ -17,7 +17,7 @@ limitations under the License.
   <st:attribute name="action" use="required"/>
   <p>
   <j:if test="${attrs.action.logFileLink != null}">
-  	<a href="${rootUrl}/job/${attrs.action.owner.project.name}/${attrs.action.owner.number}/${attrs.action.urlName}/report/${attrs.action.logFileLink}">Open ${attrs.action.logFileLink}</a>
+  	<a href="${rootURL}/job/${attrs.action.owner.project.name}/${attrs.action.owner.number}/${attrs.action.urlName}/report/${attrs.action.logFileLink}">Open ${attrs.action.logFileLink}</a>
   </j:if>
   </p>
   <ul>

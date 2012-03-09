@@ -64,9 +64,13 @@ public class RobotResultTest extends TestCase {
 		assertNotNull(caseResult);
 	}
 	
+	public void testShouldParseMultipleSameNamedSuites(){
+		assertNotNull(result.getSuite("Somecases_1"));
+	}
+	
 	//TODO; should add tests for all parsed fields? Refactor name to parsertest
 	public void testShouldParseCriticalCases(){
-		assertEquals(15, result.getCriticalTotal());
+		assertEquals(18, result.getCriticalTotal());
 	}
 	
 	public void testShouldParseFailMessages(){
@@ -86,15 +90,15 @@ public class RobotResultTest extends TestCase {
 	}
 	
 	public void testShouldParseOverallCases(){
-		assertEquals(17, result.getOverallTotal());
+		assertEquals(21, result.getOverallTotal());
 	}
 	
 	public void testShouldParseFailedCases(){
-		assertEquals(8, result.getOverallFailed());
+		assertEquals(10, result.getOverallFailed());
 	}
 	
 	public void testShouldParseFailedCriticalCases(){
-		assertEquals(7, result.getCriticalFailed());
+		assertEquals(9, result.getCriticalFailed());
 	}
 	
 	public void testShouldParseFailedNewCriticalCases() throws Exception{
@@ -118,7 +122,7 @@ public class RobotResultTest extends TestCase {
 	
 	public void testShouldReturnAllFailedCases(){
 		List<RobotCaseResult> failers = result.getAllFailedCases();
-		assertEquals(8, failers.size()
+		assertEquals(10, failers.size()
 				);
 	}
 	

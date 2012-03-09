@@ -232,8 +232,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	protected RobotResult parse(String expandedTestResults, String outputPath, AbstractBuild<?,?> build,
 			Launcher launcher, BuildListener listener) throws IOException,
 			InterruptedException {
-		return new RobotParser().parse(expandedTestResults, outputPath, build, launcher,
-				listener);
+		return new RobotParser().parse(expandedTestResults, outputPath, build);
 	}
 
 	/**
