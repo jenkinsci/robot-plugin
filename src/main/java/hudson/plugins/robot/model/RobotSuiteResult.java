@@ -55,9 +55,16 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * @param child
 	 */
 	public void addChild(RobotSuiteResult child) {
-		if(children == null) 
-			children = new HashMap<String, RobotSuiteResult>();
-		children.put(child.getSafeName(), child);
+		if(children == null)
+			this.children = new HashMap<String, RobotSuiteResult>();
+		int i = 1;
+		String originalName = child.getSafeName();
+		String checkedSuiteName = originalName;
+		while(children.get(checkedSuiteName) != null){
+			checkedSuiteName = originalName + "_" + i;
+			i++;
+		}
+		children.put(checkedSuiteName, child);
 	}
 
 	/**
@@ -348,8 +355,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	 */
 	public void addChildren(Collection<RobotSuiteResult> childSuites) {
 		for(RobotSuiteResult child : childSuites){
-			if(children.get(child.getSafeName()) == null)
-				children.put(child.getSafeName(), child);
+			addChild(child);
 		}
 	}
 
