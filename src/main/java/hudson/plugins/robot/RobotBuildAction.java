@@ -17,15 +17,15 @@ package hudson.plugins.robot;
 
 import hudson.FilePath;
 import hudson.XmlFile;
-import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
+import hudson.model.AbstractBuild;
 import hudson.model.DirectoryBrowserSupport;
 import hudson.plugins.robot.graph.RobotGraph;
 import hudson.plugins.robot.graph.RobotGraphHelper;
-import hudson.plugins.robot.model.RobotCaseResult;
-import hudson.plugins.robot.model.RobotSuiteResult;
 import hudson.plugins.robot.model.RobotTestObject;
+import hudson.plugins.robot.model.RobotCaseResult;
 import hudson.plugins.robot.model.RobotResult;
+import hudson.plugins.robot.model.RobotSuiteResult;
 import hudson.util.ChartUtil;
 import hudson.util.Graph;
 import hudson.util.HeapSpaceStringConverter;
@@ -146,6 +146,7 @@ public class RobotBuildAction extends AbstractRobotAction implements StaplerProx
             loadedResult = (RobotResult)getDataFile().read();
         } catch (IOException e) {
             logger.log(Level.WARNING, "Couldn't load " + getDataFile(),e);
+            return null;
         }
         loadedResult.tally(this);
         return loadedResult;

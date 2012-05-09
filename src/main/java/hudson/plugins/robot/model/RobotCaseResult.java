@@ -30,11 +30,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
-import org.dom4j.Element;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 public class RobotCaseResult extends RobotTestObject{
+
+	private static final long serialVersionUID = -8075680639442547520L;
 
 	private static final Logger LOGGER = Logger.getLogger(RobotCaseResult.class.getName());
 	
@@ -43,54 +44,11 @@ public class RobotCaseResult extends RobotTestObject{
 	private long duration;
 	private String errorMsg;
 	private String name;
-	private final RobotSuiteResult parent;
+	private String starttime;
+	private String endtime;
+
+	private RobotSuiteResult parent;
 	private int failedSince;
-	
-	//TODO; dummy constructor remove
-	public RobotCaseResult(String name){
-		this.name = name;
-		this.parent = null;
-	}
-	
-	/**
-	 * Create new case result from <testcase> -element
-	 * @param parent parent suite object
-	 * @param testCase testcase element in xml
-	 */
-	public RobotCaseResult(RobotSuiteResult parent, Element testCase) {
-		this.parent = parent;
-		this.name = testCase.attributeValue("name");
-		
-		parseStatus(testCase);
-		parseCriticality(testCase);
-	}
-
-	private void parseStatus(Element testCase) {
-		
-		Element status = testCase.element("status");
-		passed = status.attributeValue("status").equalsIgnoreCase("pass");
-
-		if(!passed){
-			errorMsg = status.getTextTrim();
-		}
-		
-		
-		String start = status.attributeValue("starttime");
-		String end = status.attributeValue("endtime");
-		duration =  timeDifference(start, end);
-	}
-	
-	private void parseCriticality(Element testCase) {
-		Element status = testCase.element("status");
-		String criticality = status.attributeValue("critical");		
-		
-		if(criticality != null)
-			critical = criticality.equalsIgnoreCase("yes");
-		else {
-			criticality = testCase.attributeValue("critical");
-			critical = criticality != null ? criticality.equalsIgnoreCase("yes") : false;		
-		}
-	}
 	
 	/**
 	 * Difference between string timevalues in format yyyyMMdd HH:mm:ss.SS (Java DateFormat).
@@ -99,16 +57,14 @@ public class RobotCaseResult extends RobotTestObject{
 	 * @param time2
 	 * @return
 	 */
-	protected long timeDifference(String time1, String time2){
+	public static long timeDifference(String time1, String time2) throws ParseException{
 		long difference = 0;
 		DateFormat format = new SimpleDateFormat("yyyyMMdd HH:mm:ss.SS");
-		try {
-			Date startDate = format.parse(time1);
-			Date endDate = format.parse(time2);
-			difference = endDate.getTime() - startDate.getTime();
-		} catch (ParseException e) {
-			LOGGER.warn("Unable to parse testcase \"" + getName() + "\" start and endtimes", e);
-		}
+
+		Date startDate = format.parse(time1);
+		Date endDate = format.parse(time2);
+		difference = endDate.getTime() - startDate.getTime();
+
 		return difference;
 	}
 
@@ -120,6 +76,10 @@ public class RobotCaseResult extends RobotTestObject{
 		return name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -128,12 +88,36 @@ public class RobotCaseResult extends RobotTestObject{
 		return parent;
 	}
 	
+	public void setParent(RobotSuiteResult parent){
+		this.parent = parent;
+	}
+	
 	public long getDuration() {
-		return duration;
+		if (duration != 0)
+			return duration;
+		
+		try{
+			return timeDifference(this.starttime, this.endtime);
+		} catch (ParseException e){
+			LOGGER.warn("Couldn't parse duration for test case " + name);
+			return 0;
+		}
+	}
+	
+	public String getStarttime() {
+		return starttime;
 	}
 
-	public void setDuration(long duration) {
-		this.duration = duration;
+	public void setStarttime(String starttime) {
+		this.starttime = starttime;
+	}
+
+	public String getEndtime() {
+		return endtime;
+	}
+
+	public void setEndtime(String endtime) {
+		this.endtime = endtime;
 	}
 
 	public String getErrorMsg() {
@@ -184,6 +168,10 @@ public class RobotCaseResult extends RobotTestObject{
             }
         }
         return failedSince;
+	}
+	
+	public void setFailedSince(int failedSince) {
+		this.failedSince = failedSince;
 	}
 	
 	/**

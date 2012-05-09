@@ -15,16 +15,13 @@
 */
 package hudson.plugins.robot.model;
 
-import hudson.Util;
+import hudson.plugins.robot.RobotParser;
 
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.List;
 
 import junit.framework.TestCase;
-
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.types.FileSet;
 
 
 public class RobotResultTest extends TestCase {
@@ -33,17 +30,14 @@ public class RobotResultTest extends TestCase {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		File reportFile = new File(new RobotSuiteResultTest().getClass().getResource("output.xml").toURI());
-
-		FileSet fs = Util.createFileSet(reportFile.getParentFile(), "output.xml");
-        DirectoryScanner ds = fs.getDirectoryScanner();
-        String[] files = ds.getIncludedFiles();
-       
-
-        if(files.length == 0) throw new Exception("No example file found!");
-        
-		result = new RobotResult(ds);	
+		
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("output.xml");
+		result = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("output.xml").toURI()).getParentFile(), null);
 		result.tally(null);
+	}
+	
+	public void testShouldParseTimeStamp(){
+		assertEquals("20100629 11:08:54.230", result.getTimeStamp());
 	}
 	
 	public void testShouldParseSuites(){
@@ -63,21 +57,29 @@ public class RobotResultTest extends TestCase {
 		assertNotNull(caseResult);
 	}
 	
+	public void testShouldParseCasesInNestedSuites(){
+		RobotSuiteResult suite = result.getSuite("Othercases_&_Testcases");
+		RobotSuiteResult nestedSuite = suite.getSuite("Testcases");
+		RobotCaseResult caseResult = nestedSuite.getCase("Failer");
+		assertNotNull(caseResult);
+	}
+	
+	//TODO; should add tests for all parsed fields? Refactor name to parsertest
 	public void testShouldParseCriticalCases(){
 		assertEquals(15, result.getCriticalTotal());
 	}
 	
+	public void testShouldParseFailMessages(){
+		RobotSuiteResult suite = result.getSuite("Othercases_&_Testcases");
+		RobotSuiteResult childSuite = suite.getSuite("Othercases");
+		RobotCaseResult caseResult = childSuite.getCase("Failer");
+		String errorMsg = caseResult.getErrorMsg();
+		assertEquals("Test failed miserably!", errorMsg.trim());
+	}
 	public void testShouldParseNewCriticalCases() throws Exception{
-		File reportFile = new File(new RobotSuiteResultTest().getClass().getResource("new_critical_output.xml").toURI());
-
-		FileSet fs = Util.createFileSet(reportFile.getParentFile(), "new_critical_output.xml");
-        DirectoryScanner ds = fs.getDirectoryScanner();
-        String[] files = ds.getIncludedFiles();
-       
-
-        if(files.length == 0) throw new Exception("No example file found!");
-        
-		result = new RobotResult(ds);	
+		
+        RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml");
+		result = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("new_critical_output.xml").toURI()).getParentFile(), null);	
 		result.tally(null);
 		
 		assertEquals(14, result.getCriticalTotal());
@@ -96,32 +98,16 @@ public class RobotResultTest extends TestCase {
 	}
 	
 	public void testShouldParseFailedNewCriticalCases() throws Exception{
-		File reportFile = new File(new RobotSuiteResultTest().getClass().getResource("new_critical_output.xml").toURI());
-
-		FileSet fs = Util.createFileSet(reportFile.getParentFile(), "new_critical_output.xml");
-        DirectoryScanner ds = fs.getDirectoryScanner();
-        String[] files = ds.getIncludedFiles();
-       
-
-        if(files.length == 0) throw new Exception("No example file found!");
-        
-		result = new RobotResult(ds);	
+		 RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml");
+			result = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("new_critical_output.xml").toURI()).getParentFile(), null);		
 		result.tally(null);
 		
 		assertEquals(7, result.getCriticalFailed());
 	}
 	
 	public void testShouldParseCriticalityFromStatusInsteadOfTest() throws Exception{
-		File reportFile = new File(new RobotSuiteResultTest().getClass().getResource("new_critical_output.xml").toURI());
-
-		FileSet fs = Util.createFileSet(reportFile.getParentFile(), "new_critical_output.xml");
-        DirectoryScanner ds = fs.getDirectoryScanner();
-        String[] files = ds.getIncludedFiles();
-       
-
-        if(files.length == 0) throw new Exception("No example file found!");
-        
-		result = new RobotResult(ds);	
+		 RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml");
+			result = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("new_critical_output.xml").toURI()).getParentFile(), null);		
 		result.tally(null);
 		
 		RobotSuiteResult suite = result.getSuite("Othercases_&_Testcases");
@@ -158,21 +144,13 @@ public class RobotResultTest extends TestCase {
 	
 	
 	public void testShouldParseSplittedOutput() throws Exception, URISyntaxException{
-		File reportFile = new File(new RobotSuiteResultTest().getClass().getResource("testfile.xml").toURI());
-		
-		FileSet fs = Util.createFileSet(reportFile.getParentFile(), "testfile.xml");
-        DirectoryScanner ds = fs.getDirectoryScanner();
-        String[] files = ds.getIncludedFiles();
-       
-        if(files.length == 0) throw new Exception("No example file found!");
-        
-		result = new RobotResult(ds);
+		 RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("testfile.xml");
+			result = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("testfile.xml").toURI()).getParentFile(), null);	
 		
 		RobotSuiteResult suite = result.getSuite("nestedSuites");
 		RobotSuiteResult splittedSuite = suite.getSuite("subSuite");
 		RobotSuiteResult splittedNestedSuite = splittedSuite.getSuite("Testcases");
 		assertNotNull(splittedNestedSuite);
 	}
-	
 	
 }

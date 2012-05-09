@@ -36,9 +36,9 @@ public class RobotProjectActionTest extends TestCase {
 		super.setUp();
 	}
 	
-	protected void tearDown() {
+	protected void tearDown() throws SecurityException {
 		if(robotFile.exists())
-			robotFile.delete();
+				robotFile.delete();
 	}
 
 	public void testShouldNotDisplayGraph() throws IOException {

@@ -64,7 +64,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	final private double passThreshold;
 	final private double unstableThreshold;
 	final private String logFileLink;
-	final private String[] otherFiles;
+	private String[] otherFiles;
 	
 	//Default to true
 	private boolean onlyCritical = true;
@@ -105,7 +105,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 		for (int i = 0; i < filemasks.length; i++){
 			filemasks[i] = StringUtils.strip(filemasks[i]);
 		}
-		this.otherFiles = filemasks;
+		this.otherFiles = filemasks;		
 	}
 
 	/**
@@ -265,7 +265,8 @@ public class RobotPublisher extends Recorder implements Serializable,
 				if(otherFiles != null) {
 					for(String filemask : otherFiles){
 						filemask = build.getEnvironment(listener).expand(filemask);
-						copyFilesToBuildDir(build, expandedOutputPath, filemask);
+						if(StringUtils.isNotBlank(filemask))
+							copyFilesToBuildDir(build, expandedOutputPath, filemask);
 					}
 				}
 				
