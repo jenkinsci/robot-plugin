@@ -1,0 +1,6 @@
+<j:jelly xmlns:j="jelly:core">
+  <dt>$${ROBOT_REPORTLINK}</dt>
+  <dd>
+    If logfile link is configured in the Robot plugin this link will point to that file for the build. Else show link to Robot reports directory for the build. 
+  </dd>
+</j:jelly>

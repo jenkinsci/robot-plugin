@@ -1,0 +1,6 @@
+<j:jelly xmlns:j="jelly:core">
+  <dt>$${ROBOT_FAILEDCASES}</dt>
+  <dd>
+    Expands to list of failed Robot cases. Each case on its own line.
+  </dd>
+</j:jelly>

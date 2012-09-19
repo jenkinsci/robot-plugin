@@ -1,0 +1,9 @@
+<j:jelly xmlns:j="jelly:core">
+  <dt>$${ROBOT_PASSRATIO, onlyCritical}</dt>
+  <dd>
+    Expands to build result in 'passed / total' format.
+    <ul>
+        <li><i>onlyCritical</i> - True if only critical tests should be calculated in percentage<br />Defaults to false.</li>
+    </ul>
+  </dd>
+</j:jelly>
