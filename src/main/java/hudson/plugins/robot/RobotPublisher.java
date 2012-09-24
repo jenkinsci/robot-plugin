@@ -214,7 +214,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 		final int buildNumber = lastBuildAction.getOwner().getNumber();
 		final String logFileName = lastBuildAction.getLogFileLink();
 		if(logFileName != null){
-			actions.add(new AbstractRobotAction(){
+			actions.add(new Action(){
 
 				public String getDisplayName() {
 					return "Open Latest Robot " + logFileName;
@@ -222,6 +222,10 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 				public String getUrlName() {
 					return buildNumber + "/robot/report/" + logFileName;
+				}
+
+				public String getIconFileName() {
+					return "/plugin/robot/robot.png";
 				}
 
 			});
@@ -283,7 +287,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 			build.addAction(action);
 			
 			if(getLogFileLink() != null) {
-				build.addAction(new AbstractRobotAction(){
+				build.addAction(new Action(){
 
 					public String getDisplayName() {
 						return "Open Robot " + getLogFileLink();
@@ -291,6 +295,10 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 					public String getUrlName() {
 						return "robot/report/" + getLogFileLink();
+					}
+
+					public String getIconFileName() {
+						return "/plugin/robot/robot.png";
 					}
 
 				});

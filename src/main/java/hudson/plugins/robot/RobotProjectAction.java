@@ -15,6 +15,7 @@
 */
 package hudson.plugins.robot;
 
+import hudson.model.Action;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.util.ChartUtil;
@@ -27,7 +28,7 @@ import javax.servlet.ServletException;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
-public class RobotProjectAction  extends AbstractRobotAction {
+public class RobotProjectAction  implements Action {
 
 	private AbstractProject<?, ?> project;
 
@@ -117,5 +118,26 @@ public class RobotProjectAction  extends AbstractRobotAction {
 			lastBuild = lastBuild.getPreviousBuild();
 		}
 		return lastBuild;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getIconFileName() {
+		return "/plugin/robot/robot.png";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getDisplayName() {
+		return Messages.robot_sidebar_link();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getUrlName() {
+		return "robot";
 	}
 }

@@ -26,6 +26,7 @@ import hudson.plugins.robot.model.RobotTestObject;
 import hudson.plugins.robot.model.RobotCaseResult;
 import hudson.plugins.robot.model.RobotResult;
 import hudson.plugins.robot.model.RobotSuiteResult;
+import hudson.tasks.test.AbstractTestResultAction;
 import hudson.util.ChartUtil;
 import hudson.util.Graph;
 import hudson.util.HeapSpaceStringConverter;
@@ -48,7 +49,7 @@ import org.kohsuke.stapler.StaplerResponse;
 
 import com.thoughtworks.xstream.XStream;
 
-public class RobotBuildAction extends AbstractRobotAction implements StaplerProxy {
+public class RobotBuildAction extends AbstractTestResultAction implements StaplerProxy {
 
     private static final Logger logger = Logger.getLogger(RobotBuildAction.class.getName());
     private static final XStream XSTREAM = new XStream2();
@@ -77,6 +78,7 @@ public class RobotBuildAction extends AbstractRobotAction implements StaplerProx
 	 */
 	public RobotBuildAction(AbstractBuild<?, ?> build, RobotResult result,
 			String outputPath, BuildListener listener, String logFileLink) {
+		super(build);
 		this.build = build;
 		this.outputPath = outputPath;
 		this.logFileLink = logFileLink;
@@ -251,5 +253,39 @@ public class RobotBuildAction extends AbstractRobotAction implements StaplerProx
 		if (StringUtils.isNotBlank(outputPath))
 			return new FilePath(rootDir, outputPath);
         return rootDir;
+	}
+
+	@Override
+	public int getFailCount() {
+		return (int) getResult().getOverallFailed();
+	}
+
+	@Override
+	public int getTotalCount() {
+		return (int) getResult().getOverallTotal();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getIconFileName() {
+		return "/plugin/robot/robot.png";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getDisplayName() {
+		return Messages.robot_sidebar_link();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getUrlName() {
+		return "robot";
 	}
 }
