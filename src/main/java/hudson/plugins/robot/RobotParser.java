@@ -82,13 +82,18 @@ public class RobotParser {
 				if(dirFromFileGLOB != null)
 					baseDirectory = new File(baseDirectory, dirFromFileGLOB.toString());
 				
+				FileReader reportReader = new FileReader(reportFile);
 				try {
 					XMLStreamReader reader = factory.createXMLStreamReader(
-							new FileReader(reportFile));
+							reportReader);
 					result =  parseResult(reader, baseDirectory);
 				} catch (XMLStreamException e1) {
 					throw new IOException("Parsing of output xml failed!", e1);
+				} finally {
+					reportReader.close();
+					reportReader = null;
 				}
+					
 			}
 			return result;
 		}
