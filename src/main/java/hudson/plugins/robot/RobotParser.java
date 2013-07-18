@@ -26,8 +26,8 @@ import hudson.plugins.robot.model.RobotSuiteResult;
 import hudson.remoting.VirtualChannel;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 
 import javax.xml.namespace.QName;
@@ -64,13 +64,13 @@ public class RobotParser {
 			DirectoryScanner resultScanner = setInWorkspace
 			.getDirectoryScanner();
 			RobotResult result = new RobotResult();
-			
+
 			String[] files = resultScanner.getIncludedFiles();
 			if (files.length == 0) {
 				throw new AbortException(
 						"No files found in path " + ws.getAbsolutePath() + " with configured filemask: " + outputFileLocations);
 			}
-			
+
 			for(String file : files){
 				XMLInputFactory factory = XMLInputFactory.newInstance();
 				factory.setProperty(XMLInputFactory.IS_COALESCING, Boolean.TRUE);
@@ -81,10 +81,10 @@ public class RobotParser {
 				String dirFromFileGLOB = new File(file).getParent();
 				if(dirFromFileGLOB != null)
 					baseDirectory = new File(baseDirectory, dirFromFileGLOB.toString());
-				
+
 				try {
 					XMLStreamReader reader = factory.createXMLStreamReader(
-							new FileReader(reportFile));
+							new FileInputStream(reportFile), "UTF-8");
 					result =  parseResult(reader, baseDirectory);
 				} catch (XMLStreamException e1) {
 					throw new IOException("Parsing of output xml failed!", e1);
@@ -99,7 +99,7 @@ public class RobotParser {
 				reader.next();
 				if(reader.getEventType() == XMLStreamReader.START_ELEMENT){
 					QName tagName = reader.getName();
-					
+
 					//we already have all data from suites and tests so no need for statistics
 					if("statistics".equals(tagName.getLocalPart()))
 						break;
@@ -122,7 +122,7 @@ public class RobotParser {
 		private RobotSuiteResult processSuite(XMLStreamReader reader, RobotTestObject parent, File baseDirectory) throws FileNotFoundException, XMLStreamException {
 			RobotSuiteResult suite = new RobotSuiteResult();
 			suite.setParent(parent);
-			
+
 			//parse attributes
 			for(int i = 0; i < reader.getAttributeCount(); i++){
 				if(reader.getAttributeLocalName(i).equals("name")){
@@ -130,10 +130,10 @@ public class RobotParser {
 					suite.setName(name);
 				} else if(reader.getAttributeLocalName(i).equals("src")) {
 					String path = reader.getAttributeValue(i);
-					
+
 					XMLInputFactory factory = XMLInputFactory.newInstance();
 					factory.setProperty(XMLInputFactory.IS_COALESCING, Boolean.TRUE);
-					XMLStreamReader splitReader = factory.createXMLStreamReader(new FileReader(new File(baseDirectory, path)));
+					XMLStreamReader splitReader = factory.createXMLStreamReader(new FileInputStream(new File(baseDirectory, path)), "UTF-8");
 					while(splitReader.hasNext()){
 						splitReader.next();
 						if(splitReader.getEventType() == XMLStreamReader.START_ELEMENT){
@@ -145,7 +145,7 @@ public class RobotParser {
 					}
 				}
 			}
-			
+
 			//parse children, which can be test cases or test suites
 			while(reader.hasNext()){
 				reader.next();
@@ -170,7 +170,7 @@ public class RobotParser {
 		private RobotCaseResult processTest(XMLStreamReader reader, RobotSuiteResult result) throws XMLStreamException {
 			RobotCaseResult caseResult = new RobotCaseResult();
 			caseResult.setParent(result);
-			
+
 			//parse attributes
 			for(int i = 0; i < reader.getAttributeCount(); i++){
 				if(reader.getAttributeLocalName(i).equals("name")){
@@ -184,7 +184,7 @@ public class RobotParser {
 						caseResult.setCritical(false);
 				}
 			}
-			
+
 			//parse test details from nested status
 			while(reader.hasNext()){
 				reader.next();
@@ -213,7 +213,7 @@ public class RobotParser {
 									caseResult.setCritical(false);
 							}
 						}
-						
+
 						//parse character data from status, fail if no end tag found
 						while(reader.hasNext()){
 							reader.next();
@@ -222,7 +222,7 @@ public class RobotParser {
 								caseResult.setErrorMsg(error);
 							} else if (reader.getEventType() == XMLStreamReader.END_ELEMENT){
 								QName statusName = reader.getName();
-								if("status".equals(statusName.getLocalPart())) 
+								if("status".equals(statusName.getLocalPart()))
 									break;
 								else {
 									throw new XMLStreamException("No end tag found for status while parsing test case: " + caseResult.getName());
