@@ -82,18 +82,25 @@ public class RobotParser {
 				if(dirFromFileGLOB != null)
 					baseDirectory = new File(baseDirectory, dirFromFileGLOB.toString());
 
+				FileInputStream fis = new FileInputStream(reportFile);
 				try {
 					XMLStreamReader reader = factory.createXMLStreamReader(
-							new FileInputStream(reportFile), "UTF-8");
-					result =  parseResult(reader, baseDirectory);
-				} catch (XMLStreamException e1) {
-					throw new IOException("Parsing of output xml failed!", e1);
+							fis, "UTF-8");
+					try {
+						result =  parseResult(reader, baseDirectory);
+					} finally {
+						reader.close();
+					}
+				} catch (XMLStreamException e) {
+					throw new IOException("Parsing of output xml failed\n" + e);
+				} finally {
+					fis.close();
 				}
 			}
 			return result;
 		}
 
-		private RobotResult parseResult(XMLStreamReader reader, File baseDirectory) throws XMLStreamException, FileNotFoundException {
+		private RobotResult parseResult(XMLStreamReader reader, File baseDirectory) throws XMLStreamException, FileNotFoundException, IOException {
 			RobotResult result = new RobotResult();
 			while(reader.hasNext()){
 				reader.next();
@@ -119,7 +126,7 @@ public class RobotParser {
 			return result;
 		}
 
-		private RobotSuiteResult processSuite(XMLStreamReader reader, RobotTestObject parent, File baseDirectory) throws FileNotFoundException, XMLStreamException {
+		private RobotSuiteResult processSuite(XMLStreamReader reader, RobotTestObject parent, File baseDirectory) throws FileNotFoundException, XMLStreamException, IOException {
 			RobotSuiteResult suite = new RobotSuiteResult();
 			suite.setParent(parent);
 
@@ -133,16 +140,26 @@ public class RobotParser {
 
 					XMLInputFactory factory = XMLInputFactory.newInstance();
 					factory.setProperty(XMLInputFactory.IS_COALESCING, Boolean.TRUE);
-					XMLStreamReader splitReader = factory.createXMLStreamReader(new FileInputStream(new File(baseDirectory, path)), "UTF-8");
-					while(splitReader.hasNext()){
-						splitReader.next();
-						if(splitReader.getEventType() == XMLStreamReader.START_ELEMENT){
-							QName tagName = splitReader.getName();
-							if("suite".equals(tagName.getLocalPart())){
-								return processSuite(splitReader, parent, baseDirectory);
+					FileInputStream fis = new FileInputStream(new File(baseDirectory, path));
+					try {
+						XMLStreamReader splitReader = factory.createXMLStreamReader(fis, "UTF-8");
+						try{
+							while(splitReader.hasNext()){
+								splitReader.next();
+								if(splitReader.getEventType() == XMLStreamReader.START_ELEMENT){
+									QName tagName = splitReader.getName();
+									if("suite".equals(tagName.getLocalPart())){
+										suite = processSuite(splitReader, parent, baseDirectory);
+									}
+								}
 							}
+						} finally {
+							splitReader.close();
 						}
+					} finally {
+						fis.close();
 					}
+					return suite;
 				}
 			}
 
