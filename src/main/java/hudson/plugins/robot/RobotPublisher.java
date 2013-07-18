@@ -68,6 +68,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	
 	//Default to true
 	private boolean onlyCritical = true;
+	private boolean nonCritical = true;
 
 
 	/**
@@ -87,18 +88,22 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 *            Threhold of test pass percentage for unstable builds
 	 * @param onlyCritical
 	 *            True if only critical tests are included in pass percentage
+	 * @param nonCritical
+	 *            True if build should be marked unstable when any of non-critical tests failed
 	 */
 	@DataBoundConstructor
 	public RobotPublisher(String outputPath, String outputFileName,
 			String reportFileName, String logFileName, double passThreshold,
-			double unstableThreshold, boolean onlyCritical, String logFileLink, String otherFiles) {
+			double unstableThreshold, boolean onlyCritical, boolean nonCritical, 
+			String logFileLink, String otherFiles) {
 		this.outputPath = outputPath;
 		this.outputFileName = outputFileName;
 		this.reportFileName = reportFileName;
 		this.passThreshold = passThreshold;
 		this.unstableThreshold = unstableThreshold;
 		this.logFileName = logFileName;
-		this.onlyCritical = onlyCritical;
+		this.onlyCritical = onlyCritical;		
+		this.nonCritical = nonCritical;
 		this.logFileLink = logFileLink;
 		
 		String[] filemasks = otherFiles.split(",");
@@ -106,6 +111,18 @@ public class RobotPublisher extends Recorder implements Serializable,
 			filemasks[i] = StringUtils.strip(filemasks[i]);
 		}
 		this.otherFiles = filemasks;		
+	}
+	
+	/**
+	 * Constructor for backward compatibility with existing unit tests
+	 */
+	public RobotPublisher(String outputPath, String outputFileName,
+			String reportFileName, String logFileName, double passThreshold,
+			double unstableThreshold, boolean onlyCritical, 
+			String logFileLink, String otherFiles) {
+		this(outputPath, outputFileName, reportFileName, logFileName, 
+				passThreshold, unstableThreshold, onlyCritical, false, 
+				logFileLink, otherFiles);
 	}
 
 	/**
@@ -180,6 +197,15 @@ public class RobotPublisher extends Recorder implements Serializable,
 		return onlyCritical;
 	}
 	
+	/**
+	 * Gets if failures of non-critical tests should cause build to be unstable.
+	 * 
+	 * @return
+	 */
+	public boolean getNonCritical() {
+		return nonCritical;
+	}
+
 	/**
 	 * Return the filename to be rendered in the job front page
 	 * @return null if empty file configured
@@ -403,6 +429,8 @@ public class RobotPublisher extends Recorder implements Serializable,
 			if (passPercentage < getUnstableThreshold()) {
 				return Result.FAILURE;
 			} else if (passPercentage < getPassThreshold()) {
+				return Result.UNSTABLE;
+			} else if (nonCritical && (passPercentage != result.getPassPercentage(!onlyCritical))) {
 				return Result.UNSTABLE;
 			}
 			return Result.SUCCESS;
