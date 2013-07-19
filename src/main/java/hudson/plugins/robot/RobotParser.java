@@ -84,19 +84,24 @@ public class RobotParser {
 				String dirFromFileGLOB = new File(file).getParent();
 				if(dirFromFileGLOB != null)
 					baseDirectory = new File(baseDirectory, dirFromFileGLOB.toString());
-
+				FileInputStream inputStream = new FileInputStream(reportFile);
 				try {
-					XMLStreamReader reader = factory.createXMLStreamReader(
-							new FileInputStream(reportFile), "UTF-8");
-					result =  parseResult(reader, baseDirectory);
+					XMLStreamReader reader = factory.createXMLStreamReader(inputStream, "UTF-8");
+					try {
+						result =  parseResult(reader, baseDirectory);
+					} finally {
+						reader.close();
+					}
 				} catch (XMLStreamException e1) {
 					throw new IOException("Parsing of output xml failed!", e1);
+				} finally {
+					inputStream.close();
 				}
 			}
 			return result;
 		}
 
-		private RobotResult parseResult(XMLStreamReader reader, File baseDirectory) throws XMLStreamException, FileNotFoundException {
+		private RobotResult parseResult(XMLStreamReader reader, File baseDirectory) throws XMLStreamException, IOException {
 			RobotResult result = new RobotResult();
 			while(reader.hasNext()){
 				reader.next();
@@ -115,8 +120,7 @@ public class RobotParser {
 			return result;
 		}
 
-		private RobotSuiteResult processSuite(XMLStreamReader reader, RobotTestObject parent, File baseDirectory) throws FileNotFoundException, XMLStreamException {
-			RobotSuiteResult result= null;
+		private RobotSuiteResult processSuite(XMLStreamReader reader, RobotTestObject parent, File baseDirectory) throws IOException, XMLStreamException {
 			String splitXMLPath = reader.getAttributeValue(null, "src");
 			if (splitXMLPath != null) {
 				return getSplitXMLSuite(parent, baseDirectory, splitXMLPath);
@@ -155,17 +159,26 @@ public class RobotParser {
 					location.getColumnNumber()+")");
 		}
 
-		private RobotSuiteResult getSplitXMLSuite(RobotTestObject parent, File baseDirectory, String path) throws XMLStreamException, FileNotFoundException {
+		private RobotSuiteResult getSplitXMLSuite(RobotTestObject parent, File baseDirectory, String path) throws XMLStreamException, IOException {
 			XMLInputFactory factory = XMLInputFactory.newInstance();
 			factory.setProperty(XMLInputFactory.IS_COALESCING, Boolean.TRUE);
-			XMLStreamReader splitReader = factory.createXMLStreamReader(new FileInputStream(new File(baseDirectory, path)), "UTF-8");
-			while(splitReader.hasNext()){
-				splitReader.next();
-				if(splitReader.isStartElement() && "suite".equals(splitReader.getLocalName())) {
-					return processSuite(splitReader, parent, baseDirectory);
+			FileInputStream inputStream = new FileInputStream(new File(baseDirectory, path));
+			try {
+				XMLStreamReader splitReader = factory.createXMLStreamReader(inputStream, "UTF-8");
+				try {
+					while(splitReader.hasNext()){
+						splitReader.next();
+						if(splitReader.isStartElement() && "suite".equals(splitReader.getLocalName())) {
+							return processSuite(splitReader, parent, baseDirectory);
+						}
+					}
+					throw xmlException("Illegal split xml output. Could not find suite element.", splitReader);
+				} finally {
+					splitReader.close();
 				}
+			} finally {
+				inputStream.close();
 			}
-			throw xmlException("Illegal split xml output. Could not find suite element.", splitReader);
 		}
 
 		private void ignoreUntilStarts(XMLStreamReader reader, String element) throws XMLStreamException {
