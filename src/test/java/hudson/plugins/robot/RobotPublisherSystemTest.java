@@ -40,7 +40,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		RobotPublisher before = new RobotPublisher("a", "b", "c", "d", 11, 27, true, "", "dir1/*.jpg, dir2/*.png");
 		p.getPublishersList().add(before);
 
-		submit(createWebClient().getPage(p, "configure")
+		submit(getWebClient().getPage(p, "configure")
 				.getFormByName("config"));
 
 		RobotPublisher after = p.getPublishersList().get(RobotPublisher.class);
@@ -52,7 +52,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		FreeStyleProject p = createFreeStyleProject();
 		RobotPublisher before = new RobotPublisher("a", "b", "c", "d", 11, 27, true, "", "dir1/*.jpg, dir2/*.png");
 		p.getPublishersList().add(before);
-		HtmlPage page = createWebClient().getPage(p,"configure");
+		HtmlPage page = getWebClient().getPage(p,"configure");
 		WebAssert.assertTextPresent(page, "Publish Robot Framework");
 		WebAssert.assertInputPresent(page, "_.outputPath");
 		WebAssert.assertInputContainsValue(page, "_.outputPath", "a");
@@ -115,7 +115,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 
 	@LocalData
 	public void testActionViewsWithNoRuns() throws Exception{
-		WebClient wc = new WebClient();
+		WebClient wc = getWebClient();
 		HtmlPage page = wc.goTo("job/robot/");
 
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/robot/robot']");
@@ -128,8 +128,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 
 	@LocalData
 	public void testOldActionViewsWithData() throws Exception{
-		WebClient wc = new WebClient();
-
+		WebClient wc = getWebClient();
 		HtmlPage page = wc.goTo("job/oldrobotbuild/");
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/oldrobotbuild/robot']");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a/h3[contains(.,'Latest Robot Results:')]");
@@ -172,7 +171,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		Run lastBuild = testProject.getLastBuild();
 		assertTrue("Build wasn't a success", lastBuild.getResult() == Result.SUCCESS);
 		
-		WebClient wc = new WebClient();
+		WebClient wc = getWebClient();
 
 		HtmlPage page = wc.goTo("job/robot/");
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/robot/robot']");
@@ -209,7 +208,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		Run lastBuild = testProject.getLastBuild();
 		assertTrue("Build wasn't a success", lastBuild.getResult() == Result.SUCCESS);
 		
-		WebClient wc = new WebClient();
+		WebClient wc = getWebClient();
 		HtmlPage page = wc.goTo("job/robot/robot/");
 		WebAssert.assertTextPresent(page, "Robot Framework test results");
 		WebAssert.assertTextPresent(page, "4 failed tests, 4 critical");
@@ -253,7 +252,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		}
 		if(testProject == null) fail("Couldn't find example project");
 		
-		WebClient wc = new WebClient();
+		WebClient wc = getWebClient();
 		
 		File buildRoot = testProject.getLastBuild().getRootDir();
 		File robotHtmlReport = new File(buildRoot, RobotPublisher.FILE_ARCHIVE_DIR + "/report.html");
@@ -282,5 +281,12 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		RobotResult result = action.getResult();
 		RobotCaseResult firstFailed = result.getAllFailedCases().get(0);
 		assertEquals(2,firstFailed.getFailedSince());
+	}
+	
+	private WebClient getWebClient(){
+		WebClient wc = new WebClient();
+		wc.setIncorrectnessListener(new SilentIncorrectnessListener());
+		wc.setCssErrorHandler(new QuietCssErrorHandler());
+		return wc;
 	}
 }
