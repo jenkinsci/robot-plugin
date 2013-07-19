@@ -36,7 +36,7 @@ import org.kohsuke.stapler.StaplerResponse;
 public class RobotSuiteResult extends RobotTestObject {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Map<String, RobotSuiteResult> children;
 	private RobotTestObject parent;
 	private String name;
@@ -46,12 +46,12 @@ public class RobotSuiteResult extends RobotTestObject {
 	private transient int passed;
 	private transient int criticalPassed;
 	private transient int criticalFailed;
-	
-	
+
+
 	/**
 	 * Adds a nested suite to this suite. If a suite exists with the same name
 	 * it will be overwritten with this one.
-	 * 
+	 *
 	 * @param child
 	 */
 	public void addChild(RobotSuiteResult child) {
@@ -83,7 +83,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	public RobotTestObject getParent() {
 		return parent;
 	}
-	
+
 	public void setParent(RobotTestObject parent){
 		this.parent = parent;
 	}
@@ -94,7 +94,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	public String getName(){
 		return name;
 	}
-	
+
 	public void setName(String name){
 		this.name = name;
 	}
@@ -168,7 +168,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	/**
 	 * Adds a test case result to this suite. If a case exists with the same
 	 * name it will be overwritten with this one.
-	 * 
+	 *
 	 * @param caseResult
 	 */
 	public void addCaseResult(RobotCaseResult caseResult) {
@@ -266,6 +266,27 @@ public class RobotSuiteResult extends RobotTestObject {
 		}
 
 		return failedCases;
+	}
+
+	/**
+	 * Get all cases in this suite and its child suites
+	 * @return
+	 */
+	public List<RobotCaseResult> getAllCases() {
+		List<RobotCaseResult> cases = new ArrayList<RobotCaseResult>();
+		cases.addAll(getCaseResults());
+		for(RobotSuiteResult suite : getChildSuites()){
+			cases.addAll(suite.getAllCases());
+		}
+		return cases;
+	}
+
+	/**
+	 * Fail all cases because of teardown failure.
+	 */
+	public void failTeardown() {
+		for (RobotCaseResult res: getAllCases())
+			res.setPassed(false);
 	}
 
 	/**

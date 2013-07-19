@@ -29,8 +29,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.Location;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -97,22 +100,15 @@ public class RobotParser {
 			RobotResult result = new RobotResult();
 			while(reader.hasNext()){
 				reader.next();
-				if(reader.getEventType() == XMLStreamReader.START_ELEMENT){
-					QName tagName = reader.getName();
-
-					//we already have all data from suites and tests so no need for statistics
-					if("statistics".equals(tagName.getLocalPart()))
+				if(reader.isStartElement()){
+					String tagName = reader.getLocalName();
+					if("statistics".equals(tagName))
+						//we already have all data from suites and tests so we can stop parsing
 						break;
-					else if("robot".equals(tagName.getLocalPart())){
-						for(int i = 0; i < reader.getAttributeCount(); i++){
-							if(reader.getAttributeLocalName(i).equals("generated")){
-								String timestamp = reader.getAttributeValue(i);
-								result.setTimeStamp(timestamp);
-							}
-						}
-					} else if("suite".equals(tagName.getLocalPart())){
-						RobotSuiteResult suite = processSuite(reader, result, baseDirectory);
-						result.addSuite(suite);
+					else if("robot".equals(tagName)){
+						result.setTimeStamp(reader.getAttributeValue(null, "generated"));
+					} else if("suite".equals(tagName)){
+						result.addSuite(processSuite(reader, result, baseDirectory));
 					}
 				}
 			}
@@ -120,123 +116,151 @@ public class RobotParser {
 		}
 
 		private RobotSuiteResult processSuite(XMLStreamReader reader, RobotTestObject parent, File baseDirectory) throws FileNotFoundException, XMLStreamException {
+			RobotSuiteResult result= null;
+			String splitXMLPath = reader.getAttributeValue(null, "src");
+			if (splitXMLPath != null) {
+				return getSplitXMLSuite(parent, baseDirectory, splitXMLPath);
+			}
 			RobotSuiteResult suite = new RobotSuiteResult();
 			suite.setParent(parent);
-
-			//parse attributes
-			for(int i = 0; i < reader.getAttributeCount(); i++){
-				if(reader.getAttributeLocalName(i).equals("name")){
-					String name = reader.getAttributeValue(i);
-					suite.setName(name);
-				} else if(reader.getAttributeLocalName(i).equals("src")) {
-					String path = reader.getAttributeValue(i);
-
-					XMLInputFactory factory = XMLInputFactory.newInstance();
-					factory.setProperty(XMLInputFactory.IS_COALESCING, Boolean.TRUE);
-					XMLStreamReader splitReader = factory.createXMLStreamReader(new FileInputStream(new File(baseDirectory, path)), "UTF-8");
-					while(splitReader.hasNext()){
-						splitReader.next();
-						if(splitReader.getEventType() == XMLStreamReader.START_ELEMENT){
-							QName tagName = splitReader.getName();
-							if("suite".equals(tagName.getLocalPart())){
-								return processSuite(splitReader, parent, baseDirectory);
-							}
-						}
-					}
-				}
-			}
-
+			suite.setName(reader.getAttributeValue(null, "name"));
 			//parse children, which can be test cases or test suites
 			while(reader.hasNext()){
 				reader.next();
-				if(reader.getEventType() == XMLStreamReader.START_ELEMENT){
-					QName tagName = reader.getName();
-					if("suite".equals(tagName.getLocalPart())){
-						RobotSuiteResult childSuite = processSuite(reader, suite, baseDirectory);
-						suite.addChild(childSuite);
-					} else if("test".equals(tagName.getLocalPart())){
-						RobotCaseResult test = processTest(reader, suite);
-						suite.addCaseResult(test);
+				if(reader.isStartElement()){
+					String tagName = reader.getLocalName();
+					if("suite".equals(tagName)){
+						suite.addChild(processSuite(reader, suite, baseDirectory));
+					} else if("test".equals(tagName)){
+						suite.addCaseResult(processTest(reader, suite));
+					} else if("kw".equals(tagName) && "teardown".equals(reader.getAttributeValue(null, "type"))) {
+						ignoreUntilStarts(reader, "status");
+						if ("FAIL".equals(reader.getAttributeValue(null, "status"))) {
+							suite.failTeardown();
+						}
 					}
-				} else if (reader.getEventType() == XMLStreamReader.END_ELEMENT){
-					QName tagName = reader.getName();
-					if("suite".equals(tagName.getLocalPart()))
-						return suite;
+				} else if (reader.isEndElement() && "suite".equals(reader.getLocalName())) {
+					return suite;
 				}
 			}
-			throw new XMLStreamException("No matching end tag found for test suite: " + suite.getName());
+			throw xmlException("No matching end tag found for test suite: " + suite.getName(), reader);
 		}
+
+		private XMLStreamException xmlException(String message, XMLStreamReader reader) {
+			Location location = reader.getLocation();
+			return new XMLStreamException(message +
+					" (at line: "+
+					location.getLineNumber()+
+					" column: "+
+					location.getColumnNumber()+")");
+		}
+
+		private RobotSuiteResult getSplitXMLSuite(RobotTestObject parent, File baseDirectory, String path) throws XMLStreamException, FileNotFoundException {
+			XMLInputFactory factory = XMLInputFactory.newInstance();
+			factory.setProperty(XMLInputFactory.IS_COALESCING, Boolean.TRUE);
+			XMLStreamReader splitReader = factory.createXMLStreamReader(new FileInputStream(new File(baseDirectory, path)), "UTF-8");
+			while(splitReader.hasNext()){
+				splitReader.next();
+				if(splitReader.isStartElement() && "suite".equals(splitReader.getLocalName())) {
+					return processSuite(splitReader, parent, baseDirectory);
+				}
+			}
+			throw xmlException("Illegal split xml output. Could not find suite element.", splitReader);
+		}
+
+		private void ignoreUntilStarts(XMLStreamReader reader, String element) throws XMLStreamException {
+			List<String> elementStack = new ArrayList<String>();
+			while(reader.hasNext()) {
+				reader.next();
+				if (reader.isStartElement()) {
+					if (elementStack.isEmpty() && reader.getLocalName().equals(element)) {
+						return;
+					} else {
+						elementStack.add(reader.getLocalName());
+					}
+				} else if (reader.isEndElement()) {
+					if (elementStack.isEmpty()) {
+						throw xmlException("Could not find element "+element, reader);
+					}
+					if (!elementStack.get(elementStack.size()-1).equals(reader.getLocalName())) {
+						throw xmlException("Illegal xml input. End element "+
+								reader.getLocalName()+
+								" while waiting for element "+
+								elementStack.get(elementStack.size()-1), reader);
+					}
+					elementStack.remove(elementStack.size()-1);
+				}
+			}
+			throw xmlException("Could not find element "+element, reader);
+		}
+
+		private void ignoreUntilEnds(XMLStreamReader reader, String element) throws XMLStreamException {
+			List<String> elementStack = new ArrayList<String>();
+			while(reader.hasNext()) {
+				reader.next();
+				if (reader.isStartElement()) {
+						elementStack.add(reader.getLocalName());
+				} else if (reader.isEndElement()) {
+					String tagName = reader.getLocalName();
+					if (elementStack.isEmpty()) {
+						if (tagName.equals(element)) {
+							return;
+						}
+						throw xmlException("Illegal xml input. Could not find end of element "+
+								element+ ". Unexpected end of element "+ tagName, reader);
+					} else if (!elementStack.get(elementStack.size()-1).equals(tagName)) {
+						throw xmlException("Illegal xml input. End element "+
+								tagName + " while waiting for element "+
+								elementStack.get(elementStack.size()-1), reader);
+					} else {
+						elementStack.remove(elementStack.size()-1);
+					}
+				}
+			}
+			throw xmlException("Could not find end of element "+element, reader);
+		}
+
 
 		private RobotCaseResult processTest(XMLStreamReader reader, RobotSuiteResult result) throws XMLStreamException {
 			RobotCaseResult caseResult = new RobotCaseResult();
 			caseResult.setParent(result);
-
 			//parse attributes
-			for(int i = 0; i < reader.getAttributeCount(); i++){
-				if(reader.getAttributeLocalName(i).equals("name")){
-					String name = reader.getAttributeValue(i);
-					caseResult.setName(name);
-				} else if(reader.getAttributeLocalName(i).equals("critical")) {
-					String critical = reader.getAttributeValue(i);
-					if(critical.equals("yes"))
-						caseResult.setCritical(true);
-					else
-						caseResult.setCritical(false);
-				}
-			}
-
+			caseResult.setName(reader.getAttributeValue(null, "name"));
+			setCriticalityIfAvailable(reader, caseResult);
 			//parse test details from nested status
+			ignoreUntilStarts(reader, "status");
+			caseResult.setPassed("PASS".equals(reader.getAttributeValue(null, "status")));
+			caseResult.setStarttime(reader.getAttributeValue(null, "starttime"));
+			caseResult.setEndtime(reader.getAttributeValue(null, "endtime"));
+			setCriticalityIfAvailable(reader, caseResult);
 			while(reader.hasNext()){
 				reader.next();
-				if(reader.getEventType() == XMLStreamReader.START_ELEMENT){
-					QName tagName = reader.getName();
-					if("status".equals(tagName.getLocalPart())){
-						for(int i = 0; i < reader.getAttributeCount(); i++){
-							if(reader.getAttributeLocalName(i).equals("status")){
-								String status = reader.getAttributeValue(i);
-								if(status.equals("PASS")){
-									caseResult.setPassed(true);
-								} else {
-									caseResult.setPassed(false);
-								}
-							} else if(reader.getAttributeLocalName(i).equals("starttime")) {
-								String startTime = reader.getAttributeValue(i);
-								caseResult.setStarttime(startTime);
-							} else if(reader.getAttributeLocalName(i).equals("endtime")){
-								String endTime = reader.getAttributeValue(i);
-								caseResult.setEndtime(endTime);
-							} else if(reader.getAttributeLocalName(i).equals("critical")){
-								String criticality = reader.getAttributeValue(i);
-								if(criticality.equals("yes"))
-									caseResult.setCritical(true);
-								else
-									caseResult.setCritical(false);
-							}
-						}
-
-						//parse character data from status, fail if no end tag found
-						while(reader.hasNext()){
-							reader.next();
-							if(reader.getEventType() == XMLStreamReader.CHARACTERS){
-								String error = reader.getText();
-								caseResult.setErrorMsg(error);
-							} else if (reader.getEventType() == XMLStreamReader.END_ELEMENT){
-								QName statusName = reader.getName();
-								if("status".equals(statusName.getLocalPart()))
-									break;
-								else {
-									throw new XMLStreamException("No end tag found for status while parsing test case: " + caseResult.getName());
-								}
-							}
-						}
+				if(reader.getEventType() == XMLStreamReader.CHARACTERS){
+					String error = reader.getText();
+					caseResult.setErrorMsg(error);
+				} else if (reader.isEndElement()) {
+					if ("status".equals(reader.getLocalName())) {
+						break;
+					} else {
+						throw xmlException("No end tag found for status while parsing test case: " +
+								caseResult.getName(), reader);
 					}
-				} else if (reader.getEventType() == XMLStreamReader.END_ELEMENT){
-					QName tagName = reader.getName();
-					if("test".equals(tagName.getLocalPart()))
-						return caseResult;
 				}
 			}
-			throw new XMLStreamException("No matching end tag found for test case " + caseResult.getName());
+			ignoreUntilEnds(reader, "test");
+			return caseResult;
+		}
+
+		private static void setCriticalityIfAvailable(XMLStreamReader reader, RobotCaseResult caseResult) {
+			String criticality = reader.getAttributeValue(null, "critical");
+			if (criticality != null) {
+				if(criticality.equals("yes"))
+					caseResult.setCritical(true);
+				else
+					caseResult.setCritical(false);
+			}
 		}
 	}
+
+
 }

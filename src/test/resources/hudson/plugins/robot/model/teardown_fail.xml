@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generated="20130719 14:09:09.474" generator="Robot 2.8.1 (Python 2.7.2 on darwin)">
+<suite source="/private/tmp/fail" id="s1" name="Fail">
+<suite source="/private/tmp/fail/Suite.txt" id="s1-s1" name="Suite">
+<test id="s1-s1-t1" name="Example test">
+<kw type="kw" name="BuiltIn.Log">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>Hello world</arg>
+</arguments>
+<msg timestamp="20130719 14:09:09.506" level="INFO">Hello world</msg>
+<status status="PASS" endtime="20130719 14:09:09.506" starttime="20130719 14:09:09.506"></status>
+</kw>
+<doc></doc>
+<tags>
+</tags>
+<status status="PASS" endtime="20130719 14:09:09.506" critical="yes" starttime="20130719 14:09:09.505"></status>
+</test>
+<test id="s1-s1-t2" name="Example test 2">
+<kw type="kw" name="BuiltIn.Log">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>Hello here too</arg>
+</arguments>
+<msg timestamp="20130719 14:09:09.507" level="INFO">Hello here too</msg>
+<status status="PASS" endtime="20130719 14:09:09.507" starttime="20130719 14:09:09.507"></status>
+</kw>
+<doc></doc>
+<tags>
+</tags>
+<status status="PASS" endtime="20130719 14:09:09.507" critical="yes" starttime="20130719 14:09:09.506"></status>
+</test>
+<test id="s1-s1-t3" name="Example test 3">
+<kw type="kw" name="BuiltIn.Fail">
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<arguments>
+<arg>We are failing</arg>
+</arguments>
+<msg timestamp="20130719 14:09:09.510" level="FAIL">We are failing</msg>
+<status status="FAIL" endtime="20130719 14:09:09.510" starttime="20130719 14:09:09.508"></status>
+</kw>
+<doc></doc>
+<tags>
+</tags>
+<status status="FAIL" endtime="20130719 14:09:09.511" critical="yes" starttime="20130719 14:09:09.507">We are failing</status>
+</test>
+<doc></doc>
+<metadata>
+</metadata>
+<status status="FAIL" endtime="20130719 14:09:09.511" starttime="20130719 14:09:09.503"></status>
+</suite>
+<kw type="teardown" name="BuiltIn.Fail">
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<arguments>
+<arg>on purpose</arg>
+</arguments>
+<msg timestamp="20130719 14:09:09.512" level="FAIL">on purpose</msg>
+<status status="FAIL" endtime="20130719 14:09:09.512" starttime="20130719 14:09:09.512">on purpose</status>
+</kw>
+<doc></doc>
+<metadata>
+</metadata>
+<status status="FAIL" endtime="20130719 14:09:09.512" starttime="20130719 14:09:09.474">Suite teardown failed:
+on purpose</status>
+</suite>
+<statistics>
+<total>
+<stat fail="3" pass="0">Critical Tests</stat>
+<stat fail="3" pass="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat fail="3" pass="0" id="s1" name="Fail">Fail</stat>
+<stat fail="3" pass="0" id="s1-s1" name="Suite">Fail.Suite</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
