@@ -99,7 +99,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		File storedJs = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log.js");
 		File storedSplitJs1 = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log-001.js");
 		File storedImage1 = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/screenshot.png");
-		File storedImage2 = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/screenshot2.png");
+		File storedImage2 = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/subfolder/screenshot2.png");
 
 		assertTrue("output.xml was not stored", storedOutput.exists());
 		assertTrue("output-001.xml was not stored", storedSplitOutput.exists());

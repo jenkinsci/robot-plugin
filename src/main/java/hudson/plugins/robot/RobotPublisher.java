@@ -15,6 +15,7 @@
  */
 package hudson.plugins.robot;
 
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -105,7 +106,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 		for (int i = 0; i < filemasks.length; i++){
 			filemasks[i] = StringUtils.strip(filemasks[i]);
 		}
-		this.otherFiles = filemasks;		
+		this.otherFiles = filemasks;
 	}
 
 	/**
@@ -252,10 +253,11 @@ public class RobotPublisher extends Recorder implements Serializable,
 			RobotResult result;
 			
 			try {
-				String expandedOutputFileName = build.getEnvironment(listener).expand(getOutputFileName());
-				String expandedOutputPath = build.getEnvironment(listener).expand(getOutputPath());
-				String expandedReportFileName = build.getEnvironment(listener).expand(getReportFileName());
-				String expandedLogFileName = build.getEnvironment(listener).expand(getLogFileName());
+				EnvVars buildEnv = build.getEnvironment(listener);
+				String expandedOutputFileName = buildEnv.expand(getOutputFileName());
+				String expandedOutputPath = buildEnv.expand(getOutputPath());
+				String expandedReportFileName = buildEnv.expand(getReportFileName());
+				String expandedLogFileName = buildEnv.expand(getLogFileName());
 				String logFileJavascripts = trimSuffix(expandedLogFileName) + ".js";
 				
 				result = parse(expandedOutputFileName, expandedOutputPath, build, launcher, listener);
@@ -263,14 +265,13 @@ public class RobotPublisher extends Recorder implements Serializable,
 				logger.println(Messages.robot_publisher_done());
 				logger.println(Messages.robot_publisher_copying());
 				
-				copyFilesToBuildDir(build, expandedOutputPath, expandedOutputFileName, expandedReportFileName, expandedLogFileName, logFileJavascripts);
+				//Save configured Robot files (including split output) to build dir
+				copyFilesToBuildDir(build, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedOutputFileName, expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","));
 				
+				//Save other configured files to build dir
 				if(otherFiles != null) {
-					for(String filemask : otherFiles){
-						filemask = build.getEnvironment(listener).expand(filemask);
-						if(StringUtils.isNotBlank(filemask))
-							copyFilesToBuildDir(build, expandedOutputPath, filemask);
-					}
+					String filemask = buildEnv.expand(getOtherFiles());
+					copyFilesToBuildDir(build, expandedOutputPath, filemask);
 				}
 				
 				logger.println(Messages.robot_publisher_done());
@@ -325,39 +326,11 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 * @throws InterruptedException
 	 */
 	public static void copyFilesToBuildDir(AbstractBuild<?, ?> build,
-			String inputPath, String...filemaskToCopy) throws IOException, InterruptedException {
+			String inputPath, String filemaskToCopy) throws IOException, InterruptedException {
 		FilePath srcDir = new FilePath(build.getWorkspace(), inputPath);
 		FilePath destDir = new FilePath(new FilePath(build.getRootDir()),
 				FILE_ARCHIVE_DIR);
-		for(String filemask : filemaskToCopy){
-			flattenDirsCopy(filemask, srcDir, destDir);
-		}
-	}
-
-	/**
-	 * Copy files matching given filemask from all subdirectories to destination directory
-	 * @param filemask Ant GLOB style filemask
-	 * @param srcDir source dir as string
-	 * @param destDir destination dir as string
-	 * @throws IOException on copy failure
-	 * @throws InterruptedException
-	 */
-	public static void flattenDirsCopy(String filemask, FilePath srcDir, FilePath destDir) throws IOException, InterruptedException{
-		//take care of splitoutput files not copied by the original filemask (e.g. output-001.xml etc.)
-		if (StringUtils.isNotBlank(getSuffix(filemask))) filemask = trimSuffix(filemask) + "*" + getSuffix(filemask);
-		
-		FilePath[] list = srcDir.list(filemask);
-			for (FilePath file : list) {
-					FilePath destinationFile = new FilePath(destDir, file.getName());
-					String destinationFileName = destinationFile.getName();
-					int i = 1;
-					while(destinationFile.exists()){
-						destinationFile = new FilePath(destDir, trimSuffix(destinationFileName) + "(" + i + ")" + getSuffix(destinationFileName));
-						i++;
-					}
-					
-					file.copyTo(destinationFile);
-			}
+	    srcDir.copyRecursiveTo(filemaskToCopy, destDir);
 	}
 	
 	/**
@@ -384,6 +357,19 @@ public class RobotPublisher extends Recorder implements Serializable,
 			return filename.substring(index);
 		}
 		return "";
+	}
+	
+	/**
+	 * Add wildcard to filemasks between name and file extension in order to copy split output
+	 * e.g. output-001.xml, output-002.xml etc.
+	 * @param filemasks
+	 * @return
+	 */
+	private static String[] modifyMasksforSplittedOutput(String[] filemasks){
+		for (int i = 0; i < filemasks.length; i++){
+			filemasks[i] = trimSuffix(filemasks[i]) + "*" + getSuffix(filemasks[i]);
+		}
+		return filemasks;
 	}
 	
 	/**
