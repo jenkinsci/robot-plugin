@@ -41,24 +41,24 @@ public class RobotResultTest extends TestCase {
 	}
 
 	public void testShouldParseSuites(){
-		RobotSuiteResult suite = result.getSuite("Othercases_&_Testcases");
+		RobotSuiteResult suite = result.getSuite("Othercases & Testcases");
 		assertNotNull(suite);
 	}
 
 	public void testShouldParseNestedSuites(){
-		RobotSuiteResult suite = result.getSuite("Othercases_&_Testcases");
+		RobotSuiteResult suite = result.getSuite("Othercases & Testcases");
 		RobotSuiteResult nestedSuite = suite.getSuite("Testcases");
 		assertNotNull(nestedSuite);
 	}
 
 	public void testShouldParseCases(){
-		RobotSuiteResult suite = result.getSuite("Othercases_&_Testcases");
+		RobotSuiteResult suite = result.getSuite("Othercases & Testcases");
 		RobotCaseResult caseResult = suite.getCase("Hello");
 		assertNotNull(caseResult);
 	}
 
 	public void testShouldParseCasesInNestedSuites(){
-		RobotSuiteResult suite = result.getSuite("Othercases_&_Testcases");
+		RobotSuiteResult suite = result.getSuite("Othercases & Testcases");
 		RobotSuiteResult nestedSuite = suite.getSuite("Testcases");
 		RobotCaseResult caseResult = nestedSuite.getCase("Failer");
 		assertNotNull(caseResult);
@@ -74,7 +74,7 @@ public class RobotResultTest extends TestCase {
 	}
 
 	public void testShouldParseFailMessages(){
-		RobotSuiteResult suite = result.getSuite("Othercases_&_Testcases");
+		RobotSuiteResult suite = result.getSuite("Othercases & Testcases");
 		RobotSuiteResult childSuite = suite.getSuite("Othercases");
 		RobotCaseResult caseResult = childSuite.getCase("Failer");
 		String errorMsg = caseResult.getErrorMsg();
@@ -114,7 +114,7 @@ public class RobotResultTest extends TestCase {
 			result = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("new_critical_output.xml").toURI()).getParentFile(), null);
 		result.tally(null);
 
-		RobotSuiteResult suite = result.getSuite("Othercases_&_Testcases");
+		RobotSuiteResult suite = result.getSuite("Othercases & Testcases");
 		RobotCaseResult caseResult = suite.getCase("Hello");
 
 		assertFalse("Case shouldn't be critical", caseResult.isCritical());
@@ -127,22 +127,22 @@ public class RobotResultTest extends TestCase {
 	}
 
 	public void testShouldReturnPackageName(){
-		RobotSuiteResult suite = (RobotSuiteResult)result.findObjectById("Othercases_&_Testcases/Othercases/3rd_level_cases");
+		RobotSuiteResult suite = (RobotSuiteResult)result.findObjectById("Othercases+%26+Testcases/Othercases/3rd+level+cases");
 		assertEquals("Othercases & Testcases.Othercases.3rd level cases", suite.getRelativePackageName(result));
 	}
 
 	public void testShouldReturnSuiteById(){
-		RobotSuiteResult suite = (RobotSuiteResult)result.findObjectById("Othercases_&_Testcases/Othercases/3rd_level_cases");
+		RobotSuiteResult suite = (RobotSuiteResult)result.findObjectById("Othercases+%26+Testcases/Othercases/3rd+level+cases");
 		assertEquals("3rd level cases", suite.getName());
 	}
 
 	public void testShouldReturnIdForSuite(){
-		RobotSuiteResult suite = (RobotSuiteResult)result.findObjectById("Othercases_&_Testcases/Othercases/3rd_level_cases");
-		assertEquals("Othercases_&_Testcases/Othercases/3rd_level_cases", suite.getRelativeId(result));
+		RobotSuiteResult suite = (RobotSuiteResult)result.findObjectById("Othercases+%26+Testcases/Othercases/3rd+level+cases");
+		assertEquals("Othercases+%26+Testcases/Othercases/3rd+level+cases", suite.getRelativeId(result));
 	}
 
 	public void testShouldReturnCaseById(){
-		RobotCaseResult caseResult = (RobotCaseResult)result.findObjectById("Othercases_&_Testcases/Othercases/3rd_level_cases/Hello3rd");
+		RobotCaseResult caseResult = (RobotCaseResult)result.findObjectById("Othercases+%26+Testcases/Othercases/3rd+level+cases/Hello3rd");
 		assertEquals("Hello3rd", caseResult.getName());
 	}
 
@@ -160,6 +160,13 @@ public class RobotResultTest extends TestCase {
 	public void testShouldParseSuiteTeardownFailures() throws Exception, URISyntaxException{
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("teardown_fail.xml");
 		RobotResult res = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("teardown_fail.xml").toURI()).getParentFile(), null);
+		List<RobotCaseResult> failers = res.getAllFailedCases();
+		assertEquals(3, failers.size());
+	}
+
+	public void testShouldHandleNameCollisions() throws Exception, URISyntaxException{
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("collisions.xml");
+		RobotResult res = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("collisions.xml").toURI()).getParentFile(), null);
 		List<RobotCaseResult> failers = res.getAllFailedCases();
 		assertEquals(3, failers.size());
 	}

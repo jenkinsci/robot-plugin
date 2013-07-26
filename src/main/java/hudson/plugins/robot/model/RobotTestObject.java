@@ -22,6 +22,9 @@ import hudson.util.ChartUtil;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Calendar;
 
 import org.apache.commons.lang.StringUtils;
@@ -29,9 +32,9 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 public abstract class RobotTestObject extends AbstractModelObject implements Serializable{
-	
+
 	private static final long serialVersionUID = -3191755290679194469L;
-	
+
 	private transient RobotBuildAction parentAction;
 
 	public RobotBuildAction getParentAction() {
@@ -43,10 +46,11 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	}
 
 	public abstract String getName();
-	
+
 	public abstract  RobotTestObject getParent();
-	
-	
+
+	private String duplicateSafeName;
+
 	/**
 	 * Generates the full packagename
 	 * @return
@@ -64,13 +68,13 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Get path in tree relative to given TestObject
 	 * @return
 	 */
 	public String getRelativeId(RobotTestObject thisObject){
-		StringBuilder sb = new StringBuilder(safe(getName()));
+		StringBuilder sb = new StringBuilder(urlEncode(getDuplicateSafeName()));
 
 		RobotTestObject parent = getParent();
 		if(parent != null && !parent.equals(thisObject)){
@@ -82,7 +86,23 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 		}
 		return sb.toString();
 	}
-	
+
+	public String urlEncode(String name) {
+		try {
+			return URLEncoder.encode(name, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public String urlDecode(String name) {
+		try {
+			return URLDecoder.decode(name, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	/**
 	 * Return the build that this result belongs to.
 	 * @return Build object. Null if no build.
@@ -90,30 +110,28 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	public AbstractBuild<?,?> getOwner(){
 		return getParentAction() == null ? null : getParentAction().getOwner();
 	}
-	
+
 	/**
 	 * Get the corresponding result object from a given build
 	 * @param build
 	 * @return
 	 */
 	public RobotTestObject getResultInBuild(AbstractBuild<?,?> build) {
-        parentAction = build.getAction(RobotBuildAction.class);
-        String id = getRelativeId(getParentAction().getResult());
-        return (parentAction == null) ? null : parentAction.findObjectById(id);
-    }
+		parentAction = build.getAction(RobotBuildAction.class);
+		String id = getRelativeId(getParentAction().getResult());
+		return (parentAction == null) ? null : parentAction.findObjectById(id);
+	}
 
-	private static String safe(String unsafeName) {
-		return unsafeName.replaceAll("[/\\ :;#?]", "_");
+	public String getDuplicateSafeName() {
+		if (duplicateSafeName != null)
+			return duplicateSafeName;
+		return getName();
 	}
-	
-	/**
-	 * Get URL-safe name for the object
-	 * @return
-	 */
-	public String getSafeName(){
-		return safe(getName());
+
+	public void setDuplicateSafeName(String name) {
+		duplicateSafeName = name;
 	}
-	
+
 	/**
 	 * Figure out if there's been changes since last request.
 	 * @param req
@@ -122,7 +140,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	 * @throws IOException
 	 */
 	protected boolean isNeedToGenerate(StaplerRequest req, StaplerResponse rsp)
-	throws IOException {
+			throws IOException {
 		if (ChartUtil.awtProblemCause != null) {
 			rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
 			return false;
@@ -136,5 +154,5 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	}
 
 	public abstract RobotTestObject getPreviousResult();
-	
+
 }

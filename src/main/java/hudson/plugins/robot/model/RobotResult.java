@@ -47,19 +47,18 @@ import org.kohsuke.stapler.StaplerResponse;
  */
 public class RobotResult extends RobotTestObject {
 
-	private static final long serialVersionUID = 1L;	
-	
+	private static final long serialVersionUID = 1L;
+
 	private String timeStamp;
-	
+
 	private transient int passed, failed, criticalPassed, criticalFailed;
 	private transient long duration;
 
 	//backwards compatibility with old builds
 	private transient List<RobotResultStatistics> overallStats;
 
-	private Map<String, RobotSuiteResult> suites;	
-	
-	
+	private Map<String, RobotSuiteResult> suites;
+
 	/**
 	 * Find a testobject in the result tree with id-path
 	 * @param id path e.g. "suite/subsuite/testcase"
@@ -69,11 +68,11 @@ public class RobotResult extends RobotTestObject {
 		if(id.indexOf("/") >= 0){
 			String suiteName = id.substring(0, id.indexOf("/"));
 			String childId = id.substring(id.indexOf("/")+1, id.length());
-			RobotSuiteResult suite = suites.get(suiteName);
-			return suite.findObjectById(childId);
+			RobotSuiteResult suite = suites.get(urlDecode(suiteName));
+			return suite.findObjectById(urlDecode(childId));
 		} else return null;
 	}
-	
+
 	@Override
 	public String getName() {
 		return "";
@@ -88,7 +87,7 @@ public class RobotResult extends RobotTestObject {
 		if(overallStats.isEmpty()) return 0;
 		return overallStats.get(0).getPass();
 	}
-	
+
 	/**
 	 * Get number of failed critical tests.
 	 * @return
@@ -98,7 +97,7 @@ public class RobotResult extends RobotTestObject {
 		if( overallStats.isEmpty()) return 0;
 		return overallStats.get(0).getFail();
 	}
-	
+
 	/**
 	 * Get total number of critical tests.
 	 * @return
@@ -108,7 +107,7 @@ public class RobotResult extends RobotTestObject {
 		if(overallStats.isEmpty()) return 0;
 		return overallStats.get(0).getTotal();
 	}
-	
+
 	/**
 	 * Get number of all passed tests.
 	 * @return
@@ -118,7 +117,7 @@ public class RobotResult extends RobotTestObject {
 		if(overallStats.isEmpty()) return 0;
 		return overallStats.get(1).getPass();
 	}
-	
+
 	/**
 	 * Get number of all failed tests.
 	 * @return
@@ -128,7 +127,7 @@ public class RobotResult extends RobotTestObject {
 		if(overallStats.isEmpty()) return 0;
 		return overallStats.get(1).getFail();
 	}
-	
+
 	/**
 	 * Get number of all tests.
 	 * @return
@@ -138,7 +137,7 @@ public class RobotResult extends RobotTestObject {
 		if(overallStats.isEmpty()) return 0;
 		return overallStats.get(1).getTotal();
 	}
-	
+
 	/**
 	 * Get pass/fail stats by category.
 	 * @return List containing 'critical tests' and 'all tests'
@@ -181,9 +180,9 @@ public class RobotResult extends RobotTestObject {
 			passed = getOverallPassed();
 			total = getOverallTotal();
 		}
-		
+
 		if(total == 0) return 100;
-		
+
 		double percentage = (double) passed / total * 100;
 		return roundToDecimals(percentage, 1);
 	}
@@ -216,7 +215,7 @@ public class RobotResult extends RobotTestObject {
 	public RobotSuiteResult getSuite(String name) {
 		return suites.get(name);
 	}
-	
+
 	/**
 	 * Add a suite to this result. If suite with same name exists, store this
 	 * with sequential numbering
@@ -226,16 +225,16 @@ public class RobotResult extends RobotTestObject {
 		if(suites == null)
 			this.suites = new HashMap<String, RobotSuiteResult>();
 		int i = 1;
-		String originalName = suite.getSafeName();
+		String originalName = suite.getName();
 		String checkedSuiteName = originalName;
 		while(suites.get(checkedSuiteName) != null){
 			checkedSuiteName = originalName + "_" + i;
 			i++;
 		}
-		
+		suite.setDuplicateSafeName(checkedSuiteName);
 		suites.put(checkedSuiteName, suite);
 	}
-	
+
 	/**
 	 * Get all top level suites
 	 * @return Collection of suiteresults
@@ -245,7 +244,7 @@ public class RobotResult extends RobotTestObject {
 			return suites.values();
 		return Collections.emptyList();
 	}
-	
+
 	/**
 	 * Get all testsuites related to result.
 	 * @return List of suiteresults
@@ -259,7 +258,7 @@ public class RobotResult extends RobotTestObject {
 		}
 		return allSuites;
 	}
-	
+
 	/**
 	 * Get all failed test cases related to result.
 	 * @return list of test case results
@@ -272,7 +271,7 @@ public class RobotResult extends RobotTestObject {
 		}
 		return allFailedCases;
 	}
-	
+
 	/**
 	 * Count the totals in result tree and assign parent action.
 	 * @param robotBuildAction
@@ -284,17 +283,19 @@ public class RobotResult extends RobotTestObject {
 		criticalPassed = 0;
 		criticalFailed = 0;
 		duration = 0;
-		
-		for(RobotSuiteResult suite : getSuites()){
+		HashMap<String, RobotSuiteResult> newMap = new HashMap<String, RobotSuiteResult>();
+		for(RobotSuiteResult suite: getSuites()){
 			suite.tally(robotBuildAction);
 			failed += suite.getFailed();
 			passed += suite.getPassed();
 			criticalFailed += suite.getCriticalFailed();
 			criticalPassed += suite.getCriticalPassed();
 			duration += suite.getDuration();
+			newMap.put(suite.getDuplicateSafeName(), suite);
 		}
+		suites = newMap;
 	}
-	
+
 	/**
 	 * Return the object represented by url-string
 	 * @param token
@@ -303,9 +304,9 @@ public class RobotResult extends RobotTestObject {
 	 * @return
 	 */
 	public Object getDynamic(String token, StaplerRequest req, StaplerResponse rsp){
-		return suites.get(token);
+		return suites.get(urlDecode(token));
 	}
-	
+
 	/**
 	 * Serves Robot html report via robot url. Shows not found page if file is missing. If reportfilename is specified, the report is served (To be compatible with v1.0 builds)
 	 * @param req
@@ -319,9 +320,9 @@ public class RobotResult extends RobotTestObject {
 		RobotBuildAction parent = getParentAction();
 		FilePath robotDir = null;
 
-		if(parent != null)		
+		if(parent != null)
 			robotDir = parent.getRobotDir();
-		
+
 		if(robotDir != null && robotDir.exists()) {
 			if(StringUtils.isBlank(parent.getReportFileName()))
 				return new DirectoryBrowserSupport(this, robotDir, getDisplayName(), "folder.gif", true);
@@ -329,7 +330,7 @@ public class RobotResult extends RobotTestObject {
 		rsp.sendRedirect("notfound");
 		return null;
 	}
-	
+
 	/**
 	 * Return robot trend graph in the request.
 	 * @param req
@@ -339,12 +340,12 @@ public class RobotResult extends RobotTestObject {
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
-		
+
 		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDataSetForBuild(getOwner()), Messages.robot_trendgraph_testcases(),
 				Messages.robot_trendgraph_builds(), 500, 200, false, Color.green, Color.red);
 		g.doPng(req, rsp);
 	}
-	
+
 	/**
 	 * Return robot trend graph in the request.
 	 * @param req
@@ -354,7 +355,7 @@ public class RobotResult extends RobotTestObject {
 	public void doDurationGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
-		
+
 		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDurationDataSetForBuild(getOwner()), "Duration (ms)",
 				Messages.robot_trendgraph_builds(), 500, 200, false, Color.cyan);
 		g.doPng(req, rsp);
@@ -375,22 +376,22 @@ public class RobotResult extends RobotTestObject {
 	public long getDuration() {
 		return duration;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public RobotResult getPreviousResult(){
 		AbstractBuild<?,?> build = getOwner();
-        if (build == null) {
-            return null;
-        }
-        while((build = build.getPreviousBuild()) != null) {
-            RobotBuildAction parentAction = build.getAction(getParentAction().getClass());
-            if(parentAction != null) {
-                RobotResult result = parentAction.getResult();
-                return result;
-            }
-        }
-        return null;
+		if (build == null) {
+			return null;
+		}
+		while((build = build.getPreviousBuild()) != null) {
+			RobotBuildAction parentAction = build.getAction(getParentAction().getClass());
+			if(parentAction != null) {
+				RobotResult result = parentAction.getResult();
+				return result;
+			}
+		}
+		return null;
 	}
 }

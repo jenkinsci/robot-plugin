@@ -38,7 +38,7 @@ public class RobotCaseResult extends RobotTestObject{
 	private static final long serialVersionUID = -8075680639442547520L;
 
 	private static final Logger LOGGER = Logger.getLogger(RobotCaseResult.class.getName());
-	
+
 	private boolean passed;
 	private boolean critical;
 	private long duration;
@@ -49,7 +49,7 @@ public class RobotCaseResult extends RobotTestObject{
 
 	private RobotSuiteResult parent;
 	private int failedSince;
-	
+
 	/**
 	 * Difference between string timevalues in format yyyyMMdd HH:mm:ss.SS (Java DateFormat).
 	 * Difference is calculated time2 - time1.
@@ -87,15 +87,15 @@ public class RobotCaseResult extends RobotTestObject{
 	public RobotTestObject getParent() {
 		return parent;
 	}
-	
+
 	public void setParent(RobotSuiteResult parent){
 		this.parent = parent;
 	}
-	
+
 	public long getDuration() {
 		if (duration != 0)
 			return duration;
-		
+
 		try{
 			return timeDifference(this.starttime, this.endtime);
 		} catch (ParseException e){
@@ -103,7 +103,7 @@ public class RobotCaseResult extends RobotTestObject{
 			return 0;
 		}
 	}
-	
+
 	public String getStarttime() {
 		return starttime;
 	}
@@ -151,29 +151,29 @@ public class RobotCaseResult extends RobotTestObject{
 	public boolean isCritical() {
 		return critical;
 	}
-	
+
 	/**
 	 * Gives the buildnumber of the build that this case first failed in
 	 * @return number of build
 	 */
 	public int getFailedSince(){
-        if (failedSince == 0 && !isPassed()) {
-            RobotCaseResult previous = getPreviousResult();
-            if(previous != null && !previous.isPassed())
-                this.failedSince = previous.getFailedSince();
-            else if (getOwner() != null) {
-                this.failedSince = getOwner().getNumber();
-            } else {
-                LOGGER.warn("trouble calculating getFailedSince. We've got prev, but no owner.");
-            }
-        }
-        return failedSince;
+		if (failedSince == 0 && !isPassed()) {
+			RobotCaseResult previous = getPreviousResult();
+			if(previous != null && !previous.isPassed())
+				this.failedSince = previous.getFailedSince();
+			else if (getOwner() != null) {
+				this.failedSince = getOwner().getNumber();
+			} else {
+				LOGGER.warn("trouble calculating getFailedSince. We've got prev, but no owner.");
+			}
+		}
+		return failedSince;
 	}
-	
+
 	public void setFailedSince(int failedSince) {
 		this.failedSince = failedSince;
 	}
-	
+
 	/**
 	 * Gives the corresponding caseresult from previous build
 	 */
@@ -181,17 +181,17 @@ public class RobotCaseResult extends RobotTestObject{
 		if (parent == null) return null;
 		RobotSuiteResult prevParent = parent.getPreviousResult();
 		if(prevParent == null) return null;
-		return prevParent.getCase(getSafeName());
+		return prevParent.getCase(getDuplicateSafeName());
 	}
-	
+
 	/**
 	 * Gives the run that this case first failed in
 	 * @return run object
 	 */
 	public Run<?,?> getFailedSinceRun() {
-    	return getOwner().getParent().getBuildByNumber(getFailedSince());
-    }
-	
+		return getOwner().getParent().getBuildByNumber(getFailedSince());
+	}
+
 	/**
 	 * Get the number of builds this test case has failed for
 	 * @return number of builds
@@ -203,7 +203,7 @@ public class RobotCaseResult extends RobotTestObject{
 			return getOwner().getNumber() - getFailedSince() + 1;
 		else return 0;
 	}
-	
+
 	/**
 	 * Return duration graph of the case in the request.
 	 * @param req
@@ -213,12 +213,12 @@ public class RobotCaseResult extends RobotTestObject{
 	public void doDurationGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
-		
+
 		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDurationDataSetForCase(this), "Duration (ms)",
 				Messages.robot_trendgraph_builds(), 500, 200, false, Color.cyan);
 		g.doPng(req, rsp);
 	}
-	
+
 	/**
 	 * Return duration graph of the case in the request.
 	 * @param req
@@ -228,7 +228,7 @@ public class RobotCaseResult extends RobotTestObject{
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
-		
+
 		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createPassFailDataSetForCase(this), "Pass/fail",
 				Messages.robot_trendgraph_builds(), 500, 200, true, Color.green, Color.red);
 		g.doPng(req, rsp);

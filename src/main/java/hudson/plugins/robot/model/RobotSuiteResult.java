@@ -58,12 +58,13 @@ public class RobotSuiteResult extends RobotTestObject {
 		if(children == null)
 			this.children = new HashMap<String, RobotSuiteResult>();
 		int i = 1;
-		String originalName = child.getSafeName();
+		String originalName = child.getName();
 		String checkedSuiteName = originalName;
 		while(children.get(checkedSuiteName) != null){
 			checkedSuiteName = originalName + "_" + i;
 			i++;
 		}
+		child.setDuplicateSafeName(checkedSuiteName);
 		children.put(checkedSuiteName, child);
 	}
 
@@ -174,7 +175,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	public void addCaseResult(RobotCaseResult caseResult) {
 		if(caseResults == null)
 			this.caseResults = new HashMap<String, RobotCaseResult>();
-		caseResults.put(caseResult.getSafeName(), caseResult);
+		caseResults.put(caseResult.getDuplicateSafeName(), caseResult);
 	}
 
 	public String getDisplayName() {
@@ -186,7 +187,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	}
 
 	/**
-	 * Get nested suite result by safe name
+	 * Get nested suite result by duplicate safe unencoded name
 	 * @param name
 	 * @return suite result, null if none found
 	 */
@@ -197,7 +198,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	}
 
 	/**
-	 * Get case result by safe name
+	 * Get case result by duplicate safe unencoded name
 	 * @param name
 	 * @return case result, null if none found
 	 */
@@ -214,27 +215,27 @@ public class RobotSuiteResult extends RobotTestObject {
 		if (parent == null) return null;
 		RobotTestObject prevParent = parent.getPreviousResult();
 		if(prevParent instanceof RobotSuiteResult)
-			return ((RobotSuiteResult)prevParent).getSuite(getSafeName());
+			return ((RobotSuiteResult)prevParent).getSuite(getDuplicateSafeName());
 		else if (prevParent instanceof RobotResult) {
-			return ((RobotResult)prevParent).getSuite(getSafeName());
+			return ((RobotResult)prevParent).getSuite(getDuplicateSafeName());
 		}
 		return null;
 	}
 
 	/**
-	 * Get suite or case result by safe name
+	 * Get suite or case result by url encoded name
 	 * @param token
 	 * @param req
 	 * @param rsp
 	 * @return
 	 */
 	public Object getDynamic(String token, StaplerRequest req,
-			StaplerRequest rsp) {
+							 StaplerRequest rsp) {
 		if ((token) == null)
 			return this;
-		if (getCase(token) != null)
-			return getCase(token);
-		return getSuite(token);
+		if (getCase(urlDecode(token)) != null)
+			return getCase(urlDecode(token));
+		return getSuite(urlDecode(token));
 	}
 
 	/**
@@ -301,6 +302,7 @@ public class RobotSuiteResult extends RobotTestObject {
 		criticalFailed = 0;
 		duration = 0;
 
+		HashMap<String, RobotCaseResult> newCases = new HashMap<String, RobotCaseResult>();
 		for(RobotCaseResult caseResult : getCaseResults()) {
 			if(caseResult.isPassed()) {
 				if(caseResult.isCritical()) criticalPassed++;
@@ -311,9 +313,11 @@ public class RobotSuiteResult extends RobotTestObject {
 			}
 			duration += caseResult.getDuration();
 			caseResult.setParentAction(parentAction);
+			newCases.put(caseResult.getDuplicateSafeName(), caseResult);
 		}
+		caseResults = newCases;
 
-
+		HashMap<String, RobotSuiteResult> newSuites = new HashMap<String, RobotSuiteResult>();
 		for (RobotSuiteResult suite : getChildSuites()) {
 			suite.tally(parentAction);
 			failed += suite.getFailed();
@@ -321,7 +325,9 @@ public class RobotSuiteResult extends RobotTestObject {
 			criticalFailed += suite.getCriticalFailed();
 			criticalPassed += suite.getCriticalPassed();
 			duration += suite.getDuration();
+			newSuites.put(suite.getDuplicateSafeName(), suite);
 		}
+		children = newSuites;
 	}
 
 	/**
@@ -333,11 +339,11 @@ public class RobotSuiteResult extends RobotTestObject {
 		if(id.indexOf("/") >= 0){
 			String suiteName = id.substring(0, id.indexOf("/"));
 			String childId = id.substring(id.indexOf("/")+1, id.length());
-			RobotSuiteResult suite = children.get(suiteName);
+			RobotSuiteResult suite = children.get(urlDecode(suiteName));
 			return suite.findObjectById(childId);
 		} else if(getSuite(id) != null){
-			return getSuite(id);
-		} else return getCase(id);
+			return getSuite(urlDecode(id));
+		} else return getCase(urlDecode(id));
 	}
 
 	/**
@@ -347,7 +353,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * @throws IOException
 	 */
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
-	throws IOException {
+			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
 
 		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDataSetForSuite(this), Messages.robot_trendgraph_testcases(),
@@ -362,7 +368,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * @throws IOException
 	 */
 	public void doDurationGraph(StaplerRequest req, StaplerResponse rsp)
-	throws IOException {
+			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
 
 		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDurationDataSetForSuite(this), "Duration (ms)",
@@ -382,12 +388,12 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * If cases with same name exist, the originals are kept
-	 * @param caseResults
+	 * @param newCaseResults
 	 */
 	public void addCaseResults(Collection<RobotCaseResult> newCaseResults) {
 		for(RobotCaseResult caseResult : newCaseResults){
-			if(caseResults.get(caseResult.getSafeName()) == null){
-				caseResults.put(caseResult.getSafeName(), caseResult);
+			if(caseResults.get(caseResult.getDuplicateSafeName()) == null){
+				caseResults.put(caseResult.getDuplicateSafeName(), caseResult);
 			}
 		}
 	}
