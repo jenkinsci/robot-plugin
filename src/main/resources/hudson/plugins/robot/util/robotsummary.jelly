@@ -17,7 +17,10 @@ limitations under the License.
   <st:attribute name="action" use="required"/>
   <p>
   <j:if test="${attrs.action.logFileLink != null}">
-  	<a href="${rootURL}/job/${attrs.action.owner.project.name}/${attrs.action.owner.number}/${attrs.action.urlName}/report/${attrs.action.logFileLink}">Open ${attrs.action.logFileLink}</a>
+    <j:if test="${attrs.action.owner.project.parent.name != null}">
+    	<j:set var="matrixprojectname" value="${attrs.action.owner.project.parent.name}/" />
+    </j:if>
+  	<a href="${rootURL}/job/${matrixprojectname}${attrs.action.owner.project.name}/${attrs.action.owner.number}/${attrs.action.urlName}/report/${attrs.action.logFileLink}">Open ${attrs.action.logFileLink}</a>
   </j:if>
   </p>
   <ul>

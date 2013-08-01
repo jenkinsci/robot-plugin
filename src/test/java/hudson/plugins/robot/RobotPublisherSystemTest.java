@@ -283,6 +283,16 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		// FIXME: this does not work against the old format for some reason.
 		//assertEquals(2,firstFailed.getFailedSince());
 	}
+	
+	@LocalData
+	public void testMatrixBuildReportLinks() throws Exception {
+		WebClient wc = getWebClient();
+		HtmlPage page = wc.goTo("job/matrix-robot/FOO=bar/2");
+		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/matrix-robot/FOO=bar/2/robot/report/report.html' and contains(.,'Open Robot report.html')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/matrix-robot/FOO=bar/2/robot/report/report.html' and contains(.,'Open report.html')]");
+
+	}
+	
 
 	private WebClient getWebClient(){
 		WebClient wc = new WebClient();

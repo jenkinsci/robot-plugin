@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:u="/hudson/plugins/robot/util">
-  <t:summary icon="${rootURL}/plugin/robot/robot-large.png">
+  <t:summary icon="/plugin/robot/robot-large.png">
     <h3><a href="${it.urlName}">${%summary.header}</a></h3>
     <u:robotsummary action="${it}"/>
   </t:summary>
