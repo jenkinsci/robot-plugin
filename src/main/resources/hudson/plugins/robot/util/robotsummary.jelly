@@ -15,18 +15,76 @@ limitations under the License.
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util">
   <st:attribute name="action" use="required"/>
+  <style type="text/css">
+  #robot-summary-table {
+  	text-align: center;
+  	border-collapse: collapse;
+  }
+  #robot-summary-table th {
+      font-weight: normal;
+      padding: 3px;
+  }
+  #robot-summary-table td {
+      font-weight: bold;
+      border-left: 1px solid #888;
+      margin: 0px;
+      padding: 3px;
+  }
+  #robot-summary-table .table-upper-row {
+  	  border-bottom: 1px solid #888;
+  }
+  #robot-summary-table .fail {
+      color: #f00;
+  }
+  #robot-summary-table .pass {
+      color: #0f0;
+  }
+  </style>
+  <table class="table" id="robot-summary-table">
+    <tr>
+      <th></th>
+      <th>Failed</th>
+      <th>Passed</th>
+      <th>Pass %</th>
+    </tr>
+  	<tr>
+  	  <th>Critical tests</th>
+  	  <td class="table-upper-row" style="border-left:0px;">
+  	    <j:set var="criticalFails" value="pass" />
+  	    <j:if test="${attrs.action.result.criticalFailed > 0}">
+  	       <j:set var="criticalFails" value="fail" />
+  	    </j:if>
+  	    <span class="${criticalFails}">${attrs.action.result.criticalFailed}</span>
+  	  </td>
+  	  <td class="table-upper-row">${attrs.action.result.criticalPassed}</td>
+  	  <td class="table-upper-row">${attrs.action.criticalPassPercentage}</td>
+  	</tr>
+  	<tr>
+  	  <th>Total tests</th>
+  	  <td style="border-left:0px;">
+  	    <j:set var="totalFails" value="pass" />
+  	    <j:if test="${attrs.action.result.overallFailed > 0}">
+  	       <j:set var="totalFails" value="fail" />
+  	    </j:if>
+  	    <span class="${totalFails}">${attrs.action.result.overallFailed}</span>
+  	  </td>
+  	  <td>${attrs.action.result.overallPassed}</td>
+  	  <td>${attrs.action.overallPassPercentage}</td>
+  	</tr>
+  </table>
   <p>
+  <a href="${it.urlName}">&gt; Browse results</a><br />
   <j:if test="${attrs.action.logFileLink != null}">
     <j:if test="${attrs.action.owner.project.parent.name != null}">
     	<j:set var="matrixprojectname" value="${attrs.action.owner.project.parent.name}/" />
     </j:if>
-  	<a href="${rootURL}/job/${matrixprojectname}${attrs.action.owner.project.name}/${attrs.action.owner.number}/${attrs.action.urlName}/report/${attrs.action.logFileLink}">Open ${attrs.action.logFileLink}</a>
+  	<a href="${rootURL}/job/${matrixprojectname}${attrs.action.owner.project.name}/${attrs.action.owner.number}/${attrs.action.urlName}/report/${attrs.action.logFileLink}">&gt; Open ${attrs.action.logFileLink}</a><br />
+  </j:if>
+  <j:if test="${attrs.action.logHtmlLink != null}">
+    <j:if test="${attrs.action.owner.project.parent.name != null}">
+    	<j:set var="matrixprojectname" value="${attrs.action.owner.project.parent.name}/" />
+    </j:if>
+  	<a href="${rootURL}/job/${matrixprojectname}${attrs.action.owner.project.name}/${attrs.action.owner.number}/${attrs.action.urlName}/report/${attrs.action.logHtmlLink}">&gt; Open ${attrs.action.logHtmlLink}</a><br />
   </j:if>
   </p>
-  <ul>
-    <li>${%critical.ratio(attrs.action.criticalPassPercentage)}</li>
-    <li>${%all.ratio(attrs.action.overallPassPercentage)}</li>
-    <li>${%critical.amount(attrs.action.result.criticalPassed, attrs.action.result.criticalTotal)}</li>
-    <li>${%all.amount(attrs.action.result.overallPassed, attrs.action.result.overallTotal)}</li>
-  </ul>
 </j:jelly>

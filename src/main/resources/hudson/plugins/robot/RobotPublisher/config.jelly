@@ -17,9 +17,6 @@ limitations under the License.
   <f:entry title="${%output.directory}" description="${%output.directory.description}" field="outputPath">
     <f:textbox />
   </f:entry>
-  <f:entry title="${%logfile.link.name}" description="${%logfile.link.description}" field="logFileLink">
-    <f:textbox />
-  </f:entry>
   <f:advanced>
     <f:entry title="${%advanced.outputxml}" description="${%advanced.outputxml.description}" field="outputFileName">
       <f:textbox />

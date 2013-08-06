@@ -64,7 +64,6 @@ public class RobotPublisher extends Recorder implements Serializable,
 	final private String outputFileName;
 	final private double passThreshold;
 	final private double unstableThreshold;
-	final private String logFileLink;
 	private String[] otherFiles;
 	
 	//Default to true
@@ -92,7 +91,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	@DataBoundConstructor
 	public RobotPublisher(String outputPath, String outputFileName,
 			String reportFileName, String logFileName, double passThreshold,
-			double unstableThreshold, boolean onlyCritical, String logFileLink, String otherFiles) {
+			double unstableThreshold, boolean onlyCritical, String otherFiles) {
 		this.outputPath = outputPath;
 		this.outputFileName = outputFileName;
 		this.reportFileName = reportFileName;
@@ -100,7 +99,6 @@ public class RobotPublisher extends Recorder implements Serializable,
 		this.unstableThreshold = unstableThreshold;
 		this.logFileName = logFileName;
 		this.onlyCritical = onlyCritical;
-		this.logFileLink = logFileLink;
 		
 		String[] filemasks = otherFiles.split(",");
 		for (int i = 0; i < filemasks.length; i++){
@@ -180,16 +178,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	public boolean getOnlyCritical() {
 		return onlyCritical;
 	}
-	
-	/**
-	 * Return the filename to be rendered in the job front page
-	 * @return null if empty file configured
-	 */
-	public String getLogFileLink() {
-		if(StringUtils.isBlank(logFileLink))
-			return null;
-		return logFileLink;
-	}
+
 
 	/**
 	 * Gets the comma separated list of other filemasks to copy into build dir
@@ -207,30 +196,6 @@ public class RobotPublisher extends Recorder implements Serializable,
 		Collection<Action> actions = new ArrayList<Action>();
 		RobotProjectAction roboAction = new RobotProjectAction(project);
 		actions.add(roboAction);
-		
-		RobotBuildAction lastBuildAction = roboAction.getLastBuildAction();
-		if(lastBuildAction == null)
-			return actions;
-		
-		final int buildNumber = lastBuildAction.getOwner().getNumber();
-		final String logFileName = lastBuildAction.getLogFileLink();
-		if(logFileName != null){
-			actions.add(new Action(){
-
-				public String getDisplayName() {
-					return "Open Latest Robot " + logFileName;
-				}
-
-				public String getUrlName() {
-					return buildNumber + "/robot/report/" + logFileName;
-				}
-
-				public String getIconFileName() {
-					return "/plugin/robot/robot.png";
-				}
-
-			});
-		}
 		return actions;
 	}
 
@@ -284,26 +249,8 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 			logger.println(Messages.robot_publisher_assigning());
 
-			RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener,  getLogFileLink());
+			RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener, getReportFileName(), getLogFileName());
 			build.addAction(action);
-			
-			if(getLogFileLink() != null) {
-				build.addAction(new Action(){
-
-					public String getDisplayName() {
-						return "Open Robot " + getLogFileLink();
-					}
-
-					public String getUrlName() {
-						return "robot/report/" + getLogFileLink();
-					}
-
-					public String getIconFileName() {
-						return "/plugin/robot/robot.png";
-					}
-
-				});
-			}
 
 			logger.println(Messages.robot_publisher_done());
 			logger.println(Messages.robot_publisher_checking());

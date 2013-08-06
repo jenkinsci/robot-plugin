@@ -58,6 +58,7 @@ public class RobotBuildAction extends AbstractTestResultAction implements Staple
 	private transient String reportFileName;
 	private String outputPath;
 	private String logFileLink;
+	private String logHtmlLink;
 	private AbstractBuild<?, ?> build;
 	private RobotResult result;
 	
@@ -74,14 +75,16 @@ public class RobotBuildAction extends AbstractTestResultAction implements Staple
 	 * @param build Build which this action is associated to
 	 * @param result Robot result
 	 * @param outputPath Path where the Robot report is stored relative to build root
-	 * @param reportFileName Name of Robot html report file stored
+	 * @param logFileLink
+	 * @param reportFileLink
 	 */
 	public RobotBuildAction(AbstractBuild<?, ?> build, RobotResult result,
-			String outputPath, BuildListener listener, String logFileLink) {
+			String outputPath, BuildListener listener, String logFileLink, String logHtmlLink) {
 		super(build);
 		this.build = build;
 		this.outputPath = outputPath;
 		this.logFileLink = logFileLink;
+		this.logHtmlLink = logHtmlLink;
 		setResult(result, listener);
 	}
 
@@ -99,6 +102,10 @@ public class RobotBuildAction extends AbstractTestResultAction implements Staple
 	 */
 	public String getLogFileLink(){
 		return logFileLink;
+	}
+	
+	public String getLogHtmlLink(){
+		return logHtmlLink;
 	}
 
     /**
