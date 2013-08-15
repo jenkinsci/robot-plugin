@@ -133,6 +133,16 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	}
 
 	/**
+	 * The name format used in case hashmap was changed in commit
+	 * 59c8eec3e16f28baf1288848fccbac228bbe4748, July 2013. This method allows
+	 * accessing the tests from old saved results.
+	 * TODO: Remove this after a year or so?
+	 */
+	protected String getOldFormatName() {
+		return getName().replaceAll("[/\\ :;#?]", "_");
+	}
+
+	/**
 	 * Figure out if there's been changes since last request.
 	 * @param req
 	 * @param rsp

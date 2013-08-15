@@ -214,10 +214,17 @@ public class RobotSuiteResult extends RobotTestObject {
 	public RobotSuiteResult getPreviousResult(){
 		if (parent == null) return null;
 		RobotTestObject prevParent = parent.getPreviousResult();
-		if(prevParent instanceof RobotSuiteResult)
-			return ((RobotSuiteResult)prevParent).getSuite(getDuplicateSafeName());
+		if(prevParent instanceof RobotSuiteResult) {
+			RobotSuiteResult result = ((RobotSuiteResult)prevParent).getSuite(getDuplicateSafeName());
+			if (result==null)
+				result = ((RobotSuiteResult)prevParent).getSuite(getOldFormatName());
+			return result;
+		}
 		else if (prevParent instanceof RobotResult) {
-			return ((RobotResult)prevParent).getSuite(getDuplicateSafeName());
+			RobotSuiteResult result = ((RobotResult)prevParent).getSuite(getDuplicateSafeName());
+			if (result == null)
+				result = ((RobotResult)prevParent).getSuite(getOldFormatName());
+			return result;
 		}
 		return null;
 	}

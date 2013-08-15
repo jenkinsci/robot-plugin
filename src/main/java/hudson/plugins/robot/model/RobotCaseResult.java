@@ -181,7 +181,10 @@ public class RobotCaseResult extends RobotTestObject{
 		if (parent == null) return null;
 		RobotSuiteResult prevParent = parent.getPreviousResult();
 		if(prevParent == null) return null;
-		return prevParent.getCase(getDuplicateSafeName());
+		RobotCaseResult result = prevParent.getCase(getDuplicateSafeName());
+		if (result==null)
+			result = prevParent.getCase(getOldFormatName());
+		return result;
 	}
 
 	/**

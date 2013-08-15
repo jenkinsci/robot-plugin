@@ -311,10 +311,9 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		RobotBuildAction action = lastRun.getAction(RobotBuildAction.class);
 		RobotResult result = action.getResult();
 		RobotCaseResult firstFailed = result.getAllFailedCases().get(0);
-		// FIXME: this does not work against the old format for some reason.
-		//assertEquals(2,firstFailed.getFailedSince());
+		assertEquals(2,firstFailed.getFailedSince());
 	}
-	
+
 	@LocalData
 	public void testMatrixBuildReportLinks() throws Exception {
 		WebClient wc = getWebClient();
@@ -322,7 +321,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='robot' and contains(.,'Browse results')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/matrix-robot/FOO=bar/2/robot/report/report.html' and contains(.,'Open report.html')]");
 	}
-	
+
 
 	private WebClient getWebClient(){
 		WebClient wc = new WebClient();
