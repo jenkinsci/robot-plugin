@@ -52,7 +52,6 @@ public class RobotResult extends RobotTestObject {
 	private String timeStamp;
 
 	private transient int passed, failed, criticalPassed, criticalFailed;
-	private transient long duration;
 
 	//backwards compatibility with old builds
 	private transient List<RobotResultStatistics> overallStats;

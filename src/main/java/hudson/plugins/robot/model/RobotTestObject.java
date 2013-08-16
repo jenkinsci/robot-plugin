@@ -28,6 +28,7 @@ import java.net.URLEncoder;
 import java.util.Calendar;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -50,6 +51,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	public abstract  RobotTestObject getParent();
 
 	private String duplicateSafeName;
+	protected transient long duration;
 
 	/**
 	 * Generates the full packagename
@@ -161,6 +163,37 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 		if (req.checkIfModified(t, rsp))
 			return false;
 		return true;
+	}
+	
+	/**
+	 * Get duration of this testobject run
+	 * @return
+	 */
+	public long getDuration() {
+		return duration;
+	}
+	
+	/**
+	 * Wrapper for calling formatting from jelly
+	 * @return
+	 */
+	public String getHumanReadableDuration(){
+		return DurationFormatUtils.formatDurationHMS(getDuration());
+	}
+	
+	/**
+	 * Get difference in of duration to given test object
+	 * @param comparable another testobject which to compare to
+	 * @return time difference in human readable format
+	 */
+	public String getDurationDiff(RobotTestObject comparable){
+		long duration = getDuration();
+		long diff = duration;
+		if (comparable != null)
+			diff = duration - comparable.getDuration();
+		if (diff == 0) return "\u00B10";
+		else if (diff > 0) return "+" + DurationFormatUtils.formatDurationHMS(Math.abs(diff));
+		else return "-" + DurationFormatUtils.formatDurationHMS(Math.abs(diff));
 	}
 
 	public abstract RobotTestObject getPreviousResult();

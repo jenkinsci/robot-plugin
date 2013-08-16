@@ -41,7 +41,6 @@ public class RobotCaseResult extends RobotTestObject{
 
 	private boolean passed;
 	private boolean critical;
-	private long duration;
 	private String errorMsg;
 	private String name;
 	private String starttime;
@@ -92,6 +91,7 @@ public class RobotCaseResult extends RobotTestObject{
 		this.parent = parent;
 	}
 
+	@Override
 	public long getDuration() {
 		if (duration != 0)
 			return duration;

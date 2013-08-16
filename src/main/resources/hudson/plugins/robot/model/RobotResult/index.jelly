@@ -41,7 +41,7 @@ limitations under the License.
       <div style="float:right;">
       	<img src="${rootURL}/images/16x16/notepad.gif"/><a href="report" title="Original report files">Original report files</a><br/>
 		Executed at ${it.timeStamp}<br/>
-		Tests took ${it.duration}ms (${h.getDiffString(it.duration - prevresult.duration)})
+		Tests took ${it.humanReadableDuration} (${it.getDurationDiff(prevresult)})
       </div>
       <j:if test="${it.overallFailed > 0}">
       <h2 style="color:#c00;">${it.overallFailed} failed tests, ${it.criticalFailed} critical</h2>
@@ -67,7 +67,7 @@ limitations under the License.
                     ${%Loading...}
            	    </div>
       			</td>
-      			<td class="pane">${case.duration}</td>
+      			<td class="pane">${case.humanReadableDuration}</td>
       			<td class="pane"><a href="${rootURL}/${case.failedSinceRun.url}">${case.age}</a></td>
       		</tr>
       	</j:forEach>
@@ -98,7 +98,7 @@ limitations under the License.
       		<td class="pane"><a href="${suite.getRelativeId(it)}">${suite.getRelativePackageName(it)}</a></td>
       		<td class="pane">${suite.failed} <span style="font-size:0.8em">(${h.getDiffString(suite.failed - prevsuite.failed)})</span></td>
       		<td class="pane">${suite.failed + suite.passed} <span style="font-size:0.8em">(${h.getDiffString((suite.failed + suite.passed) - (prevsuite.failed + prevsuite.passed))})</span></td>
-      		<td class="pane">${suite.duration} <span style="font-size:0.8em">(${h.getDiffString(suite.duration - prevsuite.duration)})</span></td>
+      		<td class="pane">${suite.humanReadableDuration} <span style="font-size:0.8em">(${suite.getDurationDiff(prevsuite)})</span></td>
          </tr>
       </j:forEach>      
       </table>       

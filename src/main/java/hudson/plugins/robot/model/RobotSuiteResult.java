@@ -41,7 +41,6 @@ public class RobotSuiteResult extends RobotTestObject {
 	private RobotTestObject parent;
 	private String name;
 	private Map<String, RobotCaseResult> caseResults;
-	private transient long duration;
 	private transient int failed;
 	private transient int passed;
 	private transient int criticalPassed;
@@ -132,14 +131,6 @@ public class RobotSuiteResult extends RobotTestObject {
 	 */
 	public int getTotal() {
 		return passed + failed;
-	}
-
-	/**
-	 * Get duration of this testsuite run
-	 * @return
-	 */
-	public long getDuration() {
-		return duration;
 	}
 
 	/**
