@@ -11,7 +11,7 @@ import java.io.IOException;
 import org.jenkinsci.plugins.tokenmacro.DataBoundTokenMacro;
 import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 
-@Extension
+@Extension(optional = true)
 public class RobotPassRatioTokenMacro extends DataBoundTokenMacro {
 
 	@Parameter
