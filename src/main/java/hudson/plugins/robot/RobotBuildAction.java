@@ -246,8 +246,7 @@ public class RobotBuildAction extends AbstractTestResultAction implements Staple
 		if (req.checkIfModified(t, rsp))
 			return;
 		
-		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDataSetForBuild(getOwner()), Messages.robot_trendgraph_testcases(),
-				Messages.robot_trendgraph_builds(), 500, 200, false, Color.green, Color.red);
+		Graph g = RobotGraphHelper.createDataSetForTestObject(getResult(), req.hasParameter("significant"), false);
 		g.doPng(req, rsp);
 	}
 	

@@ -217,8 +217,7 @@ public class RobotCaseResult extends RobotTestObject{
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
 
-		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDurationDataSetForCase(this), "Duration (ms)",
-				Messages.robot_trendgraph_builds(), 500, 200, false, Color.cyan);
+		Graph g = RobotGraphHelper.createDurationGraphForTestObject(this);
 		g.doPng(req, rsp);
 	}
 
@@ -232,8 +231,19 @@ public class RobotCaseResult extends RobotTestObject{
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
 
-		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createPassFailDataSetForCase(this), "Pass/fail",
-				Messages.robot_trendgraph_builds(), 500, 200, true, Color.green, Color.red);
+		Graph g = RobotGraphHelper.createDataSetForTestObject(this, false, true);
 		g.doPng(req, rsp);
+	}
+
+	@Override
+	public int getFailed() {
+		if(isPassed()) return 0;
+		return 1;
+	}
+
+	@Override
+	public int getPassed() {
+		if(isPassed()) return 1;
+		return 0;
 	}
 }

@@ -137,14 +137,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//img[@src='robot/graph']");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='robot' and contains(text(),'Browse results')]");
 		HtmlTable table = page.getHtmlElementById("robot-summary-table");
-		Assert.assertTrue(table.asXml().replaceAll("\\s","").contains("<tableclass=\"table\"id=\"robot-summary-table\">"
-				 													  +"<tbodyalign=\"left\"><tr><th/><th>Failed</th><th>Passed</th>"
-				 													  +"<th>Pass%</th></tr><tr><th>Criticaltests</th>"
-				 													  +"<tdclass=\"table-upper-row\"style=\"border-left:0px;\">"
-				 													  +"<spanclass=\"fail\">4</span></td><tdclass=\"table-upper-row\">4</td>"
-				 													  +"<tdclass=\"table-upper-row\">50.0</td></tr><tr><th>Totaltests</th>"
-				 													  +"<tdstyle=\"border-left:0px;\"><spanclass=\"fail\">4</span></td>"
-				 													  +"<td>4</td><td>50.0</td></tr></tbody></table>"));
+		Assert.assertTrue(table.asXml().replaceAll("\\s","").contains("<tableclass=\"table\"id=\"robot-summary-table\"><tbodyalign=\"left\"><tr><th/><th>Total</th><th>Failed</th><th>Passed</th><th>Pass%</th></tr><tr><th>Criticaltests</th><tdclass=\"table-upper-row\"style=\"border-left:0px;\">8</td><tdclass=\"table-upper-row\"><spanclass=\"fail\">4</span></td><tdclass=\"table-upper-row\">4</td><tdclass=\"table-upper-row\">50.0</td></tr><tr><th>Alltests</th><tdstyle=\"border-left:0px;\">8</td><td><spanclass=\"fail\">4</span></td><td>4</td><td>50.0</td></tr></tbody></table>"));
 
 		page = wc.goTo("job/oldrobotbuild/robot/");
 		WebAssert.assertTitleEquals(page, "Testcases & Othercases Test Report");
@@ -154,14 +147,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//h4[contains(.,'Robot Test Summary:')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='robot' and contains(text(),'Browse results')]");
 		table = page.getHtmlElementById("robot-summary-table");
-		Assert.assertTrue(table.asXml().replaceAll("\\s","").contains("<tableclass=\"table\"id=\"robot-summary-table\">"
-				 													  +"<tbodyalign=\"left\"><tr><th/><th>Failed</th><th>Passed</th>"
-				 													  +"<th>Pass%</th></tr><tr><th>Criticaltests</th>"
-				 													  +"<tdclass=\"table-upper-row\"style=\"border-left:0px;\">"
-				 													  +"<spanclass=\"fail\">4</span></td><tdclass=\"table-upper-row\">4</td>"
-				 													  +"<tdclass=\"table-upper-row\">50.0</td></tr><tr><th>Totaltests</th>"
-				 													  +"<tdstyle=\"border-left:0px;\"><spanclass=\"fail\">4</span></td>"
-				 													  +"<td>4</td><td>50.0</td></tr></tbody></table>"));
+		Assert.assertTrue(table.asXml().replaceAll("\\s","").contains("<tableclass=\"table\"id=\"robot-summary-table\"><tbodyalign=\"left\"><tr><th/><th>Total</th><th>Failed</th><th>Passed</th><th>Pass%</th></tr><tr><th>Criticaltests</th><tdclass=\"table-upper-row\"style=\"border-left:0px;\">8</td><tdclass=\"table-upper-row\"><spanclass=\"fail\">4</span></td><tdclass=\"table-upper-row\">4</td><tdclass=\"table-upper-row\">50.0</td></tr><tr><th>Alltests</th><tdstyle=\"border-left:0px;\">8</td><td><spanclass=\"fail\">4</span></td><td>4</td><td>50.0</td></tr></tbody></table>"));
 
 		page = wc.goTo("job/oldrobotbuild/1/robot/");
 		WebAssert.assertTitleEquals(page, "Testcases & Othercases Test Report");
@@ -196,14 +182,9 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/robot/1/robot/report/log.html' and contains(text(), 'Open log.html')]");
 
 		HtmlTable table = page.getHtmlElementById("robot-summary-table");
-		Assert.assertTrue(table.asXml().replaceAll("\\s","").contains("<tableclass=\"table\"id=\"robot-summary-table\">"
-																	 +"<tbodyalign=\"left\"><tr><th/><th>Failed</th><th>Passed</th>"
-																	 +"<th>Pass%</th></tr><tr><th>Criticaltests</th>"
-																	 +"<tdclass=\"table-upper-row\"style=\"border-left:0px;\">"
-																	 +"<spanclass=\"fail\">4</span></td><tdclass=\"table-upper-row\">4</td>"
-																	 +"<tdclass=\"table-upper-row\">50.0</td></tr><tr><th>Totaltests</th>"
-																	 +"<tdstyle=\"border-left:0px;\"><spanclass=\"fail\">4</span></td>"
-																	 +"<td>4</td><td>50.0</td></tr></tbody></table>"));
+		System.out.println(table.asXml());
+		Assert.assertTrue(table.asXml().replaceAll("\\s","").contains("<tableclass=\"table\"id=\"robot-summary-table\"><tbodyalign=\"left\"><tr><th/><th>Total</th><th>Failed</th><th>Passed</th><th>Pass%</th></tr><tr><th>Criticaltests</th><tdclass=\"table-upper-row\"style=\"border-left:0px;\">8</td><tdclass=\"table-upper-row\"><spanclass=\"fail\">4</span></td><tdclass=\"table-upper-row\">4</td><tdclass=\"table-upper-row\">50.0</td></tr><tr><th>Alltests</th><tdstyle=\"border-left:0px;\">8</td><td><spanclass=\"fail\">4</span></td><td>4</td><td>50.0</td></tr></tbody></table>"));
+
 
 		page = wc.goTo("job/robot/1/");
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/robot/1/robot']");
@@ -212,14 +193,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/robot/1/robot/report/report.html' and contains(text(), 'Open report.html')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/robot/1/robot/report/log.html' and contains(text(), 'Open log.html')]");
 		table = page.getHtmlElementById("robot-summary-table");
-		Assert.assertTrue(table.asXml().replaceAll("\\s","").contains("<tableclass=\"table\"id=\"robot-summary-table\">"
-				 													  +"<tbodyalign=\"left\"><tr><th/><th>Failed</th><th>Passed</th>"
-				 													  +"<th>Pass%</th></tr><tr><th>Criticaltests</th>"
-				 													  +"<tdclass=\"table-upper-row\"style=\"border-left:0px;\">"
-				 													  +"<spanclass=\"fail\">4</span></td><tdclass=\"table-upper-row\">4</td>"
-				 													  +"<tdclass=\"table-upper-row\">50.0</td></tr><tr><th>Totaltests</th>"
-				 													  +"<tdstyle=\"border-left:0px;\"><spanclass=\"fail\">4</span></td>"
-				 													  +"<td>4</td><td>50.0</td></tr></tbody></table>"));
+		Assert.assertTrue(table.asXml().replaceAll("\\s","").contains("<tableclass=\"table\"id=\"robot-summary-table\"><tbodyalign=\"left\"><tr><th/><th>Total</th><th>Failed</th><th>Passed</th><th>Pass%</th></tr><tr><th>Criticaltests</th><tdclass=\"table-upper-row\"style=\"border-left:0px;\">8</td><tdclass=\"table-upper-row\"><spanclass=\"fail\">4</span></td><tdclass=\"table-upper-row\">4</td><tdclass=\"table-upper-row\">50.0</td></tr><tr><th>Alltests</th><tdstyle=\"border-left:0px;\">8</td><td><spanclass=\"fail\">4</span></td><td>4</td><td>50.0</td></tr></tbody></table>"));
 	}
 
 	@LocalData

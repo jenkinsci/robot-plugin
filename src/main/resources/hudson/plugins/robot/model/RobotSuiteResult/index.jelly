@@ -35,6 +35,18 @@ limitations under the License.
 			document.getElementById(id + "-showlink").style.display = "";
 			document.getElementById(id + "-hidelink").style.display = "none";
 		}
+    	
+    	function showSignificant() {
+		    document.getElementById("passfailgraph").src = "graph?significant";
+		    document.getElementById("significantshowlink").style.display = "none";
+		    document.getElementById("significanthidelink").style.display = "";
+		}
+		
+		function hideSignificant() {
+		    document.getElementById("passfailgraph").src = "graph";
+		    document.getElementById("significantshowlink").style.display = "";
+		    document.getElementById("significanthidelink").style.display = "none";
+		}		
  	  </script>
       <h1>Testsuite: "${it.name}"</h1>
    	  <j:set var="prevresult" value="${it.previousResult}" />
@@ -72,11 +84,15 @@ limitations under the License.
       </table>
       </j:if>
       <div style="margin-top:20px;">
-       <div style="float:left; margin: 20px;">
+       <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
        <h3>Pass/fail trend</h3>
-       	<img src="graph"/>
+       	<img id="passfailgraph" src="graph"/>
+       	<p>
+       	  <a id="significantshowlink" href="javascript:showSignificant()">&gt; Scale graph to changes</a>
+       	  <a id="significanthidelink" href="javascript:hideSignificant()" class="hidden" style="display:none;">&gt; Show full graph</a>
+       	</p>
        </div>
-       <div style="float:left; margin: 20px;">
+       <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
       	 <h3>Duration trend</h3>
      	  <img src="durationGraph"/>
        </div>

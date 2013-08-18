@@ -43,13 +43,15 @@ limitations under the License.
   <table class="table" id="robot-summary-table">
     <tr>
       <th></th>
+      <th>Total</th>
       <th>Failed</th>
       <th>Passed</th>
       <th>Pass %</th>
     </tr>
   	<tr>
   	  <th>Critical tests</th>
-  	  <td class="table-upper-row" style="border-left:0px;">
+  	  <td class="table-upper-row" style="border-left:0px;">${attrs.action.result.criticalTotal}</td>
+  	  <td class="table-upper-row">
   	    <j:set var="criticalFails" value="pass" />
   	    <j:if test="${attrs.action.result.criticalFailed > 0}">
   	       <j:set var="criticalFails" value="fail" />
@@ -60,8 +62,9 @@ limitations under the License.
   	  <td class="table-upper-row">${attrs.action.criticalPassPercentage}</td>
   	</tr>
   	<tr>
-  	  <th>Total tests</th>
-  	  <td style="border-left:0px;">
+  	  <th>All tests</th>
+  	  <td style="border-left:0px;">${attrs.action.result.overallTotal}</td>
+  	  <td>
   	    <j:set var="totalFails" value="pass" />
   	    <j:if test="${attrs.action.result.overallFailed > 0}">
   	       <j:set var="totalFails" value="fail" />

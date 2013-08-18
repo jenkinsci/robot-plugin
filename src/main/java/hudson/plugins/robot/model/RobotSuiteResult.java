@@ -353,9 +353,8 @@ public class RobotSuiteResult extends RobotTestObject {
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
-
-		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDataSetForSuite(this), Messages.robot_trendgraph_testcases(),
-				Messages.robot_trendgraph_builds(), 500, 200, false, Color.green, Color.red);
+		
+		Graph g = RobotGraphHelper.createDataSetForTestObject(this, req.hasParameter("significant"), false);
 		g.doPng(req, rsp);
 	}
 
@@ -369,8 +368,7 @@ public class RobotSuiteResult extends RobotTestObject {
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
 
-		Graph g = new RobotGraph(getOwner(), RobotGraphHelper.createDurationDataSetForSuite(this), "Duration (ms)",
-				Messages.robot_trendgraph_builds(), 500, 200, false, Color.cyan);
+		Graph g = RobotGraphHelper.createDurationGraphForTestObject(this);
 		g.doPng(req, rsp);
 	}
 

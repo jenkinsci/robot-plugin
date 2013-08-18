@@ -35,17 +35,16 @@ import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
 
 public class RobotGraph extends Graph {
-
 	private final String yLabel;
 	private final String xLabel;
-
 	private final CategoryDataset categoryDataset;
 	private Color[] colors;
 	private boolean binaryData;
-
+	private int lowerBound;
+	private int upperBound;
 	public static final int DEFAULT_CHART_WIDTH = 500;
 	public static final int DEFAULT_CHART_HEIGHT = 200;
-
+	
 	/**
 	 * Construct a new styled trend graph for given dataset
 	 * @param owner Build which the graph is associated to
@@ -57,15 +56,17 @@ public class RobotGraph extends Graph {
 	 */
 	public RobotGraph(AbstractBuild<?, ?> owner,
 			CategoryDataset categoryDataset, String yLabel, String xLabel,
-			int chartWidth, int chartHeight, boolean binaryData, Color...colors) {
+			int chartWidth, int chartHeight, boolean binaryData, int lowerBound, int upperBound, Color...colors) {
 		super(owner.getTimestamp(), chartWidth, chartHeight);
 		this.yLabel = yLabel;
 		this.xLabel = xLabel;
 		this.categoryDataset = categoryDataset;
 		this.colors = colors;
 		this.binaryData = binaryData;
+		this.lowerBound = lowerBound;
+		this.upperBound = upperBound;
 	}
-
+	
 	/**
 	 * Creates a Robot trend graph
 	 * @return the JFreeChart graph object
@@ -97,11 +98,12 @@ public class RobotGraph extends Graph {
 		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 		if(binaryData){
 			rangeAxis.setUpperBound(1);
+		} else if (upperBound != 0){
+			rangeAxis.setUpperBound(upperBound);
 		} else {
 			rangeAxis.setAutoRange(true);
-			rangeAxis.setAutoRangeMinimumSize(5);
 		}
-		rangeAxis.setLowerBound(0);
+		rangeAxis.setLowerBound(lowerBound);
 
 
 		final CategoryItemRenderer renderer = plot.getRenderer();

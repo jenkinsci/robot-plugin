@@ -14,12 +14,30 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:local="local">
+    <script>
+    function showSignificant() {
+		    document.getElementById("passfailgraph").src = "${from.urlName}/graph?significant";
+		    document.getElementById("significantshowlink").style.display = "none";
+		    document.getElementById("significanthidelink").style.display = "";
+		}
+		
+		function hideSignificant() {
+		    document.getElementById("passfailgraph").src = "${from.urlName}/graph";
+		    document.getElementById("significantshowlink").style.display = "";
+		    document.getElementById("significanthidelink").style.display = "none";
+		}
+		
+ 	</script>
     <j:if test="${from.isDisplayGraph()}">
     <div align="right">
           <div class="test-trend-caption">${%trend.graph.header}</div>
                 <a href="${from.urlName}/">       
-                    <img src="${from.urlName}/graph"/>
-                </a>    
+                    <img id="passfailgraph" src="${from.urlName}/graph"/>
+                </a>
+               <p align="center">
+       	         <a id="significantshowlink" href="javascript:showSignificant()">&gt; Scale graph to changes</a>
+       	         <a id="significanthidelink" href="javascript:hideSignificant()" class="hidden" style="display:none;">&gt; Show full graph</a>
+       	       </p>
         </div>
     </j:if>
 </j:jelly>

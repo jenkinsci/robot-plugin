@@ -20,48 +20,55 @@ import hudson.plugins.robot.Messages;
 import hudson.plugins.robot.RobotBuildAction;
 import hudson.plugins.robot.model.RobotCaseResult;
 import hudson.plugins.robot.model.RobotSuiteResult;
+import hudson.plugins.robot.model.RobotTestObject;
 import hudson.util.ChartUtil;
+import hudson.util.Graph;
 import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 import hudson.util.DataSetBuilder;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
+import org.jfree.data.KeyedValue;
+import org.jfree.data.KeyedValues2D;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 public class RobotGraphHelper {
+	
+	private static int SECONDSCALE = 1000;
+	private static int MINUTESCALE = 60000;
+	private static int HOURSCALE = 3600000;
 
 	/**
-	 * Create a dataset for the trend graph.
-	 * @param project
+	 * Create a pass/fail trend graph. The graph will ignore builds with no robot results.
+	 * @param rootObject The dataset will be taken from rootObject backwards. 
+	 * (i.e. there are no saved robot results in a given build)
 	 * @return
 	 */
-	public static CategoryDataset createDataSetForBuild(AbstractBuild<?,?> build) {
+	public static Graph createDataSetForTestObject(RobotTestObject rootObject, boolean significantData, boolean binarydata) {
 		List<Number> values = new ArrayList<Number>();
 		List<String> rows = new ArrayList<String>();
 		List<NumberOnlyBuildLabel> columns = new ArrayList<NumberOnlyBuildLabel>();
 
-		for (; build != null; build = build
-				.getPreviousBuild()) {
-			RobotBuildAction action = build.getAction(RobotBuildAction.class);
+		int lowerbound = 0;
+		int upperbound = 0;
+		for (RobotTestObject testObject = rootObject; testObject != null; testObject = testObject.getPreviousResult()) {
+			Number failed = testObject.getFailed();
+			Number passed = testObject.getPassed();
+			
+			if (significantData){
+				if(lowerbound == 0 || lowerbound > failed.intValue() + passed.intValue())
+					lowerbound = failed.intValue() + passed.intValue();
 
-			Number failed = 0, passed = 0;
-			if (action != null && action.getResult() != null) {
-				failed = action.getResult().getOverallFailed();
-				passed = action.getResult().getOverallPassed();
+				if(upperbound < failed.intValue() + passed.intValue())
+					upperbound = failed.intValue() + passed.intValue();
 			}
 
-			// default 'zero value' must be set over zero to circumvent
-			// JFreeChart stacked area rendering problem with zero values
-			if (failed.intValue() < 1)
-				failed = 0.01f;
-			if (passed.intValue() < 1)
-				passed = 0.01f;
-
 			ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(
-					build);
+					testObject.getOwner());
 
 			values.add(passed);
 			rows.add(Messages.robot_trendgraph_passed());
@@ -71,144 +78,37 @@ public class RobotGraphHelper {
 			rows.add(Messages.robot_trendgraph_failed());
 			columns.add(label);
 		}
-
-		return createSortedDataset(values, rows, columns);
+		
+		if(significantData){
+			lowerbound = (int)(lowerbound * 0.9);
+			upperbound = (int)Math.ceil(upperbound * 1.1);
+		}
+		return new RobotGraph(rootObject.getOwner(), createSortedDataset(values, rows, columns), Messages.robot_trendgraph_testcases(),
+				Messages.robot_trendgraph_builds(), 500, 200, binarydata, lowerbound, upperbound, Color.green, Color.red);
 	}
 	
 	/**
-	 * Create a dataset for the trend graph.
-	 * @param project
+	 * Create a duration trend graph. The graph will ignore builds with no robot results.
+	 * @param rootObject rootObject The dataset will be taken from rootObject backwards. 
 	 * @return
 	 */
-	public static CategoryDataset createDurationDataSetForBuild(AbstractBuild<?,?> build) {
+	public static Graph createDurationGraphForTestObject(RobotTestObject rootObject) {
 		DataSetBuilder<String, NumberOnlyBuildLabel> builder = new DataSetBuilder<String, NumberOnlyBuildLabel>();
 
-		for (; build != null; build = build
-				.getPreviousBuild()) {
-			RobotBuildAction action = build.getAction(RobotBuildAction.class);
-
-			float duration = 0;
-			if (action != null && action.getResult() != null) {
-				duration = action.getResult().getDuration();
-			}
-
-			// default 'zero value' must be set over zero to circumvent
-			// JFreeChart stacked area rendering problem with zero values
-			if (duration < 1)
-				duration = 0.01f;
-
+		int scale = 1;	
+		for (RobotTestObject testObject = rootObject; testObject != null; testObject = testObject.getPreviousResult()){
+			scale = getTimeScaleFactor(testObject.getDuration(), scale);
+		}
+		
+		for (RobotTestObject testObject = rootObject; testObject != null; testObject = testObject.getPreviousResult()){
 			ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(
-					build);
-			
-			builder.add(duration, "duration", label);
+					testObject.getOwner());
+			builder.add((double)testObject.getDuration() / scale, "Duration", label);
 		}
-		
-		return builder.build();
-	}
 	
-	public static CategoryDataset createDurationDataSetForSuite(RobotSuiteResult suite) {
-		DataSetBuilder<String, NumberOnlyBuildLabel> builder = new DataSetBuilder<String, NumberOnlyBuildLabel>();
-
-		for (; suite != null; suite = (RobotSuiteResult)suite.getPreviousResult()) {
-			float duration = 0;
-			duration = suite.getDuration();
-
-				// default 'zero value' must be set over zero to circumvent
-				// JFreeChart stacked area rendering problem with zero values
-				if (duration < 1)
-					duration = 0.01f;
-
-				ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(
-						suite.getOwner());
-				
-				builder.add(duration, "duration", label);
-		}
-		
-		return builder.build();
-	}
-	
-	public static CategoryDataset createDurationDataSetForCase(RobotCaseResult caseResult) {
-		DataSetBuilder<String, NumberOnlyBuildLabel> builder = new DataSetBuilder<String, NumberOnlyBuildLabel>();
-
-		for (; caseResult != null; caseResult = caseResult.getPreviousResult()) {
-			float duration = 0;
-			duration = caseResult.getDuration();
-
-				// default 'zero value' must be set over zero to circumvent
-				// JFreeChart stacked area rendering problem with zero values
-				if (duration < 1)
-					duration = 0.01f;
-
-				ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(
-						caseResult.getOwner());
-				
-				builder.add(duration, "duration", label);
-		}
-		
-		return builder.build();
-	}
-	
-	public static CategoryDataset createPassFailDataSetForCase(RobotCaseResult caseResult) {
-		List<Number> values = new ArrayList<Number>();
-		List<String> rows = new ArrayList<String>();
-		List<NumberOnlyBuildLabel> columns = new ArrayList<NumberOnlyBuildLabel>();
-		
-		for (; caseResult != null; caseResult = caseResult.getPreviousResult()) {
-			Number failed = caseResult.isPassed() ? 0 : 1;
-			Number passed = caseResult.isPassed() ? 1 : 0;
-			
-			
-
-			// default 'zero value' must be set over zero to circumvent
-			// JFreeChart stacked area rendering problem with zero values
-			if (failed.intValue() < 1)
-				failed = 0.01f;
-			if (passed.intValue() < 1)
-				passed = 0.01f;
-
-			ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(
-					caseResult.getOwner());
-
-			values.add(passed);
-			rows.add(Messages.robot_trendgraph_passed());
-			columns.add(label);
-
-			values.add(failed);
-			rows.add(Messages.robot_trendgraph_failed());
-			columns.add(label);
-		}
-		
-		return createSortedDataset(values, rows, columns);
-	}
-
-	public static CategoryDataset createDataSetForSuite(RobotSuiteResult suite) {
-		List<Number> values = new ArrayList<Number>();
-		List<String> rows = new ArrayList<String>();
-		List<NumberOnlyBuildLabel> columns = new ArrayList<NumberOnlyBuildLabel>();
-
-		for (; suite != null; suite = (RobotSuiteResult)suite.getPreviousResult()) {
-			Number failed = suite.getFailed();
-			Number passed = suite.getPassed();
-
-			// default 'zero value' must be set over zero to circumvent
-			// JFreeChart stacked area rendering problem with zero values
-			if (failed.intValue() < 1)
-				failed = 0.01f;
-			if (passed.intValue() < 1)
-				passed = 0.01f;
-
-			ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(
-					suite.getOwner());
-
-			values.add(passed);
-			rows.add(Messages.robot_trendgraph_passed());
-			columns.add(label);
-
-			values.add(failed);
-			rows.add(Messages.robot_trendgraph_failed());
-			columns.add(label);
-		}
-		return createSortedDataset(values, rows, columns);
+		Graph g = new RobotGraph(rootObject.getOwner(), builder.build(), "Duration (" + getTimeScaleString(scale) + ")",
+				  Messages.robot_trendgraph_builds(), 500, 200, false, 0, 0, Color.cyan);
+		return g;
 	}
 	
 	private static CategoryDataset createSortedDataset(List<Number> values, List<String> rows, List<NumberOnlyBuildLabel> columns) {
@@ -232,5 +132,34 @@ public class RobotGraphHelper {
 		for (int i = 0; i < values.size(); i++)
 			dataset.addValue(values.get(i), rows.get(i), columns.get(i));
 		return dataset;
+	}
+	
+	private static float getDurationFromBuild(AbstractBuild<?,?> build){
+		RobotBuildAction action = build.getAction(RobotBuildAction.class);
+
+		float duration = 0;
+		if (action != null && action.getResult() != null) {
+			duration = action.getResult().getDuration();
+		}
+		return duration;
+	}
+	
+	private static int getTimeScaleFactor(float duration, int originalScale){
+		int scale = originalScale;
+		if (duration > HOURSCALE) {
+	    	scale = HOURSCALE;
+	    } else if (duration > MINUTESCALE) {
+	    	scale = MINUTESCALE;
+	    } else if (duration > SECONDSCALE) {
+	    	scale = SECONDSCALE;
+	    }
+		return scale;
+	}
+	
+	private static String getTimeScaleString(int scale){
+		if(scale == SECONDSCALE) return "s";
+		else if(scale == MINUTESCALE) return "min";
+		else if(scale == HOURSCALE) return "h";
+		return "ms";
 	}
 }

@@ -197,5 +197,8 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	}
 
 	public abstract RobotTestObject getPreviousResult();
-
+	
+	public abstract int getFailed();
+  
+	public abstract int getPassed();
 }
