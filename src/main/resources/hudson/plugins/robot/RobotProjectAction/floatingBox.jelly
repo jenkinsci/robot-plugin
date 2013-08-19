@@ -31,13 +31,13 @@ limitations under the License.
     <j:if test="${from.isDisplayGraph()}">
     <div align="right">
           <div class="test-trend-caption">${%trend.graph.header}</div>
+               <p align="center">
+       	         <a id="significantshowlink" href="javascript:showSignificant()">&gt; Zoom graph to changes</a>
+       	         <a id="significanthidelink" href="javascript:hideSignificant()" class="hidden" style="display:none;">&gt; Show full graph</a>
+       	       </p>
                 <a href="${from.urlName}/">       
                     <img id="passfailgraph" src="${from.urlName}/graph"/>
                 </a>
-               <p align="center">
-       	         <a id="significantshowlink" href="javascript:showSignificant()">&gt; Scale graph to changes</a>
-       	         <a id="significanthidelink" href="javascript:hideSignificant()" class="hidden" style="display:none;">&gt; Show full graph</a>
-       	       </p>
         </div>
     </j:if>
 </j:jelly>

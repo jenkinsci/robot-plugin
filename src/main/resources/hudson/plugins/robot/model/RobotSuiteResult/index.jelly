@@ -88,7 +88,7 @@ limitations under the License.
        <h3>Pass/fail trend</h3>
        	<img id="passfailgraph" src="graph"/>
        	<p>
-       	  <a id="significantshowlink" href="javascript:showSignificant()">&gt; Scale graph to changes</a>
+       	  <a id="significantshowlink" href="javascript:showSignificant()">&gt; Zoom graph to changes</a>
        	  <a id="significanthidelink" href="javascript:hideSignificant()" class="hidden" style="display:none;">&gt; Show full graph</a>
        	</p>
        </div>
