@@ -20,7 +20,6 @@ import hudson.XmlFile;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.model.DirectoryBrowserSupport;
-import hudson.plugins.robot.graph.RobotGraph;
 import hudson.plugins.robot.graph.RobotGraphHelper;
 import hudson.plugins.robot.model.RobotTestObject;
 import hudson.plugins.robot.model.RobotCaseResult;
@@ -32,7 +31,6 @@ import hudson.util.Graph;
 import hudson.util.HeapSpaceStringConverter;
 import hudson.util.XStream2;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;

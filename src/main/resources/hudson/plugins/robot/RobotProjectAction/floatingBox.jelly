@@ -14,29 +14,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:local="local">
-    <script>
-    function showSignificant() {
-		    document.getElementById("passfailgraph").src = "${from.urlName}/graph?significant";
-		    document.getElementById("significantshowlink").style.display = "none";
-		    document.getElementById("significanthidelink").style.display = "";
-		}
-		
-		function hideSignificant() {
-		    document.getElementById("passfailgraph").src = "${from.urlName}/graph";
-		    document.getElementById("significantshowlink").style.display = "";
-		    document.getElementById("significanthidelink").style.display = "none";
-		}
-		
- 	</script>
+    <script src="${rootURL}/plugin/robot/robot.js"/>
+	<j:set var="mode" value="${h.getCookie(request,'RobotResult_zoomSignificant').value}" />
+      <j:if test="${mode!=null}">
+        <j:set var="passfailquery" value="?zoomSignificant=${mode}" />
+      </j:if>
     <j:if test="${from.isDisplayGraph()}">
     <div align="right">
           <div class="test-trend-caption">${%trend.graph.header}</div>
                <p align="center">
-       	         <a id="significantshowlink" href="javascript:showSignificant()">&gt; Zoom graph to changes</a>
-       	         <a id="significanthidelink" href="javascript:hideSignificant()" class="hidden" style="display:none;">&gt; Show full graph</a>
+               <j:choose>
+                 <j:when test="${mode}">
+                   <a id="significantshowlink" href="javascript:showSignificant('${from.urlName}','${rootURL}/job/${from.project.name}/')" class="hidden" style="display:none;">&gt; Zoom graph to changes</a>
+       	           <a id="significanthidelink" href="javascript:hideSignificant('${from.urlName}','${rootURL}/job/${from.project.name}/')">&gt; Show full graph</a>
+       	         </j:when>
+       	         <j:otherwise>
+       	           <a id="significantshowlink" href="javascript:showSignificant('${from.urlName}','${rootURL}/job/${from.project.name}/')">&gt; Zoom graph to changes</a>
+       	           <a id="significanthidelink" href="javascript:hideSignificant('${from.urlName}','${rootURL}/job/${from.project.name}/')" class="hidden" style="display:none;">&gt; Show full graph</a>
+       	         </j:otherwise>
+       	       </j:choose>
        	       </p>
                 <a href="${from.urlName}/">       
-                    <img id="passfailgraph" src="${from.urlName}/graph"/>
+                    <img id="passfailgraph" src="${from.urlName}/graph${passfailquery}"/>
                 </a>
         </div>
     </j:if>

@@ -17,12 +17,9 @@ package hudson.plugins.robot.model;
 
 import hudson.model.AbstractBuild;
 import hudson.model.Run;
-import hudson.plugins.robot.Messages;
-import hudson.plugins.robot.graph.RobotGraph;
 import hudson.plugins.robot.graph.RobotGraphHelper;
 import hudson.util.Graph;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;

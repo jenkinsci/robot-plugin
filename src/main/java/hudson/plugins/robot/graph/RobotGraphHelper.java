@@ -15,11 +15,7 @@
 */
 package hudson.plugins.robot.graph;
 
-import hudson.model.AbstractBuild;
 import hudson.plugins.robot.Messages;
-import hudson.plugins.robot.RobotBuildAction;
-import hudson.plugins.robot.model.RobotCaseResult;
-import hudson.plugins.robot.model.RobotSuiteResult;
 import hudson.plugins.robot.model.RobotTestObject;
 import hudson.util.ChartUtil;
 import hudson.util.Graph;
@@ -31,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
-import org.jfree.data.KeyedValue;
-import org.jfree.data.KeyedValues2D;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
@@ -132,16 +126,6 @@ public class RobotGraphHelper {
 		for (int i = 0; i < values.size(); i++)
 			dataset.addValue(values.get(i), rows.get(i), columns.get(i));
 		return dataset;
-	}
-	
-	private static float getDurationFromBuild(AbstractBuild<?,?> build){
-		RobotBuildAction action = build.getAction(RobotBuildAction.class);
-
-		float duration = 0;
-		if (action != null && action.getResult() != null) {
-			duration = action.getResult().getDuration();
-		}
-		return duration;
 	}
 	
 	private static int getTimeScaleFactor(float duration, int originalScale){

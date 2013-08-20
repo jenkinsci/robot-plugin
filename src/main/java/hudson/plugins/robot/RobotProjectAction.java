@@ -90,10 +90,10 @@ public class RobotProjectAction  implements Action {
 			return;
 		
 		AbstractBuild<?,?> lastBuild = getLastBuildWithRobot();
-		if(req.hasParameter("significant"))
-			rsp.sendRedirect2("../" + lastBuild.getNumber() + "/" + getUrlName() + "/graph?significant");
+		if(Boolean.valueOf(req.getParameter("zoomSignificant")))
+			rsp.sendRedirect2("../" + lastBuild.getNumber() + "/" + getUrlName() + "/graph?zoomSignificant=true");
 		else
-			rsp.sendRedirect2("../" + lastBuild.getNumber() + "/" + getUrlName() + "/graph");
+			rsp.sendRedirect2("../" + lastBuild.getNumber() + "/" + getUrlName() + "/graph?zoomSignificant=false");
 	}
 
 	/**
@@ -112,6 +112,7 @@ public class RobotProjectAction  implements Action {
 			rsp.sendRedirect2("../" + buildNumber + "/" + getUrlName());
 		}
 	}
+
 	
 	private AbstractBuild<?, ?> getLastBuildWithRobot() {
 		AbstractBuild<?, ?> lastBuild = (AbstractBuild<?, ?>) project

@@ -15,13 +15,10 @@
  */
 package hudson.plugins.robot.model;
 
-import hudson.plugins.robot.Messages;
 import hudson.plugins.robot.RobotBuildAction;
-import hudson.plugins.robot.graph.RobotGraph;
 import hudson.plugins.robot.graph.RobotGraphHelper;
 import hudson.util.Graph;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -354,7 +351,7 @@ public class RobotSuiteResult extends RobotTestObject {
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
 		
-		Graph g = RobotGraphHelper.createDataSetForTestObject(this, req.hasParameter("significant"), false);
+		Graph g = RobotGraphHelper.createDataSetForTestObject(this,Boolean.valueOf(req.getParameter("zoomSignificant")), false);
 		g.doPng(req, rsp);
 	}
 
