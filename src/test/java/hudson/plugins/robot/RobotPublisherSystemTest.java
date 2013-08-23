@@ -102,6 +102,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		File storedSplitJs1 = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log-001.js");
 		File storedImage1 = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/screenshot.png");
 		File storedImage2 = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/subfolder/screenshot2.png");
+		File storedDummy = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "dummy.file");
 
 		assertTrue("output.xml was not stored", storedOutput.exists());
 		assertTrue("output-001.xml was not stored", storedSplitOutput.exists());
@@ -113,8 +114,36 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		assertTrue("log-001.js was not stored", storedSplitJs1.exists());
 		assertTrue("screenshot.png was not stored", storedImage1.exists());
 		assertTrue("screenshot2.png was not stored", storedImage2.exists());
+		assertFalse("dummy.file was copied", storedDummy.exists());
 	}
+	
+	@LocalData
+	public void testDontCopyExcessFilesWhenOtherFilesEmpty() throws Exception{
+		Hudson hudson = Hudson.getInstance();
+		List<Project> projects = hudson.getProjects();
+		Project testProject = null;
+		for (Project project : projects){
+			if(project.getName().equals("dont-copy")) testProject = project;
+		}
+		if(testProject == null) fail("Couldn't find example project");
+		Future<Run> run = testProject.scheduleBuild2(0);
 
+		while(!run.isDone()){
+			Thread.sleep(5);
+		}
+
+		Run lastBuild = testProject.getLastBuild();
+		assertTrue("Build wasn't a success", lastBuild.getResult() == Result.SUCCESS);
+
+		File storedOutput = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/output.xml");
+		File storedSplitOutput = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/output-001.xml");
+		File storedDummy = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/dummy.file");
+
+		assertTrue("output.xml was not stored", storedOutput.exists());
+		assertTrue("output-001.xml was not stored", storedSplitOutput.exists());
+		assertFalse("dummy.file was copied", storedDummy.exists());
+	}
+	
 	@LocalData
 	public void testActionViewsWithNoRuns() throws Exception{
 		WebClient wc = getWebClient();

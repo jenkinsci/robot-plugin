@@ -234,7 +234,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 				copyFilesToBuildDir(build, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedOutputFileName, expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","));
 				
 				//Save other configured files to build dir
-				if(otherFiles != null) {
+				if(StringUtils.isNotBlank(getOtherFiles())) {
 					String filemask = buildEnv.expand(getOtherFiles());
 					copyFilesToBuildDir(build, expandedOutputPath, filemask);
 				}
