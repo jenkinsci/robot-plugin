@@ -185,7 +185,7 @@ public class RobotResult extends RobotTestObject {
 
 	private static double roundToDecimals(double value, int decimals){
 		BigDecimal bd = new BigDecimal(Double.toString(value));
-		bd = bd.setScale(decimals, BigDecimal.ROUND_HALF_UP);
+		bd = bd.setScale(decimals, BigDecimal.ROUND_DOWN);
 		return bd.doubleValue();
 	}
 
