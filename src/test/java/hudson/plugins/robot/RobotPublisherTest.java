@@ -17,6 +17,7 @@ package hudson.plugins.robot;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import java.io.File;
 import hudson.model.FreeStyleBuild;
 import hudson.model.Result;
 import hudson.model.AbstractBuild;
@@ -100,5 +101,22 @@ public class RobotPublisherTest extends TestCase {
 		when(mockResult.getPassPercentage(onlyCritical)).thenReturn(90.0);
 		
 		assertEquals(Result.SUCCESS, publisher.getBuildResult(mockBuild,mockResult));
+	}
+
+	public void testShouldUnstableLowFailures() throws Exception{
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("low_failure_output.xml");
+		RobotResult result = remoteOperation.invoke(new File(new RobotPublisherTest().getClass().getResource("low_failure_output.xml").toURI()).getParentFile(), null);
+		result.tally(null);
+
+		assertEquals(1, result.getOverallFailed());
+		assertEquals(2001, result.getOverallTotal());
+
+		RobotPublisher publisher = new RobotPublisher("", "", "", "", 100, 0, false, "");
+		AbstractBuild<?,?> mockBuild = mock(FreeStyleBuild.class);
+
+		when(mockBuild.getResult()).thenReturn(Result.SUCCESS);
+
+		assertEquals(Result.UNSTABLE, publisher.getBuildResult(mockBuild, result));
+
 	}
 }
