@@ -18,7 +18,7 @@ limitations under the License.
   <st:include it="${it.parentAction.owner}" page="sidepanel.jelly"/>
     <l:main-panel>
       <j:choose>
-      	<j:when test="${it.passed}">
+      	<j:when test="${it.isPassed()}">
       		<j:set var="headingColor" value="#0c0"/>
       		<j:set var="status" value="Passed!" />
         </j:when>
