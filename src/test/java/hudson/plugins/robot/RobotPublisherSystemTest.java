@@ -190,7 +190,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		for (Project project : projects){
 			if(project.getName().equals("robot")) testProject = project;
 		}
-		if(testProject == null) fail("Couldn't find example project");;
+		if(testProject == null) fail("Couldn't find example project");
 		Future<Run> run = testProject.scheduleBuild2(0);
 
 		while(!run.isDone()){
@@ -232,7 +232,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		for (Project project : projects){
 			if(project.getName().equals("robot")) testProject = project;
 		}
-		if(testProject == null) fail("Couldn't find example project");;
+		if(testProject == null) fail("Couldn't find example project");
 		Future<Run> run = testProject.scheduleBuild2(0);
 
 		while(!run.isDone()){
@@ -273,7 +273,12 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		WebAssert.assertTextPresent(page, "Hello, world! != Good bye, world!");
 		WebAssert.assertTextPresent(page, "Test took 0:00:00.001 (+0:00:00.001)");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//img[@src='durationGraph']");
-	}
+
+        page = wc.goTo("job/robot/1/robot/Testcases+%26+Othercases/Othercases/Contains+string");
+        WebAssert.assertTextPresent(page, "Passed!");
+        WebAssert.assertTextNotPresent(page, "Error message:");
+
+    }
 
 	@LocalData
 	public void testMissingReportFileWithOld() throws Exception{
