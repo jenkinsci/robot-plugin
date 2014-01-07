@@ -421,6 +421,6 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 	public MatrixAggregator createAggregator(MatrixBuild build,
 			Launcher launcher, BuildListener listener) {
-		return new TestResultAggregator(build, launcher, listener);
+		return new RobotResultAggregator(build, launcher, listener);
 	}
 }

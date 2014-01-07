@@ -76,17 +76,14 @@ limitations under the License.
   	</tr>
   </table>
   <p>
-  <a href="${it.urlName}">&gt; Browse results</a><br />
+  <j:if test="${attrs.action.owner.project.parent.name != null}">
+    <j:set var="matrixprojectname" value="${attrs.action.owner.project.parent.name}/" />
+  </j:if>
+  <a href="${rootURL}/job/${matrixprojectname}${attrs.action.owner.project.name}/${attrs.action.owner.number}/${attrs.action.urlName}">&gt; Browse results</a><br />
   <j:if test="${attrs.action.logFileLink != null}">
-    <j:if test="${attrs.action.owner.project.parent.name != null}">
-    	<j:set var="matrixprojectname" value="${attrs.action.owner.project.parent.name}/" />
-    </j:if>
   	<a href="${rootURL}/job/${matrixprojectname}${attrs.action.owner.project.name}/${attrs.action.owner.number}/${attrs.action.urlName}/report/${attrs.action.logFileLink}">&gt; Open ${attrs.action.logFileLink}</a><br />
   </j:if>
   <j:if test="${attrs.action.logHtmlLink != null}">
-    <j:if test="${attrs.action.owner.project.parent.name != null}">
-    	<j:set var="matrixprojectname" value="${attrs.action.owner.project.parent.name}/" />
-    </j:if>
   	<a href="${rootURL}/job/${matrixprojectname}${attrs.action.owner.project.name}/${attrs.action.owner.number}/${attrs.action.urlName}/report/${attrs.action.logHtmlLink}">&gt; Open ${attrs.action.logHtmlLink}</a><br />
   </j:if>
   </p>
