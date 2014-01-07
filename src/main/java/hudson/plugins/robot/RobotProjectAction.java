@@ -53,9 +53,9 @@ public class RobotProjectAction  implements Action {
 	 * @return 
 	 */
 	public boolean isDisplayGraph() {
-		if (getLastBuildAction() != null) 
+		if (getLastBuildAction() != null)
 			return true;
-		
+
 		return false;
 	}
 	
@@ -63,10 +63,14 @@ public class RobotProjectAction  implements Action {
 	 * Return the action of last build associated with robot
 	 * @return null if action not found or no build
 	 */
-	public RobotBuildAction getLastBuildAction(){
+	public Action getLastBuildAction(){
 		AbstractBuild<?, ?> lastBuild = getLastBuildWithRobot();
-		if(lastBuild != null)
-			return lastBuild.getAction(RobotBuildAction.class);
+		if(lastBuild != null){
+            RobotBuildAction action = (RobotBuildAction)lastBuild.getAction(RobotBuildAction.class);
+            if (action == null)
+                return lastBuild.getAction(AggregatedRobotAction.class);
+            return action;
+        }
 		else return null;
 	}
 
@@ -118,7 +122,7 @@ public class RobotProjectAction  implements Action {
 		AbstractBuild<?, ?> lastBuild = (AbstractBuild<?, ?>) project
 				.getLastBuild();
 		while (lastBuild != null
-				&& lastBuild.getAction(RobotBuildAction.class) == null) {
+				&& (lastBuild.getAction(RobotBuildAction.class) == null && lastBuild.getAction(AggregatedRobotAction.class) == null)) {
 			lastBuild = lastBuild.getPreviousBuild();
 		}
 		return lastBuild;

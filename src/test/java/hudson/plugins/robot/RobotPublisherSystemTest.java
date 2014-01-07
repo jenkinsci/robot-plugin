@@ -15,6 +15,8 @@
  */
 package hudson.plugins.robot;
 
+import hudson.matrix.MatrixBuild;
+import hudson.matrix.MatrixProject;
 import hudson.model.Result;
 import hudson.model.FreeStyleProject;
 import hudson.model.Hudson;
@@ -164,7 +166,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/oldrobotbuild/robot']");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//h4[contains(.,'Latest Robot Results:')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//img[@src='robot/graph']");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='robot' and contains(text(),'Browse results')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/oldrobotbuild/1/robot' and contains(text(),'Browse results')]");
 		HtmlTable table = page.getHtmlElementById("robot-summary-table");
 		Assert.assertTrue(table.asXml().replaceAll("\\s","").contains("<tableclass=\"table\"id=\"robot-summary-table\"><tbodyalign=\"left\"><tr><th/><th>Total</th><th>Failed</th><th>Passed</th><th>Pass%</th></tr><tr><th>Criticaltests</th><tdclass=\"table-upper-row\"style=\"border-left:0px;\">8</td><tdclass=\"table-upper-row\"><spanclass=\"fail\">4</span></td><tdclass=\"table-upper-row\">4</td><tdclass=\"table-upper-row\">50.0</td></tr><tr><th>Alltests</th><tdstyle=\"border-left:0px;\">8</td><td><spanclass=\"fail\">4</span></td><td>4</td><td>50.0</td></tr></tbody></table>"));
 
@@ -174,7 +176,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		page = wc.goTo("job/oldrobotbuild/1/");
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/oldrobotbuild/1/robot']");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//h4[contains(.,'Robot Test Summary:')]");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='robot' and contains(text(),'Browse results')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/oldrobotbuild/1/robot' and contains(text(),'Browse results')]");
 		table = page.getHtmlElementById("robot-summary-table");
 		Assert.assertTrue(table.asXml().replaceAll("\\s","").contains("<tableclass=\"table\"id=\"robot-summary-table\"><tbodyalign=\"left\"><tr><th/><th>Total</th><th>Failed</th><th>Passed</th><th>Pass%</th></tr><tr><th>Criticaltests</th><tdclass=\"table-upper-row\"style=\"border-left:0px;\">8</td><tdclass=\"table-upper-row\"><spanclass=\"fail\">4</span></td><tdclass=\"table-upper-row\">4</td><tdclass=\"table-upper-row\">50.0</td></tr><tr><th>Alltests</th><tdstyle=\"border-left:0px;\">8</td><td><spanclass=\"fail\">4</span></td><td>4</td><td>50.0</td></tr></tbody></table>"));
 
@@ -206,7 +208,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/robot/robot']");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//h4[contains(.,'Latest Robot Results:')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//img[@src='robot/graph']");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='robot' and contains(text(),'Browse results')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/robot/1/robot' and contains(text(),'Browse results')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/robot/1/robot/report/report.html' and contains(text(), 'Open report.html')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/robot/1/robot/report/log.html' and contains(text(), 'Open log.html')]");
 
@@ -217,7 +219,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		page = wc.goTo("job/robot/1/");
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/robot/1/robot']");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//h4[contains(.,'Robot Test Summary:')]");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='robot' and contains(text(),'Browse results')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/robot/1/robot' and contains(text(),'Browse results')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/robot/1/robot/report/report.html' and contains(text(), 'Open report.html')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/robot/1/robot/report/log.html' and contains(text(), 'Open log.html')]");
 		table = page.getHtmlElementById("robot-summary-table");
@@ -325,10 +327,38 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 	public void testMatrixBuildReportLinks() throws Exception {
 		WebClient wc = getWebClient();
 		HtmlPage page = wc.goTo("job/matrix-robot/FOO=bar/2");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='robot' and contains(.,'Browse results')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/matrix-robot/FOO=bar/2/robot' and contains(.,'Browse results')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/matrix-robot/FOO=bar/2/robot/report/report.html' and contains(.,'Open report.html')]");
 	}
 
+	@LocalData
+	public void testMatrixBuildSummary() throws Exception {
+		Hudson hudson = Hudson.getInstance();
+		List<MatrixProject> projects = hudson.getAllItems(MatrixProject.class);
+		MatrixProject testProject = null;
+		for (MatrixProject project : projects){
+			System.out.println(project.getName());
+			if(project.getName().equals("matrix-robot")) testProject = project;
+		}
+		if(testProject == null) fail("Couldn't find example project");
+		Future<MatrixBuild> run = testProject.scheduleBuild2(0);
+
+		while(!run.isDone()){
+			Thread.sleep(5);
+		}
+		Run lastBuild = testProject.getLastBuild();
+		assertTrue("Build wasn't a success", lastBuild.getResult() == Result.SUCCESS);
+
+		WebClient wc = getWebClient();
+		HtmlPage page = wc.goTo("job/matrix-robot");
+		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/matrix-robot/robot']");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//img[@src='robot/graph']");
+
+		page = wc.goTo("job/matrix-robot/3");
+		WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/matrix-robot/3/robot']");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//h4[contains(.,'Robot Test Summary:')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/matrix-robot/3/robot' and contains(text(),'Browse results')]");
+	}
 
 	private WebClient getWebClient(){
 		WebClient wc = new WebClient();
