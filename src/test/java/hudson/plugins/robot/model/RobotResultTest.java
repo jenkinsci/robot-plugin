@@ -70,7 +70,7 @@ public class RobotResultTest extends TestCase {
 
 	//TODO; should add tests for all parsed fields? Refactor name to parsertest
 	public void testShouldParseCriticalCases(){
-		assertEquals(18, result.getCriticalTotal());
+		assertEquals(19, result.getCriticalTotal());
 	}
 
 	public void testShouldParseFailMessages(){
@@ -90,7 +90,7 @@ public class RobotResultTest extends TestCase {
 	}
 
 	public void testShouldParseOverallCases(){
-		assertEquals(21, result.getOverallTotal());
+		assertEquals(22, result.getOverallTotal());
 	}
 
 	public void testShouldParseFailedCases(){
@@ -127,27 +127,32 @@ public class RobotResultTest extends TestCase {
 	}
 
 	public void testShouldReturnPackageName(){
-		RobotSuiteResult suite = (RobotSuiteResult)result.findObjectById("Othercases+%26+Testcases/Othercases/3rd+level+cases");
+		RobotSuiteResult suite = (RobotSuiteResult)result.findObjectById("Othercases & Testcases/Othercases/3rd level cases");
 		assertEquals("Othercases & Testcases.Othercases.3rd level cases", suite.getRelativePackageName(result));
 	}
 
 	public void testShouldReturnSuiteById(){
-		RobotSuiteResult suite = (RobotSuiteResult)result.findObjectById("Othercases+%26+Testcases/Othercases/3rd+level+cases");
+		RobotSuiteResult suite = (RobotSuiteResult)result.findObjectById("Othercases & Testcases/Othercases/3rd level cases");
 		assertEquals("3rd level cases", suite.getName());
 	}
 
 	public void testShouldReturnIdForSuite(){
-		RobotSuiteResult suite = (RobotSuiteResult)result.findObjectById("Othercases+%26+Testcases/Othercases/3rd+level+cases");
-		assertEquals("Othercases+%26+Testcases/Othercases/3rd+level+cases", suite.getRelativeId(result));
+		RobotSuiteResult suite = (RobotSuiteResult)result.findObjectById("Othercases & Testcases/Othercases/3rd level cases");
+		assertEquals("Othercases%20&%20Testcases/Othercases/3rd%20level%20cases", suite.getRelativeId(result));
+	}
+
+	public void testShouldURLEncodeSpecialChars(){
+		RobotCaseResult caseResult = (RobotCaseResult)result.findObjectById("Othercases & Testcases/Othercases/3rd level cases/Passing Test Case With !\"#€%&()=?`´*'^<>©@£$∞§|[]≈±:;.,");
+		assertEquals("Othercases%20&%20Testcases/Othercases/3rd%20level%20cases/Passing%20Test%20Case%20With%20!%22%23%E2%82%AC%25&()=%3F%60%C2%B4*'%5E%3C%3E%C2%A9@%C2%A3$%E2%88%9E%C2%A7%7C%5B%5D%E2%89%88%C2%B1%3A%3B.,", caseResult.getRelativeId(result));
 	}
 
 	public void testShouldReturnCaseById(){
-		RobotCaseResult caseResult = (RobotCaseResult)result.findObjectById("Othercases+%26+Testcases/Othercases/3rd+level+cases/Hello3rd");
+		RobotCaseResult caseResult = (RobotCaseResult)result.findObjectById("Othercases & Testcases/Othercases/3rd level cases/Hello3rd");
 		assertEquals("Hello3rd", caseResult.getName());
 	}
 
 
-	public void testShouldParseSplittedOutput() throws Exception, URISyntaxException{
+	public void testShouldParseSplittedOutput() throws Exception {
 		 RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("testfile.xml");
 			result = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("testfile.xml").toURI()).getParentFile(), null);
 
@@ -157,14 +162,14 @@ public class RobotResultTest extends TestCase {
 		assertNotNull(splittedNestedSuite);
 	}
 
-	public void testShouldParseSuiteTeardownFailures() throws Exception, URISyntaxException{
+	public void testShouldParseSuiteTeardownFailures() throws Exception {
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("teardown_fail.xml");
 		RobotResult res = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("teardown_fail.xml").toURI()).getParentFile(), null);
 		List<RobotCaseResult> failers = res.getAllFailedCases();
 		assertEquals(3, failers.size());
 	}
 
-	public void testShouldHandleNameCollisions() throws Exception, URISyntaxException{
+	public void testShouldHandleNameCollisions() throws Exception {
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("collisions.xml");
 		RobotResult res = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("collisions.xml").toURI()).getParentFile(), null);
 		List<RobotCaseResult> failers = res.getAllFailedCases();

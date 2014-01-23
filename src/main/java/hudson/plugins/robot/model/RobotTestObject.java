@@ -22,9 +22,6 @@ import hudson.util.ChartUtil;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.Calendar;
 
 import org.apache.commons.lang.StringUtils;
@@ -90,19 +87,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	}
 
 	public String urlEncode(String name) {
-		try {
-			return URLEncoder.encode(name, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public String urlDecode(String name) {
-		try {
-			return URLDecoder.decode(name, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
+		return hudson.Util.rawEncode(name);
 	}
 
 	/**

@@ -248,27 +248,27 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		WebAssert.assertTextPresent(page, "Robot Framework test results");
 		WebAssert.assertTextPresent(page, "4 failed tests, 4 critical");
 		WebAssert.assertTextPresent(page, "Tests took 0:00:00.009 (+0:00:00.009)");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Testcases+%26+Othercases/Testcases/Not+equal' and contains(.,'Testcases & Othercases.Testcases.Not equal')]");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Testcases+%26+Othercases/Othercases' and contains(.,'Testcases & Othercases.Othercases')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Testcases%20&%20Othercases/Testcases/Not%20equal' and contains(.,'Testcases & Othercases.Testcases.Not equal')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Testcases%20&%20Othercases/Othercases' and contains(.,'Testcases & Othercases.Othercases')]");
 
 		page = wc.goTo("job/robot/1/robot/report/");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='output.xml' and contains(.,'output.xml')]");
 
-		page = wc.goTo("job/robot/1/robot/Testcases+%26+Othercases");
+		page = wc.goTo("job/robot/1/robot/Testcases%20&%20Othercases");
 		WebAssert.assertTextPresent(page, "4 failed tests, 4 critical");
 		WebAssert.assertTextPresent(page, "Tests took 0:00:00.009 (+0:00:00.009)");
 		WebAssert.assertTextNotPresent(page, "All Testcases");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Testcases/Not+equal' and contains(.,'Testcases.Not equal')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Testcases/Not%20equal' and contains(.,'Testcases.Not equal')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Othercases' and contains(.,'Othercases')]");
 
-		page = wc.goTo("job/robot/1/robot/Testcases+%26+Othercases/Othercases");
+		page = wc.goTo("job/robot/1/robot/Testcases%20&%20Othercases/Othercases");
 		WebAssert.assertTextPresent(page, "2 failed tests, 2 critical");
 		WebAssert.assertTextPresent(page, "Tests took 0:00:00.005 (+0:00:00.005)");
 		WebAssert.assertTextPresent(page, "All Testcases");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Not+equal' and contains(.,'Not equal')]");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Contains+string' and contains(.,'Contains string')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Not%20equal' and contains(.,'Not equal')]");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Contains%20string' and contains(.,'Contains string')]");
 
-		page = wc.goTo("job/robot/1/robot/Testcases+%26+Othercases/Othercases/Not+equal");
+		page = wc.goTo("job/robot/1/robot/Testcases%20&%20Othercases/Othercases/Not%20equal");
 		WebAssert.assertTextPresent(page, "Critical test case: \"Not equal\"");
 		WebAssert.assertTextPresent(page, "Failed!");
 		WebAssert.assertTextPresent(page, "Error message:");
@@ -276,7 +276,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		WebAssert.assertTextPresent(page, "Test took 0:00:00.001 (+0:00:00.001)");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//img[@src='durationGraph']");
 
-        page = wc.goTo("job/robot/1/robot/Testcases+%26+Othercases/Othercases/Contains+string");
+        page = wc.goTo("job/robot/1/robot/Testcases%20&%20Othercases/Othercases/Contains%20string");
         WebAssert.assertTextPresent(page, "Passed!");
         WebAssert.assertTextNotPresent(page, "Error message:");
 

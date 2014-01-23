@@ -64,8 +64,8 @@ public class RobotResult extends RobotTestObject {
 		if(id.indexOf("/") >= 0){
 			String suiteName = id.substring(0, id.indexOf("/"));
 			String childId = id.substring(id.indexOf("/")+1, id.length());
-			RobotSuiteResult suite = suites.get(urlDecode(suiteName));
-			return suite.findObjectById(urlDecode(childId));
+			RobotSuiteResult suite = suites.get(suiteName);
+			return suite.findObjectById(childId);
 		} else return null;
 	}
 
@@ -300,7 +300,7 @@ public class RobotResult extends RobotTestObject {
 	 * @return
 	 */
 	public Object getDynamic(String token, StaplerRequest req, StaplerResponse rsp){
-		return suites.get(urlDecode(token));
+		return suites.get(token);
 	}
 
 	/**
