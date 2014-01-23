@@ -228,9 +228,9 @@ public class RobotSuiteResult extends RobotTestObject {
 							 StaplerRequest rsp) {
 		if ((token) == null)
 			return this;
-		if (getCase(urlDecode(token)) != null)
-			return getCase(urlDecode(token));
-		return getSuite(urlDecode(token));
+		if (getCase(token) != null)
+			return getCase(token);
+		return getSuite(token);
 	}
 
 	/**
@@ -334,11 +334,11 @@ public class RobotSuiteResult extends RobotTestObject {
 		if(id.indexOf("/") >= 0){
 			String suiteName = id.substring(0, id.indexOf("/"));
 			String childId = id.substring(id.indexOf("/")+1, id.length());
-			RobotSuiteResult suite = children.get(urlDecode(suiteName));
+			RobotSuiteResult suite = children.get(suiteName);
 			return suite.findObjectById(childId);
 		} else if(getSuite(id) != null){
-			return getSuite(urlDecode(id));
-		} else return getCase(urlDecode(id));
+			return getSuite(id);
+		} else return getCase(id);
 	}
 
 	/**

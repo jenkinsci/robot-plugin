@@ -5,9 +5,25 @@
 		<metadata></metadata>
 		<suite source="othercases.html" name="Othercases">
 			<doc>Some documentation for testing purposes</doc>
-			<metadata></metadata><suite source="testcases.html" name="3rd level cases">
+			<metadata></metadata>
+            <suite source="testcases.html" name="3rd level cases">
 			<doc>Some documentation for testing purposes</doc>
 			<metadata></metadata>
+			<test id="s1-t1" name="Passing Test Case With !&quot;#€%&amp;()=?`´*'^&lt;&gt;©@£$∞§|[]≈±:;.,">
+				<kw type="kw" name="BuiltIn.Pass Execution">
+					<doc>Skips rest of the current test, setup, or teardown with PASS status.</doc>
+					<arguments>
+						<arg>Test always passes!</arg>
+					</arguments>
+					<msg timestamp="20140123 16:38:27.001" level="INFO">Execution passed with message:
+						Test always passes!</msg>
+					<status status="PASS" endtime="20140123 16:38:27.001" starttime="20140123 16:38:27.001"></status>
+				</kw>
+				<doc></doc>
+				<tags>
+				</tags>
+				<status status="PASS" endtime="20140123 16:38:27.002" critical="yes" starttime="20140123 16:38:26.999">Test always passes!</status>
+			</test>
 			<test critical="yes" name="Hello3rd" timeout="">
 				<doc></doc>
 				<kw type="kw" name="BuiltIn.Should Be Equal" timeout="">
@@ -421,14 +437,14 @@
 </suite>
 <statistics>
 <total>
-<stat fail="6" pass="4">Critical Tests</stat>
-<stat fail="6" pass="7">All Tests</stat>
+<stat fail="6" pass="5">Critical Tests</stat>
+<stat fail="6" pass="8">All Tests</stat>
 </total>
 <tag>
 </tag>
 <suite>
-<stat fail="4" doc="Othercases &amp; Testcases" pass="5">Othercases &amp; Testcases</stat>
-<stat fail="2" doc="Othercases &amp; Testcases.Othercases" pass="2">Othercases &amp; Testcases.Othercases</stat>
+<stat fail="4" doc="Othercases &amp; Testcases" pass="6">Othercases &amp; Testcases</stat>
+<stat fail="2" doc="Othercases &amp; Testcases.Othercases" pass="3">Othercases &amp; Testcases.Othercases</stat>
 <stat fail="2" doc="Othercases &amp; Testcases.Testcases" pass="2">Othercases &amp; Testcases.Testcases</stat>
 <stat fail="2" doc="Somecases" pass="2">Somecases</stat></suite>
 </statistics>

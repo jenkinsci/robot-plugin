@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:u="/hudson/plugins/robot/util">
   <l:layout>
   <st:include it="${it.parentAction.build}" page="sidepanel.jelly"/>
     <l:main-panel>
@@ -33,32 +33,7 @@ limitations under the License.
       <h2 style="color:#c00;">${it.overallFailed} failed tests, ${it.criticalFailed} critical</h2>
       </j:if>
       <h4>${it.overallTotal} tests in total (${h.getDiffString(it.overallTotal - prevresult.overallTotal)}), ${it.criticalTotal} critical</h4>
-      <j:if test="${!it.allFailedCases.isEmpty()}">
-      <h2>All failed testcases</h2>
-      <table class="pane sortable">
-        <tr>
-     	 <td class="pane-header">Name</td>
-     	 <td class="pane-header">Duration (ms)</td>
-     	 <td class="pane-header">Age</td>
-     	</tr>
-      	<j:forEach var="case" items="${it.allFailedCases}">
-      	    <j:set var="fullName" value="${case.getRelativePackageName(it)}" />
-      		<tr>
-      			<td class="pane">
-      			<a id="${fullName}-showlink" href="javascript:showStackTrace('${h.jsStringEscape(fullName)}','${case.getRelativeId(it)}/summary')">[+]</a>
-           		<a id="${fullName}-hidelink" style="display:none" href="javascript:hideStackTrace('${h.jsStringEscape(fullName)}')">[-]</a>
-            	<st:nbsp/>
-      			<a href="${case.getRelativeId(it)}">${fullName}</a>
-      			<div id="${fullName}" class="hidden" style="display:none">
-                    ${%Loading...}
-           	    </div>
-      			</td>
-      			<td class="pane">${case.humanReadableDuration}</td>
-      			<td class="pane"><a href="${rootURL}/${case.failedSinceRun.url}">${case.age}</a></td>
-      		</tr>
-      	</j:forEach>
-      </table>
-      </j:if>
+      <u:failedCases />
       <div style="margin-top:20px;">
        <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
        <h3>Pass/fail trend</h3>

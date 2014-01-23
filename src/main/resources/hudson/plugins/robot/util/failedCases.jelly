@@ -1,0 +1,28 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util">
+    <j:if test="${!it.allFailedCases.isEmpty()}">
+        <h2>All failed testcases</h2>
+        <table class="pane sortable">
+            <tr>
+                <td class="pane-header">Name</td>
+                <td class="pane-header">Duration (ms)</td>
+                <td class="pane-header">Age</td>
+            </tr>
+            <j:forEach var="case" items="${it.allFailedCases}">
+                <j:set var="fullName" value="${case.getRelativePackageName(it)}" />
+                <tr>
+                    <td class="pane">
+                        <a id="${fullName}-showlink" href="#" onclick="showStackTrace('${h.jsStringEscape(fullName)}','${case.getRelativeId(it)}/summary')">[+]</a>
+                        <a id="${fullName}-hidelink" style="display:none" href="#" onclick="hideStackTrace('${h.jsStringEscape(fullName)}')">[-]</a>
+                        <st:nbsp/>
+                        <a href="${case.getRelativeId(it)}">${fullName}</a>
+                        <div id="${fullName}" class="hidden" style="display:none">
+                            ${%Loading...}
+                        </div>
+                    </td>
+                    <td class="pane">${case.humanReadableDuration}</td>
+                    <td class="pane"><a href="${rootURL}/${case.failedSinceRun.url}">${case.age}</a></td>
+                </tr>
+            </j:forEach>
+        </table>
+    </j:if>
+</j:jelly>
