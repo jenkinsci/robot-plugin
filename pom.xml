@@ -7,7 +7,7 @@
   </parent>
 
   <artifactId>robot</artifactId>
-  <version>1.4.1</version>
+  <version>1.4.2-SNAPSHOT</version>
   <name>Robot Framework plugin</name>
   <description>Shows Robot Framework test results in project</description>
   <packaging>hpi</packaging> 
