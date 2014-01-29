@@ -11,11 +11,11 @@
                 <j:set var="fullName" value="${case.getRelativePackageName(it)}" />
                 <tr>
                     <td class="pane">
-                        <a id="${fullName}-showlink" href="#" onclick="showStackTrace('${h.jsStringEscape(fullName)}','${case.getRelativeId(it)}/summary')">[+]</a>
-                        <a id="${fullName}-hidelink" style="display:none" href="#" onclick="hideStackTrace('${h.jsStringEscape(fullName)}')">[-]</a>
+                        <a id="${h.escape(fullName)}-showlink" href="#" onclick="showStackTrace('${h.jsStringEscape(h.escape(fullName))}','${case.getRelativeId(it)}/summary')">[+]</a>
+                        <a id="${h.escape(fullName)}-hidelink" style="display:none" href="#" onclick="hideStackTrace('${h.jsStringEscape(h.escape(fullName))}')">[-]</a>
                         <st:nbsp/>
                         <a href="${case.getRelativeId(it)}">${fullName}</a>
-                        <div id="${fullName}" class="hidden" style="display:none">
+                        <div id="${h.escape(fullName)}" class="hidden" style="display:none">
                             ${%Loading...}
                         </div>
                     </td>
