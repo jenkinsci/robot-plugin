@@ -1,0 +1,9 @@
+<j:jelly xmlns:j="jelly:core">
+  <dt>$${ROBOT_FAILEd, onlyCritical}</dt>
+  <dd>
+    Expands to build number of failed tests.
+    <ul>
+        <li><i>onlyCritical</i> - True if number should contain only critical failed tests.<br />Defaults to false.</li>
+    </ul>
+  </dd>
+</j:jelly>
