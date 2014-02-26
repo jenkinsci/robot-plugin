@@ -41,7 +41,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 
 	public void testRoundTripConfig() throws Exception{
 		FreeStyleProject p = createFreeStyleProject();
-		RobotPublisher before = new RobotPublisher("a", "b", "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png");
+		RobotPublisher before = new RobotPublisher("a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png");
 		p.getPublishersList().add(before);
 
 		submit(getWebClient().getPage(p, "configure")
@@ -54,7 +54,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 
 	public void testConfigView() throws Exception{
 		FreeStyleProject p = createFreeStyleProject();
-		RobotPublisher before = new RobotPublisher("a", "b", "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png");
+		RobotPublisher before = new RobotPublisher("a", "b", false,"c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png");
 		p.getPublishersList().add(before);
 		HtmlPage page = getWebClient().getPage(p,"configure");
 		WebAssert.assertTextPresent(page, "Publish Robot Framework");
