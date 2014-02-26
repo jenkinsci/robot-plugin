@@ -31,7 +31,7 @@ public class RobotPublisherTest extends TestCase {
 	}
 
 	public void testBlankConfigShouldReturnDefaults() {
-		RobotPublisher testable = new RobotPublisher(" "," ", " ", " ", 0, 0, false, "");
+		RobotPublisher testable = new RobotPublisher(" "," ",false, " ", " ", 0, 0, false, "");
 		
 		assertEquals("output.xml", testable.getOutputFileName());
 		assertEquals("report.html", testable.getReportFileName());
@@ -41,7 +41,7 @@ public class RobotPublisherTest extends TestCase {
 	public void testShouldReturnSuccessWhenThresholdsExceeded() throws Exception{
 		boolean onlyCritical = false;
 		
-		RobotPublisher publisher = new RobotPublisher("","","","",99.9,99,onlyCritical, "");
+		RobotPublisher publisher = new RobotPublisher("","",false,"","",99.9,99,onlyCritical, "");
 		RobotResult mockResult = mock(RobotResult.class);
 		AbstractBuild<?,?> mockBuild = mock(FreeStyleBuild.class);
 		
@@ -54,7 +54,7 @@ public class RobotPublisherTest extends TestCase {
 	public void testShouldFailWhenFailedBuild() throws Exception{
 		boolean onlyCritical = false;
 		
-		RobotPublisher publisher = new RobotPublisher("","","","",0,0,onlyCritical, "");
+		RobotPublisher publisher = new RobotPublisher("","",false,"","",0,0,onlyCritical, "");
 		RobotResult mockResult = mock(RobotResult.class);
 		AbstractBuild<?,?> mockBuild = mock(FreeStyleBuild.class);
 		
@@ -67,7 +67,7 @@ public class RobotPublisherTest extends TestCase {
 	public void testShouldFailWhenUnstableThresholdNotExceeded(){
 		boolean onlyCritical = false;
 		
-		RobotPublisher publisher = new RobotPublisher("","","","",90,50,onlyCritical, "");
+		RobotPublisher publisher = new RobotPublisher("","",false,"","",90,50,onlyCritical, "");
 		RobotResult mockResult = mock(RobotResult.class);
 		AbstractBuild<?,?> mockBuild = mock(FreeStyleBuild.class);
 		
@@ -80,7 +80,7 @@ public class RobotPublisherTest extends TestCase {
 	public void testShouldBeUnstableWhenPassThresholdNotExceeded(){
 		boolean onlyCritical = false;
 		
-		RobotPublisher publisher = new RobotPublisher("","","","",90,50,onlyCritical, "");
+		RobotPublisher publisher = new RobotPublisher("","",false,"","",90,50,onlyCritical, "");
 		RobotResult mockResult = mock(RobotResult.class);
 		AbstractBuild<?,?> mockBuild = mock(FreeStyleBuild.class);
 		
@@ -93,7 +93,7 @@ public class RobotPublisherTest extends TestCase {
 	public void testShouldBeSuccessWithOnlyCritical(){
 		boolean onlyCritical = false;
 		
-		RobotPublisher publisher = new RobotPublisher("","","","",90,50,onlyCritical, "");
+		RobotPublisher publisher = new RobotPublisher("","",false,"","",90,50,onlyCritical, "");
 		RobotResult mockResult = mock(RobotResult.class);
 		AbstractBuild<?,?> mockBuild = mock(FreeStyleBuild.class);
 		
@@ -111,7 +111,7 @@ public class RobotPublisherTest extends TestCase {
 		assertEquals(1, result.getOverallFailed());
 		assertEquals(2001, result.getOverallTotal());
 
-		RobotPublisher publisher = new RobotPublisher("", "", "", "", 100, 0, false, "");
+		RobotPublisher publisher = new RobotPublisher("", "", false,"", "", 100, 0, false, "");
 		AbstractBuild<?,?> mockBuild = mock(FreeStyleBuild.class);
 
 		when(mockBuild.getResult()).thenReturn(Result.SUCCESS);
