@@ -41,7 +41,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 
 	public void testRoundTripConfig() throws Exception{
 		FreeStyleProject p = createFreeStyleProject();
-		RobotPublisher before = new RobotPublisher("a", "b", "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png");
+		RobotPublisher before = new RobotPublisher("a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png");
 		p.getPublishersList().add(before);
 
 		submit(getWebClient().getPage(p, "configure")
@@ -54,7 +54,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 
 	public void testConfigView() throws Exception{
 		FreeStyleProject p = createFreeStyleProject();
-		RobotPublisher before = new RobotPublisher("a", "b", "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png");
+		RobotPublisher before = new RobotPublisher("a", "b", false,"c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png");
 		p.getPublishersList().add(before);
 		HtmlPage page = getWebClient().getPage(p,"configure");
 		WebAssert.assertTextPresent(page, "Publish Robot Framework");
@@ -108,6 +108,49 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 
 		assertTrue("output.xml was not stored", storedOutput.exists());
 		assertTrue("output-001.xml was not stored", storedSplitOutput.exists());
+		assertTrue("report.html was not stored", storedReport.exists());
+		assertTrue("report-001.html was not stored", storedSplitReport.exists());
+		assertTrue("log.html was not stored", storedLog.exists());
+		assertTrue("log-001.html was not stored", storedSplitLog.exists());
+		assertTrue("log.js was not stored", storedJs.exists());
+		assertTrue("log-001.js was not stored", storedSplitJs1.exists());
+		assertTrue("screenshot.png was not stored", storedImage1.exists());
+		assertTrue("screenshot2.png was not stored", storedImage2.exists());
+		assertFalse("dummy.file was copied", storedDummy.exists());
+	}
+
+	@LocalData
+	public void testDontCopyOuputWhendisableArchiveOutput() throws Exception{
+		Hudson hudson = Hudson.getInstance();
+		List<Project> projects = hudson.getProjects();
+		Project testProject = null;
+		for (Project project : projects){
+			if(project.getName().equals("disable-archive-output-xml")) testProject = project;
+		}
+		if(testProject == null) fail("Couldn't find example project");
+		Future<Run> run = testProject.scheduleBuild2(0);
+
+		while(!run.isDone()){
+			Thread.sleep(5);
+		}
+
+		Run lastBuild = testProject.getLastBuild();
+		assertTrue("Build wasn't a success", lastBuild.getResult() == Result.SUCCESS);
+
+		File storedOutput = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/output.xml");
+		File storedSplitOutput = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/output-001.xml");
+		File storedReport = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/report.html");
+		File storedSplitReport = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/report.html");
+		File storedLog = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log.html");
+		File storedSplitLog = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log-001.html");
+		File storedJs = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log.js");
+		File storedSplitJs1 = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log-001.js");
+		File storedImage1 = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/screenshot.png");
+		File storedImage2 = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/subfolder/screenshot2.png");
+		File storedDummy = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "dummy.file");
+
+		assertFalse("output.xml was copied", storedOutput.exists());
+		assertFalse("output-001.xml was copied", storedSplitOutput.exists());
 		assertTrue("report.html was not stored", storedReport.exists());
 		assertTrue("report-001.html was not stored", storedSplitReport.exists());
 		assertTrue("log.html was not stored", storedLog.exists());

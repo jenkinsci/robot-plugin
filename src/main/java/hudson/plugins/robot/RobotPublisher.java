@@ -62,6 +62,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	final private String reportFileName;
 	final private String logFileName;
 	final private String outputFileName;
+	final private boolean disableArchiveOutput;
 	final private double passThreshold;
 	final private double unstableThreshold;
 	private String[] otherFiles;
@@ -77,6 +78,8 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 *            Path to Robot Framework's output files
 	 * @param outputFileName
 	 *            Name of Robot output xml
+	 * @param disableArchiveOutput
+	 *            Disable Archiving output xml file to server
 	 * @param reportFileName
 	 *            Name of Robot report html
 	 * @param logFileName
@@ -90,10 +93,11 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 */
 	@DataBoundConstructor
 	public RobotPublisher(String outputPath, String outputFileName,
-			String reportFileName, String logFileName, double passThreshold,
-			double unstableThreshold, boolean onlyCritical, String otherFiles) {
+			boolean disableArchiveOutput, String reportFileName, String logFileName,
+			double passThreshold, double unstableThreshold, boolean onlyCritical, String otherFiles) {
 		this.outputPath = outputPath;
 		this.outputFileName = outputFileName;
+		this.disableArchiveOutput = disableArchiveOutput;
 		this.reportFileName = reportFileName;
 		this.passThreshold = passThreshold;
 		this.unstableThreshold = unstableThreshold;
@@ -127,6 +131,15 @@ public class RobotPublisher extends Recorder implements Serializable,
 			return DEFAULT_OUTPUT_FILE;
 		return outputFileName;
 	}
+	/* 
+	* Get the value of disable Archive of output xml checkbox
+	* 
+	* 
+	* @return
+	*/
+	public boolean getDisableArchiveOutput() {
+		return disableArchiveOutput;	
+		}
 
 	/**
 	 * Gets the name of report html file. Reverts to default if empty or
@@ -231,8 +244,12 @@ public class RobotPublisher extends Recorder implements Serializable,
 				logger.println(Messages.robot_publisher_copying());
 				
 				//Save configured Robot files (including split output) to build dir
-				copyFilesToBuildDir(build, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedOutputFileName, expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","));
+				copyFilesToBuildDir(build, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","));
 				
+				if (!getDisableArchiveOutput()){
+					copyFilesToBuildDir(build, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedOutputFileName}), ","));
+				}
+
 				//Save other configured files to build dir
 				if(StringUtils.isNotBlank(getOtherFiles())) {
 					String filemask = buildEnv.expand(getOtherFiles());
