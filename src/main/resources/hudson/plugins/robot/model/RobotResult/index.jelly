@@ -27,7 +27,7 @@ limitations under the License.
       <div style="float:right;">
       	<img src="${rootURL}/images/16x16/notepad.gif"/><a href="report" title="Original report files">Original report files</a><br/>
 		Executed at ${it.timeStamp}<br/>
-		Tests took ${it.humanReadableDuration} (${it.getDurationDiff(prevresult)})
+		Suite execution took ${it.humanReadableDuration} (${it.getDurationDiff(prevresult)})
       </div>
       <j:if test="${it.overallFailed > 0}">
       <h2 style="color:#c00;">${it.overallFailed} failed tests, ${it.criticalFailed} critical</h2>

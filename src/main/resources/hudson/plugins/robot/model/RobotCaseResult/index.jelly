@@ -31,7 +31,7 @@ limitations under the License.
       <h1><j:if test="${it.critical}">Critical</j:if> test case: "${it.name}"</h1>
       <j:set var="prevcase" value="${it.previousResult}" />
       <div style="float:right;">
-		Test took ${it.humanReadableDuration} (${it.getDurationDiff(prevcase)})
+		Test execution took ${it.humanReadableDuration} (${it.getDurationDiff(prevcase)})
       </div>
       <h2 style="color:${headingColor};">${status}</h2>
        <j:if test="${!it.isPassed()}">
