@@ -18,7 +18,6 @@ package hudson.plugins.robot.model;
 import hudson.plugins.robot.RobotParser;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -151,7 +150,6 @@ public class RobotResultTest extends TestCase {
 		assertEquals("Hello3rd", caseResult.getName());
 	}
 
-
 	public void testShouldParseSplittedOutput() throws Exception {
 		 RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("testfile.xml");
 			result = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("testfile.xml").toURI()).getParentFile(), null);
@@ -174,6 +172,13 @@ public class RobotResultTest extends TestCase {
 		RobotResult res = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("collisions.xml").toURI()).getParentFile(), null);
 		List<RobotCaseResult> failers = res.getAllFailedCases();
 		assertEquals(3, failers.size());
+	}
+
+	public void testShouldParseWholeSuiteDuration() throws Exception {
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("suite-setup-and-teardown.xml");
+		RobotResult res = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("suite-setup-and-teardown.xml").toURI()).getParentFile(), null);
+		res.tally(null);
+		assertEquals(10141, res.getDuration());
 	}
 
 }

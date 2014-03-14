@@ -20,6 +20,7 @@ import hudson.plugins.robot.graph.RobotGraphHelper;
 import hudson.util.Graph;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -34,10 +37,14 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	private static final long serialVersionUID = 1L;
 
+	private static final Logger LOGGER = Logger.getLogger(RobotSuiteResult.class.getName());
+
 	private Map<String, RobotSuiteResult> children;
 	private RobotTestObject parent;
 	private String name;
 	private Map<String, RobotCaseResult> caseResults;
+	private String startTime;
+	private String endTime;
 	private transient int failed;
 	private transient int passed;
 	private transient int criticalPassed;
@@ -164,6 +171,27 @@ public class RobotSuiteResult extends RobotTestObject {
 		if(caseResults == null)
 			this.caseResults = new HashMap<String, RobotCaseResult>();
 		caseResults.put(caseResult.getDuplicateSafeName(), caseResult);
+	}
+
+	public void setStartTime(String startTime){
+		this.startTime = startTime;
+	}
+
+	public void setEndTime(String endTime){
+		this.endTime = endTime;
+	}
+
+	@Override
+	public long getDuration() {
+		if (StringUtils.isEmpty(this.startTime) || StringUtils.isEmpty(this.endTime))
+				return duration;
+
+		try{
+			return RobotCaseResult.timeDifference(this.startTime, this.endTime);
+		} catch (ParseException e){
+			LOGGER.warn("Couldn't parse duration for suite " + name);
+			return 0;
+		}
 	}
 
 	public String getDisplayName() {

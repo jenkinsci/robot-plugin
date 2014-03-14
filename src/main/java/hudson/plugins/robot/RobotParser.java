@@ -140,6 +140,9 @@ public class RobotParser {
 						if ("FAIL".equals(reader.getAttributeValue(null, "status"))) {
 							suite.failTeardown();
 						}
+					} else if("status".equals(tagName)){
+						suite.setStartTime(reader.getAttributeValue(null, "starttime"));
+						suite.setEndTime(reader.getAttributeValue(null, "endtime"));
 					}
 				} else if (reader.isEndElement() && "suite".equals(reader.getLocalName())) {
 					return suite;

@@ -25,7 +25,7 @@ limitations under the License.
       <h1>Testsuite: "${it.name}"</h1>
    	  <j:set var="prevresult" value="${it.previousResult}" />
    	  <div style="float:right;">
-		Tests took ${it.humanReadableDuration} (${it.getDurationDiff(prevresult)})
+        Suite execution took ${it.humanReadableDuration} (${it.getDurationDiff(prevresult)})
       </div>
       <j:if test="${it.failed > 0}">
       <h2 style="color:#c00;">${it.failed} failed tests, ${it.criticalFailed} critical</h2>

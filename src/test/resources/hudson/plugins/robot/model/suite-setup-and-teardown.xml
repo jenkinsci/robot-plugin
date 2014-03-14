@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generated="20140314 10:53:30.832" generator="Robot 2.8.3 (Python 2.7.5 on darwin)">
+<suite source="robot-with-long-setuptimes/setuptimes.txt" id="s1" name="Setuptimes">
+<kw type="setup" name="BuiltIn.Sleep">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>5s</arg>
+</arguments>
+<msg timestamp="20140314 10:53:35.937" level="INFO">Slept 5 seconds</msg>
+<status status="PASS" endtime="20140314 10:53:35.938" starttime="20140314 10:53:30.936"></status>
+</kw>
+<test id="s1-t1" name="Sleepy Test">
+<kw type="kw" name="BuiltIn.Log">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>Test with slow setup and teardown!</arg>
+</arguments>
+<msg timestamp="20140314 10:53:35.970" level="INFO">Test with slow setup and teardown!</msg>
+<status status="PASS" endtime="20140314 10:53:35.970" starttime="20140314 10:53:35.969"></status>
+</kw>
+<doc></doc>
+<tags>
+</tags>
+<status status="PASS" endtime="20140314 10:53:35.970" critical="yes" starttime="20140314 10:53:35.968"></status>
+</test>
+<kw type="teardown" name="BuiltIn.Sleep">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>5s</arg>
+</arguments>
+<msg timestamp="20140314 10:53:40.973" level="INFO">Slept 5 seconds</msg>
+<status status="PASS" endtime="20140314 10:53:40.973" starttime="20140314 10:53:35.971"></status>
+</kw>
+<doc></doc>
+<metadata>
+</metadata>
+<status status="PASS" endtime="20140314 10:53:40.973" starttime="20140314 10:53:30.832"></status>
+</suite>
+<statistics>
+<total>
+<stat fail="0" pass="1">Critical Tests</stat>
+<stat fail="0" pass="1">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat fail="0" pass="1" id="s1" name="Setuptimes">Setuptimes</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
