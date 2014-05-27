@@ -34,6 +34,7 @@ limitations under the License.
 		Test execution took ${it.humanReadableDuration} (${it.getDurationDiff(prevcase)})
       </div>
       <h2 style="color:${headingColor};">${status}</h2>
+      <h4>| Tags: |<j:forEach var="tag" items="${it.tags}"><j:whitespace> ${tag} |</j:whitespace></j:forEach></h4>
        <j:if test="${!it.isPassed()}">
      	 <h3>Error message:</h3>
       	 <p>${it.errorMsg}</p>

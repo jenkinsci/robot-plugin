@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.List;
 
 import junit.framework.TestCase;
+import org.apache.commons.lang.StringUtils;
 
 
 public class RobotResultTest extends TestCase {
@@ -148,6 +149,12 @@ public class RobotResultTest extends TestCase {
 	public void testShouldReturnCaseById(){
 		RobotCaseResult caseResult = (RobotCaseResult)result.findObjectById("Othercases & Testcases/Othercases/3rd level cases/Hello3rd");
 		assertEquals("Hello3rd", caseResult.getName());
+	}
+
+	public void testShouldReturnCaseTags(){
+		RobotCaseResult caseResult = (RobotCaseResult)result.findObjectById("Othercases & Testcases/Othercases/3rd level cases/Hello3rd");
+		String tags = StringUtils.join(caseResult.getTags(), ",");
+		assertEquals("tag1,tag2", tags);
 	}
 
 	public void testShouldParseSplittedOutput() throws Exception {

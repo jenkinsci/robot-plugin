@@ -241,6 +241,9 @@ public class RobotParser {
 			//parse attributes
 			caseResult.setName(reader.getAttributeValue(null, "name"));
 			setCriticalityIfAvailable(reader, caseResult);
+			//parse test tags
+			ignoreUntilStarts(reader, "tags");
+			caseResult.addTags(processTags(reader));
 			//parse test details from nested status
 			ignoreUntilStarts(reader, "status");
 			caseResult.setPassed("PASS".equals(reader.getAttributeValue(null, "status")));
@@ -263,6 +266,26 @@ public class RobotParser {
 			}
 			ignoreUntilEnds(reader, "test");
 			return caseResult;
+		}
+
+		private List<String> processTags(XMLStreamReader reader) throws XMLStreamException {
+			List<String> taglist = new ArrayList<String>();
+			while(reader.hasNext()){
+				reader.next();
+				if(reader.isStartElement() && "tag".equals(reader.getLocalName())){
+					while(reader.hasNext()){
+						reader.next();
+						if(reader.getEventType() == XMLStreamReader.CHARACTERS){
+							taglist.add(reader.getText());
+						} else if(reader.isEndElement() && "tag".equals(reader.getLocalName())){
+							break;
+						}
+					}
+				} else if(reader.isEndElement() && "tags".equals(reader.getLocalName())){
+					break;
+				}
+			}
+			return taglist;
 		}
 
 		private static void setCriticalityIfAvailable(XMLStreamReader reader, RobotCaseResult caseResult) {

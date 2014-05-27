@@ -24,7 +24,9 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.kohsuke.stapler.StaplerRequest;
@@ -42,6 +44,7 @@ public class RobotCaseResult extends RobotTestObject{
 	private String name;
 	private String starttime;
 	private String endtime;
+	private List<String> tags;
 
 	private RobotSuiteResult parent;
 	private int failedSince;
@@ -147,6 +150,18 @@ public class RobotCaseResult extends RobotTestObject{
 
 	public boolean isCritical() {
 		return critical;
+	}
+
+	public List<String> getTags(){
+		if(tags == null)
+			return new ArrayList<String>();
+		return tags;
+	}
+
+	public void addTags(List<String> taglist){
+		if(tags == null)
+			tags = new ArrayList<String>();
+		tags.addAll(taglist);
 	}
 
 	/**

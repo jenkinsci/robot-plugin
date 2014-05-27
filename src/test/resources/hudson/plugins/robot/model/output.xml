@@ -35,7 +35,10 @@
 					<status status="PASS" endtime="20100629 11:08:54.451" starttime="20100629 11:08:54.451">
 					</status>
 				</kw>
-				<tags></tags>
+				<tags>
+					<tag>tag1</tag>
+					<tag>tag2</tag>
+				</tags>
 				<status status="PASS" endtime="20100629 11:08:54.451" starttime="20100629 11:08:54.450">
 				</status>
 			</test>
