@@ -17,6 +17,7 @@ package hudson.plugins.robot.model;
 
 import hudson.FilePath;
 import hudson.model.AbstractBuild;
+import hudson.model.Api;
 import hudson.model.DirectoryBrowserSupport;
 import hudson.plugins.robot.RobotBuildAction;
 import hudson.plugins.robot.graph.RobotGraphHelper;
@@ -36,12 +37,15 @@ import javax.servlet.ServletException;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.export.Exported;
+import org.kohsuke.stapler.export.ExportedBean;
 
 
 /**
  * Class representing Robot Framework test results.
  *
  */
+@ExportedBean
 public class RobotResult extends RobotTestObject {
 
 	private static final long serialVersionUID = 1L;
@@ -78,6 +82,7 @@ public class RobotResult extends RobotTestObject {
 	 * Get number of passed critical tests.
 	 * @return
 	 */
+	@Exported
 	public long getCriticalPassed(){
 		if(overallStats == null) return criticalPassed;
 		if(overallStats.isEmpty()) return 0;
@@ -88,6 +93,7 @@ public class RobotResult extends RobotTestObject {
 	 * Get number of failed critical tests.
 	 * @return
 	 */
+	@Exported
 	public long getCriticalFailed(){
 		if(overallStats == null) return criticalFailed;
 		if( overallStats.isEmpty()) return 0;
@@ -98,6 +104,7 @@ public class RobotResult extends RobotTestObject {
 	 * Get total number of critical tests.
 	 * @return
 	 */
+	@Exported
 	public long getCriticalTotal(){
 		if(overallStats == null) return criticalFailed + criticalPassed;
 		if(overallStats.isEmpty()) return 0;
@@ -108,6 +115,7 @@ public class RobotResult extends RobotTestObject {
 	 * Get number of all passed tests.
 	 * @return
 	 */
+	@Exported
 	public long getOverallPassed(){
 		if(overallStats == null) return passed;
 		if(overallStats.isEmpty()) return 0;
@@ -118,6 +126,7 @@ public class RobotResult extends RobotTestObject {
 	 * Get number of all failed tests.
 	 * @return
 	 */
+	@Exported
 	public long getOverallFailed(){
 		if(overallStats == null) return failed;
 		if(overallStats.isEmpty()) return 0;
@@ -128,6 +137,7 @@ public class RobotResult extends RobotTestObject {
 	 * Get number of all tests.
 	 * @return
 	 */
+	@Exported
 	public long getOverallTotal(){
 		if(overallStats == null) return failed + passed;
 		if(overallStats.isEmpty()) return 0;
@@ -150,6 +160,7 @@ public class RobotResult extends RobotTestObject {
 	 * Get the timestamp of the original test run
 	 * @return
 	 */
+	@Exported
 	public String getTimeStamp() {
 		return timeStamp;
 	}
@@ -181,6 +192,11 @@ public class RobotResult extends RobotTestObject {
 
 		double percentage = (double) passed / total * 100;
 		return roundToDecimals(percentage, 1);
+	}
+
+	@Exported
+	public double getPassPercentage(){
+		return getPassPercentage(false);
 	}
 
 	private static double roundToDecimals(double value, int decimals){
@@ -235,6 +251,7 @@ public class RobotResult extends RobotTestObject {
 	 * Get all top level suites
 	 * @return Collection of suiteresults
 	 */
+	@Exported
 	public Collection<RobotSuiteResult> getSuites(){
 		if (suites != null)
 			return suites.values();
@@ -259,6 +276,7 @@ public class RobotResult extends RobotTestObject {
 	 * Get all failed test cases related to result.
 	 * @return list of test case results
 	 */
+	@Exported
 	public List<RobotCaseResult> getAllFailedCases(){
 		List<RobotCaseResult> allFailedCases = new ArrayList<RobotCaseResult>();
 		for(RobotSuiteResult suite : getSuites()){
@@ -398,4 +416,6 @@ public class RobotResult extends RobotTestObject {
 	public int getPassed() {
 		return (int) getOverallPassed();
 	}
+
+	public Api getApi() { return new Api(this); }
 }
