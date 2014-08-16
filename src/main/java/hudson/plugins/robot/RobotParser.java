@@ -64,13 +64,13 @@ public class RobotParser {
 			.createFileSet(ws, outputFileLocations);
 			DirectoryScanner resultScanner = setInWorkspace
 			.getDirectoryScanner();
-			RobotResult result = new RobotResult();
 
 			String[] files = resultScanner.getIncludedFiles();
 			if (files.length == 0) {
 				throw new AbortException(
 						"No files found in path " + ws.getAbsolutePath() + " with configured filemask: " + outputFileLocations);
 			}
+			RobotResult result = new RobotResult();
 
 			for(String file : files){
 				XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -86,7 +86,7 @@ public class RobotParser {
 				try {
 					XMLStreamReader reader = factory.createXMLStreamReader(inputStream, "UTF-8");
 					try {
-						result =  parseResult(reader, baseDirectory);
+						parseResult(result, reader, baseDirectory);
 					} finally {
 						reader.close();
 					}
@@ -99,8 +99,7 @@ public class RobotParser {
 			return result;
 		}
 
-		private RobotResult parseResult(XMLStreamReader reader, File baseDirectory) throws XMLStreamException, IOException {
-			RobotResult result = new RobotResult();
+		private RobotResult parseResult(RobotResult result, XMLStreamReader reader, File baseDirectory) throws XMLStreamException, IOException {
 			while(reader.hasNext()){
 				reader.next();
 				if(reader.isStartElement()){
