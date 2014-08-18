@@ -161,7 +161,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		assertTrue("screenshot2.png was not stored", storedImage2.exists());
 		assertFalse("dummy.file was copied", storedDummy.exists());
 	}
-	
+
 	@LocalData
 	public void testDontCopyExcessFilesWhenOtherFilesEmpty() throws Exception{
 		Hudson hudson = Hudson.getInstance();
@@ -188,7 +188,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		assertTrue("output-001.xml was not stored", storedSplitOutput.exists());
 		assertFalse("dummy.file was copied", storedDummy.exists());
 	}
-	
+
 	@LocalData
 	public void testActionViewsWithNoRuns() throws Exception{
 		WebClient wc = getWebClient();
@@ -268,6 +268,39 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		table = page.getHtmlElementById("robot-summary-table");
 		Assert.assertTrue(table.asXml().replaceAll("\\s","").contains("<tableclass=\"table\"id=\"robot-summary-table\"><tbodyalign=\"left\"><tr><th/><th>Total</th><th>Failed</th><th>Passed</th><th>Pass%</th></tr><tr><th>Criticaltests</th><tdclass=\"table-upper-row\"style=\"border-left:0px;\">8</td><tdclass=\"table-upper-row\"><spanclass=\"fail\">4</span></td><tdclass=\"table-upper-row\">4</td><tdclass=\"table-upper-row\">50.0</td></tr><tr><th>Alltests</th><tdstyle=\"border-left:0px;\">8</td><td><spanclass=\"fail\">4</span></td><td>4</td><td>50.0</td></tr></tbody></table>"));
 	}
+
+    @LocalData
+    public void testCombinedOutputs() throws Exception{
+        Hudson hudson = Hudson.getInstance();
+        List<Project> projects = hudson.getProjects();
+        Project testProject = null;
+        for (Project project : projects){
+            if(project.getName().equals("several-outputs")) testProject = project;
+        }
+        if(testProject == null) fail("Couldn't find example project");
+        Future<Run> run = testProject.scheduleBuild2(0);
+
+        while(!run.isDone()){
+            Thread.sleep(5);
+        }
+
+        Run lastBuild = testProject.getLastBuild();
+        assertTrue("Build wasn't a success", lastBuild.getResult() == Result.SUCCESS);
+
+        WebClient wc = getWebClient();
+
+        HtmlPage page = wc.goTo("job/several-outputs/");
+        WebAssert.assertElementPresentByXPath(page, "//div[@id='navigation']//a[@href='/job/several-outputs/robot']");
+        WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//h4[contains(.,'Latest Robot Results:')]");
+        WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//img[@src='robot/graph']");
+        WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/several-outputs/1/robot' and contains(text(),'Browse results')]");
+        WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/several-outputs/1/robot/report/**/report.html' and contains(text(), 'Open **/report.html')]");
+        WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='/job/several-outputs/1/robot/report/**/log.html' and contains(text(), 'Open **/log.html')]");
+
+        HtmlTable table = page.getHtmlElementById("robot-summary-table");
+        // TODO: some nicer syntax for these verifications. This is unreadable.
+        Assert.assertTrue(table.asXml().replaceAll("\\s","").contains("<tableclass=\"table\"id=\"robot-summary-table\"><tbodyalign=\"left\"><tr><th/><th>Total</th><th>Failed</th><th>Passed</th><th>Pass%</th></tr><tr><th>Criticaltests</th><tdclass=\"table-upper-row\"style=\"border-left:0px;\">2</td><tdclass=\"table-upper-row\"><spanclass=\"pass\">0</span></td><tdclass=\"table-upper-row\">2</td><tdclass=\"table-upper-row\">100.0</td></tr><tr><th>Alltests</th><tdstyle=\"border-left:0px;\">2</td><td><spanclass=\"pass\">0</span></td><td>2</td><td>100.0</td></tr></tbody></table>"));
+    }
 
 	@LocalData
 	public void testReportPage() throws Exception {
