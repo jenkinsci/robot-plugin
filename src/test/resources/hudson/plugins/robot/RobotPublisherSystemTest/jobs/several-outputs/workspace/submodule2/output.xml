@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 2.8.5 (Jython 2.5.3 on java1.7.0_45)" generated="20140816 12:17:32.638">
+<suite source="/Users/jmalinen/Documents/workspace/jenkins-try/submodule1/src/test/robotframework/Suites" id="s1" name="Suites">
+<suite source="/Users/jmalinen/Documents/workspace/jenkins-try/submodule1/src/test/robotframework/Suites/hello.txt" id="s1-s1" name="Hello">
+<test id="s1-s1-t1" name="Example test">
+<kw type="kw" name="BuiltIn.Log">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>Hello world</arg>
+</arguments>
+<msg timestamp="20140816 12:17:33.430" level="INFO">Hello world</msg>
+<status status="PASS" endtime="20140816 12:17:33.432" starttime="20140816 12:17:33.425"></status>
+</kw>
+<doc></doc>
+<tags>
+</tags>
+<status status="PASS" critical="yes" endtime="20140816 12:17:33.436" starttime="20140816 12:17:33.411"></status>
+</test>
+<doc></doc>
+<metadata>
+</metadata>
+<status status="PASS" endtime="20140816 12:17:33.444" starttime="20140816 12:17:33.351"></status>
+</suite>
+<doc></doc>
+<metadata>
+</metadata>
+<status status="PASS" endtime="20140816 12:17:33.455" starttime="20140816 12:17:32.648"></status>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0">Critical Tests</stat>
+<stat pass="1" fail="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="1" id="s1" fail="0" name="Suites">Suites</stat>
+<stat pass="1" id="s1-s1" fail="0" name="Hello">Suites.Hello</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

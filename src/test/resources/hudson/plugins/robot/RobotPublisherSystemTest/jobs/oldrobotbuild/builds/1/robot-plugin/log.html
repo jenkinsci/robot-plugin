@@ -1,0 +1,960 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Expires" content="Mon, 20 Jan 2001 20:01:21 GMT" />
+<meta name="generator" content="Robot 2.5.1 (Python 2.6.5 on linux2)" />
+<style media="all" type="text/css">
+  /* Generic styles */
+  body {
+    font-family: sans-serif;
+    font-size: 0.8em;
+    color: black;
+    padding: 6px;
+  }
+  h2 {
+    margin-top: 1.2em;
+  }
+  /* Statistics Table */
+  table.statistics {
+    width: 58em;
+    border: 1px solid black;
+    border-collapse: collapse;
+    empty-cells: show;
+    margin-bottom: 1em;
+  }
+  table.statistics td, table.statistics th {
+    border: 1px solid black;
+    padding: 1px 4px;
+    margin: 0px;
+  }
+  table.statistics th {
+    background: #C6C6C6;
+  }
+  .col_stat_name {
+    width: 40em;
+  }
+  .col_stat {
+    width: 3em;
+    text-align: center;
+  }
+  .stat_name {
+    float: left;
+  }
+  .stat_name a, .stat_name span {
+    font-weight: bold;
+  }
+  .tag_links {
+    font-size: 0.9em;
+    float: right;
+    margin-top: 0.05em;
+  }
+  .tag_links span {
+    margin-left: 0.2em;
+  }
+  /* Statistics Table Graph */
+  .pass_bar {
+    background: #00f000;
+  }
+  .fail_bar {
+    background: red;
+  }
+  .no_tags_bar {
+    background: #E9E9E9;
+  }
+  .graph {
+    position: relative;
+    border: 1px solid black;
+    width: 11em;
+    height: 0.75em;
+    padding: 0px;
+    background: #E9E9E9;
+  }
+  .graph b {
+    display: block;
+    position: relative;
+    height: 100%;
+    float: left;
+    font-size: 4px;  /* to make graphs thin also in IE */
+  }
+  /* Tables in documentation */
+  table.doc {
+    border: 1px solid gray;
+    background: transparent;
+    border-collapse: collapse;
+    empty-cells: show;
+    font-size: 0.9em;
+  }
+  table.doc td {
+    border: 1px solid gray;
+    padding: 0.1em 0.3em;
+    height: 1.2em;
+  }
+  /* Misc Styles */
+  .not_available {
+    color: gray;      /* no grey in IE */
+    font-weight: normal;
+  }
+  .parent_name {
+    font-size: 0.7em;
+    letter-spacing: -0.07em;
+  }
+  a:link, a:visited {
+    text-decoration: none;
+    color: blue;
+  }
+  a:hover, a:active {
+    text-decoration: underline;
+    color: purple;
+  }
+  /* Headers */
+  .header {
+    width: 58em;
+    margin: 6px 0px;
+  }
+  h1 {
+    margin: 0px;
+    width: 70%;
+    float: left;
+  }
+  .times {
+    width: 29%;
+    float: right;
+    text-align: right;
+  }
+  .generated_time, .generated_ago {
+    font-size: 0.9em;
+  }
+  .spacer {
+    font-size: 0.8em;
+    clear: both;
+  }
+  /* Status text colors */
+  .error, .fail {
+    color: red;
+  }
+  .pass {
+    color: #009900;
+  }
+  .warn {
+    color: #FFCC00;
+  }
+  .not_run {
+    color: #663300;
+  }
+</style>
+<style media="print" type="text/css">
+  body {
+    background: white;
+    padding: 0px;
+    font-size: 8pt;
+  }
+  a:link, a:visited {
+    color: black;
+  }
+  .header, table.details, table.statistics {
+    width: 100%;
+  }
+  .generated_ago, .expand {
+    display: none;
+  }
+</style>
+<style media="all" type="text/css">
+  /* Tables */
+  body {
+    background: white;
+  }
+  table.suite, table.errors {
+    width: 100%;
+    border: 1px solid gray;  /* no grey in IE */
+    margin: 0.2em 0em;
+    padding: 0.2em;
+  }
+  table.errors td.level {
+    font-weight: bold;
+    width: 4em;
+    text-align: center;
+    vertical-align: top;
+  }
+  table.errors td.time {
+    width: 10em;
+    vertical-align: top;
+  }
+  table.test {
+    width: 100%;
+    border: 1px dashed gray;
+    margin: 0.2em 0em;
+    padding: 0.2em;
+  }
+  table.metadata, table.keyword, table.messages {
+    margin-left: 1.1em;
+    width: 100%;
+  }
+  table.metadata, table.messages {
+    margin-right: 2em;
+  }
+  table.keyword table.metadata {
+    font-size: 0.9em;
+    margin-left: 1.4em;
+  }
+  table.messages {
+    font-family: monospace;
+    font-size: 1.2em;
+  }
+  table.metadata th {
+    width: 12em;
+    text-align: left;
+    vertical-align: top;
+  }
+  table.metadata td {
+    padding-left: 0.5em;
+    vertical-align: top;
+  }
+  table.messages td {
+    vertical-align: top;
+  }
+  table.messages td.time {
+    width: 6em;
+    letter-spacing: -0.05em;
+  }
+  table.messages td.level {
+    width: 4em;
+    text-align: center;
+  }
+  /* Folding buttons */
+  div.foldingbutton {
+    text-align: center;
+    line-height: 0.8em;
+    font-size: 0.8em;
+    margin: 0.2em 0.4em 0em 0.1em;
+    height: 0.9em;
+    width: 0.9em;
+    float: left;
+    text-decoration: none;
+    font-weight: bold;
+    border: 1px solid black;
+    border: 1px solid black;
+  }
+  div.foldingbutton:hover {
+    background: yellow;
+  }
+ .expand {
+   float: right;
+   margin-right: 0.5em;
+   font-size: 0.8em;
+  }
+  /* Test, suite and kw names */
+  .name, .splitname {
+    font-weight: bold;
+    text-decoration: none;
+  }
+  a.name:hover {
+    text-decoration: none;
+    color: black;
+  }
+</style>
+<script type="text/javascript">
+    function toggle_child_visibility(element_id) {
+        if (document.getElementById(element_id + '_children') != null) {
+            toggle_visibility(element_id + '_children')
+        }
+        else {
+            toggle_visibility(element_id)
+        }
+        if (document.getElementById(element_id + '_foldlink') != null) {
+            toggle_visibility(element_id + '_foldlink')
+        }
+        if (document.getElementById(element_id + '_unfoldlink') != null) {
+            toggle_visibility(element_id + '_unfoldlink')
+        }
+    }
+    function toggle_visibility(element_id) {
+        var element = document.getElementById(element_id)
+        if (element == null) {
+            return
+        }
+        if (element.style.display == 'none') {
+            element.style.display = 'block'
+        }
+        else {
+            element.style.display = 'none'
+        }
+    }
+    function expand_all_children(element_id) {
+        var elements = document.getElementById(element_id).getElementsByTagName('div')
+        for (var i=0; i<elements.length; i++) {
+            var element = elements[i]
+            if (element.className == 'indent' && element.style.display == 'none') {
+                toggle_child_visibility(element.getAttribute('id').replace(/_children/, ''))
+            }
+        }
+    }
+    function open_element_by_url() {
+        var name = get_element_name_from_url()
+        if (name != null) {
+            set_element_visible(name)
+            window.location.hash = name  // does not seem to work with Opera
+        }
+    }
+    function get_element_name_from_url() {
+        var hash = window.location.hash
+        if (hash == '' || hash == '#' || hash == null) {
+            return null
+        }
+        return hash.slice(1).replace(/%20/g, ' ')
+    }
+    function set_element_visible(name) {
+        var elements = document.body.getElementsByTagName('a')
+        for (var i=0; i<elements.length; i++) {
+            if (elements[i].getAttribute('name') == name) {
+                open_parents(elements[i])
+                return
+            }
+        }
+    }
+    // Find right type of parent element, open it and its parents
+    function open_parents(element) {
+        var parent = element.parentNode
+        // Find a parent table with id
+        while (parent.nodeName != 'TABLE' || parent.getAttribute('id') == null) {
+            parent = parent.parentNode
+        }
+        var element_id = parent.getAttribute('id')
+        if (document.getElementById(element_id+'_children').style.display == 'none') {
+            toggle_child_visibility(element_id)
+            open_parents(parent)
+        }
+    }
+</script>
+
+<title>Testcases & Othercases Test Log</title>
+</head>
+<body onload="open_element_by_url()">
+<div class="header">
+  <h1>Testcases & Othercases Test Log</h1>
+  <div class="times">
+    <span class="generated_time">Generated<br />20100728&nbsp;14:49:36&nbsp;GMT&nbsp;+03:00</span><br />
+	<span class="generated_ago">
+<script type="text/javascript">
+  function get_end(number) {
+    if (number == 1) { return ' ' }
+    return 's '
+  }
+  function get_sec_str(secs) {
+    return secs + ' second' + get_end(secs)
+  }
+  function get_min_str(mins) {
+    return mins + ' minute' + get_end(mins)
+  }
+  function get_hour_str(hours) {
+    return hours + ' hour' + get_end(hours)
+  }
+  function get_day_str(days) {
+    return days + ' day' + get_end(days)
+  }
+  function get_year_str(years) {
+    return years + ' year' + get_end(years)
+  }
+  generated = 1280317776
+  current = Math.round(new Date().getTime() / 1000)  // getTime returns millis
+  elapsed = current - generated
+  // elapsed should only be negative if clocks are not in sync
+  if (elapsed < 0) {
+    elapsed = Math.abs(elapsed)
+    prefix = '- '
+  }
+  else {
+    prefix = ''
+  }
+  secs  = elapsed % 60
+  mins  = Math.floor(elapsed / 60) % 60
+  hours = Math.floor(elapsed / (60*60)) % 24
+  days  = Math.floor(elapsed / (60*60*24)) % 365
+  years = Math.floor(elapsed / (60*60*24*365))
+  if (years > 0) {
+    // compencate the effect of leap years (not perfect but should be enough)
+    days = days - Math.floor(years / 4)
+    if (days < 0) { days = 0 }
+    output = get_year_str(years) + get_day_str(days)
+  }
+  else if (days > 0) {
+    output = get_day_str(days) +  get_hour_str(hours)
+  }
+  else if (hours > 0) {
+    output = get_hour_str(hours) + get_min_str(mins)
+  }
+  else if (mins > 0) {
+    output = get_min_str(mins) + get_sec_str(secs)
+  }
+  else {
+    output = get_sec_str(secs)
+  }
+  document.write(prefix + output + 'ago')
+</script>
+    </span>
+  </div>
+</div>
+<div class="spacer">&nbsp;</div>
+<h2>Test Statistics</h2>
+<table class="statistics">
+<tr>
+<th class="col_stat_name">Total Statistics</th>
+<th class="col_stat">Total</th>
+<th class="col_stat">Pass</th>
+<th class="col_stat">Fail</th>
+<th class="col_graph">Graph</th>
+</tr>
+<tr>
+<td class="col_stat_name">
+<div class="stat_name"><span>Critical Tests</span></div>
+</td>
+<td class="col_stat">8</td>
+<td class="col_stat">4</td>
+<td class="col_stat">4</td>
+<td class="col_graph">
+<div class="graph">
+<b class="pass_bar" style="width: 50.00%;" title="50.0%"></b>
+<b class="fail_bar" style="width: 49.99%;" title="50.0%"></b>
+</div>
+</td>
+</tr>
+<tr>
+<td class="col_stat_name">
+<div class="stat_name"><span>All Tests</span></div>
+</td>
+<td class="col_stat">8</td>
+<td class="col_stat">4</td>
+<td class="col_stat">4</td>
+<td class="col_graph">
+<div class="graph">
+<b class="pass_bar" style="width: 50.00%;" title="50.0%"></b>
+<b class="fail_bar" style="width: 49.99%;" title="50.0%"></b>
+</div>
+</td>
+</tr>
+</table>
+<table class="statistics">
+<tr>
+<th class="col_stat_name">Statistics by Tag</th>
+<th class="col_stat">Total</th>
+<th class="col_stat">Pass</th>
+<th class="col_stat">Fail</th>
+<th class="col_graph">Graph</th>
+</tr>
+<tr>
+<td class="col_stat_name">No Tags</td>
+<td class="col_stat"></td>
+<td class="col_stat"></td>
+<td class="col_stat"></td>
+<td class="col_graph">
+<div class="graph">
+<b class="no_tags_bar" style="width: 100%;"></b>
+</div>
+</td>
+</tr>
+</table>
+<table class="statistics">
+<tr>
+<th class="col_stat_name">Statistics by Suite</th>
+<th class="col_stat">Total</th>
+<th class="col_stat">Pass</th>
+<th class="col_stat">Fail</th>
+<th class="col_graph">Graph</th>
+</tr>
+<tr>
+<td class="col_stat_name">
+<div class="stat_name"><a href="#suite_Testcases &amp; Othercases" onclick="set_element_visible('suite_Testcases &amp; Othercases')" title="Testcases &amp; Othercases">Testcases &amp; Othercases</a></div>
+</td>
+<td class="col_stat">8</td>
+<td class="col_stat">4</td>
+<td class="col_stat">4</td>
+<td class="col_graph">
+<div class="graph">
+<b class="pass_bar" style="width: 50.00%;" title="50.0%"></b>
+<b class="fail_bar" style="width: 49.99%;" title="50.0%"></b>
+</div>
+</td>
+</tr>
+<tr>
+<td class="col_stat_name">
+<div class="stat_name"><a href="#suite_Testcases &amp; Othercases.Testcases" onclick="set_element_visible('suite_Testcases &amp; Othercases.Testcases')" title="Testcases &amp; Othercases.Testcases"><span class="parent_name">Testcases &amp; Othercases . </span>Testcases</a></div>
+</td>
+<td class="col_stat">4</td>
+<td class="col_stat">2</td>
+<td class="col_stat">2</td>
+<td class="col_graph">
+<div class="graph">
+<b class="pass_bar" style="width: 50.00%;" title="50.0%"></b>
+<b class="fail_bar" style="width: 49.99%;" title="50.0%"></b>
+</div>
+</td>
+</tr>
+<tr>
+<td class="col_stat_name">
+<div class="stat_name"><a href="#suite_Testcases &amp; Othercases.Othercases" onclick="set_element_visible('suite_Testcases &amp; Othercases.Othercases')" title="Testcases &amp; Othercases.Othercases"><span class="parent_name">Testcases &amp; Othercases . </span>Othercases</a></div>
+</td>
+<td class="col_stat">4</td>
+<td class="col_stat">2</td>
+<td class="col_stat">2</td>
+<td class="col_graph">
+<div class="graph">
+<b class="pass_bar" style="width: 50.00%;" title="50.0%"></b>
+<b class="fail_bar" style="width: 49.99%;" title="50.0%"></b>
+</div>
+</td>
+</tr>
+</table>
+<h2>Test Execution Log</h2>
+<table class="suite" id="suite000001">
+<tr>
+<td>
+<a class="expand" href="javascript:expand_all_children('suite000001')">Expand All</a>
+<div class="foldingbutton" id="suite000001_unfoldlink" onclick="toggle_child_visibility('suite000001');" style="display: none;">+</div>
+<div class="foldingbutton" id="suite000001_foldlink" onclick="toggle_child_visibility('suite000001');" style="display: block;">-</div>
+<span class="fail">TEST&nbsp;SUITE: </span>
+<a class="name" name="suite_Testcases &amp; Othercases" title="Testcases &amp; Othercases">Testcases &amp; Othercases</a>
+</td>
+</tr>
+<tr>
+<td>
+<div class="indent" id="suite000001_children" style="display: block;">
+<table class="metadata">
+<tr><th>Full Name:</th><td>Testcases &amp; Othercases</td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.734 / 20100728 14:49:36.775 / 00:00:00.041</td></tr>
+<tr><th>Overall Status:</th><td class="fail">FAIL</td></tr>
+<tr><th>Message:</th><td>8&nbsp;critical&nbsp;tests,&nbsp;4&nbsp;passed,&nbsp;<span class="fail">4&nbsp;failed</span><br />8&nbsp;tests&nbsp;total,&nbsp;4&nbsp;passed,&nbsp;<span class="fail">4&nbsp;failed</span></td></tr>
+</table>
+<table class="suite" id="suite000002">
+<tr>
+<td>
+<a class="expand" href="javascript:expand_all_children('suite000002')">Expand All</a>
+<div class="foldingbutton" id="suite000002_unfoldlink" onclick="toggle_child_visibility('suite000002');" style="display: none;">+</div>
+<div class="foldingbutton" id="suite000002_foldlink" onclick="toggle_child_visibility('suite000002');" style="display: block;">-</div>
+<span class="fail">TEST&nbsp;SUITE: </span>
+<a class="name" name="suite_Testcases &amp; Othercases.Testcases" title="Testcases &amp; Othercases.Testcases">Testcases</a>
+</td>
+</tr>
+<tr>
+<td>
+<div class="indent" id="suite000002_children" style="display: block;">
+<table class="metadata">
+<tr><th>Full Name:</th><td>Testcases &amp; Othercases.Testcases</td></tr>
+<tr><th>Documentation:</th><td>Some documentation for testing purposes</td></tr>
+<tr><th>Source:</th><td><a href="testcases.html">/home/japiiron/CI-consulting/Robot_plugin/example_tests/testcases.html</a></td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.759 / 20100728 14:49:36.766 / 00:00:00.007</td></tr>
+<tr><th>Overall Status:</th><td class="fail">FAIL</td></tr>
+<tr><th>Message:</th><td>4&nbsp;critical&nbsp;tests,&nbsp;2&nbsp;passed,&nbsp;<span class="fail">2&nbsp;failed</span><br />4&nbsp;tests&nbsp;total,&nbsp;2&nbsp;passed,&nbsp;<span class="fail">2&nbsp;failed</span></td></tr>
+</table>
+<table class="test" id="test000001">
+<tr>
+<td>
+<a class="expand" href="javascript:expand_all_children('test000001')">Expand All</a>
+<div class="foldingbutton" id="test000001_unfoldlink" onclick="toggle_child_visibility('test000001');" style="display: none;">-</div>
+<div class="foldingbutton" id="test000001_foldlink" onclick="toggle_child_visibility('test000001');" style="display: block;">+</div>
+<span class="pass">TEST&nbsp;CASE: </span>
+<a class="name" name="test_Testcases &amp; Othercases.Testcases.Hello" title="Testcases &amp; Othercases.Testcases.Hello">Hello</a>
+</td>
+</tr>
+<tr>
+<td>
+<div class="indent" id="test000001_children" style="display: none;">
+<table class="metadata">
+<tr><th>Full Name:</th><td>Testcases &amp; Othercases.Testcases.Hello</td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.760 / 20100728 14:49:36.761 / 00:00:00.001</td></tr>
+<tr><th>Status:</th><td class="pass">PASS (critical)</td></tr>
+</table>
+<table class="keyword">
+<tr id="kw000001">
+<td>
+<div class="foldingbutton" id="kw000001_unfoldlink" onclick="toggle_child_visibility('kw000001');" style="display: none;">-</div>
+<div class="foldingbutton" id="kw000001_foldlink" onclick="toggle_child_visibility('kw000001');" style="display: block;">+</div>
+<span class="pass">KEYWORD: </span>
+<span class="name">BuiltIn.Should Be Equal </span>
+<span class="arg">${HELLO}, Hello, world!</span>
+</td>
+</tr>
+<tr id="kw000001">
+<td>
+<div class="indent" id="kw000001_children" style="display: none;">
+<table class="metadata">
+<tr><th>Documentation:</th><td>Fails if the given objects are unequal.</td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.761 / 20100728 14:49:36.761 / 00:00:00.000</td></tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<table class="test" id="test000002">
+<tr>
+<td>
+<a class="expand" href="javascript:expand_all_children('test000002')">Expand All</a>
+<div class="foldingbutton" id="test000002_unfoldlink" onclick="toggle_child_visibility('test000002');" style="display: none;">+</div>
+<div class="foldingbutton" id="test000002_foldlink" onclick="toggle_child_visibility('test000002');" style="display: block;">-</div>
+<span class="fail">TEST&nbsp;CASE: </span>
+<a class="name" name="test_Testcases &amp; Othercases.Testcases.Failer" title="Testcases &amp; Othercases.Testcases.Failer">Failer</a>
+</td>
+</tr>
+<tr>
+<td>
+<div class="indent" id="test000002_children" style="display: block;">
+<table class="metadata">
+<tr><th>Full Name:</th><td>Testcases &amp; Othercases.Testcases.Failer</td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.762 / 20100728 14:49:36.763 / 00:00:00.001</td></tr>
+<tr><th>Status:</th><td class="fail">FAIL (critical)</td></tr>
+<tr><th>Message:</th><td>Test failed miserably!</td></tr>
+</table>
+<table class="keyword">
+<tr id="kw000002">
+<td>
+<div class="foldingbutton" id="kw000002_unfoldlink" onclick="toggle_child_visibility('kw000002');" style="display: none;">+</div>
+<div class="foldingbutton" id="kw000002_foldlink" onclick="toggle_child_visibility('kw000002');" style="display: block;">-</div>
+<span class="fail">KEYWORD: </span>
+<span class="name">BuiltIn.Fail </span>
+<span class="arg">${FAILMSG}</span>
+</td>
+</tr>
+<tr id="kw000002">
+<td>
+<div class="indent" id="kw000002_children" style="display: block;">
+<table class="metadata">
+<tr><th>Documentation:</th><td>Fails the test immediately with the given (optional) message.</td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.762 / 20100728 14:49:36.763 / 00:00:00.001</td></tr>
+</table>
+<table class="messages">
+<tr>
+<td class="time">14:49:36.763</td>
+<td class="fail level">FAIL</td>
+<td class="msg">Test failed miserably!</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<table class="test" id="test000003">
+<tr>
+<td>
+<a class="expand" href="javascript:expand_all_children('test000003')">Expand All</a>
+<div class="foldingbutton" id="test000003_unfoldlink" onclick="toggle_child_visibility('test000003');" style="display: none;">+</div>
+<div class="foldingbutton" id="test000003_foldlink" onclick="toggle_child_visibility('test000003');" style="display: block;">-</div>
+<span class="fail">TEST&nbsp;CASE: </span>
+<a class="name" name="test_Testcases &amp; Othercases.Testcases.Not equal" title="Testcases &amp; Othercases.Testcases.Not equal">Not equal</a>
+</td>
+</tr>
+<tr>
+<td>
+<div class="indent" id="test000003_children" style="display: block;">
+<table class="metadata">
+<tr><th>Full Name:</th><td>Testcases &amp; Othercases.Testcases.Not equal</td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.764 / 20100728 14:49:36.765 / 00:00:00.001</td></tr>
+<tr><th>Status:</th><td class="fail">FAIL (critical)</td></tr>
+<tr><th>Message:</th><td>Hello, world! != Good bye, world!</td></tr>
+</table>
+<table class="keyword">
+<tr id="kw000003">
+<td>
+<div class="foldingbutton" id="kw000003_unfoldlink" onclick="toggle_child_visibility('kw000003');" style="display: none;">+</div>
+<div class="foldingbutton" id="kw000003_foldlink" onclick="toggle_child_visibility('kw000003');" style="display: block;">-</div>
+<span class="fail">KEYWORD: </span>
+<span class="name">BuiltIn.Should Be Equal </span>
+<span class="arg">Hello, world!, Good bye, world!</span>
+</td>
+</tr>
+<tr id="kw000003">
+<td>
+<div class="indent" id="kw000003_children" style="display: block;">
+<table class="metadata">
+<tr><th>Documentation:</th><td>Fails if the given objects are unequal.</td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.764 / 20100728 14:49:36.765 / 00:00:00.001</td></tr>
+</table>
+<table class="messages">
+<tr>
+<td class="time">14:49:36.765</td>
+<td class="fail level">FAIL</td>
+<td class="msg">Hello, world! != Good bye, world!</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<table class="test" id="test000004">
+<tr>
+<td>
+<a class="expand" href="javascript:expand_all_children('test000004')">Expand All</a>
+<div class="foldingbutton" id="test000004_unfoldlink" onclick="toggle_child_visibility('test000004');" style="display: none;">-</div>
+<div class="foldingbutton" id="test000004_foldlink" onclick="toggle_child_visibility('test000004');" style="display: block;">+</div>
+<span class="pass">TEST&nbsp;CASE: </span>
+<a class="name" name="test_Testcases &amp; Othercases.Testcases.Contains string" title="Testcases &amp; Othercases.Testcases.Contains string">Contains string</a>
+</td>
+</tr>
+<tr>
+<td>
+<div class="indent" id="test000004_children" style="display: none;">
+<table class="metadata">
+<tr><th>Full Name:</th><td>Testcases &amp; Othercases.Testcases.Contains string</td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.765 / 20100728 14:49:36.766 / 00:00:00.001</td></tr>
+<tr><th>Status:</th><td class="pass">PASS (critical)</td></tr>
+</table>
+<table class="keyword">
+<tr id="kw000004">
+<td>
+<div class="foldingbutton" id="kw000004_unfoldlink" onclick="toggle_child_visibility('kw000004');" style="display: none;">-</div>
+<div class="foldingbutton" id="kw000004_foldlink" onclick="toggle_child_visibility('kw000004');" style="display: block;">+</div>
+<span class="pass">KEYWORD: </span>
+<span class="name">BuiltIn.Should Contain </span>
+<span class="arg">Hello, world!, world</span>
+</td>
+</tr>
+<tr id="kw000004">
+<td>
+<div class="indent" id="kw000004_children" style="display: none;">
+<table class="metadata">
+<tr><th>Documentation:</th><td>Fails if `item1` does not contain `item2` one or more times.</td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.765 / 20100728 14:49:36.766 / 00:00:00.001</td></tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<table class="suite" id="suite000003">
+<tr>
+<td>
+<a class="expand" href="javascript:expand_all_children('suite000003')">Expand All</a>
+<div class="foldingbutton" id="suite000003_unfoldlink" onclick="toggle_child_visibility('suite000003');" style="display: none;">+</div>
+<div class="foldingbutton" id="suite000003_foldlink" onclick="toggle_child_visibility('suite000003');" style="display: block;">-</div>
+<span class="fail">TEST&nbsp;SUITE: </span>
+<a class="name" name="suite_Testcases &amp; Othercases.Othercases" title="Testcases &amp; Othercases.Othercases">Othercases</a>
+</td>
+</tr>
+<tr>
+<td>
+<div class="indent" id="suite000003_children" style="display: block;">
+<table class="metadata">
+<tr><th>Full Name:</th><td>Testcases &amp; Othercases.Othercases</td></tr>
+<tr><th>Documentation:</th><td>Some documentation for testing purposes</td></tr>
+<tr><th>Source:</th><td><a href="othercases.html">/home/japiiron/CI-consulting/Robot_plugin/example_tests/othercases.html</a></td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.767 / 20100728 14:49:36.775 / 00:00:00.008</td></tr>
+<tr><th>Overall Status:</th><td class="fail">FAIL</td></tr>
+<tr><th>Message:</th><td>4&nbsp;critical&nbsp;tests,&nbsp;2&nbsp;passed,&nbsp;<span class="fail">2&nbsp;failed</span><br />4&nbsp;tests&nbsp;total,&nbsp;2&nbsp;passed,&nbsp;<span class="fail">2&nbsp;failed</span></td></tr>
+</table>
+<table class="test" id="test000005">
+<tr>
+<td>
+<a class="expand" href="javascript:expand_all_children('test000005')">Expand All</a>
+<div class="foldingbutton" id="test000005_unfoldlink" onclick="toggle_child_visibility('test000005');" style="display: none;">-</div>
+<div class="foldingbutton" id="test000005_foldlink" onclick="toggle_child_visibility('test000005');" style="display: block;">+</div>
+<span class="pass">TEST&nbsp;CASE: </span>
+<a class="name" name="test_Testcases &amp; Othercases.Othercases.Hello" title="Testcases &amp; Othercases.Othercases.Hello">Hello</a>
+</td>
+</tr>
+<tr>
+<td>
+<div class="indent" id="test000005_children" style="display: none;">
+<table class="metadata">
+<tr><th>Full Name:</th><td>Testcases &amp; Othercases.Othercases.Hello</td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.768 / 20100728 14:49:36.769 / 00:00:00.001</td></tr>
+<tr><th>Status:</th><td class="pass">PASS (critical)</td></tr>
+</table>
+<table class="keyword">
+<tr id="kw000005">
+<td>
+<div class="foldingbutton" id="kw000005_unfoldlink" onclick="toggle_child_visibility('kw000005');" style="display: none;">-</div>
+<div class="foldingbutton" id="kw000005_foldlink" onclick="toggle_child_visibility('kw000005');" style="display: block;">+</div>
+<span class="pass">KEYWORD: </span>
+<span class="name">BuiltIn.Should Be Equal </span>
+<span class="arg">${HELLO}, Hello, world!</span>
+</td>
+</tr>
+<tr id="kw000005">
+<td>
+<div class="indent" id="kw000005_children" style="display: none;">
+<table class="metadata">
+<tr><th>Documentation:</th><td>Fails if the given objects are unequal.</td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.769 / 20100728 14:49:36.769 / 00:00:00.000</td></tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<table class="test" id="test000006">
+<tr>
+<td>
+<a class="expand" href="javascript:expand_all_children('test000006')">Expand All</a>
+<div class="foldingbutton" id="test000006_unfoldlink" onclick="toggle_child_visibility('test000006');" style="display: none;">+</div>
+<div class="foldingbutton" id="test000006_foldlink" onclick="toggle_child_visibility('test000006');" style="display: block;">-</div>
+<span class="fail">TEST&nbsp;CASE: </span>
+<a class="name" name="test_Testcases &amp; Othercases.Othercases.Failer" title="Testcases &amp; Othercases.Othercases.Failer">Failer</a>
+</td>
+</tr>
+<tr>
+<td>
+<div class="indent" id="test000006_children" style="display: block;">
+<table class="metadata">
+<tr><th>Full Name:</th><td>Testcases &amp; Othercases.Othercases.Failer</td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.769 / 20100728 14:49:36.771 / 00:00:00.002</td></tr>
+<tr><th>Status:</th><td class="fail">FAIL (critical)</td></tr>
+<tr><th>Message:</th><td>Test failed miserably!</td></tr>
+</table>
+<table class="keyword">
+<tr id="kw000006">
+<td>
+<div class="foldingbutton" id="kw000006_unfoldlink" onclick="toggle_child_visibility('kw000006');" style="display: none;">+</div>
+<div class="foldingbutton" id="kw000006_foldlink" onclick="toggle_child_visibility('kw000006');" style="display: block;">-</div>
+<span class="fail">KEYWORD: </span>
+<span class="name">BuiltIn.Fail </span>
+<span class="arg">${FAILMSG}</span>
+</td>
+</tr>
+<tr id="kw000006">
+<td>
+<div class="indent" id="kw000006_children" style="display: block;">
+<table class="metadata">
+<tr><th>Documentation:</th><td>Fails the test immediately with the given (optional) message.</td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.770 / 20100728 14:49:36.771 / 00:00:00.001</td></tr>
+</table>
+<table class="messages">
+<tr>
+<td class="time">14:49:36.771</td>
+<td class="fail level">FAIL</td>
+<td class="msg">Test failed miserably!</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<table class="test" id="test000007">
+<tr>
+<td>
+<a class="expand" href="javascript:expand_all_children('test000007')">Expand All</a>
+<div class="foldingbutton" id="test000007_unfoldlink" onclick="toggle_child_visibility('test000007');" style="display: none;">+</div>
+<div class="foldingbutton" id="test000007_foldlink" onclick="toggle_child_visibility('test000007');" style="display: block;">-</div>
+<span class="fail">TEST&nbsp;CASE: </span>
+<a class="name" name="test_Testcases &amp; Othercases.Othercases.Not equal" title="Testcases &amp; Othercases.Othercases.Not equal">Not equal</a>
+</td>
+</tr>
+<tr>
+<td>
+<div class="indent" id="test000007_children" style="display: block;">
+<table class="metadata">
+<tr><th>Full Name:</th><td>Testcases &amp; Othercases.Othercases.Not equal</td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.772 / 20100728 14:49:36.773 / 00:00:00.001</td></tr>
+<tr><th>Status:</th><td class="fail">FAIL (critical)</td></tr>
+<tr><th>Message:</th><td>Hello, world! != Good bye, world!</td></tr>
+</table>
+<table class="keyword">
+<tr id="kw000007">
+<td>
+<div class="foldingbutton" id="kw000007_unfoldlink" onclick="toggle_child_visibility('kw000007');" style="display: none;">+</div>
+<div class="foldingbutton" id="kw000007_foldlink" onclick="toggle_child_visibility('kw000007');" style="display: block;">-</div>
+<span class="fail">KEYWORD: </span>
+<span class="name">BuiltIn.Should Be Equal </span>
+<span class="arg">Hello, world!, Good bye, world!</span>
+</td>
+</tr>
+<tr id="kw000007">
+<td>
+<div class="indent" id="kw000007_children" style="display: block;">
+<table class="metadata">
+<tr><th>Documentation:</th><td>Fails if the given objects are unequal.</td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.772 / 20100728 14:49:36.773 / 00:00:00.001</td></tr>
+</table>
+<table class="messages">
+<tr>
+<td class="time">14:49:36.773</td>
+<td class="fail level">FAIL</td>
+<td class="msg">Hello, world! != Good bye, world!</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<table class="test" id="test000008">
+<tr>
+<td>
+<a class="expand" href="javascript:expand_all_children('test000008')">Expand All</a>
+<div class="foldingbutton" id="test000008_unfoldlink" onclick="toggle_child_visibility('test000008');" style="display: none;">-</div>
+<div class="foldingbutton" id="test000008_foldlink" onclick="toggle_child_visibility('test000008');" style="display: block;">+</div>
+<span class="pass">TEST&nbsp;CASE: </span>
+<a class="name" name="test_Testcases &amp; Othercases.Othercases.Contains string" title="Testcases &amp; Othercases.Othercases.Contains string">Contains string</a>
+</td>
+</tr>
+<tr>
+<td>
+<div class="indent" id="test000008_children" style="display: none;">
+<table class="metadata">
+<tr><th>Full Name:</th><td>Testcases &amp; Othercases.Othercases.Contains string</td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.773 / 20100728 14:49:36.774 / 00:00:00.001</td></tr>
+<tr><th>Status:</th><td class="pass">PASS (critical)</td></tr>
+</table>
+<table class="keyword">
+<tr id="kw000008">
+<td>
+<div class="foldingbutton" id="kw000008_unfoldlink" onclick="toggle_child_visibility('kw000008');" style="display: none;">-</div>
+<div class="foldingbutton" id="kw000008_foldlink" onclick="toggle_child_visibility('kw000008');" style="display: block;">+</div>
+<span class="pass">KEYWORD: </span>
+<span class="name">BuiltIn.Should Contain </span>
+<span class="arg">Hello, world!, world</span>
+</td>
+</tr>
+<tr id="kw000008">
+<td>
+<div class="indent" id="kw000008_children" style="display: none;">
+<table class="metadata">
+<tr><th>Documentation:</th><td>Fails if `item1` does not contain `item2` one or more times.</td></tr>
+<tr><th>Start&nbsp;/&nbsp;End&nbsp;/&nbsp;Elapsed:</th><td>20100728 14:49:36.774 / 20100728 14:49:36.774 / 00:00:00.000</td></tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+</body>
+</html>

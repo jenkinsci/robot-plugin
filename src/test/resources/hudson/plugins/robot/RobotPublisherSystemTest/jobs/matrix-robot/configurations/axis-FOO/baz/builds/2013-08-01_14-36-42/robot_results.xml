@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<result>
+  <timeStamp>20100728 14:49:36.693</timeStamp>
+  <suites>
+    <entry>
+      <string>Testcases &amp; Othercases</string>
+      <suite>
+        <duplicateSafeName>Testcases &amp; Othercases</duplicateSafeName>
+        <children>
+          <entry>
+            <string>Testcases</string>
+            <suite>
+              <duplicateSafeName>Testcases</duplicateSafeName>
+              <children/>
+              <parent class="suite" reference="../../../.."/>
+              <name>Testcases</name>
+              <caseResults>
+                <entry>
+                  <string>Not equal</string>
+                  <case>
+                    <passed>false</passed>
+                    <critical>true</critical>
+                    <duration>0</duration>
+                    <errorMsg>Hello, world! != Good bye, world!</errorMsg>
+                    <name>Not equal</name>
+                    <starttime>20100728 14:49:36.764</starttime>
+                    <endtime>20100728 14:49:36.765</endtime>
+                    <parent reference="../../../.."/>
+                    <failedSince>0</failedSince>
+                  </case>
+                </entry>
+                <entry>
+                  <string>Contains string</string>
+                  <case>
+                    <passed>true</passed>
+                    <critical>true</critical>
+                    <duration>0</duration>
+                    <name>Contains string</name>
+                    <starttime>20100728 14:49:36.765</starttime>
+                    <endtime>20100728 14:49:36.766</endtime>
+                    <parent reference="../../../.."/>
+                    <failedSince>0</failedSince>
+                  </case>
+                </entry>
+                <entry>
+                  <string>Failer</string>
+                  <case>
+                    <passed>false</passed>
+                    <critical>true</critical>
+                    <duration>0</duration>
+                    <errorMsg>Test failed miserably!</errorMsg>
+                    <name>Failer</name>
+                    <starttime>20100728 14:49:36.762</starttime>
+                    <endtime>20100728 14:49:36.763</endtime>
+                    <parent reference="../../../.."/>
+                    <failedSince>0</failedSince>
+                  </case>
+                </entry>
+                <entry>
+                  <string>Hello</string>
+                  <case>
+                    <passed>true</passed>
+                    <critical>true</critical>
+                    <duration>0</duration>
+                    <name>Hello</name>
+                    <starttime>20100728 14:49:36.760</starttime>
+                    <endtime>20100728 14:49:36.761</endtime>
+                    <parent reference="../../../.."/>
+                    <failedSince>0</failedSince>
+                  </case>
+                </entry>
+              </caseResults>
+            </suite>
+          </entry>
+          <entry>
+            <string>Othercases</string>
+            <suite>
+              <duplicateSafeName>Othercases</duplicateSafeName>
+              <children/>
+              <parent class="suite" reference="../../../.."/>
+              <name>Othercases</name>
+              <caseResults>
+                <entry>
+                  <string>Not equal</string>
+                  <case>
+                    <passed>false</passed>
+                    <critical>true</critical>
+                    <duration>0</duration>
+                    <errorMsg>Hello, world! != Good bye, world!</errorMsg>
+                    <name>Not equal</name>
+                    <starttime>20100728 14:49:36.772</starttime>
+                    <endtime>20100728 14:49:36.773</endtime>
+                    <parent reference="../../../.."/>
+                    <failedSince>0</failedSince>
+                  </case>
+                </entry>
+                <entry>
+                  <string>Contains string</string>
+                  <case>
+                    <passed>true</passed>
+                    <critical>true</critical>
+                    <duration>0</duration>
+                    <name>Contains string</name>
+                    <starttime>20100728 14:49:36.773</starttime>
+                    <endtime>20100728 14:49:36.774</endtime>
+                    <parent reference="../../../.."/>
+                    <failedSince>0</failedSince>
+                  </case>
+                </entry>
+                <entry>
+                  <string>Failer</string>
+                  <case>
+                    <passed>false</passed>
+                    <critical>true</critical>
+                    <duration>0</duration>
+                    <errorMsg>Test failed miserably!</errorMsg>
+                    <name>Failer</name>
+                    <starttime>20100728 14:49:36.769</starttime>
+                    <endtime>20100728 14:49:36.771</endtime>
+                    <parent reference="../../../.."/>
+                    <failedSince>0</failedSince>
+                  </case>
+                </entry>
+                <entry>
+                  <string>Hello</string>
+                  <case>
+                    <passed>true</passed>
+                    <critical>true</critical>
+                    <duration>0</duration>
+                    <name>Hello</name>
+                    <starttime>20100728 14:49:36.768</starttime>
+                    <endtime>20100728 14:49:36.769</endtime>
+                    <parent reference="../../../.."/>
+                    <failedSince>0</failedSince>
+                  </case>
+                </entry>
+              </caseResults>
+            </suite>
+          </entry>
+        </children>
+        <parent class="result" reference="../../../.."/>
+        <name>Testcases &amp; Othercases</name>
+        <caseResults/>
+      </suite>
+    </entry>
+  </suites>
+</result>

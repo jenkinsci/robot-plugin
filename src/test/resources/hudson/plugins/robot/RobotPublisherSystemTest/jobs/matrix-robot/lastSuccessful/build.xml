@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<matrix-build>
+  <actions>
+    <hudson.model.CauseAction>
+      <causes>
+        <hudson.model.Cause_-UserCause>
+          <authenticationName>anonymous</authenticationName>
+        </hudson.model.Cause_-UserCause>
+      </causes>
+    </hudson.model.CauseAction>
+    <hudson.tasks.test.MatrixTestResult>
+      <owner class="matrix-build" reference="../../.."/>
+      <descriptions class="java.util.concurrent.ConcurrentHashMap"/>
+      <failCount>8</failCount>
+      <skipCount>0</skipCount>
+      <totalCount>16</totalCount>
+      <children>
+        <hudson.tasks.test.AggregatedTestResultAction_-Child>
+          <name>FOO=bar</name>
+          <build>2</build>
+        </hudson.tasks.test.AggregatedTestResultAction_-Child>
+        <hudson.tasks.test.AggregatedTestResultAction_-Child>
+          <name>FOO=baz</name>
+          <build>2</build>
+        </hudson.tasks.test.AggregatedTestResultAction_-Child>
+      </children>
+    </hudson.tasks.test.MatrixTestResult>
+  </actions>
+  <number>2</number>
+  <result>SUCCESS</result>
+  <duration>1039</duration>
+  <charset>MacRoman</charset>
+  <keepLog>false</keepLog>
+  <builtOn></builtOn>
+  <workspace>/Users/japiiron/eclipse.kepler.workspace/robot-github/work/jobs/matrix-robot/workspace</workspace>
+  <hudsonVersion>1.424</hudsonVersion>
+  <scm class="hudson.scm.NullChangeLogParser"/>
+  <culprits/>
+  <axes>
+    <hudson.matrix.TextAxis>
+      <name>FOO</name>
+      <values>
+        <string>bar</string>
+        <string>baz</string>
+      </values>
+    </hudson.matrix.TextAxis>
+  </axes>
+</matrix-build>

@@ -1,0 +1,182 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<build>
+  <actions>
+    <hudson.model.CauseAction>
+      <causes>
+        <hudson.model.Cause_-UserCause>
+          <authenticationName>anonymous</authenticationName>
+        </hudson.model.Cause_-UserCause>
+      </causes>
+    </hudson.model.CauseAction>
+    <hudson.plugins.robot.RobotBuildAction>
+      <build class="build" reference="../../.."/>
+      <result>
+        <parentAction reference="../.."/>
+        <timeStamp>20100728 14:49:36.693</timeStamp>
+        <passed>4</passed>
+        <failed>4</failed>
+        <criticalPassed>4</criticalPassed>
+        <criticalFailed>4</criticalFailed>
+        <duration>9</duration>
+        <suites>
+          <entry>
+            <string>Testcases_&amp;_Othercases</string>
+            <hudson.plugins.robot.model.RobotSuiteResult>
+              <parentAction reference="../../../../.."/>
+              <children>
+                <entry>
+                  <string>Testcases</string>
+                  <hudson.plugins.robot.model.RobotSuiteResult>
+                    <parentAction reference="../../../../../../../.."/>
+                    <parent class="hudson.plugins.robot.model.RobotSuiteResult" reference="../../../.."/>
+                    <name>Testcases</name>
+                    <caseResults>
+                      <entry>
+                        <string>Not_equal</string>
+                        <hudson.plugins.robot.model.RobotCaseResult>
+                          <parentAction reference="../../../../../../../../../../.."/>
+                          <passed>false</passed>
+                          <critical>true</critical>
+                          <duration>1</duration>
+                          <errorMsg>Hello, world! != Good bye, world!</errorMsg>
+                          <name>Not equal</name>
+                          <parent reference="../../../.."/>
+                          <failedSince>0</failedSince>
+                        </hudson.plugins.robot.model.RobotCaseResult>
+                      </entry>
+                      <entry>
+                        <string>Contains_string</string>
+                        <hudson.plugins.robot.model.RobotCaseResult>
+                          <parentAction reference="../../../../../../../../../../.."/>
+                          <passed>true</passed>
+                          <critical>true</critical>
+                          <duration>1</duration>
+                          <name>Contains string</name>
+                          <parent reference="../../../.."/>
+                          <failedSince>0</failedSince>
+                        </hudson.plugins.robot.model.RobotCaseResult>
+                      </entry>
+                      <entry>
+                        <string>Failer</string>
+                        <hudson.plugins.robot.model.RobotCaseResult>
+                          <parentAction reference="../../../../../../../../../../.."/>
+                          <passed>false</passed>
+                          <critical>true</critical>
+                          <duration>1</duration>
+                          <errorMsg>Test failed miserably!</errorMsg>
+                          <name>Failer</name>
+                          <parent reference="../../../.."/>
+                          <failedSince>0</failedSince>
+                        </hudson.plugins.robot.model.RobotCaseResult>
+                      </entry>
+                      <entry>
+                        <string>Hello</string>
+                        <hudson.plugins.robot.model.RobotCaseResult>
+                          <parentAction reference="../../../../../../../../../../.."/>
+                          <passed>true</passed>
+                          <critical>true</critical>
+                          <duration>1</duration>
+                          <name>Hello</name>
+                          <parent reference="../../../.."/>
+                          <failedSince>0</failedSince>
+                        </hudson.plugins.robot.model.RobotCaseResult>
+                      </entry>
+                    </caseResults>
+                    <duration>4</duration>
+                    <failed>2</failed>
+                    <passed>2</passed>
+                    <criticalPassed>2</criticalPassed>
+                    <criticalFailed>2</criticalFailed>
+                  </hudson.plugins.robot.model.RobotSuiteResult>
+                </entry>
+                <entry>
+                  <string>Othercases</string>
+                  <hudson.plugins.robot.model.RobotSuiteResult>
+                    <parentAction reference="../../../../../../../.."/>
+                    <parent class="hudson.plugins.robot.model.RobotSuiteResult" reference="../../../.."/>
+                    <name>Othercases</name>
+                    <caseResults>
+                      <entry>
+                        <string>Not_equal</string>
+                        <hudson.plugins.robot.model.RobotCaseResult>
+                          <parentAction reference="../../../../../../../../../../.."/>
+                          <passed>false</passed>
+                          <critical>true</critical>
+                          <duration>1</duration>
+                          <errorMsg>Hello, world! != Good bye, world!</errorMsg>
+                          <name>Not equal</name>
+                          <parent reference="../../../.."/>
+                          <failedSince>0</failedSince>
+                        </hudson.plugins.robot.model.RobotCaseResult>
+                      </entry>
+                      <entry>
+                        <string>Contains_string</string>
+                        <hudson.plugins.robot.model.RobotCaseResult>
+                          <parentAction reference="../../../../../../../../../../.."/>
+                          <passed>true</passed>
+                          <critical>true</critical>
+                          <duration>1</duration>
+                          <name>Contains string</name>
+                          <parent reference="../../../.."/>
+                          <failedSince>0</failedSince>
+                        </hudson.plugins.robot.model.RobotCaseResult>
+                      </entry>
+                      <entry>
+                        <string>Failer</string>
+                        <hudson.plugins.robot.model.RobotCaseResult>
+                          <parentAction reference="../../../../../../../../../../.."/>
+                          <passed>false</passed>
+                          <critical>true</critical>
+                          <duration>2</duration>
+                          <errorMsg>Test failed miserably!</errorMsg>
+                          <name>Failer</name>
+                          <parent reference="../../../.."/>
+                          <failedSince>0</failedSince>
+                        </hudson.plugins.robot.model.RobotCaseResult>
+                      </entry>
+                      <entry>
+                        <string>Hello</string>
+                        <hudson.plugins.robot.model.RobotCaseResult>
+                          <parentAction reference="../../../../../../../../../../.."/>
+                          <passed>true</passed>
+                          <critical>true</critical>
+                          <duration>1</duration>
+                          <name>Hello</name>
+                          <parent reference="../../../.."/>
+                          <failedSince>0</failedSince>
+                        </hudson.plugins.robot.model.RobotCaseResult>
+                      </entry>
+                    </caseResults>
+                    <duration>5</duration>
+                    <failed>2</failed>
+                    <passed>2</passed>
+                    <criticalPassed>2</criticalPassed>
+                    <criticalFailed>2</criticalFailed>
+                  </hudson.plugins.robot.model.RobotSuiteResult>
+                </entry>
+              </children>
+              <parent class="hudson.plugins.robot.model.RobotResult" reference="../../../.."/>
+              <name>Testcases &amp; Othercases</name>
+              <duration>9</duration>
+              <failed>4</failed>
+              <passed>4</passed>
+              <criticalPassed>4</criticalPassed>
+              <criticalFailed>4</criticalFailed>
+            </hudson.plugins.robot.model.RobotSuiteResult>
+          </entry>
+        </suites>
+      </result>
+      <outputPath>robot-plugin</outputPath>
+    </hudson.plugins.robot.RobotBuildAction>
+  </actions>
+  <number>4</number>
+  <result>SUCCESS</result>
+  <duration>38</duration>
+  <charset>UTF-8</charset>
+  <keepLog>false</keepLog>
+  <builtOn></builtOn>
+  <workspace>/home/jpiironen/Eclipse.workspace/robot-plugin/work/jobs/failingtests/workspace</workspace>
+  <hudsonVersion>1.390</hudsonVersion>
+  <scm class="hudson.scm.NullChangeLogParser"/>
+  <culprits/>
+</build>

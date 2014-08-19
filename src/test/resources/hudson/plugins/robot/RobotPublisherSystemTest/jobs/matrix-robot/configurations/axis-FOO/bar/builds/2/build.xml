@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<matrix-run>
+  <actions>
+    <hudson.model.CauseAction>
+      <causes>
+        <hudson.model.Cause_-UpstreamCause>
+          <upstreamProject>matrix-robot</upstreamProject>
+          <upstreamUrl>job/matrix-robot/</upstreamUrl>
+          <upstreamBuild>2</upstreamBuild>
+          <upstreamCauses>
+            <hudson.model.Cause_-UserCause>
+              <authenticationName>anonymous</authenticationName>
+            </hudson.model.Cause_-UserCause>
+          </upstreamCauses>
+        </hudson.model.Cause_-UpstreamCause>
+      </causes>
+    </hudson.model.CauseAction>
+    <hudson.plugins.robot.RobotBuildAction>
+      <owner class="matrix-run" reference="../../.."/>
+      <descriptions class="java.util.concurrent.ConcurrentHashMap"/>
+      <outputPath>robot-plugin</outputPath>
+      <logFileLink>report.html</logFileLink>
+      <build class="matrix-run" reference="../../.."/>
+    </hudson.plugins.robot.RobotBuildAction>
+    <hudson.plugins.robot.RobotPublisher_-2>
+      <outer-class>
+        <outputPath></outputPath>
+        <reportFileName></reportFileName>
+        <logFileName></logFileName>
+        <outputFileName></outputFileName>
+        <passThreshold>50.0</passThreshold>
+        <unstableThreshold>50.0</unstableThreshold>
+        <logFileLink>report.html</logFileLink>
+        <otherFiles>
+          <string></string>
+        </otherFiles>
+        <onlyCritical>true</onlyCritical>
+      </outer-class>
+    </hudson.plugins.robot.RobotPublisher_-2>
+  </actions>
+  <number>2</number>
+  <result>SUCCESS</result>
+  <duration>150</duration>
+  <charset>MacRoman</charset>
+  <keepLog>false</keepLog>
+  <builtOn></builtOn>
+  <workspace>/Users/japiiron/eclipse.kepler.workspace/robot-github/work/jobs/matrix-robot/workspace/FOO/bar</workspace>
+  <hudsonVersion>1.424</hudsonVersion>
+  <scm class="hudson.scm.NullChangeLogParser"/>
+  <culprits/>
+</matrix-run>

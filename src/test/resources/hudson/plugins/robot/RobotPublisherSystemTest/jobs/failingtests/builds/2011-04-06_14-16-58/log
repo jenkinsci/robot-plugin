@@ -1,0 +1,23 @@
+Started by user anonymous
+Robot results publisher started...
+-Parsing output xml:
+Failed!
+hudson.AbortException: No files found in path /home/jpiironen/Eclipse.workspace/robot-plugin/work/jobs/failingtests/workspace with configured filemask: output.xml
+	at hudson.plugins.robot.RobotParser$RobotParserCallable.invoke(RobotParser.java:61)
+	at hudson.plugins.robot.RobotParser$RobotParserCallable.invoke(RobotParser.java:44)
+	at hudson.FilePath.act(FilePath.java:756)
+	at hudson.FilePath.act(FilePath.java:738)
+	at hudson.plugins.robot.RobotParser.parse(RobotParser.java:39)
+	at hudson.plugins.robot.RobotPublisher.parse(RobotPublisher.java:183)
+	at hudson.plugins.robot.RobotPublisher.perform(RobotPublisher.java:205)
+	at hudson.tasks.BuildStepMonitor$1.perform(BuildStepMonitor.java:19)
+	at hudson.model.AbstractBuild$AbstractRunner.perform(AbstractBuild.java:603)
+	at hudson.model.AbstractBuild$AbstractRunner.performAllBuildSteps(AbstractBuild.java:582)
+	at hudson.model.AbstractBuild$AbstractRunner.performAllBuildSteps(AbstractBuild.java:560)
+	at hudson.model.Build$RunnerImpl.post2(Build.java:156)
+	at hudson.model.AbstractBuild$AbstractRunner.post(AbstractBuild.java:529)
+	at hudson.model.Run.run(Run.java:1389)
+	at hudson.model.FreeStyleBuild.run(FreeStyleBuild.java:46)
+	at hudson.model.ResourceController.execute(ResourceController.java:88)
+	at hudson.model.Executor.run(Executor.java:145)
+Finished: FAILURE

@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<build>
+  <actions>
+    <hudson.model.CauseAction>
+      <causes>
+        <hudson.model.Cause_-UserCause>
+          <authenticationName>anonymous</authenticationName>
+        </hudson.model.Cause_-UserCause>
+      </causes>
+    </hudson.model.CauseAction>
+    <hudson.plugins.robot.RobotBuildAction>
+      <build class="build" reference="../../.."/>
+      <result>
+        <timeStamp>20100728 14:49:36.693</timeStamp>
+        <overallStats>
+          <hudson.plugins.robot.model.RobotResultStatistics>
+            <pass>4</pass>
+            <fail>4</fail>
+          </hudson.plugins.robot.model.RobotResultStatistics>
+          <hudson.plugins.robot.model.RobotResultStatistics>
+            <pass>4</pass>
+            <fail>4</fail>
+          </hudson.plugins.robot.model.RobotResultStatistics>
+        </overallStats>
+      </result>
+      <reportFileName>report.html</reportFileName>
+      <outputPath>robot-plugin</outputPath>
+    </hudson.plugins.robot.RobotBuildAction>
+  </actions>
+  <number>1</number>
+  <result>SUCCESS</result>
+  <duration>377</duration>
+  <charset>UTF-8</charset>
+  <keepLog>false</keepLog>
+  <builtOn></builtOn>
+  <workspace>/home/jpiironen/.hudson/jobs/Robot/workspace</workspace>
+  <hudsonVersion>1.386</hudsonVersion>
+  <scm class="hudson.scm.NullChangeLogParser"/>
+  <culprits/>
+</build>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generated="20130722 15:01:31.481" generator="Robot 2.8.1 (Python 2.7.2 on darwin)">
+<suite source="/private/tmp/collisions" id="s1" name="Collisions">
+<suite source="/private/tmp/collisions/hello" id="s1-s1" name="Hello">
+<suite source="/private/tmp/collisions/hello/in_subsuite.txt" id="s1-s1-s1" name="In Subsuite">
+<test id="s1-s1-s1-t1" name="Subsuite example">
+<kw type="kw" name="BuiltIn.Fail">
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<arguments>
+<arg>in subsuite</arg>
+</arguments>
+<msg timestamp="20130722 15:01:31.513" level="FAIL">in subsuite</msg>
+<status status="FAIL" endtime="20130722 15:01:31.513" starttime="20130722 15:01:31.510"></status>
+</kw>
+<doc></doc>
+<tags>
+</tags>
+<status status="FAIL" endtime="20130722 15:01:31.513" critical="yes" starttime="20130722 15:01:31.510">in subsuite</status>
+</test>
+<doc></doc>
+<metadata>
+</metadata>
+<status status="FAIL" endtime="20130722 15:01:31.513" starttime="20130722 15:01:31.508"></status>
+</suite>
+<doc></doc>
+<metadata>
+</metadata>
+<status status="FAIL" endtime="20130722 15:01:31.514" starttime="20130722 15:01:31.506"></status>
+</suite>
+<suite source="/private/tmp/collisions/hello.txt" id="s1-s2" name="Hello">
+<test id="s1-s2-t1" name="Example:">
+<kw type="kw" name="BuiltIn.Fail">
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<arguments>
+<arg>with :</arg>
+</arguments>
+<msg timestamp="20130722 15:01:31.517" level="FAIL">with :</msg>
+<status status="FAIL" endtime="20130722 15:01:31.517" starttime="20130722 15:01:31.517"></status>
+</kw>
+<doc></doc>
+<tags>
+</tags>
+<status status="FAIL" endtime="20130722 15:01:31.517" critical="yes" starttime="20130722 15:01:31.516">with :</status>
+</test>
+<test id="s1-s2-t2" name="Example/">
+<kw type="kw" name="BuiltIn.Fail">
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<arguments>
+<arg>with /</arg>
+</arguments>
+<msg timestamp="20130722 15:01:31.518" level="FAIL">with /</msg>
+<status status="FAIL" endtime="20130722 15:01:31.518" starttime="20130722 15:01:31.518"></status>
+</kw>
+<doc></doc>
+<tags>
+</tags>
+<status status="FAIL" endtime="20130722 15:01:31.519" critical="yes" starttime="20130722 15:01:31.518">with /</status>
+</test>
+<doc></doc>
+<metadata>
+</metadata>
+<status status="FAIL" endtime="20130722 15:01:31.519" starttime="20130722 15:01:31.515"></status>
+</suite>
+<doc></doc>
+<metadata>
+</metadata>
+<status status="FAIL" endtime="20130722 15:01:31.520" starttime="20130722 15:01:31.481"></status>
+</suite>
+<statistics>
+<total>
+<stat fail="3" pass="0">Critical Tests</stat>
+<stat fail="3" pass="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat fail="3" pass="0" id="s1" name="Collisions">Collisions</stat>
+<stat fail="1" pass="0" id="s1-s1" name="Hello">Collisions.Hello</stat>
+<stat fail="1" pass="0" id="s1-s1-s1" name="In Subsuite">Collisions.Hello.In Subsuite</stat>
+<stat fail="2" pass="0" id="s1-s2" name="Hello">Collisions.Hello</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
