@@ -27,14 +27,14 @@ limitations under the License.
 			<j:set var="status" value="Failed!" />
 		</j:otherwise>
 	  </j:choose>
-        	
+
       <h1><j:if test="${it.critical}">Critical</j:if> test case: "${it.name}"</h1>
       <j:set var="prevcase" value="${it.previousResult}" />
       <div style="float:right;">
 		Test execution took ${it.humanReadableDuration} (${it.getDurationDiff(prevcase)})
       </div>
       <h2 style="color:${headingColor};">${status}</h2>
-      <h4>| Tags: |<j:forEach var="tag" items="${it.tags}"><j:whitespace> ${tag} |</j:whitespace></j:forEach></h4>
+      <h4>Tags: ${it.commaSeparatedTags}</h4>
        <j:if test="${!it.isPassed()}">
      	 <h3>Error message:</h3>
       	 <p>${it.errorMsg}</p>

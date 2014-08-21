@@ -158,6 +158,14 @@ public class RobotCaseResult extends RobotTestObject{
 		return tags;
 	}
 
+	public String getCommaSeparatedTags(){
+		List<String> tags = getTags();
+		String result = "";
+		for (String tag: tags)
+			result += tag+", ";
+		return result.substring(0, result.length()-2);
+	}
+
 	public void addTags(List<String> taglist){
 		if(tags == null)
 			tags = new ArrayList<String>();
