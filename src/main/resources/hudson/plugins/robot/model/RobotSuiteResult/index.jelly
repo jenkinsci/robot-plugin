@@ -20,7 +20,7 @@ limitations under the License.
     <script src="${rootURL}/plugin/robot/robot.js"/>
     <j:set var="mode" value="${h.getCookie(request,'RobotResult_zoomSignificant').value}" />
       <j:if test="${mode!=null}">
-        <j:set var="passfailquery" value="?zoomSignificant=${mode}" />
+        <j:set var="passfailquery" value="zoomSignificant=${mode}" />
       </j:if>
       <h1>Testsuite: "${it.name}"</h1>
    	  <j:set var="prevresult" value="${it.previousResult}" />
@@ -30,12 +30,14 @@ limitations under the License.
       <j:if test="${it.failed > 0}">
       <h2 style="color:#c00;">${it.failed} failed tests, ${it.criticalFailed} critical</h2>
       </j:if>
-      <h4>${it.total} tests in total (${h.getDiffString(it.total - prevresult.total)}), ${it.criticalTotal} critical</h4>     
+      <h4>${it.total} tests in total (${h.getDiffString(it.total - prevresult.total)}), ${it.criticalTotal} critical</h4>
       <u:failedCases />
       <div style="margin-top:20px;">
        <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
        <h3>Pass/fail trend</h3>
-       	<img id="passfailgraph" src="graph${passfailquery}"/>
+       	<a id="passfailgraph_hd" href="graph?hd=true&amp;${passfailquery}">
+       	  <img id="passfailgraph" src="graph?${passfailquery}"/>
+       	</a>
        	<p>
        	  <j:choose>
                  <j:when test="${mode}">
@@ -51,7 +53,9 @@ limitations under the License.
        </div>
        <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
       	 <h3>Duration trend</h3>
+     	  <a href="durationGraph?hd=true">
      	  <img src="durationGraph"/>
+     	  </a>
        </div>
        <div style="clear:both;"></div>
       </div>
@@ -64,7 +68,7 @@ limitations under the License.
       	</tr>
 		<j:forEach var="case" items="${it.caseResults}">
 		<j:set var="prevcase" value="${case.previousResult}" />
-		
+
 		<tr>
 		 <td class="pane"><a href="${case.getRelativeId(it)}">${case.name}</a></td>
 		 <td class="pane">${case.humanReadableDuration}<span style="font-size:0.8em">(${case.getDurationDiff(prevcase)})</span></td>
@@ -89,9 +93,9 @@ limitations under the License.
       		<td class="pane">${suite.failed + suite.passed} <span style="font-size:0.8em">(${h.getDiffString((suite.failed + suite.passed) - (prevsuite.failed + prevsuite.passed))})</span></td>
       		<td class="pane">${suite.humanReadableDuration} <span style="font-size:0.8em">(${suite.getDurationDiff(prevsuite)})</span></td>
          </tr>
-      </j:forEach>      
-      </table>      
-      </j:if>   
+      </j:forEach>
+      </table>
+      </j:if>
     </l:main-panel>
   </l:layout>
 </j:jelly>

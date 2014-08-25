@@ -233,25 +233,10 @@ public class RobotCaseResult extends RobotTestObject{
 	 * @param rsp
 	 * @throws IOException
 	 */
-	public void doDurationGraph(StaplerRequest req, StaplerResponse rsp)
-			throws IOException {
-		if(!isNeedToGenerate(req, rsp)) return;
-
-		Graph g = RobotGraphHelper.createDurationGraphForTestObject(this);
-		g.doPng(req, rsp);
-	}
-
-	/**
-	 * Return duration graph of the case in the request.
-	 * @param req
-	 * @param rsp
-	 * @throws IOException
-	 */
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
-
-		Graph g = RobotGraphHelper.createDataSetForTestObject(this, false, true);
+		Graph g = RobotGraphHelper.createDataSetForTestObject(this, false, true, req.hasParameter("hd"));
 		g.doPng(req, rsp);
 	}
 

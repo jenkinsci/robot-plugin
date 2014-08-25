@@ -51,7 +51,7 @@ public class RobotBuildAction extends AbstractTestResultAction implements Staple
 
     private static final Logger logger = Logger.getLogger(RobotBuildAction.class.getName());
     private static final XStream XSTREAM = new XStream2();
-    
+
 	private transient WeakReference<RobotResult> resultReference;
 	private transient String reportFileName;
 	private String outputPath;
@@ -59,7 +59,7 @@ public class RobotBuildAction extends AbstractTestResultAction implements Staple
 	private String logHtmlLink;
 	private AbstractBuild<?, ?> build;
 	private RobotResult result;
-	
+
     static {
         XSTREAM.alias("result",RobotResult.class);
         XSTREAM.alias("suite",RobotSuiteResult.class);
@@ -93,7 +93,7 @@ public class RobotBuildAction extends AbstractTestResultAction implements Staple
 	public AbstractBuild<?, ?> getOwner() {
 		return build;
 	}
-	
+
 	/**
 	 * Get filename to link to
 	 * @return null if no filename specified
@@ -101,7 +101,7 @@ public class RobotBuildAction extends AbstractTestResultAction implements Staple
 	public String getLogFileLink(){
 		return logFileLink;
 	}
-	
+
 	public String getLogHtmlLink(){
 		return logHtmlLink;
 	}
@@ -158,15 +158,15 @@ public class RobotBuildAction extends AbstractTestResultAction implements Staple
         loadedResult.tally(this);
         return loadedResult;
     }
-	
+
 	/**
 	 * Get file name for Robot html report.
 	 * @return file name as string
-	 */	
+	 */
 	public String getReportFileName(){
 		return reportFileName;
 	}
-	
+
 	/**
 	 * Get ratio of passed tests per total tests. Accounts for all tests run.
 	 * @return percent number
@@ -174,7 +174,7 @@ public class RobotBuildAction extends AbstractTestResultAction implements Staple
 	public double getOverallPassPercentage(){
 		return getResult().getPassPercentage(false);
 	}
-	
+
 	/**
 	 * Get ratio of passed tests per total tests. Accounts for only critical tests run.
 	 * @return percent number
@@ -182,7 +182,7 @@ public class RobotBuildAction extends AbstractTestResultAction implements Staple
 	public double getCriticalPassPercentage() {
 		return getResult().getPassPercentage(true);
 	}
-	
+
 	/**
 	 * Find test object from the results object tree
 	 * @param id path e.g. "suite/nestedsuite/testcase"
@@ -191,7 +191,7 @@ public class RobotBuildAction extends AbstractTestResultAction implements Staple
 	public RobotTestObject findObjectById(String id) {
         return getResult().findObjectById(id);
     }
-	
+
 	/**
 	 * Get the result object which is responsible for UI. If an old project doesn't have it provides buildaction as this.
 	 */
@@ -212,20 +212,20 @@ public class RobotBuildAction extends AbstractTestResultAction implements Staple
 			throws IOException, ServletException, InterruptedException {
 		String indexFile = getReportFileName();
 		FilePath robotDir = getRobotDir();
-		
+
 		if(!new FilePath(robotDir, indexFile).exists()){
 			rsp.sendRedirect("notfound");
 			return;
 		}
-		
+
 		DirectoryBrowserSupport dbs = new DirectoryBrowserSupport(this,
 				getRobotDir(), getDisplayName(),
 				"folder.gif", false);
-		
+
 		dbs.setIndexFileName(indexFile);
 		dbs.generateResponse(req, rsp, this);
 	}
-	
+
 	/**
 	 * Return robot trend graph in the request.
 	 * @param req
@@ -243,11 +243,11 @@ public class RobotBuildAction extends AbstractTestResultAction implements Staple
 
 		if (req.checkIfModified(t, rsp))
 			return;
-		
-		Graph g = RobotGraphHelper.createDataSetForTestObject(getResult(), req.hasParameter("significant"), false);
+
+		Graph g = RobotGraphHelper.createDataSetForTestObject(getResult(), req.hasParameter("significant"), false, req.hasParameter("hd"));
 		g.doPng(req, rsp);
 	}
-	
+
 	/**
 	 * Return path of robot files in build
 	 * @return
@@ -268,7 +268,7 @@ public class RobotBuildAction extends AbstractTestResultAction implements Staple
 	public int getTotalCount() {
 		return (int) getResult().getOverallTotal();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

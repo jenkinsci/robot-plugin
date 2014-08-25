@@ -18,7 +18,9 @@ package hudson.plugins.robot.model;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractModelObject;
 import hudson.plugins.robot.RobotBuildAction;
+import hudson.plugins.robot.graph.RobotGraphHelper;
 import hudson.util.ChartUtil;
+import hudson.util.Graph;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -149,7 +151,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 			return false;
 		return true;
 	}
-	
+
 	/**
 	 * Get duration of this testobject run
 	 * @return
@@ -157,7 +159,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	public long getDuration() {
 		return duration;
 	}
-	
+
 	/**
 	 * Wrapper for calling formatting from jelly
 	 * @return
@@ -165,7 +167,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	public String getHumanReadableDuration(){
 		return DurationFormatUtils.formatDurationHMS(getDuration());
 	}
-	
+
 	/**
 	 * Get difference in of duration to given test object
 	 * @param comparable another testobject which to compare to
@@ -182,8 +184,36 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	}
 
 	public abstract RobotTestObject getPreviousResult();
-	
+
 	public abstract int getFailed();
-  
+
 	public abstract int getPassed();
+
+	/**
+	 * Return robot trend graph in the request.
+	 * @param req
+	 * @param rsp
+	 * @throws IOException
+	 */
+	public void doGraph(StaplerRequest req, StaplerResponse rsp)
+			throws IOException {
+		if(!isNeedToGenerate(req, rsp)) return;
+		Graph g = RobotGraphHelper.createDataSetForTestObject(this,Boolean.valueOf(req.getParameter("zoomSignificant")), false, req.hasParameter("hd"));
+		g.doPng(req, rsp);
+	}
+
+	/**
+	 * Return duration graph of the case in the request.
+	 * @param req
+	 * @param rsp
+	 * @throws IOException
+	 */
+	public void doDurationGraph(StaplerRequest req, StaplerResponse rsp)
+			throws IOException {
+		if(!isNeedToGenerate(req, rsp)) return;
+		Graph g = RobotGraphHelper.createDurationGraphForTestObject(this, req.hasParameter("hd"));
+		g.doPng(req, rsp);
+	}
+
+
 }

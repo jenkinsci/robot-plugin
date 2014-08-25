@@ -93,7 +93,7 @@ public class AggregatedRobotAction implements Action {
 		if (req.checkIfModified(t, rsp))
 			return;
 
-		Graph g = RobotGraphHelper.createDataSetForTestObject(getResult(), req.hasParameter("significant"), false);
+		Graph g = RobotGraphHelper.createDataSetForTestObject(getResult(), req.hasParameter("significant"), false, req.hasParameter("hd"));
 		g.doPng(req, rsp);
 	}
 

@@ -20,6 +20,7 @@ import hudson.util.Graph;
 import hudson.util.ShiftedCategoryAxis;
 
 import java.awt.Color;
+import java.awt.Font;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -42,9 +43,28 @@ public class RobotGraph extends Graph {
 	private boolean binaryData;
 	private int lowerBound;
 	private int upperBound;
+	private int fontSize;
 	public static final int DEFAULT_CHART_WIDTH = 500;
 	public static final int DEFAULT_CHART_HEIGHT = 200;
-	
+	public static final int DEFAULT_FONT_SIZE = 12;
+
+	/**
+	 * Construct a new styled trend graph for given dataset
+	 * @param owner Build which the graph is associated to
+	 * @param categoryDataset Category data for graph
+	 * @param yLabel Y label name
+	 * @param xLabel X label name
+	 * @param scale the size 1 is graph of default size. This is multiplied by scale.
+	 */
+	public static RobotGraph getRobotGraph(AbstractBuild<?, ?> owner,
+					  CategoryDataset categoryDataset, String yLabel, String xLabel,
+					  int scale, boolean binaryData, int lowerBound, int upperBound, Color...colors) {
+		int width = scale * RobotGraph.DEFAULT_CHART_WIDTH;
+		int heigth = scale * RobotGraph.DEFAULT_CHART_HEIGHT;
+		int fontSize = scale * RobotGraph.DEFAULT_FONT_SIZE;
+		return new RobotGraph(owner, categoryDataset, yLabel, xLabel, width, heigth, fontSize, binaryData, lowerBound, upperBound, colors);
+	}
+
 	/**
 	 * Construct a new styled trend graph for given dataset
 	 * @param owner Build which the graph is associated to
@@ -53,10 +73,11 @@ public class RobotGraph extends Graph {
 	 * @param xLabel X label name
 	 * @param chartWidth Chart width in pixels
 	 * @param chartHeight Chart height in pixels
+	 * @param fontSize Chart font size
 	 */
-	public RobotGraph(AbstractBuild<?, ?> owner,
+	private RobotGraph(AbstractBuild<?, ?> owner,
 			CategoryDataset categoryDataset, String yLabel, String xLabel,
-			int chartWidth, int chartHeight, boolean binaryData, int lowerBound, int upperBound, Color...colors) {
+			int chartWidth, int chartHeight, int fontSize, boolean binaryData, int lowerBound, int upperBound, Color...colors) {
 		super(owner.getTimestamp(), chartWidth, chartHeight);
 		this.yLabel = yLabel;
 		this.xLabel = xLabel;
@@ -65,8 +86,9 @@ public class RobotGraph extends Graph {
 		this.binaryData = binaryData;
 		this.lowerBound = lowerBound;
 		this.upperBound = upperBound;
+		this.fontSize = fontSize;
 	}
-	
+
 	/**
 	 * Creates a Robot trend graph
 	 * @return the JFreeChart graph object
@@ -104,15 +126,19 @@ public class RobotGraph extends Graph {
 			rangeAxis.setAutoRange(true);
 		}
 		rangeAxis.setLowerBound(lowerBound);
-
-
+		Font font = new Font("Dialog", Font.PLAIN, fontSize);
+		plot.getDomainAxis().setLabelFont(font);
+		plot.getDomainAxis().setTickLabelFont(font);
+		plot.getRangeAxis().setLabelFont(font);
+		plot.getRangeAxis().setTickLabelFont(font);
+		legend.setItemFont(font);
 		final CategoryItemRenderer renderer = plot.getRenderer();
-	
+
 		for(int i = 0; i < colors.length; i++){
 			renderer.setSeriesPaint(i, colors[i]);
 		}
 
-		plot.setInsets(new RectangleInsets(5.0, 0, 0, 5.0));
+		plot.setInsets(new RectangleInsets(15.0, 0, 0, 5.0));
 
 		return chart;
 	}

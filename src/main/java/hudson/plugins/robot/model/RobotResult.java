@@ -20,8 +20,6 @@ import hudson.model.AbstractBuild;
 import hudson.model.Api;
 import hudson.model.DirectoryBrowserSupport;
 import hudson.plugins.robot.RobotBuildAction;
-import hudson.plugins.robot.graph.RobotGraphHelper;
-import hudson.util.Graph;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -343,34 +341,6 @@ public class RobotResult extends RobotTestObject {
 		}
 		rsp.sendRedirect("notfound");
 		return null;
-	}
-
-	/**
-	 * Return robot trend graph in the request.
-	 * @param req
-	 * @param rsp
-	 * @throws IOException
-	 */
-	public void doGraph(StaplerRequest req, StaplerResponse rsp)
-			throws IOException {
-		if(!isNeedToGenerate(req, rsp)) return;
-		
-		Graph g = RobotGraphHelper.createDataSetForTestObject(this,Boolean.valueOf(req.getParameter("zoomSignificant")), false);
-		g.doPng(req, rsp);
-	}
-
-	/**
-	 * Return robot trend graph in the request.
-	 * @param req
-	 * @param rsp
-	 * @throws IOException
-	 */
-	public void doDurationGraph(StaplerRequest req, StaplerResponse rsp)
-			throws IOException {
-		if(!isNeedToGenerate(req, rsp)) return;
-
-		Graph g = RobotGraphHelper.createDurationGraphForTestObject(this);
-		g.doPng(req, rsp);
 	}
 
 	/**

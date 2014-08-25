@@ -16,8 +16,6 @@
 package hudson.plugins.robot.model;
 
 import hudson.plugins.robot.RobotBuildAction;
-import hudson.plugins.robot.graph.RobotGraphHelper;
-import hudson.util.Graph;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -367,34 +365,6 @@ public class RobotSuiteResult extends RobotTestObject {
 		} else if(getSuite(id) != null){
 			return getSuite(id);
 		} else return getCase(id);
-	}
-
-	/**
-	 * Return robot trend graph in the request.
-	 * @param req
-	 * @param rsp
-	 * @throws IOException
-	 */
-	public void doGraph(StaplerRequest req, StaplerResponse rsp)
-			throws IOException {
-		if(!isNeedToGenerate(req, rsp)) return;
-		
-		Graph g = RobotGraphHelper.createDataSetForTestObject(this,Boolean.valueOf(req.getParameter("zoomSignificant")), false);
-		g.doPng(req, rsp);
-	}
-
-	/**
-	 * Return duration graph for the suite in the request.
-	 * @param req
-	 * @param rsp
-	 * @throws IOException
-	 */
-	public void doDurationGraph(StaplerRequest req, StaplerResponse rsp)
-			throws IOException {
-		if(!isNeedToGenerate(req, rsp)) return;
-
-		Graph g = RobotGraphHelper.createDurationGraphForTestObject(this);
-		g.doPng(req, rsp);
 	}
 
 	/**

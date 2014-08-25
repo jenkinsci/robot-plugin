@@ -31,18 +31,18 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 public class RobotGraphHelper {
-	
+
 	private static int SECONDSCALE = 1000;
 	private static int MINUTESCALE = 60000;
 	private static int HOURSCALE = 3600000;
 
 	/**
 	 * Create a pass/fail trend graph. The graph will ignore builds with no robot results.
-	 * @param rootObject The dataset will be taken from rootObject backwards. 
+	 * @param rootObject The dataset will be taken from rootObject backwards.
 	 * (i.e. there are no saved robot results in a given build)
 	 * @return
 	 */
-	public static Graph createDataSetForTestObject(RobotTestObject rootObject, boolean significantData, boolean binarydata) {
+	public static Graph createDataSetForTestObject(RobotTestObject rootObject, boolean significantData, boolean binarydata, boolean hd) {
 		List<Number> values = new ArrayList<Number>();
 		List<String> rows = new ArrayList<String>();
 		List<NumberOnlyBuildLabel> columns = new ArrayList<NumberOnlyBuildLabel>();
@@ -52,7 +52,7 @@ public class RobotGraphHelper {
 		for (RobotTestObject testObject = rootObject; testObject != null; testObject = testObject.getPreviousResult()) {
 			Number failed = testObject.getFailed();
 			Number passed = testObject.getPassed();
-			
+
 			if (significantData){
 				if(lowerbound == 0 || lowerbound > failed.intValue() + passed.intValue())
 					lowerbound = failed.intValue() + passed.intValue();
@@ -72,39 +72,39 @@ public class RobotGraphHelper {
 			rows.add(Messages.robot_trendgraph_failed());
 			columns.add(label);
 		}
-		
+
 		if(significantData){
 			lowerbound = (int)(lowerbound * 0.9);
 			upperbound = (int)Math.ceil(upperbound * 1.1);
 		}
-		return new RobotGraph(rootObject.getOwner(), createSortedDataset(values, rows, columns), Messages.robot_trendgraph_testcases(),
-				Messages.robot_trendgraph_builds(), 500, 200, binarydata, lowerbound, upperbound, Color.green, Color.red);
+		int graphScale = hd ? 3 : 1;
+		return RobotGraph.getRobotGraph(rootObject.getOwner(), createSortedDataset(values, rows, columns), Messages.robot_trendgraph_testcases(),
+				Messages.robot_trendgraph_builds(), graphScale, binarydata, lowerbound, upperbound, Color.green, Color.red);
 	}
-	
+
 	/**
 	 * Create a duration trend graph. The graph will ignore builds with no robot results.
-	 * @param rootObject rootObject The dataset will be taken from rootObject backwards. 
+	 * @param rootObject rootObject The dataset will be taken from rootObject backwards.
 	 * @return
 	 */
-	public static Graph createDurationGraphForTestObject(RobotTestObject rootObject) {
+	public static Graph createDurationGraphForTestObject(RobotTestObject rootObject, boolean hd) {
 		DataSetBuilder<String, NumberOnlyBuildLabel> builder = new DataSetBuilder<String, NumberOnlyBuildLabel>();
 
-		int scale = 1;	
+		int scale = 1;
 		for (RobotTestObject testObject = rootObject; testObject != null; testObject = testObject.getPreviousResult()){
 			scale = getTimeScaleFactor(testObject.getDuration(), scale);
 		}
-		
+
 		for (RobotTestObject testObject = rootObject; testObject != null; testObject = testObject.getPreviousResult()){
 			ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(
 					testObject.getOwner());
 			builder.add((double)testObject.getDuration() / scale, "Duration", label);
 		}
-	
-		Graph g = new RobotGraph(rootObject.getOwner(), builder.build(), "Duration (" + getTimeScaleString(scale) + ")",
-				  Messages.robot_trendgraph_builds(), 500, 200, false, 0, 0, Color.cyan);
-		return g;
+		int graphScale = hd ? 3 : 1;
+		return RobotGraph.getRobotGraph(rootObject.getOwner(), builder.build(), "Duration (" + getTimeScaleString(scale) + ")",
+				  Messages.robot_trendgraph_builds(), graphScale, false, 0, 0, Color.cyan);
 	}
-	
+
 	private static CategoryDataset createSortedDataset(List<Number> values, List<String> rows, List<NumberOnlyBuildLabel> columns) {
 		// Code from DataSetBuilder, reversed row order for passed tests to go
 		// first into dataset for nicer order when rendered in chart
@@ -127,7 +127,7 @@ public class RobotGraphHelper {
 			dataset.addValue(values.get(i), rows.get(i), columns.get(i));
 		return dataset;
 	}
-	
+
 	private static int getTimeScaleFactor(float duration, int originalScale){
 		int scale = originalScale;
 		if (duration > HOURSCALE) {
@@ -139,7 +139,7 @@ public class RobotGraphHelper {
 	    }
 		return scale;
 	}
-	
+
 	private static String getTimeScaleString(int scale){
 		if(scale == SECONDSCALE) return "s";
 		else if(scale == MINUTESCALE) return "min";
