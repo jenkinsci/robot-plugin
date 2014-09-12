@@ -53,7 +53,7 @@ public class RobotGraphHelper {
 			Number failed = testObject.getFailed();
 			Number passed = testObject.getPassed();
 
-			if (significantData){
+			if (!significantData){
 				if(lowerbound == 0 || lowerbound > failed.intValue() + passed.intValue())
 					lowerbound = failed.intValue() + passed.intValue();
 
@@ -73,7 +73,7 @@ public class RobotGraphHelper {
 			columns.add(label);
 		}
 
-		if(significantData){
+		if(!significantData){
 			lowerbound = (int)(lowerbound * 0.9);
 			upperbound = (int)Math.ceil(upperbound * 1.1);
 		}
