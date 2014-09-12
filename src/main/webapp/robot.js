@@ -5,7 +5,9 @@ function showSignificant(urlName, path) {
     } else {
         urlName = "";
     }
-    document.getElementById("passfailgraph_hd").href = urlName + "graph?hd=true&zoomSignificant=true";
+    if (document.getElementById("passfailgraph_hd")) {
+        document.getElementById("passfailgraph_hd").href = urlName + "graph?hd=true&zoomSignificant=true";
+    }
     document.getElementById("passfailgraph").src = urlName + "graph?zoomSignificant=true";
     document.getElementById("significantshowlink").style.display = "none";
     document.getElementById("significanthidelink").style.display = "";
@@ -18,7 +20,9 @@ function hideSignificant(urlName, path) {
     } else {
         urlName = "";
     }
-    document.getElementById("passfailgraph_hd").href = urlName + "graph?hd=true&zoomSignificant=false";
+    if (document.getElementById("passfailgraph_hd")) {
+        document.getElementById("passfailgraph_hd").href = urlName + "graph?hd=true&zoomSignificant=false";
+    }
     document.getElementById("passfailgraph").src = urlName + "graph?zoomSignificant=false";
     document.getElementById("significantshowlink").style.display = "";
     document.getElementById("significanthidelink").style.display = "none";
