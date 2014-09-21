@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
-    <th width="1">
+    <th width="1" style="white-space:nowrap;">
         Robot Results
     </th>
 </j:jelly>
