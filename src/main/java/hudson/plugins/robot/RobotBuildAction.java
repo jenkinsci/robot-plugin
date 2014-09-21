@@ -234,6 +234,7 @@ public class RobotBuildAction extends AbstractTestResultAction implements Staple
 	 */
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
+		// TODO: When is this executed?
 		if (ChartUtil.awtProblemCause != null) {
 			rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
 			return;
@@ -244,7 +245,9 @@ public class RobotBuildAction extends AbstractTestResultAction implements Staple
 		if (req.checkIfModified(t, rsp))
 			return;
 
-		Graph g = RobotGraphHelper.createDataSetForTestObject(getResult(), req.hasParameter("significant"), false, req.hasParameter("hd"));
+		Graph g = RobotGraphHelper.createDataSetForTestObject(getResult(),
+				Boolean.valueOf(req.getParameter("zoomSignificant")), false,
+				Boolean.valueOf(req.getParameter("hd")));
 		g.doPng(req, rsp);
 	}
 

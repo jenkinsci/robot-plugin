@@ -21,7 +21,10 @@ limitations under the License.
             <j:forEach var="run" items="${it.owner.exactRuns}">
                 <div style="border: 1px solid gray; margin-bottom: 20px; padding: 10px" >
                 <h2>Configuration: ${run.parent.displayName}</h2>
-                <img src="${run.project.absoluteUrl}${run.number}/robot/graph" style="float:right" />
+                <div style="float:right">
+                <a href="${run.project.absoluteUrl}${run.number}/robot"><img title="Go to results" src="${run.project.absoluteUrl}${run.number}/robot/graph"/></a><br/>
+                <p style="float:right"><a href="graph?hd=true">Show bigger image</a></p>
+                </div>
                 <u:robotsummary action="${it.getChildBuildAction(run)}"/>
                 <div style="clear: both" />
                 </div>

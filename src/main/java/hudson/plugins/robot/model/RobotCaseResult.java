@@ -236,7 +236,8 @@ public class RobotCaseResult extends RobotTestObject{
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
-		Graph g = RobotGraphHelper.createDataSetForTestObject(this, false, true, req.hasParameter("hd"));
+		Graph g = RobotGraphHelper.createDataSetForTestObject(this, false, true,
+				Boolean.valueOf(req.getParameter("hd")));
 		g.doPng(req, rsp);
 	}
 

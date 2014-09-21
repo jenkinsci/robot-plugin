@@ -28,7 +28,8 @@ limitations under the License.
 		</j:otherwise>
 	  </j:choose>
 
-      <h1><j:if test="${it.critical}">Critical</j:if> test case: "${it.name}"</h1>
+      <h1><j:if test="${it.critical}">Critical test case: </j:if>
+          <j:if test="${!it.critical}">Test case: </j:if> ${it.name}</h1>
       <j:set var="prevcase" value="${it.previousResult}" />
       <div style="float:right;">
 		Test execution took ${it.humanReadableDuration} (${it.getDurationDiff(prevcase)})
@@ -40,17 +41,19 @@ limitations under the License.
       	 <p>${it.errorMsg}</p>
       </j:if>
       <div style="margin-top:20px; float: left;">
-      <div style="float:left; margin: 20px;">
+      <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
       		 <h3>Pass/fail trend</h3>
      	     <a href="graph?hd=true">
-     	        <img src="graph" />
-     	     </a>
+     	        <img src="graph" title="Show bigger image"/>
+     	     </a><br/>
+     	     <p style="float:right"><a href="graph?hd=true">Show bigger image</a></p>
        </div>
-       <div style="float:left; margin: 20px;">
+       <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
       	 <h3>Duration trend</h3>
      	  <a href="durationGraph?hd=true">
-     	    <img src="durationGraph"/>
-     	  </a>
+     	    <img src="durationGraph" title="Show bigger image"/>
+     	  </a><br/>
+     	  <p style="float:right"><a href="durationGraph?hd=true">Show bigger image</a></p>
        </div>
        <div style="clear:both;"></div>
       </div>

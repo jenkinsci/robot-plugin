@@ -53,7 +53,7 @@ public class RobotGraphHelper {
 			Number failed = testObject.getFailed();
 			Number passed = testObject.getPassed();
 
-			if (!significantData){
+			if (significantData){
 				if(lowerbound == 0 || lowerbound > failed.intValue() + passed.intValue())
 					lowerbound = failed.intValue() + passed.intValue();
 
@@ -73,9 +73,9 @@ public class RobotGraphHelper {
 			columns.add(label);
 		}
 
-		if(!significantData){
-			lowerbound = (int)(lowerbound * 0.9);
-			upperbound = (int)Math.ceil(upperbound * 1.1);
+		if(significantData){
+			lowerbound = (int)(lowerbound * 0.95);
+			upperbound = (int)Math.round(upperbound * 1.02);
 		}
 		int graphScale = hd ? 3 : 1;
 		return RobotGraph.getRobotGraph(rootObject.getOwner(), createSortedDataset(values, rows, columns), Messages.robot_trendgraph_testcases(),

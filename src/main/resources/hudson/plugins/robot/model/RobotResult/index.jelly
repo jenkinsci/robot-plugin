@@ -18,10 +18,6 @@ limitations under the License.
   <st:include it="${it.parentAction.build}" page="sidepanel.jelly"/>
     <l:main-panel>
     <script src="${rootURL}/plugin/robot/robot.js"/>
-    <j:set var="mode" value="${h.getCookie(request,'RobotResult_zoomSignificant').value}" />
-      <j:if test="${mode!=null}">
-        <j:set var="passfailquery" value="zoomSignificant=${mode}" />
-      </j:if>
     <h1>Robot Framework test results</h1>
       <j:set var="prevresult" value="${it.previousResult}" />
       <div style="float:right;">
@@ -37,27 +33,19 @@ limitations under the License.
       <div style="margin-top:20px;">
        <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
        <h3>Pass/fail trend</h3>
-       	<a id="passfailgraph_hd" href="graph?hd=true&amp;${passfailquery}">
-       	    <img id="passfailgraph" src="graph?${passfailquery}"/>
-       	</a>
-       	<p>
-       	  <j:choose>
-                 <j:when test="${mode}">
-                   <a id="significantshowlink" href="javascript:showSignificant('','${rootURL}/job/${it.owner.project.name}/')" class="hidden" style="display:none;">&gt; Zoom graph to changes</a>
-       	           <a id="significanthidelink" href="javascript:hideSignificant('','${rootURL}/job/${it.owner.project.name}/')">&gt; Show full graph</a>
-       	         </j:when>
-       	         <j:otherwise>
-       	           <a id="significantshowlink" href="javascript:showSignificant('','${rootURL}/job/${it.owner.project.name}/')">&gt; Zoom graph to changes</a>
-       	           <a id="significanthidelink" href="javascript:hideSignificant('','${rootURL}/job/${it.owner.project.name}/')" class="hidden" style="display:none;">&gt; Show full graph</a>
-       	         </j:otherwise>
-       	   </j:choose>
-       	</p>
+       	<a id="passfailgraph_hd" href="">
+       	  <img id="passfailgraph" src="" title="Show bigger image"/>
+       	</a><br/>
+       	<p style="float:left"><label><input type="checkbox" id="zoomToChanges" onclick="zoomToChanges('');"/>Zoom to changes</label></p>
+        <p style="float:right"><a id="passfailgraph_hd_link" href="">Show bigger image</a></p>
        </div>
+       <script>initGraph('');</script>
        <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
       	 <h3>Duration trend</h3>
      	  <a href="durationGraph?hd=true">
-     	    <img src="durationGraph"/>
-     	  </a>
+     	    <img src="durationGraph" title="Show bigger image"/>
+     	  </a><br/>
+          <p style="float:right"><a href="durationGraph?hd=true">Show bigger image</a></p>
        </div>
        <div style="clear:both;"></div>
       </div>

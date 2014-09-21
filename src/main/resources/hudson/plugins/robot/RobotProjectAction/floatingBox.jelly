@@ -15,28 +15,17 @@ limitations under the License.
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:local="local">
     <script src="${rootURL}/plugin/robot/robot.js"/>
-	<j:set var="mode" value="${h.getCookie(request,'RobotResult_zoomSignificant').value}" />
-      <j:if test="${mode!=null}">
-        <j:set var="passfailquery" value="?zoomSignificant=${mode}" />
-      </j:if>
     <j:if test="${from.isDisplayGraph()}">
     <div align="right">
-          <div class="test-trend-caption">${%trend.graph.header}</div>
-               <p align="center">
-               <j:choose>
-                 <j:when test="${mode}">
-                   <a id="significantshowlink" href="javascript:showSignificant('${from.urlName}','${rootURL}/job/${from.project.name}/')" class="hidden" style="display:none;">&gt; Zoom graph to changes</a>
-       	           <a id="significanthidelink" href="javascript:hideSignificant('${from.urlName}','${rootURL}/job/${from.project.name}/')">&gt; Show full graph</a>
-       	         </j:when>
-       	         <j:otherwise>
-       	           <a id="significantshowlink" href="javascript:showSignificant('${from.urlName}','${rootURL}/job/${from.project.name}/')">&gt; Zoom graph to changes</a>
-       	           <a id="significanthidelink" href="javascript:hideSignificant('${from.urlName}','${rootURL}/job/${from.project.name}/')" class="hidden" style="display:none;">&gt; Show full graph</a>
-       	         </j:otherwise>
-       	       </j:choose>
-       	       </p>
-                <a href="${from.urlName}/">       
-                    <img id="passfailgraph" src="${from.urlName}/graph${passfailquery}"/>
-                </a>
+        <div class="test-trend-caption">${%trend.graph.header}</div>
+        <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px; text-align:left">
+            <a href="${from.urlName}">
+                <img id="passfailgraph" src="" title="Go to results"/>
+            </a><br/>
+            <p style="float:left"><label><input type="checkbox" id="zoomToChanges" onclick="zoomToChanges('${from.urlName}/');"/>Zoom to changes</label></p>
+            <p style="float:right"><a id="passfailgraph_hd_link" href="">Show bigger image</a></p>
         </div>
+        <script>initGraph('${from.urlName}/');</script>
+    </div>
     </j:if>
 </j:jelly>

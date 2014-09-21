@@ -1,39 +1,39 @@
-
-function showSignificant(urlName, path) {
-    if (urlName) {
-        urlName = urlName + "/";
-    } else {
-        urlName = "";
-    }
-    if (document.getElementById("passfailgraph_hd")) {
-        document.getElementById("passfailgraph_hd").href = urlName + "graph?hd=true&zoomSignificant=true";
-    }
-    document.getElementById("passfailgraph").src = urlName + "graph?zoomSignificant=true";
-    document.getElementById("significantshowlink").style.display = "none";
-    document.getElementById("significanthidelink").style.display = "";
-    setCookie("RobotResult_zoomSignificant","true", 365, path);
+function initGraph(target) {
+    var mode = getCookie("RobotResult_zoom", "false");
+    document.getElementById("zoomToChanges").checked = (mode == "true");
+    setGraphSrc(target, mode);
 }
 
-function hideSignificant(urlName, path) {
-    if (urlName) {
-        urlName = urlName + "/";
-    } else {
-        urlName = "";
-    }
-    if (document.getElementById("passfailgraph_hd")) {
-        document.getElementById("passfailgraph_hd").href = urlName + "graph?hd=true&zoomSignificant=false";
-    }
-    document.getElementById("passfailgraph").src = urlName + "graph?zoomSignificant=false";
-    document.getElementById("significantshowlink").style.display = "";
-    document.getElementById("significanthidelink").style.display = "none";
-    setCookie("RobotResult_zoomSignificant","false", 365, path);
+function setGraphSrc(target, mode) {
+    if (document.getElementById("passfailgraph_hd"))
+        document.getElementById("passfailgraph_hd").href =  target+"graph?hd=true&zoomSignificant="+mode;
+    document.getElementById("passfailgraph_hd_link").href =  target+"graph?hd=true&zoomSignificant="+mode;
+    document.getElementById("passfailgraph").src =  target+"graph?zoomSignificant="+mode;
 }
 
-function setCookie(c_name,value,exdays,path) {
+function zoomToChanges(target) {
+    var mode = Boolean(document.getElementById('zoomToChanges').checked).toString();
+    setCookie("RobotResult_zoom",mode, 365);
+    setGraphSrc(target, mode);
+}
+
+function setCookie(c_name,value,exdays) {
     var exdate=new Date();
     exdate.setDate(exdate.getDate() + exdays);
-    var c_value=escape(value) + ";path=" + escape(path) + ((exdays==null) ? "" : ";expires="+exdate.toUTCString());
+    var c_value=escape(value) + ((exdays==null) ? "" : ";expires="+exdate.toUTCString());
+    console.log("setting cookie: "+c_value);
     document.cookie=c_name + "=" + c_value;
+}
+
+function getCookie(c_name, default_value) {
+    var name = c_name + "=";
+    var cookies = document.cookie.split(';');
+    for(var i=0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        while (cookie.charAt(0)==' ') cookie = cookie.substring(1);
+        if (cookie.indexOf(name) != -1) return cookie.substring(name.length, cookie.length);
+    }
+    return default_value;
 }
 
 function showStackTrace(id,query) {

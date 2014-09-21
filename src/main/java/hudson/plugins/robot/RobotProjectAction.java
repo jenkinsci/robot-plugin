@@ -39,7 +39,7 @@ public class RobotProjectAction  implements Action {
 	public RobotProjectAction(AbstractProject<?, ?> project) {
 		this.project = project;
 	}
-	
+
 	/**
 	 * Get associated project.
 	 * @return
@@ -50,7 +50,7 @@ public class RobotProjectAction  implements Action {
 
 	/**
 	 * Returns true if there are any builds in the associated project.
-	 * @return 
+	 * @return
 	 */
 	public boolean isDisplayGraph() {
 		if (getLastBuildAction() != null)
@@ -58,7 +58,7 @@ public class RobotProjectAction  implements Action {
 
 		return false;
 	}
-	
+
 	/**
 	 * Return the action of last build associated with robot
 	 * @return null if action not found or no build
@@ -79,7 +79,7 @@ public class RobotProjectAction  implements Action {
 	 * @param req
 	 * @param rsp
 	 * @throws IOException
-	 * @throws ServletException 
+	 * @throws ServletException
 	 */
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException, ServletException {
@@ -92,12 +92,11 @@ public class RobotProjectAction  implements Action {
 
 		if (req.checkIfModified(t, rsp))
 			return;
-		
+
 		AbstractBuild<?,?> lastBuild = getLastBuildWithRobot();
-		if(Boolean.valueOf(req.getParameter("zoomSignificant")))
-			rsp.sendRedirect2("../" + lastBuild.getNumber() + "/" + getUrlName() + "/graph?zoomSignificant=true");
-		else
-			rsp.sendRedirect2("../" + lastBuild.getNumber() + "/" + getUrlName() + "/graph?zoomSignificant=false");
+		rsp.sendRedirect2("../" + lastBuild.getNumber() + "/" + getUrlName()
+				+ "/graph?zoomSignificant="+Boolean.valueOf(req.getParameter("zoomSignificant"))
+				+ "&hd="+Boolean.valueOf(req.getParameter("hd")));
 	}
 
 	/**
@@ -117,7 +116,7 @@ public class RobotProjectAction  implements Action {
 		}
 	}
 
-	
+
 	private AbstractBuild<?, ?> getLastBuildWithRobot() {
 		AbstractBuild<?, ?> lastBuild = (AbstractBuild<?, ?>) project
 				.getLastBuild();
@@ -127,7 +126,7 @@ public class RobotProjectAction  implements Action {
 		}
 		return lastBuild;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
