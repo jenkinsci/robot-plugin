@@ -41,8 +41,8 @@ public class RobotGraph extends Graph {
 	private final CategoryDataset categoryDataset;
 	private Color[] colors;
 	private boolean binaryData;
-	private int lowerBound;
-	private int upperBound;
+	private double lowerBound;
+	private double upperBound;
 	private int fontSize;
 	public static final int DEFAULT_CHART_WIDTH = 500;
 	public static final int DEFAULT_CHART_HEIGHT = 200;
@@ -58,7 +58,7 @@ public class RobotGraph extends Graph {
 	 */
 	public static RobotGraph getRobotGraph(AbstractBuild<?, ?> owner,
 					  CategoryDataset categoryDataset, String yLabel, String xLabel,
-					  int scale, boolean binaryData, int lowerBound, int upperBound, Color...colors) {
+					  int scale, boolean binaryData, double lowerBound, double upperBound, Color...colors) {
 		int width = scale * RobotGraph.DEFAULT_CHART_WIDTH;
 		int heigth = scale * RobotGraph.DEFAULT_CHART_HEIGHT;
 		int fontSize = scale * RobotGraph.DEFAULT_FONT_SIZE;
@@ -77,7 +77,7 @@ public class RobotGraph extends Graph {
 	 */
 	private RobotGraph(AbstractBuild<?, ?> owner,
 			CategoryDataset categoryDataset, String yLabel, String xLabel,
-			int chartWidth, int chartHeight, int fontSize, boolean binaryData, int lowerBound, int upperBound, Color...colors) {
+			int chartWidth, int chartHeight, int fontSize, boolean binaryData, double lowerBound, double upperBound, Color...colors) {
 		super(owner.getTimestamp(), chartWidth, chartHeight);
 		this.yLabel = yLabel;
 		this.xLabel = xLabel;

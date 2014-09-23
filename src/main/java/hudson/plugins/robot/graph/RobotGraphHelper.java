@@ -47,8 +47,8 @@ public class RobotGraphHelper {
 		List<String> rows = new ArrayList<String>();
 		List<NumberOnlyBuildLabel> columns = new ArrayList<NumberOnlyBuildLabel>();
 
-		int lowerbound = 0;
-		int upperbound = 0;
+		double lowerbound = 0;
+		double upperbound = 0;
 		for (RobotTestObject testObject = rootObject; testObject != null; testObject = testObject.getPreviousResult()) {
 			Number failed = testObject.getFailed();
 			Number passed = testObject.getPassed();
@@ -74,8 +74,8 @@ public class RobotGraphHelper {
 		}
 
 		if(significantData){
-			lowerbound = (int)(lowerbound * 0.95);
-			upperbound = (int)Math.round(upperbound * 1.02);
+			lowerbound = lowerbound * 0.90;
+			upperbound = upperbound * 1.02;
 		}
 		int graphScale = hd ? 3 : 1;
 		return RobotGraph.getRobotGraph(rootObject.getOwner(), createSortedDataset(values, rows, columns), Messages.robot_trendgraph_testcases(),
