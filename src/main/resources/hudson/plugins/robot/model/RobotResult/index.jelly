@@ -44,6 +44,7 @@ limitations under the License.
               padding-right:50px;
               font-size:120%;
               white-space:nowrap;
+              vertical-align: top;
           }
           table.summary td {
               font-size:120%;
