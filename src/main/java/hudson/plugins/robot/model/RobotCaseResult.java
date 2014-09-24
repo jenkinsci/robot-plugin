@@ -160,6 +160,8 @@ public class RobotCaseResult extends RobotTestObject{
 
 	public String getCommaSeparatedTags(){
 		List<String> tags = getTags();
+		if (tags.size()==0)
+			return "";
 		String result = "";
 		for (String tag: tags)
 			result += tag+", ";
