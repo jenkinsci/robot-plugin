@@ -18,18 +18,60 @@ limitations under the License.
   <st:include it="${it.parentAction.build}" page="sidepanel.jelly"/>
     <l:main-panel>
     <script src="${rootURL}/plugin/robot/robot.js"/>
-    <h1>Robot Framework test results</h1>
-      <j:set var="prevresult" value="${it.previousResult}" />
-      <div style="float:right;">
+
+    <j:choose>
+      <j:when test="${it.failed > 0}">
+          <j:set var="total_status" value="FAIL" />
+      </j:when>
+      <j:otherwise>
+          <j:set var="total_status" value="PASS" />
+      </j:otherwise>
+    </j:choose>
+    <j:choose>
+      <j:when test="${it.criticalFailed > 0}">
+          <j:set var="status" value="FAIL" />
+      </j:when>
+      <j:otherwise>
+          <j:set var="status" value="PASS" />
+      </j:otherwise>
+    </j:choose>
+    <j:set var="prevresult" value="${it.previousResult}" />
+      <style>
+          table.summary {
+              text-align:left;
+          }
+          table.summary th {
+              padding-right:50px;
+              font-size:120%;
+          }
+          table.summary td {
+              font-size:120%;
+          }
+          .PASS {
+              color: #0c0;
+          }
+          .FAIL {
+              color: #c00;
+          }
+          span.FAIL {
+              font-weight: bold;
+          }
+      </style>
+      <h1 class="${status}">Robot Framework Test Results</h1>
+      <table class="summary">
+      <tbody>
+        <tr><th>Executed:</th><td>${it.timeStamp}</td></tr>
+        <tr><th>Elapsed:</th><td>${it.humanReadableDuration} (${it.getDurationDiff(prevresult)})</td></tr>
+        <tr><th>Status:</th><td>${it.criticalTotal} critical test, ${it.criticalPassed} passed, <span class="${status}">${it.criticalFailed}</span> failed<br/>
+                              ${it.total} test total (${h.getDiffString(it.total - prevresult.total)}), ${it.passed} passed, <span class="${total_status}">${it.failed}</span> failed</td></tr>
+      </tbody>
+      </table>
+
+      <div style="float:left;">
       	<img src="${rootURL}/images/16x16/notepad.gif"/><a href="report" title="Original report files">Original report files</a><br/>
-		Executed at ${it.timeStamp}<br/>
-		Suite execution took ${it.humanReadableDuration} (${it.getDurationDiff(prevresult)})
+      	<u:failedCases />
       </div>
-      <j:if test="${it.overallFailed > 0}">
-      <h2 style="color:#c00;">${it.overallFailed} failed tests, ${it.criticalFailed} critical</h2>
-      </j:if>
-      <h4>${it.overallTotal} tests in total (${h.getDiffString(it.overallTotal - prevresult.overallTotal)}), ${it.criticalTotal} critical</h4>
-      <u:failedCases />
+
       <div style="margin-top:20px;">
        <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
        <h3>Pass/fail trend</h3>
