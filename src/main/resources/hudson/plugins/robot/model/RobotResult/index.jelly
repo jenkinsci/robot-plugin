@@ -43,6 +43,7 @@ limitations under the License.
           table.summary th {
               padding-right:50px;
               font-size:120%;
+              white-space:nowrap;
           }
           table.summary td {
               font-size:120%;
@@ -63,7 +64,7 @@ limitations under the License.
         <tr><th>Executed:</th><td>${it.timeStamp}</td></tr>
         <tr><th>Elapsed:</th><td>${it.humanReadableDuration} (${it.getDurationDiff(prevresult)})</td></tr>
         <tr><th>Status:</th><td>${it.criticalTotal} critical test, ${it.criticalPassed} passed, <span class="${status}">${it.criticalFailed}</span> failed<br/>
-                              ${it.total} test total (${h.getDiffString(it.total - prevresult.total)}), ${it.passed} passed, <span class="${total_status}">${it.failed}</span> failed</td></tr>
+                              ${it.overallTotal} test total (${h.getDiffString(it.total - prevresult.total)}), ${it.passed} passed, <span class="${total_status}">${it.failed}</span> failed</td></tr>
       </tbody>
       </table>
 

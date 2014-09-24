@@ -42,6 +42,7 @@ limitations under the License.
           table.summary th {
               padding-right:50px;
               font-size:120%;
+              white-space:nowrap;
           }
           table.summary td {
               font-size:120%;
