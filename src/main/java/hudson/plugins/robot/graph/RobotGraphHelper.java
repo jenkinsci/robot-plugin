@@ -74,8 +74,8 @@ public class RobotGraphHelper {
 		}
 
 		if(significantData){
-			lowerbound = lowerbound * 0.98;
-			upperbound = upperbound * 1.02;
+			lowerbound = lowerbound - (1 + upperbound - lowerbound)*0.05;
+			upperbound = upperbound + (1 + upperbound - lowerbound)*0.05;
 		}
 		int graphScale = hd ? 3 : 1;
 		return RobotGraph.getRobotGraph(rootObject.getOwner(), createSortedDataset(values, rows, columns), Messages.robot_trendgraph_testcases(),
