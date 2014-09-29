@@ -58,9 +58,11 @@ limitations under the License.
       <j:if test="${!it.isPassed()}">
         <tr><th>Message:</th><td>${it.errorMsg}</td></tr>
       </j:if>
+      <j:if test="${it.hasLog}">
+        <tr><th>Log file:</th><td><a href="${rootURL}/${it.parentAction.owner.url}${it.parentAction.urlName}/report/${it.logFile}#${it.id}">${it.logFile}</a></td></tr>
+      </j:if>
       </tbody>
       </table>
-
       <div style="margin-top:20px; float: left;">
       <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
       		 <h3>Pass/fail trend</h3>

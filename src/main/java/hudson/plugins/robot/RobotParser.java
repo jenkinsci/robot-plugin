@@ -41,10 +41,10 @@ import org.apache.tools.ant.types.FileSet;
 
 public class RobotParser {
 
-	public RobotResult parse(String outputFileLocations, String outputPath, AbstractBuild<?, ?> build)
+	public RobotResult parse(String outputFileLocations, String outputPath, AbstractBuild<?, ?> build, String logFileName)
 	throws InterruptedException, IOException {
 		RobotResult result = new FilePath(build.getWorkspace(), outputPath).act(
-				new RobotParserCallable(outputFileLocations));
+				new RobotParserCallable(outputFileLocations, logFileName));
 		return result;
 	}
 
@@ -53,9 +53,11 @@ public class RobotParser {
 
 		private static final long serialVersionUID = 1L;
 		private final String outputFileLocations;
+		private final String logFileName;
 
-		public RobotParserCallable(String outputFileLocations) {
+		public RobotParserCallable(String outputFileLocations, String logFileName) {
 			this.outputFileLocations = outputFileLocations;
+			this.logFileName = logFileName;
 		}
 
 		public RobotResult invoke(File ws, VirtualChannel channel)
@@ -123,8 +125,10 @@ public class RobotParser {
 				return getSplitXMLSuite(parent, baseDirectory, splitXMLPath);
 			}
 			RobotSuiteResult suite = new RobotSuiteResult();
+			suite.setLogFile(this.logFileName);
 			suite.setParent(parent);
 			suite.setName(reader.getAttributeValue(null, "name"));
+			suite.setId(reader.getAttributeValue(null, "id"));
 			//parse children, which can be test cases or test suites
 			while(reader.hasNext()){
 				reader.next();
@@ -237,9 +241,11 @@ public class RobotParser {
 		private RobotCaseResult processTest(XMLStreamReader reader, RobotSuiteResult result) throws XMLStreamException {
 			RobotCaseResult caseResult = new RobotCaseResult();
 			caseResult.setParent(result);
+			caseResult.setLogFile(this.logFileName);
 			//parse attributes
 			caseResult.setName(reader.getAttributeValue(null, "name"));
 			setCriticalityIfAvailable(reader, caseResult);
+			caseResult.setId(reader.getAttributeValue(null, "id"));
 			//parse test tags
 			ignoreUntilStarts(reader, "tags");
 			caseResult.addTags(processTags(reader));

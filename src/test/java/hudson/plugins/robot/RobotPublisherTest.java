@@ -32,79 +32,79 @@ public class RobotPublisherTest extends TestCase {
 
 	public void testBlankConfigShouldReturnDefaults() {
 		RobotPublisher testable = new RobotPublisher(" "," ",false, " ", " ", 0, 0, false, "");
-		
+
 		assertEquals("output.xml", testable.getOutputFileName());
 		assertEquals("report.html", testable.getReportFileName());
 		assertEquals("log.html", testable.getLogFileName());
 	}
-	
+
 	public void testShouldReturnSuccessWhenThresholdsExceeded() throws Exception{
 		boolean onlyCritical = false;
-		
+
 		RobotPublisher publisher = new RobotPublisher("","",false,"","",99.9,99,onlyCritical, "");
 		RobotResult mockResult = mock(RobotResult.class);
 		AbstractBuild<?,?> mockBuild = mock(FreeStyleBuild.class);
-		
+
 		when(mockBuild.getResult()).thenReturn(Result.SUCCESS);
 		when(mockResult.getPassPercentage(onlyCritical)).thenReturn(100.0);
-		
+
 		assertEquals(Result.SUCCESS, publisher.getBuildResult(mockBuild,mockResult));
 	}
-	
+
 	public void testShouldFailWhenFailedBuild() throws Exception{
 		boolean onlyCritical = false;
-		
+
 		RobotPublisher publisher = new RobotPublisher("","",false,"","",0,0,onlyCritical, "");
 		RobotResult mockResult = mock(RobotResult.class);
 		AbstractBuild<?,?> mockBuild = mock(FreeStyleBuild.class);
-		
+
 		when(mockBuild.getResult()).thenReturn(Result.FAILURE);
 		when(mockResult.getPassPercentage(onlyCritical)).thenReturn(100.0);
-		
+
 		assertEquals(Result.FAILURE, publisher.getBuildResult(mockBuild,mockResult));
 	}
-	
+
 	public void testShouldFailWhenUnstableThresholdNotExceeded(){
 		boolean onlyCritical = false;
-		
+
 		RobotPublisher publisher = new RobotPublisher("","",false,"","",90,50,onlyCritical, "");
 		RobotResult mockResult = mock(RobotResult.class);
 		AbstractBuild<?,?> mockBuild = mock(FreeStyleBuild.class);
-		
+
 		when(mockBuild.getResult()).thenReturn(Result.SUCCESS);
 		when(mockResult.getPassPercentage(onlyCritical)).thenReturn(49.9);
-		
+
 		assertEquals(Result.FAILURE, publisher.getBuildResult(mockBuild,mockResult));
 	}
-	
+
 	public void testShouldBeUnstableWhenPassThresholdNotExceeded(){
 		boolean onlyCritical = false;
-		
+
 		RobotPublisher publisher = new RobotPublisher("","",false,"","",90,50,onlyCritical, "");
 		RobotResult mockResult = mock(RobotResult.class);
 		AbstractBuild<?,?> mockBuild = mock(FreeStyleBuild.class);
-		
+
 		when(mockBuild.getResult()).thenReturn(Result.SUCCESS);
 		when(mockResult.getPassPercentage(onlyCritical)).thenReturn(89.9);
-		
+
 		assertEquals(Result.UNSTABLE, publisher.getBuildResult(mockBuild,mockResult));
 	}
-	
+
 	public void testShouldBeSuccessWithOnlyCritical(){
 		boolean onlyCritical = false;
-		
+
 		RobotPublisher publisher = new RobotPublisher("","",false,"","",90,50,onlyCritical, "");
 		RobotResult mockResult = mock(RobotResult.class);
 		AbstractBuild<?,?> mockBuild = mock(FreeStyleBuild.class);
-		
+
 		when(mockBuild.getResult()).thenReturn(Result.SUCCESS);
 		when(mockResult.getPassPercentage(onlyCritical)).thenReturn(90.0);
-		
+
 		assertEquals(Result.SUCCESS, publisher.getBuildResult(mockBuild,mockResult));
 	}
 
 	public void testShouldUnstableLowFailures() throws Exception{
-		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("low_failure_output.xml");
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("low_failure_output.xml", null);
 		RobotResult result = remoteOperation.invoke(new File(new RobotPublisherTest().getClass().getResource("low_failure_output.xml").toURI()).getParentFile(), null);
 		result.tally(null);
 

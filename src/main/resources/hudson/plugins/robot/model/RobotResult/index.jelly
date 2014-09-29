@@ -66,11 +66,11 @@ limitations under the License.
         <tr><th>Elapsed:</th><td>${it.humanReadableDuration} (${it.getDurationDiff(prevresult)})</td></tr>
         <tr><th>Status:</th><td>${it.criticalTotal} critical test, ${it.criticalPassed} passed, <span class="${status}">${it.criticalFailed}</span> failed<br/>
                               ${it.overallTotal} test total (${h.getDiffString(it.total - prevresult.total)}), ${it.passed} passed, <span class="${total_status}">${it.failed}</span> failed</td></tr>
+        <tr><th>Robot Results:</th><td><a href="report" title="Original report files">Original report files</a></td></tr>
       </tbody>
       </table>
 
       <div style="float:left;">
-      	<img src="${rootURL}/images/16x16/notepad.gif"/><a href="report" title="Original report files">Original report files</a><br/>
       	<u:failedCases />
       </div>
 

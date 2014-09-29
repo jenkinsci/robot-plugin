@@ -51,7 +51,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 		MatrixAggregatable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	protected static final String DEFAULT_REPORT_FILE = "report.html";
 	protected static final String FILE_ARCHIVE_DIR = "robot-plugin";
 
@@ -66,14 +66,14 @@ public class RobotPublisher extends Recorder implements Serializable,
 	final private double passThreshold;
 	final private double unstableThreshold;
 	private String[] otherFiles;
-	
+
 	//Default to true
 	private boolean onlyCritical = true;
 
 
 	/**
 	 * Create new publisher for Robot Framework results
-	 * 
+	 *
 	 * @param outputPath
 	 *            Path to Robot Framework's output files
 	 * @param outputFileName
@@ -103,7 +103,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 		this.unstableThreshold = unstableThreshold;
 		this.logFileName = logFileName;
 		this.onlyCritical = onlyCritical;
-		
+
 		String[] filemasks = otherFiles.split(",");
 		for (int i = 0; i < filemasks.length; i++){
 			filemasks[i] = StringUtils.strip(filemasks[i]);
@@ -113,7 +113,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 	/**
 	 * Gets the output	 path of Robot files
-	 * 
+	 *
 	 * @return
 	 */
 	public String getOutputPath() {
@@ -123,7 +123,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	/**
 	 * Gets the name of output xml file. Reverts to default if empty or
 	 * whitespace.
-	 * 
+	 *
 	 * @return
 	 */
 	public String getOutputFileName() {
@@ -131,20 +131,20 @@ public class RobotPublisher extends Recorder implements Serializable,
 			return DEFAULT_OUTPUT_FILE;
 		return outputFileName;
 	}
-	/* 
+	/*
 	* Get the value of disable Archive of output xml checkbox
-	* 
-	* 
+	*
+	*
 	* @return
 	*/
 	public boolean getDisableArchiveOutput() {
-		return disableArchiveOutput;	
+		return disableArchiveOutput;
 		}
 
 	/**
 	 * Gets the name of report html file. Reverts to default if empty or
 	 * whitespace.
-	 * 
+	 *
 	 * @return
 	 */
 	public String getReportFileName() {
@@ -156,7 +156,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	/**
 	 * Gets the name of log html file. Reverts to default if empty or
 	 * whitespace.
-	 * 
+	 *
 	 * @return
 	 */
 	public String getLogFileName() {
@@ -167,7 +167,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 	/**
 	 * Gets the test pass percentage threshold for successful builds.
-	 * 
+	 *
 	 * @return
 	 */
 	public double getPassThreshold() {
@@ -176,7 +176,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 	/**
 	 * Gets the test pass percentage threshold for unstable builds.
-	 * 
+	 *
 	 * @return
 	 */
 	public double getUnstableThreshold() {
@@ -185,7 +185,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 	/**
 	 * Gets if only critical tests should be accounted for the thresholds.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean getOnlyCritical() {
@@ -215,7 +215,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	protected RobotResult parse(String expandedTestResults, String outputPath, AbstractBuild<?,?> build,
 			Launcher launcher, BuildListener listener) throws IOException,
 			InterruptedException {
-		return new RobotParser().parse(expandedTestResults, outputPath, build);
+		return new RobotParser().parse(expandedTestResults, outputPath, build, getLogFileName());
 	}
 
 	/**
@@ -229,7 +229,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 			logger.println(Messages.robot_publisher_started());
 			logger.println(Messages.robot_publisher_parsing());
 			RobotResult result;
-			
+
 			try {
 				EnvVars buildEnv = build.getEnvironment(listener);
 				String expandedOutputFileName = buildEnv.expand(getOutputFileName());
@@ -237,15 +237,15 @@ public class RobotPublisher extends Recorder implements Serializable,
 				String expandedReportFileName = buildEnv.expand(getReportFileName());
 				String expandedLogFileName = buildEnv.expand(getLogFileName());
 				String logFileJavascripts = trimSuffix(expandedLogFileName) + ".js";
-				
+
 				result = parse(expandedOutputFileName, expandedOutputPath, build, launcher, listener);
-				
+
 				logger.println(Messages.robot_publisher_done());
 				logger.println(Messages.robot_publisher_copying());
-				
+
 				//Save configured Robot files (including split output) to build dir
 				copyFilesToBuildDir(build, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","));
-				
+
 				if (!getDisableArchiveOutput()){
 					copyFilesToBuildDir(build, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedOutputFileName}), ","));
 				}
@@ -255,7 +255,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 					String filemask = buildEnv.expand(getOtherFiles());
 					copyFilesToBuildDir(build, expandedOutputPath, filemask);
 				}
-				
+
 				logger.println(Messages.robot_publisher_done());
 			} catch (Exception e) {
 				logger.println(Messages.robot_publisher_fail());
@@ -296,7 +296,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 				FILE_ARCHIVE_DIR);
 	    srcDir.copyRecursiveTo(filemaskToCopy, destDir);
 	}
-	
+
 	/**
 	 * Return filename without file suffix.
 	 * @param filename
@@ -322,7 +322,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 		}
 		return "";
 	}
-	
+
 	/**
 	 * Add wildcard to filemasks between name and file extension in order to copy split output
 	 * e.g. output-001.xml, output-002.xml etc.
@@ -335,11 +335,11 @@ public class RobotPublisher extends Recorder implements Serializable,
 		}
 		return filemasks;
 	}
-	
+
 	/**
 	 * Determines the build result based on set thresholds. If build is already
 	 * failed before the tests it won't be changed to successful.
-	 * 
+	 *
 	 * @param build
 	 *            Build to be evaluated
 	 * @param result
@@ -386,7 +386,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 		/**
 		 * Validates the unstable threshold input field.
-		 * 
+		 *
 		 * @param value
 		 * @return
 		 * @throws IOException
@@ -404,7 +404,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 		/**
 		 * Validates the pass threshold input field.
-		 * 
+		 *
 		 * @param value
 		 * @return
 		 * @throws IOException

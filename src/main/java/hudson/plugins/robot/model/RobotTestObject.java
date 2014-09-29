@@ -52,6 +52,29 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	private String duplicateSafeName;
 	protected transient long duration;
 
+	private String logFile;
+	private String id;
+
+	public String getId() {
+		return id != null ? id : "";
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getLogFile() {
+		return logFile;
+	}
+
+	public void setLogFile(String logFileName) {
+		this.logFile = logFileName;
+	}
+
+	public boolean getHasLog() {
+		return this.logFile != null && !"".equals(this.logFile);
+	}
+
 	/**
 	 * Generates the full packagename
 	 * @return
