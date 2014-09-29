@@ -54,8 +54,8 @@ public class RobotGraphHelper {
 			Number passed = testObject.getPassed();
 
 			if (significantData){
-				if(lowerbound == 0 || lowerbound > failed.intValue() + passed.intValue())
-					lowerbound = failed.intValue() + passed.intValue();
+				if(lowerbound == 0 || lowerbound > passed.intValue())
+					lowerbound =  passed.intValue();
 
 				if(upperbound < failed.intValue() + passed.intValue())
 					upperbound = failed.intValue() + passed.intValue();
@@ -74,7 +74,7 @@ public class RobotGraphHelper {
 		}
 
 		if(significantData){
-			lowerbound = lowerbound * 0.90;
+			lowerbound = lowerbound * 0.98;
 			upperbound = upperbound * 1.02;
 		}
 		int graphScale = hd ? 3 : 1;
