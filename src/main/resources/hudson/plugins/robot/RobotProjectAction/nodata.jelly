@@ -21,7 +21,7 @@ limitations under the License.
         <l:main-panel>
              <h1>${%header}</h1>
              <h2>${%description}</h2>
-	     <p>${%content}</p>                                   
+             <p>${%content}</p>
         </l:main-panel>
     </l:layout>
 </j:jelly>

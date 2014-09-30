@@ -21,18 +21,18 @@ limitations under the License.
     <f:entry title="${%advanced.outputxml}" description="${%advanced.outputxml.description}" field="outputFileName">
       <f:textbox />
     </f:entry>
-  	<f:entry title="${%advanced.reporthtml}" description="${%advanced.reporthtml.description}" field="reportFileName">
-  		<f:textbox />
-  	</f:entry>
-  	<f:entry title="${%advanced.loghtml}" description="${%advanced.loghtml.description}" field="logFileName">
-  		<f:textbox />
-  	</f:entry>
-  	<f:entry title="${%advanced.otherfiles}" description="${%advanced.otherfiles.description}" field="otherFiles">
+    <f:entry title="${%advanced.reporthtml}" description="${%advanced.reporthtml.description}" field="reportFileName">
         <f:textbox />
     </f:entry>
-	<f:entry title="${%advanced.disablearchiveoutputxml}" description="${%advanced.disablearchiveoutputxml.description}" field="disableArchiveOutput">
-		<f:checkbox />
-  </f:entry>        
+    <f:entry title="${%advanced.loghtml}" description="${%advanced.loghtml.description}" field="logFileName">
+        <f:textbox />
+    </f:entry>
+    <f:entry title="${%advanced.otherfiles}" description="${%advanced.otherfiles.description}" field="otherFiles">
+        <f:textbox />
+    </f:entry>
+    <f:entry title="${%advanced.disablearchiveoutputxml}" description="${%advanced.disablearchiveoutputxml.description}" field="disableArchiveOutput">
+        <f:checkbox />
+  </f:entry>
   </f:advanced>
   <f:entry title="${%thresholds.label}" help="/plugin/robot/help-thresholds.html">
     <table width="100%">
@@ -43,8 +43,8 @@ limitations under the License.
            <f:textbox />
     </f:entry>
     <f:entry field="onlyCritical">
-  		<f:checkbox default="true"/>${%thresholds.onlycritical}
-	</f:entry>
+        <f:checkbox default="true"/>${%thresholds.onlycritical}
+    </f:entry>
     </table>
   </f:entry>
 </j:jelly>
