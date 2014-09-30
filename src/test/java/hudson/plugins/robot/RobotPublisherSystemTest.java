@@ -333,14 +333,14 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		page = wc.goTo("job/robot/1/robot/Testcases%20&%20Othercases");
 		WebAssert.assertTextPresent(page,"4 passed, 4 failed");
 		WebAssert.assertTextPresent(page, "0:00:00.041 (+0:00:00.041)");
-		WebAssert.assertTextNotPresent(page, "All Testcases");
+		WebAssert.assertTextNotPresent(page, "All Test Cases");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Testcases/Not%20equal' and contains(.,'Testcases.Not equal')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Othercases' and contains(.,'Othercases')]");
 
 		page = wc.goTo("job/robot/1/robot/Testcases%20&%20Othercases/Othercases");
 		WebAssert.assertTextPresent(page, "2 passed, 2 failed");
 		WebAssert.assertTextPresent(page, "0:00:00.008 (+0:00:00.008)");
-		WebAssert.assertTextPresent(page, "All Testcases");
+		WebAssert.assertTextPresent(page, "All Test Cases");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Not%20equal' and contains(.,'Not equal')]");
 		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//a[@href='Contains%20string' and contains(.,'Contains string')]");
 

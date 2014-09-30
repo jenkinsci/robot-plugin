@@ -1,5 +1,5 @@
 function initGraph(target) {
-    var mode = getCookie("RobotResult_zoom", "false");
+    var mode = getCookie("RobotResult_zoom", "true");
     document.getElementById("zoomToChanges").checked = (mode == "true");
     setGraphSrc(target, mode);
 }

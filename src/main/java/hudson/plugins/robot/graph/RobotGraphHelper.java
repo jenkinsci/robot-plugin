@@ -37,7 +37,7 @@ public class RobotGraphHelper {
 	private static int HOURSCALE = 3600000;
 
 	/**
-	 * Create a pass/fail trend graph. The graph will ignore builds with no robot results.
+	 * Create a test result trend graph. The graph will ignore builds with no robot results.
 	 * @param rootObject The dataset will be taken from rootObject backwards.
 	 * (i.e. there are no saved robot results in a given build)
 	 * @return
@@ -74,7 +74,7 @@ public class RobotGraphHelper {
 		}
 
 		if(significantData){
-			lowerbound = lowerbound - (1 + upperbound - lowerbound)*0.05;
+			lowerbound = Math.max(0,lowerbound - (1 + upperbound - lowerbound)*0.05);
 			upperbound = upperbound + (1 + upperbound - lowerbound)*0.05;
 		}
 		int graphScale = hd ? 3 : 1;

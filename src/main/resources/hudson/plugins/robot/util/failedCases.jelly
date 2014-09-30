@@ -1,6 +1,11 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util">
     <j:if test="${!it.allFailedCases.isEmpty()}">
-        <h2>All failed testcases</h2>
+        <style>
+            td.pane {
+                vertical-align: top;
+            }
+        </style>
+        <h2>All Failed Test Cases</h2>
         <table class="pane sortable">
             <tr>
                 <td class="pane-header">Name</td>

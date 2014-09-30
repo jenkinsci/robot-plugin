@@ -16,7 +16,10 @@ limitations under the License.
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
          xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
   <st:contentType value="text/plain"/>
-            <h3>| Tags: |<j:forEach var="tag" items="${it.tags}"><j:whitespace> ${tag} |</j:whitespace></j:forEach></h3>
-			<h3>Error message:</h3>
-			<pre><st:out value="${it.errorMsg}"/></pre>
+  <table class="summary listsummary">
+        <tbody>
+        <tr><th>Tags:</th><td>${it.commaSeparatedTags}</td></tr>
+        <tr><th>Message:</th><td><pre><st:out value="${it.errorMsg}"/></pre></td></tr>
+        </tbody>
+  </table>
 </j:jelly>

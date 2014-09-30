@@ -58,12 +58,15 @@ limitations under the License.
           span.FAIL {
               font-weight: bold;
           }
+          table.listsummary th, table.listsummary td {
+              font-size:100%;
+          }
       </style>
       <h1 class="${status}">Robot Framework Test Results</h1>
       <table class="summary">
       <tbody>
         <tr><th>Executed:</th><td>${it.timeStamp}</td></tr>
-        <tr><th>Elapsed:</th><td>${it.humanReadableDuration} (${it.getDurationDiff(prevresult)})</td></tr>
+        <tr><th>Duration:</th><td>${it.humanReadableDuration} (${it.getDurationDiff(prevresult)})</td></tr>
         <tr><th>Status:</th><td>${it.criticalTotal} critical test, ${it.criticalPassed} passed, <span class="${status}">${it.criticalFailed}</span> failed<br/>
                               ${it.overallTotal} test total (${h.getDiffString(it.total - prevresult.total)}), ${it.passed} passed, <span class="${total_status}">${it.failed}</span> failed</td></tr>
         <tr><th>Robot Results:</th><td><a href="report" title="Original report files">Original report files</a></td></tr>
@@ -76,7 +79,7 @@ limitations under the License.
 
       <div style="margin-top:20px;">
        <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
-       <h3>Pass/fail trend</h3>
+       <h3>Test Result Trend</h3>
        	<a id="passfailgraph_hd" href="">
        	  <img id="passfailgraph" src="" title="Show bigger image"/>
        	</a><br/>
@@ -85,7 +88,7 @@ limitations under the License.
        </div>
        <script>initGraph('');</script>
        <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
-      	 <h3>Duration trend</h3>
+      	 <h3>Duration Trend</h3>
      	  <a href="durationGraph?hd=true">
      	    <img src="durationGraph" title="Show bigger image"/>
      	  </a><br/>
@@ -93,7 +96,7 @@ limitations under the License.
        </div>
        <div style="clear:both;"></div>
       </div>
-      <h2>All test suites</h2>
+      <h2>All Test Suites</h2>
    	  <table class="pane sortable">
    	  <tr>
    	  	<td class="pane-header">Name</td>

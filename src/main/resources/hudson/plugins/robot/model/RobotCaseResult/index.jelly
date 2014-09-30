@@ -53,26 +53,26 @@ limitations under the License.
       <tbody>
       <tr><th class="${status}">TEST CASE:</th><td><strong>${it.name}</strong><j:if test="${!it.critical}"> (non-critical)</j:if></td></tr>
       <tr><th>Tags:</th><td>${it.commaSeparatedTags}</td></tr>
-      <tr><th>Elapsed:</th><td>${it.humanReadableDuration} (${it.getDurationDiff(prevcase)})</td></tr>
-      <tr><th>Status:</th><td><span class="${status}">${status}</span><j:if test="${!it.critical}"> (non-critical)</j:if></td></tr>
+      <tr><th>Duration:</th><td>${it.humanReadableDuration} (${it.getDurationDiff(prevcase)})</td></tr>
+      <tr><th>Status:</th><td><span class="${status}">${status}</span> (<j:if test="${!it.critical}">non-</j:if>critical)</td></tr>
       <j:if test="${!it.isPassed()}">
         <tr><th>Message:</th><td>${it.errorMsg}</td></tr>
       </j:if>
       <j:if test="${it.hasLog}">
-        <tr><th>Log file:</th><td><a href="${rootURL}/${it.parentAction.owner.url}${it.parentAction.urlName}/report/${it.logFile}#${it.id}">${it.logFile}</a></td></tr>
+        <tr><th>Log File:</th><td><a href="${rootURL}/${it.parentAction.owner.url}${it.parentAction.urlName}/report/${it.logFile}#${it.id}">${it.logFile}</a></td></tr>
       </j:if>
       </tbody>
       </table>
       <div style="margin-top:20px; float: left;">
       <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
-      		 <h3>Pass/fail trend</h3>
+      		 <h3>Test Result Trend</h3>
      	     <a href="graph?hd=true">
      	        <img src="graph" title="Show bigger image"/>
      	     </a><br/>
      	     <p style="float:right"><a href="graph?hd=true">Show bigger image</a></p>
        </div>
        <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
-      	 <h3>Duration trend</h3>
+      	 <h3>Duration Trend</h3>
      	  <a href="durationGraph?hd=true">
      	    <img src="durationGraph" title="Show bigger image"/>
      	  </a><br/>
