@@ -104,7 +104,7 @@ public class RobotPublisherTest extends TestCase {
 	}
 
 	public void testShouldUnstableLowFailures() throws Exception{
-		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("low_failure_output.xml", null);
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("low_failure_output.xml", null, null);
 		RobotResult result = remoteOperation.invoke(new File(new RobotPublisherTest().getClass().getResource("low_failure_output.xml").toURI()).getParentFile(), null);
 		result.tally(null);
 

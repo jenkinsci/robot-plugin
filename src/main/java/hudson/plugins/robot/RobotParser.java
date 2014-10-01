@@ -41,10 +41,10 @@ import org.apache.tools.ant.types.FileSet;
 
 public class RobotParser {
 
-	public RobotResult parse(String outputFileLocations, String outputPath, AbstractBuild<?, ?> build, String logFileName)
+	public RobotResult parse(String outputFileLocations, String outputPath, AbstractBuild<?, ?> build, String logFileName, String reportFileName)
 	throws InterruptedException, IOException {
 		RobotResult result = new FilePath(build.getWorkspace(), outputPath).act(
-				new RobotParserCallable(outputFileLocations, logFileName));
+				new RobotParserCallable(outputFileLocations, logFileName, reportFileName));
 		return result;
 	}
 
@@ -54,10 +54,12 @@ public class RobotParser {
 		private static final long serialVersionUID = 1L;
 		private final String outputFileLocations;
 		private final String logFileName;
+		private final String reportFileName;
 
-		public RobotParserCallable(String outputFileLocations, String logFileName) {
+		public RobotParserCallable(String outputFileLocations, String logFileName, String reportFileName) {
 			this.outputFileLocations = outputFileLocations;
 			this.logFileName = logFileName;
+			this.reportFileName = reportFileName;
 		}
 
 		public RobotResult invoke(File ws, VirtualChannel channel)
@@ -73,6 +75,8 @@ public class RobotParser {
 						"No files found in path " + ws.getAbsolutePath() + " with configured filemask: " + outputFileLocations);
 			}
 			RobotResult result = new RobotResult();
+			result.setLogFile(this.logFileName);
+			result.setReportFile(this.reportFileName);
 
 			for(String file : files){
 				XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -126,6 +130,7 @@ public class RobotParser {
 			}
 			RobotSuiteResult suite = new RobotSuiteResult();
 			suite.setLogFile(this.logFileName);
+			suite.setReportFile(this.reportFileName);
 			suite.setParent(parent);
 			suite.setName(reader.getAttributeValue(null, "name"));
 			suite.setId(reader.getAttributeValue(null, "id"));

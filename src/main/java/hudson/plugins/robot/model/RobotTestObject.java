@@ -53,6 +53,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	protected transient long duration;
 
 	private String logFile;
+	private String reportFile;
 	private String id;
 
 	public String getId() {
@@ -71,8 +72,20 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 		this.logFile = logFileName;
 	}
 
+	public String getReportFile() {
+		return reportFile;
+	}
+
+	public void setReportFile(String reportFileName) {
+		this.reportFile = reportFileName;
+	}
+
 	public boolean getHasLog() {
 		return this.logFile != null && !"".equals(this.logFile);
+	}
+
+	public boolean getHasReport() {
+		return this.reportFile != null && !"".equals(this.reportFile);
 	}
 
 	/**
