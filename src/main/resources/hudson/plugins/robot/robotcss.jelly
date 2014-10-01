@@ -1,0 +1,28 @@
+<j:jelly xmlns:j="jelly:core">
+    <style type="text/css">
+table.summary {
+    text-align:left;
+}
+table.summary th {
+    padding-right:50px;
+    font-size:120%;
+    white-space:nowrap;
+    vertical-align: top;
+}
+table.summary td {
+    font-size:120%;
+}
+.PASS {
+    color: #0c0;
+}
+.FAIL {
+    color: #c00;
+}
+span.FAIL {
+    font-weight: bold;
+}
+table.listsummary th, table.listsummary td {
+    font-size:100%;
+}
+</style>
+</j:jelly>

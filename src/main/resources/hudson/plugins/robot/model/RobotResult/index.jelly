@@ -18,7 +18,7 @@ limitations under the License.
   <st:include it="${it.parentAction.build}" page="sidepanel.jelly"/>
     <l:main-panel>
     <script src="${rootURL}/plugin/robot/robot.js"/>
-
+    <st:include page="/hudson/plugins/robot/robotcss.jelly" />
     <j:choose>
       <j:when test="${it.failed > 0}">
           <j:set var="total_status" value="FAIL" />
@@ -36,32 +36,6 @@ limitations under the License.
       </j:otherwise>
     </j:choose>
     <j:set var="prevresult" value="${it.previousResult}" />
-      <style>
-          table.summary {
-              text-align:left;
-          }
-          table.summary th {
-              padding-right:50px;
-              font-size:120%;
-              white-space:nowrap;
-              vertical-align: top;
-          }
-          table.summary td {
-              font-size:120%;
-          }
-          .PASS {
-              color: #0c0;
-          }
-          .FAIL {
-              color: #c00;
-          }
-          span.FAIL {
-              font-weight: bold;
-          }
-          table.listsummary th, table.listsummary td {
-              font-size:100%;
-          }
-      </style>
       <h1 class="${status}">Robot Framework Test Results</h1>
       <table class="summary">
       <tbody>

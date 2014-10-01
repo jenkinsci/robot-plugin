@@ -16,6 +16,7 @@ limitations under the License.
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
   <l:layout>
   <st:include it="${it.parentAction.owner}" page="sidepanel.jelly"/>
+  <st:include page="/hudson/plugins/robot/robotcss.jelly" />
     <l:main-panel>
       <j:choose>
         <j:when test="${it.isPassed()}">
@@ -26,29 +27,6 @@ limitations under the License.
         </j:otherwise>
       </j:choose>
       <j:set var="prevcase" value="${it.previousResult}" />
-      <style>
-          table.summary {
-              text-align:left;
-          }
-          table.summary th {
-              padding-right:50px;
-              font-size:120%;
-              white-space:nowrap;
-              vertical-align: top;
-          }
-          table.summary td {
-              font-size:120%;
-          }
-          .PASS {
-              color: #0c0;
-          }
-          .FAIL {
-              color: #c00;
-          }
-          span.FAIL {
-              font-weight: bold;
-          }
-      </style>
       <table class="summary">
       <tbody>
       <tr><th class="${status}">TEST CASE:</th><td><strong>${it.name}</strong><j:if test="${!it.critical}"> (non-critical)</j:if></td></tr>
