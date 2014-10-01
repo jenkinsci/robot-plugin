@@ -8,9 +8,10 @@
         <h2>All Failed Test Cases</h2>
         <table class="pane sortable">
             <tr>
-                <td class="pane-header">Name</td>
-                <td class="pane-header">Duration (ms)</td>
-                <td class="pane-header">Age</td>
+                <td class="pane-header" title="Sort by name">Name</td>
+                <td class="pane-header" title="Sort by criticality">Crit.</td>
+                <td class="pane-header" title="Sort by duration">Duration (ms)</td>
+                <td class="pane-header" title="Sort by age">Age</td>
             </tr>
             <j:forEach var="case" items="${it.allFailedCases}">
                 <j:set var="fullName" value="${case.getRelativePackageName(it)}" />
@@ -24,6 +25,7 @@
                             ${%Loading...}
                         </div>
                     </td>
+                    <td class="pane"><j:if test="${case.isCritical()}">yes</j:if><j:if test="${!case.isCritical()}">no</j:if></td>
                     <td class="pane">${case.humanReadableDuration}</td>
                     <td class="pane"><a href="${rootURL}/${case.failedSinceRun.url}">${case.age}</a></td>
                 </tr>

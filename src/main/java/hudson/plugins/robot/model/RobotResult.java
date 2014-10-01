@@ -281,6 +281,7 @@ public class RobotResult extends RobotTestObject {
 			List<RobotCaseResult> failedCases = suite.getAllFailedCases();
 			allFailedCases.addAll(failedCases);
 		}
+		Collections.sort(allFailedCases, new RobotCaseComparator());
 		return allFailedCases;
 	}
 

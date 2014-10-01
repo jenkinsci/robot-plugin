@@ -106,8 +106,11 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * @return
 	 */
 	public Collection<RobotCaseResult> getCaseResults() {
-		if(caseResults != null)
-			return caseResults.values();
+		if(caseResults != null) {
+			List<RobotCaseResult> res = new ArrayList(caseResults.values());
+			Collections.sort(res, new RobotCaseComparator());
+			return res;
+		}
 		return Collections.emptyList();
 	}
 
@@ -286,7 +289,7 @@ public class RobotSuiteResult extends RobotTestObject {
 		for(RobotSuiteResult suite : getChildSuites()){
 			failedCases.addAll(suite.getAllFailedCases());
 		}
-
+		Collections.sort(failedCases, new RobotCaseComparator());
 		return failedCases;
 	}
 

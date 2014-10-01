@@ -50,11 +50,6 @@ limitations under the License.
             </td></tr>
       </tbody>
       </table>
-
-      <div style="float:left;">
-        <u:failedCases />
-      </div>
-
       <div style="margin-top:20px;">
        <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
        <h3>Test Result Trend</h3>
@@ -74,13 +69,16 @@ limitations under the License.
        </div>
        <div style="clear:both;"></div>
       </div>
+      <div style="float:left;">
+          <u:failedCases />
+      </div>
       <h2>All Test Suites</h2>
       <table class="pane sortable">
       <tr>
-        <td class="pane-header">Name</td>
-        <td class="pane-header">Failed tests <span style="font-size:0.8em">(diff)</span></td>
-        <td class="pane-header">Total tests <span style="font-size:0.8em">(diff)</span></td>
-        <td class="pane-header">Duration ms <span style="font-size:0.8em">(diff)</span></td>
+        <td class="pane-header" title="Sort by name">Name</td>
+        <td class="pane-header" title="Sort by total failed count">Failed tests <span style="font-size:0.8em">(diff)</span></td>
+        <td class="pane-header" title="Sort by total test count">Total tests <span style="font-size:0.8em">(diff)</span></td>
+        <td class="pane-header" title="Sort by duration">Duration ms <span style="font-size:0.8em">(diff)</span></td>
       </tr>
       <j:forEach var="suite" items="${it.allSuites}">
       <j:set var="prevsuite" value="${suite.previousResult}" />

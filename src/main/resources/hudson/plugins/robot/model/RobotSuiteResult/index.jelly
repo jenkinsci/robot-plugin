@@ -50,7 +50,6 @@ limitations under the License.
         </j:if>
       </tbody>
       </table>
-      <u:failedCases />
       <div style="margin-top:20px;">
        <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
        <h3>Test Result Trend</h3>
@@ -74,27 +73,40 @@ limitations under the License.
       <h2>All Test Cases</h2>
       <table class="pane sortable">
         <tr>
-            <td class="pane-header">Name</td>
-            <td class="pane-header">Duration <span style="font-size:0.8em">(diff)</span></td>
+            <td class="pane-header" title="Sort by name">Name</td>
+            <td class="pane-header" title="Sort by criticality">Crit.</td>
+            <td class="pane-header" title="Sort by status">Status</td>
+            <td class="pane-header" title="Sort by duration">Duration <span style="font-size:0.8em">(diff)</span></td>
         </tr>
         <j:forEach var="case" items="${it.caseResults}">
         <j:set var="prevcase" value="${case.previousResult}" />
+        <j:choose>
+                <j:when test="${case.isPassed()}">
+                  <j:set var="status" value="PASS" />
+                </j:when>
+                <j:otherwise>
+                  <j:set var="status" value="FAIL" />
+                </j:otherwise>
+        </j:choose>
 
         <tr>
          <td class="pane"><a href="${case.getRelativeId(it)}">${case.name}</a></td>
+         <td class="pane"><j:if test="${case.isCritical()}">yes</j:if><j:if test="${!case.isCritical()}">no</j:if></td>
+         <td class="pane ${status}"><j:if test="${case.isPassed()}">PASS</j:if><j:if test="${!case.isPassed()}">FAIL</j:if></td>
          <td class="pane">${case.humanReadableDuration}<span style="font-size:0.8em">(${case.getDurationDiff(prevcase)})</span></td>
         </tr>
         </j:forEach>
        </table>
        </j:if>
       <j:if test="${!it.allChildSuites.isEmpty()}">
+      <u:failedCases />
       <h2>Nested Test Suites</h2>
       <table class="pane sortable">
       <tr>
-        <td class="pane-header">Name</td>
-        <td class="pane-header">Failed tests <span style="font-size:0.8em">(diff)</span></td>
-        <td class="pane-header">Total tests <span style="font-size:0.8em">(diff)</span></td>
-        <td class="pane-header">Duration<span style="font-size:0.8em">(diff)</span></td>
+        <td class="pane-header" title="Sort by name">Name</td>
+        <td class="pane-header" title="Sort by failed test count">Failed tests <span style="font-size:0.8em">(diff)</span></td>
+        <td class="pane-header" title="Sort by total test count">Total tests <span style="font-size:0.8em">(diff)</span></td>
+        <td class="pane-header" title="Sort by duration">Duration<span style="font-size:0.8em">(diff)</span></td>
       </tr>
       <j:forEach var="suite" items="${it.allChildSuites}">
       <j:set var="prevsuite" value="${suite.previousResult}" />
