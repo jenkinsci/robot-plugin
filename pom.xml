@@ -7,10 +7,10 @@
   </parent>
 
   <artifactId>robot</artifactId>
-  <version>1.4.4-SNAPSHOT</version>
+  <version>1.5.0-SNAPSHOT</version>
   <name>Robot Framework plugin</name>
   <description>Shows Robot Framework test results in project</description>
-  <packaging>hpi</packaging> 
+  <packaging>hpi</packaging>
   <url>http://wiki.jenkins-ci.org/display/JENKINS/Robot+Framework+Plugin</url>
 
   <developers>
@@ -20,13 +20,13 @@
       <email>janne.piironen@gmail.com</email>
     </developer>
   </developers>
-  
+
   <scm>
     <connection>scm:git:ssh://github.com/jenkinsci/robot-plugin.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/jenkinsci/robot-plugin.git</developerConnection>
     <url>https://www.github.com/jenkinsci/robot-plugin</url>
   </scm>
-  
+
   <dependencies>
     <dependency>
          <groupId>org.mockito</groupId>
@@ -41,14 +41,14 @@
          <optional>true</optional>
     </dependency>
 </dependencies>
-  
+
   <distributionManagement>
     <repository>
       <id>maven.jenkins-ci.org</id>
       <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
     </repository>
   </distributionManagement>
-  
+
   <build>
    <plugins>
      <plugin>
@@ -64,7 +64,7 @@
         </dependencies>
 	  </plugin>
     </plugins>
-    
+
     <extensions>
       <extension>
         <groupId>org.jvnet.wagon-svn</groupId>
@@ -87,6 +87,6 @@
             <url>http://repo.jenkins-ci.org/public/</url>
         </pluginRepository>
     </pluginRepositories>
-</project>  
-  
+</project>
+
 
