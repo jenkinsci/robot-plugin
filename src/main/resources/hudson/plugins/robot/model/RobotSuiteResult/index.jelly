@@ -73,7 +73,7 @@ limitations under the License.
       <h2>Test Cases</h2>
       <table class="pane sortable">
         <tr>
-            <td class="pane-header" title="Sort by name">Name</td>
+            <td class="pane-header" title="Sort by test case name">Name</td>
             <td class="pane-header" title="Sort by criticality">Crit.</td>
             <td class="pane-header" title="Sort by status">Status</td>
             <td class="pane-header" title="Sort by duration">Duration <span style="font-size:0.8em">(diff)</span></td>
@@ -106,7 +106,7 @@ limitations under the License.
       <h2>Nested Test Suites</h2>
       <table class="pane sortable">
       <tr>
-        <td class="pane-header" title="Sort by name">Name</td>
+        <td class="pane-header" title="Sort by test suite name">Name</td>
         <td class="pane-header" title="Sort by failed test count">Failed tests <span style="font-size:0.8em">(diff)</span></td>
         <td class="pane-header" title="Sort by total test count">Total tests <span style="font-size:0.8em">(diff)</span></td>
         <td class="pane-header" title="Sort by duration">Duration<span style="font-size:0.8em">(diff)</span></td>

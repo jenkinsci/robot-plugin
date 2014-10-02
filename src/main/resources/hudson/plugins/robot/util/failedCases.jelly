@@ -8,10 +8,10 @@
         <h2>Failed Test Cases</h2>
         <table class="pane sortable">
             <tr>
-                <td class="pane-header" title="Sort by name">Name</td>
+                <td class="pane-header" title="Sort by test case name">Name</td>
                 <td class="pane-header" title="Sort by criticality">Crit.</td>
                 <td class="pane-header" title="Sort by duration">Duration (ms)</td>
-                <td class="pane-header" title="Sort by age">Age</td>
+                <td class="pane-header" title="Sort by number of failed builds">Age</td>
             </tr>
             <j:forEach var="case" items="${it.allFailedCases}">
                 <j:set var="fullName" value="${case.getRelativePackageName(it)}" />
