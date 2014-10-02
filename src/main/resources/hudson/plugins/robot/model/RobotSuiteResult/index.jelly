@@ -99,9 +99,10 @@ limitations under the License.
        </table>
        </j:if>
       <j:if test="${!it.allChildSuites.isEmpty()}">
-      <div style="float:left;">
+      <div>
+          <div style="margin-bottom=20px;">
           <u:failedCases />
-      </div>
+          </div>
       <h2>Nested Test Suites</h2>
       <table class="pane sortable">
       <tr>
@@ -120,7 +121,9 @@ limitations under the License.
          </tr>
       </j:forEach>
       </table>
+      </div>
       </j:if>
+
     </l:main-panel>
   </l:layout>
 </j:jelly>
