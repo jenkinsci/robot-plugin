@@ -73,10 +73,10 @@ limitations under the License.
       <h2>Test Cases</h2>
       <table class="pane sortable">
         <tr>
-            <td class="pane-header" title="Sort by test case name">Name</td>
-            <td class="pane-header" title="Sort by criticality">Crit.</td>
-            <td class="pane-header" title="Sort by status">Status</td>
-            <td class="pane-header" title="Sort by duration">Duration <span style="font-size:0.8em">(diff)</span></td>
+            <td class="pane-header" title="Test case name. Click to sort.">Name</td>
+            <td class="pane-header" style="text-align:center;" title="Criticality. Click to sort.">Crit.</td>
+            <td class="pane-header" style="text-align:center;" title="Status. Click to sort.">Status</td>
+            <td class="pane-header" title="Duration and difference to previous build. Click to sort.">Duration <span style="font-size:0.8em">(diff)</span></td>
         </tr>
         <j:forEach var="case" items="${it.caseResults}">
         <j:set var="prevcase" value="${case.previousResult}" />
@@ -91,8 +91,8 @@ limitations under the License.
 
         <tr>
          <td class="pane"><a href="${case.getRelativeId(it)}">${case.name}</a></td>
-         <td class="pane"><j:if test="${case.isCritical()}">yes</j:if><j:if test="${!case.isCritical()}">no</j:if></td>
-         <td class="pane ${status}"><j:if test="${case.isPassed()}">PASS</j:if><j:if test="${!case.isPassed()}">FAIL</j:if></td>
+         <td class="pane" style="text-align:center;"><j:if test="${case.isCritical()}">yes</j:if><j:if test="${!case.isCritical()}">no</j:if></td>
+         <td class="pane ${status}" style="text-align:center;"><j:if test="${case.isPassed()}">PASS</j:if><j:if test="${!case.isPassed()}">FAIL</j:if></td>
          <td class="pane">${case.humanReadableDuration}<span style="font-size:0.8em">(${case.getDurationDiff(prevcase)})</span></td>
         </tr>
         </j:forEach>
@@ -106,10 +106,10 @@ limitations under the License.
       <h2>Nested Test Suites</h2>
       <table class="pane sortable">
       <tr>
-        <td class="pane-header" title="Sort by test suite name">Name</td>
-        <td class="pane-header" title="Sort by failed test count">Failed tests <span style="font-size:0.8em">(diff)</span></td>
-        <td class="pane-header" title="Sort by total test count">Total tests <span style="font-size:0.8em">(diff)</span></td>
-        <td class="pane-header" title="Sort by duration">Duration<span style="font-size:0.8em">(diff)</span></td>
+        <td class="pane-header" title="Test suite name. Click to sort.">Name</td>
+        <td class="pane-header" title="Failed test count and difference to previous build. Click to sort.">Failed tests <span style="font-size:0.8em">(diff)</span></td>
+        <td class="pane-header" title="Total test count and difference to previous build. Click to sort.">Total tests <span style="font-size:0.8em">(diff)</span></td>
+        <td class="pane-header" title="Duration and difference to previous build. Click to sort.">Duration <span style="font-size:0.8em">(diff)</span></td>
       </tr>
       <j:forEach var="suite" items="${it.allChildSuites}">
       <j:set var="prevsuite" value="${suite.previousResult}" />

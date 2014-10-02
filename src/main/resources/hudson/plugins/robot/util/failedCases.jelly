@@ -8,10 +8,10 @@
         <h2>Failed Test Cases</h2>
         <table class="pane sortable">
             <tr>
-                <td class="pane-header" title="Sort by test case name">Name</td>
-                <td class="pane-header" title="Sort by criticality">Crit.</td>
-                <td class="pane-header" title="Sort by duration">Duration (ms)</td>
-                <td class="pane-header" title="Sort by number of failed builds">Age</td>
+                <td class="pane-header" title="Test case name. Click to sort.">Name</td>
+                <td class="pane-header" style="text-align:center !important;" title="Criticality. Click to sort.">Crit.</td>
+                <td class="pane-header" title="Duration. Click to sort.">Duration</td>
+                <td class="pane-header" style="text-align:center;" title="Number of failed builds. Click to sort.">Age</td>
             </tr>
             <j:forEach var="case" items="${it.allFailedCases}">
                 <j:set var="fullName" value="${case.getRelativePackageName(it)}" />
@@ -25,9 +25,9 @@
                             ${%Loading...}
                         </div>
                     </td>
-                    <td class="pane"><j:if test="${case.isCritical()}">yes</j:if><j:if test="${!case.isCritical()}">no</j:if></td>
+                    <td class="pane" style="text-align:center;"><j:if test="${case.isCritical()}">yes</j:if><j:if test="${!case.isCritical()}">no</j:if></td>
                     <td class="pane">${case.humanReadableDuration}</td>
-                    <td class="pane"><a href="${rootURL}/${case.failedSinceRun.url}">${case.age}</a></td>
+                    <td class="pane" style="text-align:center;"><a href="${rootURL}/${case.failedSinceRun.url}">${case.age}</a></td>
                 </tr>
             </j:forEach>
         </table>

@@ -77,10 +77,10 @@ limitations under the License.
       <h2>Test Suites</h2>
       <table class="pane sortable">
       <tr>
-        <td class="pane-header" title="Sort by test suite name">Name</td>
-        <td class="pane-header" title="Sort by total failed count">Failed tests <span style="font-size:0.8em">(diff)</span></td>
-        <td class="pane-header" title="Sort by total test count">Total tests <span style="font-size:0.8em">(diff)</span></td>
-        <td class="pane-header" title="Sort by duration">Duration ms <span style="font-size:0.8em">(diff)</span></td>
+        <td class="pane-header" title="Test suite name. Click to sort.">Name</td>
+        <td class="pane-header" title="Failed test count and difference to previous build. Click to sort.">Failed tests <span style="font-size:0.8em">(diff)</span></td>
+        <td class="pane-header" title="Total test count and difference to previous build. Click to sort.">Total tests <span style="font-size:0.8em">(diff)</span></td>
+        <td class="pane-header" title="Duration and difference to previous build. Click to sort.">Duration <span style="font-size:0.8em">(diff)</span></td>
       </tr>
       <j:forEach var="suite" items="${it.allSuites}">
       <j:set var="prevsuite" value="${suite.previousResult}" />
