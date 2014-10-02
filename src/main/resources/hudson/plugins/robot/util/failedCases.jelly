@@ -5,7 +5,7 @@
                 vertical-align: top;
             }
         </style>
-        <h2>All Failed Test Cases</h2>
+        <h2>Failed Test Cases</h2>
         <table class="pane sortable">
             <tr>
                 <td class="pane-header" title="Sort by name">Name</td>
@@ -17,10 +17,10 @@
                 <j:set var="fullName" value="${case.getRelativePackageName(it)}" />
                 <tr>
                     <td class="pane">
-                        <a id="${h.escape(fullName)}-showlink" href="#" onclick="showStackTrace('${h.jsStringEscape(h.escape(fullName))}','${case.getRelativeId(it)}/summary')">[+]</a>
-                        <a id="${h.escape(fullName)}-hidelink" style="display:none" href="#" onclick="hideStackTrace('${h.jsStringEscape(h.escape(fullName))}')">[-]</a>
+                        <a id="${h.escape(fullName)}-showlink" href="#!" onclick="showStackTrace('${h.jsStringEscape(h.escape(fullName))}','${h.jsStringEscape(case.getRelativeId(it))}/summary')">[+]</a>
+                        <a id="${h.escape(fullName)}-hidelink" style="display:none" href="#!" onclick="hideStackTrace('${h.jsStringEscape(h.escape(fullName))}')">[-]</a>
                         <st:nbsp/>
-                        <a href="${case.getRelativeId(it)}">${fullName}</a>
+                        <a href="${case.getRelativeId(it)}"><small>${case.getRelativeParent(it)}</small>${case.name}</a>
                         <div id="${h.escape(fullName)}" class="hidden" style="display:none">
                             ${%Loading...}
                         </div>

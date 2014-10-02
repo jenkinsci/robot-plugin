@@ -94,7 +94,15 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	 */
 	public String getRelativePackageName(RobotTestObject thisObject) {
 		StringBuilder sb = new StringBuilder(getName());
+		String parentPackage = getRelativeParent(thisObject);
+		if (! "".equals(parentPackage)) {
+			sb.insert(0, parentPackage);
+		}
+		return sb.toString();
+	}
 
+	public String getRelativeParent(RobotTestObject thisObject) {
+		StringBuilder sb = new StringBuilder();
 		RobotTestObject parent = getParent();
 		if(parent != null && !parent.equals(thisObject)){
 			String parentPackage = parent.getRelativePackageName(thisObject);

@@ -54,7 +54,7 @@ limitations under the License.
        <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
        <h3>Test Result Trend</h3>
         <a id="passfailgraph_hd" href="">
-          <img id="passfailgraph" src="" title="Show bigger image"/>
+          <img id="passfailgraph" src="" title="Show bigger image" width="500" height="200"/>
         </a><br/>
         <p style="float:left"><label><input type="checkbox" id="zoomToChanges" onclick="zoomToChanges('');"/>Zoom to changes</label></p>
         <p style="float:right"><a id="passfailgraph_hd_link" href="">Show bigger image</a></p>
@@ -63,16 +63,18 @@ limitations under the License.
        <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
          <h3>Duration Trend</h3>
           <a href="durationGraph?hd=true">
-            <img src="durationGraph" title="Show bigger image"/>
+            <img src="durationGraph" title="Show bigger image" width="500" height="200"/>
           </a><br/>
           <p style="float:right"><a href="durationGraph?hd=true">Show bigger image</a></p>
        </div>
        <div style="clear:both;"></div>
       </div>
       <div style="float:left;">
-          <u:failedCases />
+      <div style="margin-bottom=20px;">
+        <u:failedCases />
       </div>
-      <h2>All Test Suites</h2>
+
+      <h2>Test Suites</h2>
       <table class="pane sortable">
       <tr>
         <td class="pane-header" title="Sort by name">Name</td>
@@ -83,13 +85,14 @@ limitations under the License.
       <j:forEach var="suite" items="${it.allSuites}">
       <j:set var="prevsuite" value="${suite.previousResult}" />
          <tr>
-            <td class="pane"><a href="${suite.getRelativeId(it)}">${suite.getRelativePackageName(it)}</a></td>
+            <td class="pane"><a href="${suite.getRelativeId(it)}"><small>${suite.getRelativeParent(it)}</small>${suite.name}</a></td>
             <td class="pane">${suite.failed} <span style="font-size:0.8em">(${h.getDiffString(suite.failed - prevsuite.failed)})</span></td>
             <td class="pane">${suite.failed + suite.passed} <span style="font-size:0.8em">(${h.getDiffString((suite.failed + suite.passed) - (prevsuite.failed + prevsuite.passed))})</span></td>
             <td class="pane">${suite.humanReadableDuration} <span style="font-size:0.8em">(${suite.getDurationDiff(prevsuite)})</span></td>
          </tr>
       </j:forEach>
       </table>
+      </div>
     </l:main-panel>
   </l:layout>
 </j:jelly>
