@@ -1,5 +1,5 @@
 /*
-* Copyright 2008-2011 Nokia Siemens Networks Oyj
+* Copyright 2008-2014 Nokia Solutions and Networks Oy
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -24,10 +24,10 @@ import java.io.Serializable;
 public class RobotResultStatistics implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private long pass;
 	private long fail;
-	
+
 	//backwards compatibility with old builds
 	private transient String name;
 
@@ -46,7 +46,7 @@ public class RobotResultStatistics implements Serializable {
 	public void setFail(long fail) {
 		this.fail = fail;
 	}
-	
+
 	public long getTotal(){
 		return fail + pass;
 	}
