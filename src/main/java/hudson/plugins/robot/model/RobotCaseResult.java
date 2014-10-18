@@ -239,7 +239,7 @@ public class RobotCaseResult extends RobotTestObject{
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
 		Graph g = RobotGraphHelper.createDataSetForTestObject(this, false, true,
-				Boolean.valueOf(req.getParameter("hd")));
+				Boolean.valueOf(req.getParameter("hd")),false);
 		g.doPng(req, rsp);
 	}
 

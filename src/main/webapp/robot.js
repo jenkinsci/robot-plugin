@@ -1,20 +1,24 @@
 function initGraph(target) {
     var mode = getCookie("RobotResult_zoom", "true");
+    var failedOnly = getCookie("RobotResult_failedOnly", "true");
     document.getElementById("zoomToChanges").checked = (mode == "true");
-    setGraphSrc(target, mode);
+    document.getElementById("failedOnly").checked = (failedOnly == "true");
+    setGraphSrc(target, mode, failedOnly);
 }
 
-function setGraphSrc(target, mode) {
+function setGraphSrc(target, mode, failedOnly) {
     if (document.getElementById("passfailgraph_hd"))
-        document.getElementById("passfailgraph_hd").href =  target+"graph?hd=true&zoomSignificant="+mode;
-    document.getElementById("passfailgraph_hd_link").href =  target+"graph?hd=true&zoomSignificant="+mode;
-    document.getElementById("passfailgraph").src =  target+"graph?zoomSignificant="+mode;
+        document.getElementById("passfailgraph_hd").href =  target+"graph?hd=true&zoomSignificant="+mode+"&failedOnly="+failedOnly;
+    document.getElementById("passfailgraph_hd_link").href =  target+"graph?hd=true&zoomSignificant="+mode+"&failedOnly="+failedOnly;
+    document.getElementById("passfailgraph").src =  target+"graph?zoomSignificant="+mode+"&failedOnly="+failedOnly;
 }
 
 function zoomToChanges(target) {
     var mode = Boolean(document.getElementById('zoomToChanges').checked).toString();
+    var failedOnly = Boolean(document.getElementById('failedOnly').checked).toString();
     setCookie("RobotResult_zoom",mode, 365);
-    setGraphSrc(target, mode);
+    setCookie("RobotResult_failedOnly",failedOnly, 365);
+    setGraphSrc(target, mode,failedOnly);
 }
 
 function setCookie(c_name,value,exdays) {

@@ -96,7 +96,8 @@ public class RobotProjectAction  implements Action {
 		AbstractBuild<?,?> lastBuild = getLastBuildWithRobot();
 		rsp.sendRedirect2("../" + lastBuild.getNumber() + "/" + getUrlName()
 				+ "/graph?zoomSignificant="+Boolean.valueOf(req.getParameter("zoomSignificant"))
-				+ "&hd="+Boolean.valueOf(req.getParameter("hd")));
+				+ "&hd="+Boolean.valueOf(req.getParameter("hd"))
+				+ "&failedOnly="+Boolean.valueOf(req.getParameter("failedOnly")));
 	}
 
 	/**

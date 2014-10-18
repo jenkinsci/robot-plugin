@@ -40,9 +40,10 @@ public class RobotGraphHelper {
 	 * Create a test result trend graph. The graph will ignore builds with no robot results.
 	 * @param rootObject The dataset will be taken from rootObject backwards.
 	 * (i.e. there are no saved robot results in a given build)
+	 * @param failedOnly put test failures onto the graph only, to allow focus on test failures
 	 * @return
 	 */
-	public static Graph createDataSetForTestObject(RobotTestObject rootObject, boolean significantData, boolean binarydata, boolean hd) {
+	public static Graph createDataSetForTestObject(RobotTestObject rootObject, boolean significantData, boolean binarydata, boolean hd, boolean failedOnly) {
 		List<Number> values = new ArrayList<Number>();
 		List<String> rows = new ArrayList<String>();
 		List<NumberOnlyBuildLabel> columns = new ArrayList<NumberOnlyBuildLabel>();
@@ -51,7 +52,10 @@ public class RobotGraphHelper {
 		double upperbound = 0;
 		for (RobotTestObject testObject = rootObject; testObject != null; testObject = testObject.getPreviousResult()) {
 			Number failed = testObject.getFailed();
-			Number passed = testObject.getPassed();
+			Number passed = 0;
+			if (! failedOnly) {
+			    passed = testObject.getPassed();
+			}
 
 			if (significantData){
 				if(lowerbound == 0 || lowerbound > passed.intValue())
