@@ -47,7 +47,7 @@ import org.kohsuke.stapler.StaplerResponse;
 
 import com.thoughtworks.xstream.XStream;
 
-public class RobotBuildAction extends AbstractTestResultAction implements StaplerProxy {
+public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction> implements StaplerProxy {
 
     private static final Logger logger = Logger.getLogger(RobotBuildAction.class.getName());
     private static final XStream XSTREAM = new XStream2();
@@ -247,7 +247,8 @@ public class RobotBuildAction extends AbstractTestResultAction implements Staple
 
 		Graph g = RobotGraphHelper.createDataSetForTestObject(getResult(),
 				Boolean.valueOf(req.getParameter("zoomSignificant")), false,
-				Boolean.valueOf(req.getParameter("hd")));
+				Boolean.valueOf(req.getParameter("hd")),
+				Boolean.valueOf(req.getParameter("failedOnly")));
 		g.doPng(req, rsp);
 	}
 
