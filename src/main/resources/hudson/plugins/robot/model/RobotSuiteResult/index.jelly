@@ -58,6 +58,7 @@ limitations under the License.
         </a><br/>
         <p style="float:left"><label><input type="checkbox" id="zoomToChanges" onclick="redrawGraph('');"/>Zoom to changes</label></p>
         <p style="float:left"><label><input type="checkbox" id="failedOnly" onclick="redrawGraph('');"/>Show failed tests only</label></p>
+
         <p style="float:right"><a id="passfailgraph_hd_link" href="">Show bigger image</a></p>
        </div>
        <script>initGraph('');</script>
