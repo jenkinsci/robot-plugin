@@ -2,7 +2,7 @@ function initGraph(target) {
     var mode = getCookie("RobotResult_zoom", "true");
     var failedOnly = getCookie("RobotResult_failedOnly", "false");
     document.getElementById("zoomToChanges").checked = (mode == "true");
-    document.getElementById("failedOnly").checked = (failedOnly == "true);
+    document.getElementById("failedOnly").checked = (failedOnly == "true");
     setGraphSrc(target, mode, failedOnly);
 }
 
