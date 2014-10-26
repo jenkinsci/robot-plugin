@@ -244,7 +244,8 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 		if(!isNeedToGenerate(req, rsp)) return;
 		Graph g = RobotGraphHelper.createDataSetForTestObject(this,
 				Boolean.valueOf(req.getParameter("zoomSignificant")),
-				false, Boolean.valueOf(req.getParameter("hd")));
+				false, Boolean.valueOf(req.getParameter("hd")),
+				Boolean.valueOf(req.getParameter("failedOnly")));
 		g.doPng(req, rsp);
 	}
 
