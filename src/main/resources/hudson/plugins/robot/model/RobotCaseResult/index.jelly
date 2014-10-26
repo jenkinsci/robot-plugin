@@ -42,7 +42,7 @@ limitations under the License.
       </tbody>
       </table>
       <div style="margin-top:20px; float: left;">
-      <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
+      <div class="passfail">
              <h3>Test Result Trend</h3>
              <a href="graph?hd=true">
                 <img src="graph" title="Show bigger image" width="500" height="200"/>

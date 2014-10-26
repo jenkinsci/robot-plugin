@@ -12,6 +12,17 @@ table.summary th {
 table.summary td {
     font-size:120%;
 }
+div.passfail {
+    float:left;
+    margin: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align:left;
+}
+div.passfail p {
+    float:left;
+    padding-right: 20px;
+}
 .PASS {
     color: #0c0;
 }
