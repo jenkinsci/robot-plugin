@@ -34,7 +34,7 @@ limitations under the License.
       <tr><th>Duration:</th><td>${it.humanReadableDuration} (${it.getDurationDiff(prevcase)})</td></tr>
       <tr><th>Status:</th><td><span class="${status}">${status}</span> (<j:if test="${!it.critical}">non-</j:if>critical)</td></tr>
       <j:if test="${!it.isPassed()}">
-        <tr><th>Message:</th><td>${it.errorMsg}</td></tr>
+        <tr><th>Message:</th><td class="error-message">${it.errorMsg}</td></tr>
       </j:if>
       <j:if test="${it.hasLog}">
         <tr><th>Log File:</th><td><a href="${rootURL}/${it.parentAction.owner.url}${it.parentAction.urlName}/report/${it.logFile}#${it.id}">${it.logFile}</a></td></tr>
