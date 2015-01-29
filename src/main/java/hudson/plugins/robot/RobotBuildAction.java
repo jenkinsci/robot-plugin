@@ -33,7 +33,7 @@ import hudson.util.XStream2;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,7 +52,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
     private static final Logger logger = Logger.getLogger(RobotBuildAction.class.getName());
     private static final XStream XSTREAM = new XStream2();
 
-	private transient WeakReference<RobotResult> resultReference;
+	private transient SoftReference<RobotResult> resultReference;
 	private transient String reportFileName;
 	private String outputPath;
 	private String logFileLink;
@@ -117,7 +117,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
             e.printStackTrace(listener.fatalError("Failed to save the Robot test result"));
         }
 
-        this.resultReference = new WeakReference<RobotResult>(result);
+        this.resultReference = new SoftReference<RobotResult>(result);
     }
 
     private XmlFile getDataFile() {
@@ -132,14 +132,14 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
         if(result != null) return result;
         if(resultReference == null) {
             returnable = load();
-            resultReference = new WeakReference<RobotResult>(returnable);
+            resultReference = new SoftReference<RobotResult>(returnable);
         } else {
             returnable = resultReference.get();
         }
 
         if(returnable == null) {
             returnable = load();
-            resultReference = new WeakReference<RobotResult>(returnable);
+            resultReference = new SoftReference<RobotResult>(returnable);
         }
         return returnable;
     }
