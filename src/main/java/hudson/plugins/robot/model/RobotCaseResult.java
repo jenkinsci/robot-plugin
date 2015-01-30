@@ -239,7 +239,7 @@ public class RobotCaseResult extends RobotTestObject{
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
 		Graph g = RobotGraphHelper.createDataSetForTestObject(this, false, true,
-				Boolean.valueOf(req.getParameter("hd")),false);
+				Boolean.valueOf(req.getParameter("hd")),false, false);
 		g.doPng(req, rsp);
 	}
 
@@ -252,6 +252,18 @@ public class RobotCaseResult extends RobotTestObject{
 	@Override
 	public int getPassed() {
 		if(isPassed()) return 1;
+		return 0;
+	}
+
+	@Override
+	public long getCriticalFailed() {
+		if(isPassed() && isCritical()) return 0;
+		return 1;
+	}
+
+	@Override
+	public long getCriticalPassed() {
+		if(isPassed() && isCritical()) return 1;
 		return 0;
 	}
 }

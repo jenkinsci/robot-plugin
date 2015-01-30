@@ -49,8 +49,8 @@ import com.thoughtworks.xstream.XStream;
 
 public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction> implements StaplerProxy {
 
-    private static final Logger logger = Logger.getLogger(RobotBuildAction.class.getName());
-    private static final XStream XSTREAM = new XStream2();
+	private static final Logger logger = Logger.getLogger(RobotBuildAction.class.getName());
+	private static final XStream XSTREAM = new XStream2();
 
 	private transient SoftReference<RobotResult> resultReference;
 	private transient String reportFileName;
@@ -60,12 +60,12 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	private AbstractBuild<?, ?> build;
 	private RobotResult result;
 
-    static {
-        XSTREAM.alias("result",RobotResult.class);
-        XSTREAM.alias("suite",RobotSuiteResult.class);
-        XSTREAM.alias("case",RobotCaseResult.class);
-        XSTREAM.registerConverter(new HeapSpaceStringConverter(),100);
-    }
+	static {
+		XSTREAM.alias("result",RobotResult.class);
+		XSTREAM.alias("suite",RobotSuiteResult.class);
+		XSTREAM.alias("case",RobotCaseResult.class);
+		XSTREAM.registerConverter(new HeapSpaceStringConverter(),100);
+	}
 
 
 	/**
@@ -106,58 +106,58 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		return logHtmlLink;
 	}
 
-    /**
-     * Loads new data to {@link RobotResult}.
-     */
-    public synchronized void setResult(RobotResult result, BuildListener listener) {
-      result.tally(this);
-        try {
-            getDataFile().write(result);
-        } catch (IOException e) {
-            e.printStackTrace(listener.fatalError("Failed to save the Robot test result"));
-        }
+	/**
+	 * Loads new data to {@link RobotResult}.
+	 */
+	public synchronized void setResult(RobotResult result, BuildListener listener) {
+	  result.tally(this);
+		try {
+			getDataFile().write(result);
+		} catch (IOException e) {
+			e.printStackTrace(listener.fatalError("Failed to save the Robot test result"));
+		}
 
-        this.resultReference = new SoftReference<RobotResult>(result);
-    }
+		this.resultReference = new SoftReference<RobotResult>(result);
+	}
 
-    private XmlFile getDataFile() {
-       return new XmlFile(XSTREAM, new File(getOwner().getRootDir(), "robot_results.xml"));
-    }
+	private XmlFile getDataFile() {
+	   return new XmlFile(XSTREAM, new File(getOwner().getRootDir(), "robot_results.xml"));
+	}
 
-    /**
-     * Returns Robotresult. If not in memory loads it from disk.
-     */
-    public synchronized RobotResult getResult() {
-        RobotResult returnable;
-        if(result != null) return result;
-        if(resultReference == null) {
-            returnable = load();
-            resultReference = new SoftReference<RobotResult>(returnable);
-        } else {
-            returnable = resultReference.get();
-        }
+	/**
+	 * Returns Robotresult. If not in memory loads it from disk.
+	 */
+	public synchronized RobotResult getResult() {
+		RobotResult returnable;
+		if(result != null) return result;
+		if(resultReference == null) {
+			returnable = load();
+			resultReference = new SoftReference<RobotResult>(returnable);
+		} else {
+			returnable = resultReference.get();
+		}
 
-        if(returnable == null) {
-            returnable = load();
-            resultReference = new SoftReference<RobotResult>(returnable);
-        }
-        return returnable;
-    }
+		if(returnable == null) {
+			returnable = load();
+			resultReference = new SoftReference<RobotResult>(returnable);
+		}
+		return returnable;
+	}
 
-    /**
-     * Loads a {@link RobotResult} from disk.
-     */
-    private RobotResult load() {
-        RobotResult loadedResult = null;
-        try {
-            loadedResult = (RobotResult)getDataFile().read();
-        } catch (IOException e) {
-            logger.log(Level.WARNING, "Couldn't load " + getDataFile(),e);
-            return null;
-        }
-        loadedResult.tally(this);
-        return loadedResult;
-    }
+	/**
+	 * Loads a {@link RobotResult} from disk.
+	 */
+	private RobotResult load() {
+		RobotResult loadedResult = null;
+		try {
+			loadedResult = (RobotResult)getDataFile().read();
+		} catch (IOException e) {
+			logger.log(Level.WARNING, "Couldn't load " + getDataFile(),e);
+			return null;
+		}
+		loadedResult.tally(this);
+		return loadedResult;
+	}
 
 	/**
 	 * Get file name for Robot html report.
@@ -248,7 +248,8 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		Graph g = RobotGraphHelper.createDataSetForTestObject(getResult(),
 				Boolean.valueOf(req.getParameter("zoomSignificant")), false,
 				Boolean.valueOf(req.getParameter("hd")),
-				Boolean.valueOf(req.getParameter("failedOnly")));
+				Boolean.valueOf(req.getParameter("failedOnly")),
+				Boolean.valueOf(req.getParameter("criticalOnly")));
 		g.doPng(req, rsp);
 	}
 

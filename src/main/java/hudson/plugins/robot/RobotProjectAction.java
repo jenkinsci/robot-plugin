@@ -66,11 +66,11 @@ public class RobotProjectAction  implements Action {
 	public Action getLastBuildAction(){
 		AbstractBuild<?, ?> lastBuild = getLastBuildWithRobot();
 		if(lastBuild != null){
-            RobotBuildAction action = (RobotBuildAction)lastBuild.getAction(RobotBuildAction.class);
-            if (action == null)
-                return lastBuild.getAction(AggregatedRobotAction.class);
-            return action;
-        }
+			RobotBuildAction action = (RobotBuildAction)lastBuild.getAction(RobotBuildAction.class);
+			if (action == null)
+				return lastBuild.getAction(AggregatedRobotAction.class);
+			return action;
+		}
 		else return null;
 	}
 
@@ -95,9 +95,10 @@ public class RobotProjectAction  implements Action {
 
 		AbstractBuild<?,?> lastBuild = getLastBuildWithRobot();
 		rsp.sendRedirect2("../" + lastBuild.getNumber() + "/" + getUrlName()
-				+ "/graph?zoomSignificant="+Boolean.valueOf(req.getParameter("zoomSignificant"))
-				+ "&hd="+Boolean.valueOf(req.getParameter("hd"))
-				+ "&failedOnly="+Boolean.valueOf(req.getParameter("failedOnly")));
+			+ "/graph?zoomSignificant="+Boolean.valueOf(req.getParameter("zoomSignificant"))
+			+ "&hd="+Boolean.valueOf(req.getParameter("hd"))
+			+ "&failedOnly="+Boolean.valueOf(req.getParameter("failedOnly"))
+			+ "&criticalOnly="+Boolean.valueOf(req.getParameter("criticalOnly")));
 	}
 
 	/**

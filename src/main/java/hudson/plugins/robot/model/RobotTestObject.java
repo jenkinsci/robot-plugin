@@ -233,6 +233,10 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 
 	public abstract int getPassed();
 
+	public abstract long getCriticalPassed();
+
+	public abstract long getCriticalFailed();
+
 	/**
 	 * Return robot trend graph in the request.
 	 * @param req
@@ -245,7 +249,8 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 		Graph g = RobotGraphHelper.createDataSetForTestObject(this,
 				Boolean.valueOf(req.getParameter("zoomSignificant")),
 				false, Boolean.valueOf(req.getParameter("hd")),
-				Boolean.valueOf(req.getParameter("failedOnly")));
+				Boolean.valueOf(req.getParameter("failedOnly")),
+				Boolean.valueOf(req.getParameter("criticalOnly")));
 		g.doPng(req, rsp);
 	}
 

@@ -142,7 +142,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * Get number of passed critical tests
 	 * @return
 	 */
-	public int getCriticalPassed() {
+	public long getCriticalPassed() {
 		return criticalPassed;
 	}
 
@@ -150,7 +150,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * Get number of failed critical tests
 	 * @return
 	 */
-	public int getCriticalFailed() {
+	public long getCriticalFailed() {
 		return criticalFailed;
 	}
 

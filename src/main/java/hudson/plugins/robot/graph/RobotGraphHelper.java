@@ -43,7 +43,12 @@ public class RobotGraphHelper {
 	 * @param failedOnly put test failures onto the graph only, to allow focus on test failures
 	 * @return
 	 */
-	public static Graph createDataSetForTestObject(RobotTestObject rootObject, boolean significantData, boolean binarydata, boolean hd, boolean failedOnly) {
+	public static Graph createDataSetForTestObject(RobotTestObject rootObject,
+												   boolean significantData,
+												   boolean binarydata,
+												   boolean hd,
+												   boolean failedOnly,
+												   boolean criticalOnly) {
 		List<Number> values = new ArrayList<Number>();
 		List<String> rows = new ArrayList<String>();
 		List<NumberOnlyBuildLabel> columns = new ArrayList<NumberOnlyBuildLabel>();
@@ -51,13 +56,13 @@ public class RobotGraphHelper {
 		double lowerbound = 0;
 		double upperbound = 0;
 		for (RobotTestObject testObject = rootObject; testObject != null; testObject = testObject.getPreviousResult()) {
-			Number failed = testObject.getFailed();
+			Number failed =  !criticalOnly ? testObject.getFailed() : testObject.getCriticalFailed();
 			Number passed = 0;
 			int compareLowerBoundTo;
 			if ( failedOnly) {
 			    compareLowerBoundTo = failed.intValue();
 			} else {
-			    passed = testObject.getPassed();
+			    passed = !criticalOnly ? testObject.getPassed() : testObject.getCriticalPassed();
 			    compareLowerBoundTo = passed.intValue();
 			}
 

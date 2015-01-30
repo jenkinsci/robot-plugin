@@ -96,7 +96,8 @@ public class AggregatedRobotAction implements Action {
 		Graph g = RobotGraphHelper.createDataSetForTestObject(getResult(),
 				Boolean.valueOf(req.getParameter("zoomSignificant")),
 				false, Boolean.valueOf(req.getParameter("hd")),
-				Boolean.valueOf(req.getParameter("failedOnly")));
+				Boolean.valueOf(req.getParameter("failedOnly")),
+				Boolean.valueOf(req.getParameter("criticalOnly")));
 		g.doPng(req, rsp);
 	}
 
