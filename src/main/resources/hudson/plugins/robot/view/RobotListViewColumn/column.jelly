@@ -22,9 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+  <j:if test="${it.isRobotResultsColumnEnabled()}">
       <td style="white-space:nowrap;">
       <j:if test="${it.getTotal(job) != 0}">
           ${it.getPass(job)} / ${it.getTotal(job)} passed <img src="${rootURL}/plugin/robot/robot.png" />
       </j:if>
       </td>
+  </j:if>
 </j:jelly>
