@@ -16,7 +16,7 @@ limitations under the License.
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
   <l:layout>
   <st:include it="${it.parentAction.owner}" page="sidepanel.jelly"/>
-  <st:include page="/hudson/plugins/robot/robotcss.jelly" />
+  <st:include page="robotcss.jelly" />
     <l:main-panel>
       <j:choose>
         <j:when test="${it.isPassed()}">

@@ -15,8 +15,8 @@ limitations under the License.
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:local="local">
     <script src="${rootURL}/plugin/robot/robot.js"/>
+    <st:include class="hudson.plugins.robot.model.RobotTestObject" page="robotcss.jelly" />
     <j:if test="${from.isDisplayGraph()}">
-    <st:include page="/hudson/plugins/robot/robotcss.jelly" />
     <div align="right">
         <div class="test-trend-caption">${%trend.graph.header}</div>
         <div class="passfail">

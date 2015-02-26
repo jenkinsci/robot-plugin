@@ -28,7 +28,7 @@ import javax.servlet.ServletException;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
-public class RobotProjectAction  implements Action {
+public class RobotProjectAction implements Action {
 
 	private AbstractProject<?, ?> project;
 

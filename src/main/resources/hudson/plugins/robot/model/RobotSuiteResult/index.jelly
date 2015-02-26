@@ -18,7 +18,7 @@ limitations under the License.
   <st:include it="${it.owner}" page="sidepanel.jelly"/>
     <l:main-panel>
     <script src="${rootURL}/plugin/robot/robot.js"/>
-    <st:include page="/hudson/plugins/robot/robotcss.jelly" />
+    <st:include page="robotcss.jelly" />
     <j:choose>
       <j:when test="${it.failed > 0}">
           <j:set var="total_status" value="FAIL" />
