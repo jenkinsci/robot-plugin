@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.stream.Location;
@@ -190,19 +191,20 @@ public class RobotParser {
 			}
 		}
 
-		private void ignoreUntilStarts(XMLStreamReader reader, String element) throws XMLStreamException {
+		private String ignoreUntilStarts(XMLStreamReader reader, String... elements) throws XMLStreamException {
 			List<String> elementStack = new ArrayList<String>();
 			while(reader.hasNext()) {
 				reader.next();
 				if (reader.isStartElement()) {
-					if (elementStack.isEmpty() && reader.getLocalName().equals(element)) {
-						return;
+					String elem = reader.getLocalName();
+					if (elementStack.isEmpty() && isNameInElements(elem, elements)) {
+						return elem;
 					} else {
 						elementStack.add(reader.getLocalName());
 					}
 				} else if (reader.isEndElement()) {
 					if (elementStack.isEmpty()) {
-						throw xmlException("Could not find element "+element, reader);
+						throw xmlException("Could not find elements "+ Arrays.toString(elements), reader);
 					}
 					if (!elementStack.get(elementStack.size()-1).equals(reader.getLocalName())) {
 						throw xmlException("Illegal xml input. End element "+
@@ -213,7 +215,15 @@ public class RobotParser {
 					elementStack.remove(elementStack.size()-1);
 				}
 			}
-			throw xmlException("Could not find element "+element, reader);
+			throw xmlException("Could not find elements "+Arrays.toString(elements), reader);
+		}
+
+		private boolean isNameInElements(String name, String[] elements) {
+			for (String element: elements) {
+				if (name.equals(element))
+						return true;
+			}
+			return false;
 		}
 
 		private void ignoreUntilEnds(XMLStreamReader reader, String element) throws XMLStreamException {
@@ -252,10 +262,14 @@ public class RobotParser {
 			setCriticalityIfAvailable(reader, caseResult);
 			caseResult.setId(reader.getAttributeValue(null, "id"));
 			//parse test tags
-			ignoreUntilStarts(reader, "tags");
-			caseResult.addTags(processTags(reader));
+			String tag = ignoreUntilStarts(reader, "tags", "status");
+			if (tag == "tags") {
+				caseResult.addTags(processTags(reader));
+				ignoreUntilStarts(reader, "status");
+			} else {
+				caseResult.addTags(new ArrayList<String>());
+			}
 			//parse test details from nested status
-			ignoreUntilStarts(reader, "status");
 			caseResult.setPassed("PASS".equals(reader.getAttributeValue(null, "status")));
 			caseResult.setStarttime(reader.getAttributeValue(null, "starttime"));
 			caseResult.setEndtime(reader.getAttributeValue(null, "endtime"));
@@ -308,6 +322,4 @@ public class RobotParser {
 			}
 		}
 	}
-
-
 }
