@@ -2,27 +2,36 @@ function initGraph(target) {
     var mode = getCookie("RobotResult_zoom", "true");
     var failedOnly = getCookie("RobotResult_failedOnly", "false");
     var criticalOnly = getCookie("RobotResult_criticalOnly", "false");
+    var maxBuildsToShow = getCookie("RobotResult_maxBuildsToShow", 0);
     document.getElementById("zoomToChanges").checked = (mode == "true");
     document.getElementById("failedOnly").checked = (failedOnly == "true");
     document.getElementById("criticalOnly").checked = (criticalOnly == "true");
-    setGraphSrc(target, mode, failedOnly, criticalOnly);
+    document.getElementById("maxBuildsToShow").value = maxBuildsToShow;
+    setGraphSrc(target, mode, failedOnly, criticalOnly, maxBuildsToShow);
 }
 
-function setGraphSrc(target, mode, failedOnly, criticalOnly) {
+function setGraphSrc(target, mode, failedOnly, criticalOnly, maxBuildsToShow) {
+    var href = target + "graph?" +
+               "zoomSignificant=" + mode +
+               "&failedOnly=" + failedOnly +
+               "&criticalOnly=" + criticalOnly +
+               "&maxBuildsToShow=" + maxBuildsToShow;
     if (document.getElementById("passfailgraph_hd"))
-        document.getElementById("passfailgraph_hd").href =  target+"graph?hd=true&zoomSignificant="+mode+"&failedOnly="+failedOnly+"&criticalOnly="+criticalOnly;
-    document.getElementById("passfailgraph_hd_link").href =  target+"graph?hd=true&zoomSignificant="+mode+"&failedOnly="+failedOnly+"&criticalOnly="+criticalOnly;
-    document.getElementById("passfailgraph").src =  target+"graph?zoomSignificant="+mode+"&failedOnly="+failedOnly+"&criticalOnly="+criticalOnly;
+        document.getElementById("passfailgraph_hd").href = href + "&hd=true";
+    document.getElementById("passfailgraph_hd_link").href = href + "&hd=true";
+    document.getElementById("passfailgraph").src = href;
 }
 
 function redrawGraph(target) {
     var mode = Boolean(document.getElementById('zoomToChanges').checked).toString();
     var failedOnly = Boolean(document.getElementById('failedOnly').checked).toString();
     var criticalOnly = Boolean(document.getElementById('criticalOnly').checked).toString();
+    var maxBuildsToShow = document.getElementById('maxBuildsToShow').value;
     setCookie("RobotResult_zoom",mode, 365);
     setCookie("RobotResult_failedOnly",failedOnly, 365);
     setCookie("RobotResult_criticalOnly",criticalOnly, 365);
-    setGraphSrc(target, mode, failedOnly, criticalOnly);
+    setCookie("RobotResult_maxBuildsToShow",maxBuildsToShow, 365);
+    setGraphSrc(target, mode, failedOnly, criticalOnly, maxBuildsToShow);
 }
 
 function setCookie(c_name,value,exdays) {

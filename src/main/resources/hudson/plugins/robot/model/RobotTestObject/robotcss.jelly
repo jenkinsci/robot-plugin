@@ -59,5 +59,9 @@ table.listsummary th, table.listsummary td {
     border: 1px solid black;
     border-radius: 2px;
 }
+#maxBuildsToShow {
+    text-align:right;
+    width: 5em;
+}
 </style>
 </j:jelly>

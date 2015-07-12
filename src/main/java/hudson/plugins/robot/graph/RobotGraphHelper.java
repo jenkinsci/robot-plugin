@@ -41,6 +41,8 @@ public class RobotGraphHelper {
 	 * @param rootObject The dataset will be taken from rootObject backwards.
 	 * (i.e. there are no saved robot results in a given build)
 	 * @param failedOnly put test failures onto the graph only, to allow focus on test failures
+	 * @param maxBuildsToShow This maximum number of build result will be displayed on a graph
+	 *                        0 - no limits applied.
 	 * @return
 	 */
 	public static Graph createDataSetForTestObject(RobotTestObject rootObject,
@@ -48,14 +50,19 @@ public class RobotGraphHelper {
 												   boolean binarydata,
 												   boolean hd,
 												   boolean failedOnly,
-												   boolean criticalOnly) {
+												   boolean criticalOnly,
+												   int maxBuildsToShow) {
 		List<Number> values = new ArrayList<Number>();
 		List<String> rows = new ArrayList<String>();
 		List<NumberOnlyBuildLabel> columns = new ArrayList<NumberOnlyBuildLabel>();
 
 		double lowerbound = 0;
 		double upperbound = 0;
-		for (RobotTestObject testObject = rootObject; testObject != null; testObject = testObject.getPreviousResult()) {
+		int buildsLeftToShow = maxBuildsToShow > 0? maxBuildsToShow: -1;
+		for (RobotTestObject testObject = rootObject;
+			 testObject != null && buildsLeftToShow != 0;
+			 testObject = testObject.getPreviousResult(), buildsLeftToShow--)
+		{
 			Number failed =  !criticalOnly ? testObject.getFailed() : testObject.getCriticalFailed();
 			Number passed = 0;
 			int compareLowerBoundTo;

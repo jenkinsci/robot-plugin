@@ -22,8 +22,8 @@ limitations under the License.
                 <div style="border: 1px solid gray; margin-bottom: 20px; padding: 10px" >
                 <h2>Configuration: ${run.parent.displayName}</h2>
                 <div style="float:right">
-                <a href="${run.project.absoluteUrl}${run.number}/robot"><img title="Browse results" src="${run.project.absoluteUrl}${run.number}/robot/graph?zoomSignificant=true&amp;failedOnly=false&amp;criticalOnly=false" width="500" height="200"/></a><br/>
-                <p style="float:right"><a href="graph?hd=true&amp;zoomSignificant=true&amp;failedOnly=false&amp;criticalOnly=false">Show bigger image</a></p>
+                <a href="${run.project.absoluteUrl}${run.number}/robot"><img title="Browse results" src="${run.project.absoluteUrl}${run.number}/robot/graph?zoomSignificant=true&amp;failedOnly=false&amp;criticalOnly=false&amp;maxBuildsToShow=0" width="500" height="200"/></a><br/>
+                <p style="float:right"><a href="graph?hd=true&amp;zoomSignificant=true&amp;failedOnly=false&amp;criticalOnly=false&amp;maxBuildsToShow=0">Show bigger image</a></p>
                 </div>
                 <u:robotsummary action="${it.getChildBuildAction(run)}"/>
                 <div style="clear: both" />
