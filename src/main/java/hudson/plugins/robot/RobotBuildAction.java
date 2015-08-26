@@ -245,7 +245,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		if (req.checkIfModified(t, rsp))
 			return;
 
-		Graph g = RobotGraphHelper.createDataSetForTestObject(getResult(),
+		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(getResult(),
 				Boolean.valueOf(req.getParameter("zoomSignificant")), false,
 				Boolean.valueOf(req.getParameter("hd")),
 				Boolean.valueOf(req.getParameter("failedOnly")),

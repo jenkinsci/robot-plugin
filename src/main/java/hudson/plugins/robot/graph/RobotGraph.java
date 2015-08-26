@@ -89,6 +89,10 @@ public class RobotGraph extends Graph {
 		this.fontSize = fontSize;
 	}
 
+	public CategoryDataset getDataset(){
+		return categoryDataset;
+	}
+
 	/**
 	 * Creates a Robot trend graph
 	 * @return the JFreeChart graph object

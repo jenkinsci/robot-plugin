@@ -45,13 +45,13 @@ public class RobotGraphHelper {
 	 *                        0 - no limits applied.
 	 * @return
 	 */
-	public static Graph createDataSetForTestObject(RobotTestObject rootObject,
-												   boolean significantData,
-												   boolean binarydata,
-												   boolean hd,
-												   boolean failedOnly,
-												   boolean criticalOnly,
-												   int maxBuildsToShow) {
+	public static RobotGraph createTestResultsGraphForTestObject(RobotTestObject rootObject,
+																 boolean significantData,
+																 boolean binarydata,
+																 boolean hd,
+																 boolean failedOnly,
+																 boolean criticalOnly,
+																 int maxBuildsToShow) {
 		List<Number> values = new ArrayList<Number>();
 		List<String> rows = new ArrayList<String>();
 		List<NumberOnlyBuildLabel> columns = new ArrayList<NumberOnlyBuildLabel>();
@@ -107,7 +107,7 @@ public class RobotGraphHelper {
 	 * @param rootObject rootObject The dataset will be taken from rootObject backwards.
 	 * @return
 	 */
-	public static Graph createDurationGraphForTestObject(RobotTestObject rootObject, boolean hd) {
+	public static RobotGraph createDurationGraphForTestObject(RobotTestObject rootObject, boolean hd) {
 		DataSetBuilder<String, NumberOnlyBuildLabel> builder = new DataSetBuilder<String, NumberOnlyBuildLabel>();
 
 		int scale = 1;

@@ -246,7 +246,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
-		Graph g = RobotGraphHelper.createDataSetForTestObject(this,
+		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(this,
 				Boolean.valueOf(req.getParameter("zoomSignificant")),
 				false, Boolean.valueOf(req.getParameter("hd")),
 				Boolean.valueOf(req.getParameter("failedOnly")),
