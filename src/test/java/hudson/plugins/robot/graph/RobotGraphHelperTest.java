@@ -28,56 +28,56 @@ import static org.mockito.Mockito.*;
 
 public class RobotGraphHelperTest extends TestCase {
 
-    private RobotResult mockResult1;
-    private RobotResult mockResult2;
+	private RobotResult mockResult1;
+	private RobotResult mockResult2;
 
-    protected void setUp() throws Exception {
-        super.setUp();
+	protected void setUp() throws Exception {
+		super.setUp();
 
-        RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("output.xml", null, null);
-        RobotResult result = remoteOperation.invoke(new File(new RobotGraphHelperTest().getClass().getResource("output.xml").toURI()).getParentFile(), null);
-        result.tally(null);
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("output.xml", null, null);
+		RobotResult result = remoteOperation.invoke(new File(new RobotGraphHelperTest().getClass().getResource("output.xml").toURI()).getParentFile(), null);
+		result.tally(null);
 
-        // Mocked builds to play as owners of test results
-        FreeStyleBuild mockBuild1 = mock(FreeStyleBuild.class);
-        FreeStyleBuild mockBuild2 = mock(FreeStyleBuild.class);
-        when(mockBuild2.compareTo(mockBuild1)).thenReturn(1);
-        when(mockBuild1.compareTo(mockBuild2)).thenReturn(-1);
+		// Mocked builds to play as owners of test results
+		FreeStyleBuild mockBuild1 = mock(FreeStyleBuild.class);
+		FreeStyleBuild mockBuild2 = mock(FreeStyleBuild.class);
+		when(mockBuild2.compareTo(mockBuild1)).thenReturn(1);
+		when(mockBuild1.compareTo(mockBuild2)).thenReturn(-1);
 
-        // This is to pass hudson.util.Graph constructor
-        GregorianCalendar c = new GregorianCalendar();
-        c.setTimeInMillis(0L);
-        when(mockBuild1.getTimestamp()).thenReturn(c);
-        when(mockBuild2.getTimestamp()).thenReturn(c);
+		// This is to pass hudson.util.Graph constructor
+		GregorianCalendar c = new GregorianCalendar();
+		c.setTimeInMillis(0L);
+		when(mockBuild1.getTimestamp()).thenReturn(c);
+		when(mockBuild2.getTimestamp()).thenReturn(c);
 
-        // set up some results chains
-        mockResult1 = spy(result);
-        doReturn(null).when(mockResult1).getPreviousResult();
-        doReturn(mockBuild1).when(mockResult1).getOwner();
+		// set up some results chains
+		mockResult1 = spy(result);
+		doReturn(null).when(mockResult1).getPreviousResult();
+		doReturn(mockBuild1).when(mockResult1).getOwner();
 
-        mockResult2 = spy(result);
-        doReturn(mockResult1).when(mockResult2).getPreviousResult();
-        doReturn(mockBuild2).when(mockResult2).getOwner();
-    }
+		mockResult2 = spy(result);
+		doReturn(mockResult1).when(mockResult2).getPreviousResult();
+		doReturn(mockBuild2).when(mockResult2).getOwner();
+	}
 
-    public void testShouldLimitGraphDataSet() throws Exception {
-        RobotGraph limitedResultsGraph = RobotGraphHelper.createTestResultsGraphForTestObject(
-                        mockResult2, false, false, false, false, false, 1);
+	public void testShouldLimitGraphDataSet() throws Exception {
+		RobotGraph limitedResultsGraph = RobotGraphHelper.createTestResultsGraphForTestObject(
+				mockResult2, false, false, false, false, false, 1);
 
-        assertEquals(1, limitedResultsGraph.getDataset().getColumnCount());
-    }
+		assertEquals(1, limitedResultsGraph.getDataset().getColumnCount());
+	}
 
-    public void testShouldReturnAllDataIfNotLimited() throws Exception {
-        RobotGraph notlimitedResultsGraph = RobotGraphHelper.createTestResultsGraphForTestObject(
-                        mockResult2, false, false, false, false, false, 0);
+	public void testShouldReturnAllDataIfNotLimited() throws Exception {
+		RobotGraph notlimitedResultsGraph = RobotGraphHelper.createTestResultsGraphForTestObject(
+				mockResult2, false, false, false, false, false, 0);
 
-        assertEquals(2, notlimitedResultsGraph.getDataset().getColumnCount());
-    }
+		assertEquals(2, notlimitedResultsGraph.getDataset().getColumnCount());
+	}
 
-    public void testShouldReturnAllDataIfLimitIsBiggerThanDataAmount() throws Exception {
-        RobotGraph notlimitedResultsGraph = RobotGraphHelper.createTestResultsGraphForTestObject(
-                mockResult2, false, false, false, false, false, 10);
+	public void testShouldReturnAllDataIfLimitIsBiggerThanDataAmount() throws Exception {
+		RobotGraph notlimitedResultsGraph = RobotGraphHelper.createTestResultsGraphForTestObject(
+				mockResult2, false, false, false, false, false, 10);
 
-        assertEquals(2, notlimitedResultsGraph.getDataset().getColumnCount());
-    }
+		assertEquals(2, notlimitedResultsGraph.getDataset().getColumnCount());
+	}
 }
