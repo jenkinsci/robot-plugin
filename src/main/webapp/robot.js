@@ -6,8 +6,12 @@ function initGraph(target) {
     document.getElementById("zoomToChanges").checked = (mode == "true");
     document.getElementById("failedOnly").checked = (failedOnly == "true");
     document.getElementById("criticalOnly").checked = (criticalOnly == "true");
-    document.getElementById("maxBuildsToShow").value = maxBuildsToShow;
+    setMaxBuildsToShow(maxBuildsToShow);
     setGraphSrc(target, mode, failedOnly, criticalOnly, maxBuildsToShow);
+}
+
+function setMaxBuildsToShow(maxBuildsToShow) {
+    document.getElementById("maxBuildsToShow").value = maxBuildsToShow == 0 ? "" : maxBuildsToShow;
 }
 
 function setGraphSrc(target, mode, failedOnly, criticalOnly, maxBuildsToShow) {
@@ -27,6 +31,8 @@ function redrawGraph(target) {
     var failedOnly = Boolean(document.getElementById('failedOnly').checked).toString();
     var criticalOnly = Boolean(document.getElementById('criticalOnly').checked).toString();
     var maxBuildsToShow = document.getElementById('maxBuildsToShow').value;
+    if (maxBuildsToShow == "") maxBuildsToShow = 0;
+    setMaxBuildsToShow(maxBuildsToShow);
     setCookie("RobotResult_zoom",mode, 365);
     setCookie("RobotResult_failedOnly",failedOnly, 365);
     setCookie("RobotResult_criticalOnly",criticalOnly, 365);

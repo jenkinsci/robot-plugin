@@ -21,7 +21,7 @@ div.passfail {
 }
 div.passfail p {
     float:left;
-    padding-right: 20px;
+    padding-right: 10px;
 }
 .PASS {
     color: #0c0;
@@ -61,7 +61,7 @@ table.listsummary th, table.listsummary td {
 }
 #maxBuildsToShow {
     text-align:right;
-    width: 5em;
+    width: 4em;
 }
 </style>
 </j:jelly>
