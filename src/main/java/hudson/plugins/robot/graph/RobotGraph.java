@@ -57,8 +57,8 @@ public class RobotGraph extends Graph {
 	 * @param scale the size 1 is graph of default size. This is multiplied by scale.
 	 */
 	public static RobotGraph getRobotGraph(AbstractBuild<?, ?> owner,
-					  CategoryDataset categoryDataset, String yLabel, String xLabel,
-					  int scale, boolean binaryData, double lowerBound, double upperBound, Color...colors) {
+			CategoryDataset categoryDataset, String yLabel, String xLabel,
+			int scale, boolean binaryData, double lowerBound, double upperBound, Color...colors) {
 		int width = scale * RobotGraph.DEFAULT_CHART_WIDTH;
 		int heigth = scale * RobotGraph.DEFAULT_CHART_HEIGHT;
 		int fontSize = scale * RobotGraph.DEFAULT_FONT_SIZE;
@@ -89,6 +89,10 @@ public class RobotGraph extends Graph {
 		this.fontSize = fontSize;
 	}
 
+	public CategoryDataset getDataset(){
+		return categoryDataset;
+	}
+
 	/**
 	 * Creates a Robot trend graph
 	 * @return the JFreeChart graph object
@@ -96,8 +100,8 @@ public class RobotGraph extends Graph {
 	protected JFreeChart createGraph() {
 
 		final JFreeChart chart = ChartFactory.createStackedAreaChart(null,
-				null, yLabel, categoryDataset, PlotOrientation.VERTICAL, true,
-				true, false);
+			null, yLabel, categoryDataset, PlotOrientation.VERTICAL, true,
+			true, false);
 
 		final LegendTitle legend = chart.getLegend();
 		legend.setPosition(RectangleEdge.RIGHT);

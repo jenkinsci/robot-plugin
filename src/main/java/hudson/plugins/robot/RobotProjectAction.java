@@ -98,7 +98,9 @@ public class RobotProjectAction implements Action {
 			+ "/graph?zoomSignificant="+Boolean.valueOf(req.getParameter("zoomSignificant"))
 			+ "&hd="+Boolean.valueOf(req.getParameter("hd"))
 			+ "&failedOnly="+Boolean.valueOf(req.getParameter("failedOnly"))
-			+ "&criticalOnly="+Boolean.valueOf(req.getParameter("criticalOnly")));
+			+ "&criticalOnly="+Boolean.valueOf(req.getParameter("criticalOnly"))
+			+ "&maxBuildsToShow="+Integer.valueOf(req.getParameter("maxBuildsToShow")));
+
 	}
 
 	/**

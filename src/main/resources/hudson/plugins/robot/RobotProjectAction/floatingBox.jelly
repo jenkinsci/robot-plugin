@@ -26,7 +26,8 @@ limitations under the License.
             <p><label><input type="checkbox" id="zoomToChanges" onclick="redrawGraph('${from.urlName}/');"/>Zoom to changes</label></p>
             <p><label><input type="checkbox" id="failedOnly" onclick="redrawGraph('${from.urlName}/');"/>Show only failed</label></p>
             <p><label><input type="checkbox" id="criticalOnly" onclick="redrawGraph('${from.urlName}/');"/>Show only critical</label></p>
-            <p style="float:right"><a id="passfailgraph_hd_link" href="">Show bigger image</a></p>
+            <p><label><input min="0" max="9999" step="1" placeholder="all" value="" type="number" id="maxBuildsToShow" onchange="redrawGraph('${from.urlName}/');"/>Max builds</label></p>
+            <br/><p style="float:right"><a id="passfailgraph_hd_link" href="">Show bigger image</a></p>
         </div>
         <script>initGraph('${from.urlName}/');</script>
     </div>
