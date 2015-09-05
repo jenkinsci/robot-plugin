@@ -56,20 +56,22 @@ limitations under the License.
         <a id="passfailgraph_hd" href="">
           <img id="passfailgraph" src="" title="Show bigger image" width="500" height="200"/>
         </a><br/>
-        <p><label><input type="checkbox" id="zoomToChanges" onclick="redrawGraph('');"/>Zoom to changes</label></p>
-        <p><label><input type="checkbox" id="failedOnly" onclick="redrawGraph('');"/>Show only failed</label></p>
-        <p><label><input type="checkbox" id="criticalOnly" onclick="redrawGraph('');"/>Show only critical</label></p>
-        <p><label><input min="0" max="9999" step="1" placeholder="all" value="" type="number" id="maxBuildsToShow" onchange="redrawGraph('');"/>Max builds</label></p>
+        <p><label><input type="checkbox" id="zoomToChanges" onclick="redrawPassFailGraph('');"/>Zoom to changes</label></p>
+        <p><label><input type="checkbox" id="failedOnly" onclick="redrawPassFailGraph('');"/>Show only failed</label></p>
+        <p><label><input type="checkbox" id="criticalOnly" onclick="redrawPassFailGraph('');"/>Show only critical</label></p>
+        <p><label><input min="0" max="9999" step="1" placeholder="all" value="" type="number" id="maxBuildsToShow"
+                         onchange="redrawPassFailGraph(''); redrawDurationGraph('');"/>Max builds</label></p>
         <br/><p style="float:right"><a id="passfailgraph_hd_link" href="">Show bigger image</a></p>
        </div>
-       <script>initGraph('');</script>
+       <script>initPassFailGraph('');</script>
        <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
          <h3>Duration Trend</h3>
-          <a href="durationGraph?hd=true">
-            <img src="durationGraph" title="Show bigger image" width="500" height="200"/>
+          <a id="durationgraph_hd" href="">
+            <img id="durationgraph" src="" title="Show bigger image" width="500" height="200"/>
           </a><br/>
-          <p style="float:right"><a href="durationGraph?hd=true">Show bigger image</a></p>
+          <p style="float:right"><a id="durationgraph_hd_link" href="">Show bigger image</a></p>
        </div>
+       <script>initDurationGraph('');</script>
        <div style="clear:both;"></div>
       </div>
       <div style="float:left;">

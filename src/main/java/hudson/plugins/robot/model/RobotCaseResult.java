@@ -239,7 +239,8 @@ public class RobotCaseResult extends RobotTestObject{
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
 		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(this, false, true,
-				Boolean.valueOf(req.getParameter("hd")), false, false, 0);
+				Boolean.valueOf(req.getParameter("hd")), false, false,
+				Integer.valueOf(req.getParameter("maxBuildsToShow")));
 		g.doPng(req, rsp);
 	}
 

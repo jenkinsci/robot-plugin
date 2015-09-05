@@ -382,7 +382,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		WebAssert.assertTextPresent(page, "Message:");
 		WebAssert.assertTextPresent(page, "Hello, world! != Good bye, world!");
 		WebAssert.assertTextPresent(page, "0:00:00.001 (+0:00:00.001)");
-		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//img[@src='durationGraph']");
+		WebAssert.assertElementPresentByXPath(page, "//td[@id='main-panel']//img[@src='durationGraph?maxBuildsToShow=0']");
 
 		page = wc.goTo("job/robot/1/robot/Testcases%20&%20Othercases/Othercases/Contains%20string");
 		WebAssert.assertTextPresent(page, "PASS");

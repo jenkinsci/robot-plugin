@@ -264,7 +264,9 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	public void doDurationGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
-		Graph g = RobotGraphHelper.createDurationGraphForTestObject(this, req.hasParameter("hd"));
+		Graph g = RobotGraphHelper.createDurationGraphForTestObject(this,
+				req.hasParameter("hd"),
+ 				Integer.valueOf(req.getParameter("maxBuildsToShow")));
 		g.doPng(req, rsp);
 	}
 
