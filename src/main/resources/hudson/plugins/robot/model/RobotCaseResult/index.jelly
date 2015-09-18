@@ -16,6 +16,7 @@ limitations under the License.
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
   <l:layout>
   <st:include it="${it.parentAction.owner}" page="sidepanel.jelly"/>
+  <script src="${rootURL}/plugin/robot/robot.js"/>
   <st:include page="robotcss.jelly" />
     <l:main-panel>
       <j:choose>
@@ -41,23 +42,27 @@ limitations under the License.
       </j:if>
       </tbody>
       </table>
-      <div style="margin-top:20px; float: left;">
-      <div class="passfail">
-             <h3>Test Result Trend</h3>
-             <a href="graph?hd=true">
-                <img src="graph" title="Show bigger image" width="500" height="200"/>
-             </a><br/>
-             <p style="float:right"><a href="graph?hd=true">Show bigger image</a></p>
+      <div style="margin-top:20px;">
+       <div class="passfail">
+       <h3>Test Result Trend</h3>
+        <a id="passfailgraph_hd" href="">
+          <img id="passfailgraph" src="" title="Show bigger image" width="500" height="200"/>
+        </a><br/>
+        <p><label><input min="0" step="1" max="9999" value="" placeholder="all" type="number" id="maxBuildsToShow"
+                         onchange="redrawPassFailGraph(''); redrawDurationGraph('');"/>Max builds</label></p>
+        <br/><p style="float:right"><a id="passfailgraph_hd_link" href="">Show bigger image</a></p>
        </div>
+       <script>initPassFailGraph('');</script>
        <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
-         <h3>Duration Trend</h3>
-          <a href="durationGraph?hd=true">
-            <img src="durationGraph" title="Show bigger image" width="500" height="200"/>
+        <h3>Duration Trend</h3>
+          <a id="durationgraph_hd" href="">
+            <img id="durationgraph" src="" title="Show bigger image" width="500" height="200"/>
           </a><br/>
-          <p style="float:right"><a href="durationGraph?hd=true">Show bigger image</a></p>
-       </div>
+          <p style="float:right"><a id="durationgraph_hd_link" href="">Show bigger image</a></p>
+        </div>
+       <script>initDurationGraph('');</script>
        <div style="clear:both;"></div>
       </div>
-    </l:main-panel>
+      </l:main-panel>
   </l:layout>
 </j:jelly>

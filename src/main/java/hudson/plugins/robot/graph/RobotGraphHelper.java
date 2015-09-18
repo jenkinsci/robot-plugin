@@ -107,15 +107,23 @@ public class RobotGraphHelper {
 	 * @param rootObject rootObject The dataset will be taken from rootObject backwards.
 	 * @return
 	 */
-	public static RobotGraph createDurationGraphForTestObject(RobotTestObject rootObject, boolean hd) {
+	public static RobotGraph createDurationGraphForTestObject(RobotTestObject rootObject, boolean hd, int maxBuildsToShow) {
 		DataSetBuilder<String, NumberOnlyBuildLabel> builder = new DataSetBuilder<String, NumberOnlyBuildLabel>();
 
 		int scale = 1;
-		for (RobotTestObject testObject = rootObject; testObject != null; testObject = testObject.getPreviousResult()){
+		int buildsLeftToShow = maxBuildsToShow > 0? maxBuildsToShow: -1;
+		for (RobotTestObject testObject = rootObject;
+			 testObject != null && buildsLeftToShow != 0;
+			 testObject = testObject.getPreviousResult(), buildsLeftToShow--)
+		{
 			scale = getTimeScaleFactor(testObject.getDuration(), scale);
 		}
 
-		for (RobotTestObject testObject = rootObject; testObject != null; testObject = testObject.getPreviousResult()){
+		buildsLeftToShow = maxBuildsToShow > 0? maxBuildsToShow: -1;
+		for (RobotTestObject testObject = rootObject;
+			 testObject != null && buildsLeftToShow != 0;
+			 testObject = testObject.getPreviousResult(), buildsLeftToShow--)
+		{
 			ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(
 					testObject.getOwner());
 			builder.add((double)testObject.getDuration() / scale, "Duration", label);
