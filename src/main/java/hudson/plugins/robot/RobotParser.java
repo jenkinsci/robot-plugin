@@ -39,6 +39,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.jenkinsci.remoting.RoleChecker;
 
 public class RobotParser {
 
@@ -320,6 +321,11 @@ public class RobotParser {
 				else
 					caseResult.setCritical(false);
 			}
+		}
+
+		@Override
+		public void checkRoles(RoleChecker roleChecker) throws SecurityException {
+
 		}
 	}
 }

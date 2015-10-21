@@ -15,8 +15,6 @@
 */
 package hudson.plugins.robot;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import hudson.plugins.robot.model.RobotResult;
@@ -25,6 +23,10 @@ import java.io.File;
 import java.io.IOException;
 
 import junit.framework.TestCase;
+import org.mockito.Mockito;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 
 public class RobotProjectActionTest extends TestCase {
@@ -44,7 +46,9 @@ public class RobotProjectActionTest extends TestCase {
 	public void testShouldNotDisplayGraph() throws IOException {
 		FreeStyleProject p = mock(FreeStyleProject.class);
 		FreeStyleBuild build = new FreeStyleBuild(p);
-		when(p.getLastBuild()).thenReturn(build);
+		FreeStyleBuild build2 = spy(build);
+		when(p.getLastBuild()).thenReturn(build2);
+		doReturn(null).when(build2).getPreviousBuild();
 
 		RobotProjectAction action = new RobotProjectAction(p);
 		assertFalse(action.isDisplayGraph());
