@@ -22,11 +22,7 @@ import hudson.Launcher;
 import hudson.matrix.MatrixAggregatable;
 import hudson.matrix.MatrixAggregator;
 import hudson.matrix.MatrixBuild;
-import hudson.model.Action;
-import hudson.model.BuildListener;
-import hudson.model.Result;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
+import hudson.model.*;
 import hudson.plugins.robot.model.RobotResult;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
@@ -43,12 +39,13 @@ import java.util.Collection;
 
 import javax.servlet.ServletException;
 
+import jenkins.tasks.SimpleBuildStep;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
 public class RobotPublisher extends Recorder implements Serializable,
-		MatrixAggregatable {
+		MatrixAggregatable, SimpleBuildStep {
 
 	private static final long serialVersionUID = 1L;
 
@@ -212,18 +209,17 @@ public class RobotPublisher extends Recorder implements Serializable,
 		return actions;
 	}
 
-	protected RobotResult parse(String expandedTestResults, String outputPath, AbstractBuild<?,?> build,
-			Launcher launcher, BuildListener listener) throws IOException,
+	protected RobotResult parse(String expandedTestResults, String outputPath, Run<?,?> build, FilePath workspace,
+			Launcher launcher, TaskListener listener) throws IOException,
 			InterruptedException {
-		return new RobotParser().parse(expandedTestResults, outputPath, build, getLogFileName(), getReportFileName());
+		return new RobotParser().parse(expandedTestResults, outputPath, build, workspace, getLogFileName(), getReportFileName());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher,
-			BuildListener listener) throws InterruptedException, IOException {
+	public void perform(Run<?, ?> build, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
 		if (build.getResult() != Result.ABORTED) {
 			PrintStream logger = listener.getLogger();
 			logger.println(Messages.robot_publisher_started());
@@ -238,22 +234,22 @@ public class RobotPublisher extends Recorder implements Serializable,
 				String expandedLogFileName = buildEnv.expand(getLogFileName());
 				String logFileJavascripts = trimSuffix(expandedLogFileName) + ".js";
 
-				result = parse(expandedOutputFileName, expandedOutputPath, build, launcher, listener);
+				result = parse(expandedOutputFileName, expandedOutputPath, build, workspace, launcher, listener);
 
 				logger.println(Messages.robot_publisher_done());
 				logger.println(Messages.robot_publisher_copying());
 
 				//Save configured Robot files (including split output) to build dir
-				copyFilesToBuildDir(build, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","));
+				copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","));
 
 				if (!getDisableArchiveOutput()){
-					copyFilesToBuildDir(build, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedOutputFileName}), ","));
+					copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedOutputFileName}), ","));
 				}
 
 				//Save other configured files to build dir
 				if(StringUtils.isNotBlank(getOtherFiles())) {
 					String filemask = buildEnv.expand(getOtherFiles());
-					copyFilesToBuildDir(build, expandedOutputPath, filemask);
+					copyFilesToBuildDir(build, workspace, expandedOutputPath, filemask);
 				}
 
 				logger.println(Messages.robot_publisher_done());
@@ -261,7 +257,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 				logger.println(Messages.robot_publisher_fail());
 				e.printStackTrace(logger);
 				build.setResult(Result.FAILURE);
-				return true;
+				return;
 			}
 
 			logger.println(Messages.robot_publisher_assigning());
@@ -278,7 +274,6 @@ public class RobotPublisher extends Recorder implements Serializable,
 			logger.println(Messages.robot_publisher_done());
 			logger.println(Messages.robot_publisher_finished());
 		}
-		return true;
 	}
 
 	/**
@@ -289,9 +284,9 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public static void copyFilesToBuildDir(AbstractBuild<?, ?> build,
+	public static void copyFilesToBuildDir(Run<?, ?> build, FilePath workspace,
 			String inputPath, String filemaskToCopy) throws IOException, InterruptedException {
-		FilePath srcDir = new FilePath(build.getWorkspace(), inputPath);
+		FilePath srcDir = new FilePath(workspace, inputPath);
 		FilePath destDir = new FilePath(new FilePath(build.getRootDir()),
 				FILE_ARCHIVE_DIR);
 	    srcDir.copyRecursiveTo(filemaskToCopy, destDir);
@@ -346,7 +341,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 *            Results associated to build
 	 * @return Result of build
 	 */
-	protected Result getBuildResult(AbstractBuild<?, ?> build,
+	protected Result getBuildResult(Run<?, ?> build,
 			RobotResult result) {
 		if (build.getResult() != Result.FAILURE) {
 			double passPercentage = result.getPassPercentage(onlyCritical);

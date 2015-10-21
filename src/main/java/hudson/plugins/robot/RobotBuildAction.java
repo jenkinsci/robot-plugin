@@ -17,14 +17,13 @@ package hudson.plugins.robot;
 
 import hudson.FilePath;
 import hudson.XmlFile;
-import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
-import hudson.model.DirectoryBrowserSupport;
+import hudson.model.*;
 import hudson.plugins.robot.graph.RobotGraphHelper;
 import hudson.plugins.robot.model.RobotTestObject;
 import hudson.plugins.robot.model.RobotCaseResult;
 import hudson.plugins.robot.model.RobotResult;
 import hudson.plugins.robot.model.RobotSuiteResult;
+
 import hudson.tasks.test.AbstractTestResultAction;
 import hudson.util.ChartUtil;
 import hudson.util.Graph;
@@ -57,7 +56,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	private String outputPath;
 	private String logFileLink;
 	private String logHtmlLink;
-	private AbstractBuild<?, ?> build;
+	private Run<?, ?> build;
 	private RobotResult result;
 
 	static {
@@ -74,10 +73,9 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	 * @param result Robot result
 	 * @param outputPath Path where the Robot report is stored relative to build root
 	 * @param logFileLink
-	 * @param reportFileLink
 	 */
-	public RobotBuildAction(AbstractBuild<?, ?> build, RobotResult result,
-			String outputPath, BuildListener listener, String logFileLink, String logHtmlLink) {
+	public RobotBuildAction(Run<?, ?> build, RobotResult result,
+			String outputPath, TaskListener listener, String logFileLink, String logHtmlLink) {
 		super(build);
 		this.build = build;
 		this.outputPath = outputPath;
@@ -90,7 +88,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	 * Get build associated to action
 	 * @return build object
 	 */
-	public AbstractBuild<?, ?> getOwner() {
+	public Run<?, ?> getOwner() {
 		return build;
 	}
 
@@ -109,7 +107,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	/**
 	 * Loads new data to {@link RobotResult}.
 	 */
-	public synchronized void setResult(RobotResult result, BuildListener listener) {
+	public synchronized void setResult(RobotResult result, TaskListener listener) {
 	  result.tally(this);
 		try {
 			getDataFile().write(result);

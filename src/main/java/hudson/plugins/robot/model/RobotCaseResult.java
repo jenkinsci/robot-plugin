@@ -223,7 +223,7 @@ public class RobotCaseResult extends RobotTestObject{
 	 */
 	public int getAge(){
 		if(isPassed()) return 0;
-		AbstractBuild<?,?> owner = getOwner();
+		Run<?,?> owner = getOwner();
 		if(owner != null)
 			return getOwner().getNumber() - getFailedSince() + 1;
 		else return 0;

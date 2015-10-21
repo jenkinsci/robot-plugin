@@ -19,6 +19,7 @@ import hudson.AbortException;
 import hudson.FilePath;
 import hudson.Util;
 import hudson.model.AbstractBuild;
+import hudson.model.Run;
 import hudson.plugins.robot.model.RobotTestObject;
 import hudson.plugins.robot.model.RobotCaseResult;
 import hudson.plugins.robot.model.RobotResult;
@@ -43,9 +44,9 @@ import org.jenkinsci.remoting.RoleChecker;
 
 public class RobotParser {
 
-	public RobotResult parse(String outputFileLocations, String outputPath, AbstractBuild<?, ?> build, String logFileName, String reportFileName)
+	public RobotResult parse(String outputFileLocations, String outputPath, Run<?, ?> build, FilePath workSpace, String logFileName, String reportFileName)
 	throws InterruptedException, IOException {
-		RobotResult result = new FilePath(build.getWorkspace(), outputPath).act(
+		RobotResult result = new FilePath(workSpace, outputPath).act(
 				new RobotParserCallable(outputFileLocations, logFileName, reportFileName));
 		return result;
 	}
