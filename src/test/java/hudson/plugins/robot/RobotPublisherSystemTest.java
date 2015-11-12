@@ -15,33 +15,27 @@
  */
 package hudson.plugins.robot;
 
+import com.gargoylesoftware.htmlunit.WebAssert;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlTable;
 import hudson.matrix.MatrixBuild;
 import hudson.matrix.MatrixProject;
-import hudson.model.Result;
-import hudson.model.FreeStyleProject;
-import hudson.model.Hudson;
-import hudson.model.Project;
-import hudson.model.Run;
+import hudson.model.*;
 import hudson.plugins.robot.model.RobotCaseResult;
 import hudson.plugins.robot.model.RobotResult;
+import org.junit.Assert;
+import org.jvnet.hudson.test.HudsonTestCase;
+import org.jvnet.hudson.test.recipes.LocalData;
 
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import org.junit.Assert;
-import org.jvnet.hudson.test.HudsonTestCase;
-import org.jvnet.hudson.test.recipes.LocalData;
-
-import com.gargoylesoftware.htmlunit.WebAssert;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlTable;
-
 public class RobotPublisherSystemTest extends HudsonTestCase {
 
 	public void testRoundTripConfig() throws Exception{
 		FreeStyleProject p = createFreeStyleProject();
-		RobotPublisher before = new RobotPublisher("a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png");
+		RobotPublisher before = new RobotPublisher("a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png", false);
 		p.getPublishersList().add(before);
 
 		submit(getWebClient().getPage(p, "configure")
@@ -54,7 +48,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 
 	public void testConfigView() throws Exception{
 		FreeStyleProject p = createFreeStyleProject();
-		RobotPublisher before = new RobotPublisher("a", "b", false,"c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png");
+		RobotPublisher before = new RobotPublisher("a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png", false);
 		p.getPublishersList().add(before);
 		HtmlPage page = getWebClient().getPage(p,"configure");
 		WebAssert.assertTextPresent(page, "Publish Robot Framework");

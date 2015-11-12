@@ -15,37 +15,34 @@
 */
 package hudson.plugins.robot;
 
+import com.thoughtworks.xstream.XStream;
 import hudson.FilePath;
 import hudson.XmlFile;
-import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
+import hudson.model.BuildListener;
 import hudson.model.DirectoryBrowserSupport;
 import hudson.plugins.robot.graph.RobotGraphHelper;
-import hudson.plugins.robot.model.RobotTestObject;
 import hudson.plugins.robot.model.RobotCaseResult;
 import hudson.plugins.robot.model.RobotResult;
 import hudson.plugins.robot.model.RobotSuiteResult;
+import hudson.plugins.robot.model.RobotTestObject;
 import hudson.tasks.test.AbstractTestResultAction;
 import hudson.util.ChartUtil;
 import hudson.util.Graph;
 import hudson.util.HeapSpaceStringConverter;
 import hudson.util.XStream2;
+import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.StaplerProxy;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
+import javax.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.servlet.ServletException;
-
-import org.apache.commons.lang.StringUtils;
-import org.kohsuke.stapler.StaplerProxy;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
-
-import com.thoughtworks.xstream.XStream;
 
 public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction> implements StaplerProxy {
 
@@ -54,11 +51,12 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 
 	private transient WeakReference<RobotResult> resultReference;
 	private transient String reportFileName;
-	private String outputPath;
-	private String logFileLink;
-	private String logHtmlLink;
-	private AbstractBuild<?, ?> build;
-	private RobotResult result;
+    private final String outputPath;
+    private final String logFileLink;
+    private final String logHtmlLink;
+    private final boolean enableCache;
+    private RobotResult result;
+    private final AbstractBuild<?, ?> build;
 
 	static {
 		XSTREAM.alias("result",RobotResult.class);
@@ -67,23 +65,23 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		XSTREAM.registerConverter(new HeapSpaceStringConverter(),100);
 	}
 
-
 	/**
 	 * Create new Robot build action
 	 * @param build Build which this action is associated to
 	 * @param result Robot result
 	 * @param outputPath Path where the Robot report is stored relative to build root
 	 * @param logFileLink
-	 * @param reportFileLink
-	 */
+     * @param logHtmlLink
+     */
 	public RobotBuildAction(AbstractBuild<?, ?> build, RobotResult result,
-			String outputPath, BuildListener listener, String logFileLink, String logHtmlLink) {
-		super(build);
+                            String outputPath, BuildListener listener, String logFileLink, String logHtmlLink, boolean enableCache) {
+        super(build);
 		this.build = build;
 		this.outputPath = outputPath;
 		this.logFileLink = logFileLink;
 		this.logHtmlLink = logHtmlLink;
-		setResult(result, listener);
+        this.enableCache = enableCache;
+        setResult(result, listener);
 	}
 
 	/**
@@ -117,7 +115,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 			e.printStackTrace(listener.fatalError("Failed to save the Robot test result"));
 		}
 
-        this.resultReference = new WeakReference<RobotResult>(result);
+        cacheRobotResult(result);
     }
 
 	private XmlFile getDataFile() {
@@ -129,27 +127,35 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	 */
 	public synchronized RobotResult getResult() {
 		RobotResult returnable;
-		if (result != null) return result;
+
+        if (result != null) return result;
+
 		if (resultReference == null) {
 			returnable = load();
-			resultReference = new WeakReference<RobotResult>(returnable);
-		} else {
+            cacheRobotResult(returnable);
+        } else {
 			returnable = resultReference.get();
 		}
 
 		if (returnable == null) {
 			returnable = load();
-			resultReference = new WeakReference<RobotResult>(returnable);
-		}
+            cacheRobotResult(returnable);
+        }
 		return returnable;
 	}
+
+    private void cacheRobotResult(RobotResult result) {
+        if (enableCache) {
+            resultReference = new WeakReference<RobotResult>(result);
+        }
+    }
 
 	/**
 	 * Loads a {@link RobotResult} from disk.
 	 */
 	private RobotResult load() {
-		RobotResult loadedResult = null;
-		try {
+        RobotResult loadedResult;
+        try {
 			loadedResult = (RobotResult)getDataFile().read();
 		} catch (IOException e) {
 			logger.log(Level.WARNING, "Couldn't load " + getDataFile(),e);

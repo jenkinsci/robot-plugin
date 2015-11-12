@@ -16,12 +16,11 @@
 package hudson.plugins.robot.model;
 
 import hudson.plugins.robot.RobotParser;
+import junit.framework.TestCase;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.util.List;
-
-import junit.framework.TestCase;
-import org.apache.commons.lang.StringUtils;
 
 
 public class RobotResultTest extends TestCase {
@@ -32,7 +31,7 @@ public class RobotResultTest extends TestCase {
 		super.setUp();
 
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("output.xml", null, null);
-		result = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("output.xml").toURI()).getParentFile(), null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("output.xml").toURI()).getParentFile(), null);
 		result.tally(null);
 	}
 
@@ -83,7 +82,7 @@ public class RobotResultTest extends TestCase {
 	public void testShouldParseNewCriticalCases() throws Exception{
 
         RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml", null, null);
-		result = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("new_critical_output.xml").toURI()).getParentFile(), null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("new_critical_output.xml").toURI()).getParentFile(), null);
 		result.tally(null);
 
 		assertEquals(14, result.getCriticalTotal());
@@ -103,7 +102,7 @@ public class RobotResultTest extends TestCase {
 
 	public void testShouldParseFailedNewCriticalCases() throws Exception{
 		 RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml", null, null);
-			result = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("new_critical_output.xml").toURI()).getParentFile(), null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("new_critical_output.xml").toURI()).getParentFile(), null);
 		result.tally(null);
 
 		assertEquals(7, result.getCriticalFailed());
@@ -111,7 +110,7 @@ public class RobotResultTest extends TestCase {
 
 	public void testShouldAcceptNoLogAndReport() throws Exception{
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml", null, null);
-		result = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("new_critical_output.xml").toURI()).getParentFile(), null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("new_critical_output.xml").toURI()).getParentFile(), null);
 		result.tally(null);
 
 		assertFalse(result.getAllFailedCases().get(0).getHasLog());
@@ -120,7 +119,7 @@ public class RobotResultTest extends TestCase {
 
 	public void testShouldGetLogWhenAvailable() throws Exception{
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml", "log.html", "report.html");
-		result = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("new_critical_output.xml").toURI()).getParentFile(), null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("new_critical_output.xml").toURI()).getParentFile(), null);
 		result.tally(null);
 
 		assertTrue(result.getAllFailedCases().get(0).getHasLog());
@@ -128,7 +127,7 @@ public class RobotResultTest extends TestCase {
 
 	public void testShouldGetLogAndReportInSuites() throws Exception{
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("output.xml", "log.html", "report.html");
-		result = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("output.xml").toURI()).getParentFile(), null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("output.xml").toURI()).getParentFile(), null);
 		result.tally(null);
 
 		RobotSuiteResult suite = result.getSuite("Othercases & Testcases");
@@ -138,7 +137,7 @@ public class RobotResultTest extends TestCase {
 
 	public void testIdShouldBeEmptyWhenNotAvailable() throws Exception{
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml", "log.html", null);
-		result = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("new_critical_output.xml").toURI()).getParentFile(), null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("new_critical_output.xml").toURI()).getParentFile(), null);
 		result.tally(null);
 
 		assertEquals("", result.getAllFailedCases().get(0).getId());
@@ -146,7 +145,7 @@ public class RobotResultTest extends TestCase {
 
 	public void testShouldGetIdWhenAvailable() throws Exception{
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("teardown_fail.xml", "log.html", null);
-		result = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("teardown_fail.xml").toURI()).getParentFile(), null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("teardown_fail.xml").toURI()).getParentFile(), null);
 		result.tally(null);
 		RobotSuiteResult suite = result.getSuite("Fail");
 		RobotSuiteResult subSuite = suite.getSuite("Suite");
@@ -157,7 +156,7 @@ public class RobotResultTest extends TestCase {
 
 	public void testShouldParseCriticalityFromStatusInsteadOfTest() throws Exception{
 		 RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml", null, null);
-			result = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("new_critical_output.xml").toURI()).getParentFile(), null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("new_critical_output.xml").toURI()).getParentFile(), null);
 		result.tally(null);
 
 		RobotSuiteResult suite = result.getSuite("Othercases & Testcases");
@@ -204,7 +203,7 @@ public class RobotResultTest extends TestCase {
 
 	public void testShouldParseSplittedOutput() throws Exception {
 		 RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("testfile.xml", null, null);
-			result = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("testfile.xml").toURI()).getParentFile(), null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("testfile.xml").toURI()).getParentFile(), null);
 
 		RobotSuiteResult suite = result.getSuite("nestedSuites");
 		RobotSuiteResult splittedSuite = suite.getSuite("subSuite");
@@ -214,21 +213,21 @@ public class RobotResultTest extends TestCase {
 
 	public void testShouldParseSuiteTeardownFailures() throws Exception {
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("teardown_fail.xml", null, null);
-		RobotResult res = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("teardown_fail.xml").toURI()).getParentFile(), null);
+		RobotResult res = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("teardown_fail.xml").toURI()).getParentFile(), null);
 		List<RobotCaseResult> failers = res.getAllFailedCases();
 		assertEquals(3, failers.size());
 	}
 
 	public void testShouldHandleNameCollisions() throws Exception {
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("collisions.xml", null, null);
-		RobotResult res = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("collisions.xml").toURI()).getParentFile(), null);
+		RobotResult res = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("collisions.xml").toURI()).getParentFile(), null);
 		List<RobotCaseResult> failers = res.getAllFailedCases();
 		assertEquals(3, failers.size());
 	}
 
 	public void testShouldParseWholeSuiteDuration() throws Exception {
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("suite-setup-and-teardown.xml", null, null);
-		RobotResult res = remoteOperation.invoke(new File(new RobotSuiteResultTest().getClass().getResource("suite-setup-and-teardown.xml").toURI()).getParentFile(), null);
+		RobotResult res = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("suite-setup-and-teardown.xml").toURI()).getParentFile(), null);
 		res.tally(null);
 		assertEquals(10141, res.getDuration());
 	}

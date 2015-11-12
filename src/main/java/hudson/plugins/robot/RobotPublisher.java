@@ -22,30 +22,23 @@ import hudson.Launcher;
 import hudson.matrix.MatrixAggregatable;
 import hudson.matrix.MatrixAggregator;
 import hudson.matrix.MatrixBuild;
-import hudson.model.Action;
-import hudson.model.BuildListener;
-import hudson.model.Result;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
+import hudson.model.*;
 import hudson.plugins.robot.model.RobotResult;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
-import hudson.tasks.test.TestResultAggregator;
 import hudson.util.FormValidation;
+import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-
-import javax.servlet.ServletException;
-
-import org.apache.commons.lang.StringUtils;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
 
 public class RobotPublisher extends Recorder implements Serializable,
 		MatrixAggregatable {
@@ -66,6 +59,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	final private double passThreshold;
 	final private double unstableThreshold;
 	private String[] otherFiles;
+    final private boolean enableCache;
 
 	//Default to true
 	private boolean onlyCritical = true;
@@ -93,9 +87,9 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 */
 	@DataBoundConstructor
 	public RobotPublisher(String outputPath, String outputFileName,
-			boolean disableArchiveOutput, String reportFileName, String logFileName,
-			double passThreshold, double unstableThreshold, boolean onlyCritical, String otherFiles) {
-		this.outputPath = outputPath;
+                          boolean disableArchiveOutput, String reportFileName, String logFileName,
+                          double passThreshold, double unstableThreshold, boolean onlyCritical, String otherFiles, boolean enableCache) {
+        this.outputPath = outputPath;
 		this.outputFileName = outputFileName;
 		this.disableArchiveOutput = disableArchiveOutput;
 		this.reportFileName = reportFileName;
@@ -103,6 +97,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 		this.unstableThreshold = unstableThreshold;
 		this.logFileName = logFileName;
 		this.onlyCritical = onlyCritical;
+        this.enableCache = enableCache;
 
 		String[] filemasks = otherFiles.split(",");
 		for (int i = 0; i < filemasks.length; i++){
@@ -223,8 +218,8 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 */
 	@Override
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher,
-			BuildListener listener) throws InterruptedException, IOException {
-		if (build.getResult() != Result.ABORTED) {
+                           BuildListener listener) throws InterruptedException, IOException {
+        if (build.getResult() != Result.ABORTED) {
 			PrintStream logger = listener.getLogger();
 			logger.println(Messages.robot_publisher_started());
 			logger.println(Messages.robot_publisher_parsing());
@@ -266,8 +261,8 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 			logger.println(Messages.robot_publisher_assigning());
 
-			RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener, getReportFileName(), getLogFileName());
-			build.addAction(action);
+            RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener, getReportFileName(), getLogFileName(), enableCache);
+            build.addAction(action);
 
 			logger.println(Messages.robot_publisher_done());
 			logger.println(Messages.robot_publisher_checking());
@@ -346,9 +341,8 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 *            Results associated to build
 	 * @return Result of build
 	 */
-	protected Result getBuildResult(AbstractBuild<?, ?> build,
-			RobotResult result) {
-		if (build.getResult() != Result.FAILURE) {
+    protected Result getBuildResult(AbstractBuild<?, ?> build, RobotResult result) {
+        if (build.getResult() != Result.FAILURE) {
 			double passPercentage = result.getPassPercentage(onlyCritical);
 			if (passPercentage < getUnstableThreshold()) {
 				return Result.FAILURE;

@@ -20,23 +20,16 @@ import hudson.model.AbstractBuild;
 import hudson.model.Api;
 import hudson.model.DirectoryBrowserSupport;
 import hudson.plugins.robot.RobotBuildAction;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.*;
 
 
 /**
@@ -63,8 +56,8 @@ public class RobotResult extends RobotTestObject {
 	 * @return null if not found
 	 */
 	public RobotTestObject findObjectById(String id){
-		if(id.indexOf("/") >= 0){
-			String suiteName = id.substring(0, id.indexOf("/"));
+        if (id.contains("/")) {
+            String suiteName = id.substring(0, id.indexOf("/"));
 			String childId = id.substring(id.indexOf("/")+1, id.length());
 			RobotSuiteResult suite = suites.get(suiteName);
 			return suite.findObjectById(childId);
@@ -296,9 +289,12 @@ public class RobotResult extends RobotTestObject {
 		criticalPassed = 0;
 		criticalFailed = 0;
 		duration = 0;
-		HashMap<String, RobotSuiteResult> newMap = new HashMap<String, RobotSuiteResult>();
-		for(RobotSuiteResult suite: getSuites()){
-			suite.tally(robotBuildAction);
+
+        Collection<RobotSuiteResult> newSuites = getSuites();
+        HashMap<String, RobotSuiteResult> newMap = new HashMap<String, RobotSuiteResult>(newSuites.size());
+
+        for (RobotSuiteResult suite : newSuites) {
+            suite.tally(robotBuildAction);
 			failed += suite.getFailed();
 			passed += suite.getPassed();
 			criticalFailed += suite.getCriticalFailed();
@@ -371,9 +367,8 @@ public class RobotResult extends RobotTestObject {
 		while((build = build.getPreviousBuild()) != null) {
 			RobotBuildAction parentAction = build.getAction(getParentAction().getClass());
 			if(parentAction != null) {
-				RobotResult result = parentAction.getResult();
-				return result;
-			}
+                return parentAction.getResult();
+            }
 		}
 		return null;
 	}
