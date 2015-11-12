@@ -5,7 +5,7 @@
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 *
-*    http://www.apache.org/licenses/LICENSE-2.0
+*	http://www.apache.org/licenses/LICENSE-2.0
 *
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,34 +15,37 @@
 */
 package hudson.plugins.robot;
 
-import com.thoughtworks.xstream.XStream;
 import hudson.FilePath;
 import hudson.XmlFile;
-import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
+import hudson.model.AbstractBuild;
 import hudson.model.DirectoryBrowserSupport;
 import hudson.plugins.robot.graph.RobotGraphHelper;
+import hudson.plugins.robot.model.RobotTestObject;
 import hudson.plugins.robot.model.RobotCaseResult;
 import hudson.plugins.robot.model.RobotResult;
 import hudson.plugins.robot.model.RobotSuiteResult;
-import hudson.plugins.robot.model.RobotTestObject;
 import hudson.tasks.test.AbstractTestResultAction;
 import hudson.util.ChartUtil;
 import hudson.util.Graph;
 import hudson.util.HeapSpaceStringConverter;
 import hudson.util.XStream2;
-import org.apache.commons.lang.StringUtils;
-import org.kohsuke.stapler.StaplerProxy;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
 
-import javax.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.servlet.ServletException;
+
+import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.StaplerProxy;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
+
+import com.thoughtworks.xstream.XStream;
 
 public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction> implements StaplerProxy {
 
@@ -51,12 +54,12 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 
 	private transient WeakReference<RobotResult> resultReference;
 	private transient String reportFileName;
-    private final String outputPath;
-    private final String logFileLink;
-    private final String logHtmlLink;
-    private final boolean enableCache;
-    private RobotResult result;
-    private final AbstractBuild<?, ?> build;
+	private final String outputPath;
+	private final String logFileLink;
+	private final String logHtmlLink;
+	private final boolean enableCache;
+	private RobotResult result;
+	private final AbstractBuild<?, ?> build;
 
 	static {
 		XSTREAM.alias("result",RobotResult.class);
@@ -71,17 +74,17 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	 * @param result Robot result
 	 * @param outputPath Path where the Robot report is stored relative to build root
 	 * @param logFileLink
-     * @param logHtmlLink
-     */
+	 * @param logHtmlLink
+	 */
 	public RobotBuildAction(AbstractBuild<?, ?> build, RobotResult result,
-                            String outputPath, BuildListener listener, String logFileLink, String logHtmlLink, boolean enableCache) {
-        super(build);
+							String outputPath, BuildListener listener, String logFileLink, String logHtmlLink, boolean enableCache) {
+		super(build);
 		this.build = build;
 		this.outputPath = outputPath;
 		this.logFileLink = logFileLink;
 		this.logHtmlLink = logHtmlLink;
-        this.enableCache = enableCache;
-        setResult(result, listener);
+		this.enableCache = enableCache;
+		setResult(result, listener);
 	}
 
 	/**
@@ -107,16 +110,17 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	/**
 	 * Loads new data to {@link RobotResult}.
 	 */
-	public synchronized void setResult(RobotResult result, BuildListener listener) {
-	  result.tally(this);
+	private synchronized void setResult(RobotResult result, BuildListener listener) {
+		result.tally(this);
+
 		try {
 			getDataFile().write(result);
 		} catch (IOException e) {
 			e.printStackTrace(listener.fatalError("Failed to save the Robot test result"));
 		}
 
-        cacheRobotResult(result);
-    }
+		cacheRobotResult(result);
+	}
 
 	private XmlFile getDataFile() {
 	   return new XmlFile(XSTREAM, new File(getOwner().getRootDir(), "robot_results.xml"));
@@ -128,34 +132,34 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	public synchronized RobotResult getResult() {
 		RobotResult returnable;
 
-        if (result != null) return result;
+		if (result != null) return result;
 
 		if (resultReference == null) {
 			returnable = load();
-            cacheRobotResult(returnable);
-        } else {
+			cacheRobotResult(returnable);
+		} else {
 			returnable = resultReference.get();
 		}
 
 		if (returnable == null) {
 			returnable = load();
-            cacheRobotResult(returnable);
-        }
+			cacheRobotResult(returnable);
+		}
 		return returnable;
 	}
 
-    private void cacheRobotResult(RobotResult result) {
-        if (enableCache) {
-            resultReference = new WeakReference<RobotResult>(result);
-        }
-    }
+	private void cacheRobotResult(RobotResult result) {
+		if (enableCache) {
+			resultReference = new WeakReference<RobotResult>(result);
+		}
+	}
 
 	/**
 	 * Loads a {@link RobotResult} from disk.
 	 */
 	private RobotResult load() {
-        RobotResult loadedResult;
-        try {
+		RobotResult loadedResult;
+		try {
 			loadedResult = (RobotResult)getDataFile().read();
 		} catch (IOException e) {
 			logger.log(Level.WARNING, "Couldn't load " + getDataFile(),e);
@@ -195,8 +199,8 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	 * @return test object
 	 */
 	public RobotTestObject findObjectById(String id) {
-        return getResult().findObjectById(id);
-    }
+		return getResult().findObjectById(id);
+	}
 
 	/**
 	 * Get the result object which is responsible for UI. If an old project doesn't have it provides buildaction as this.
@@ -268,7 +272,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		FilePath rootDir = new FilePath(build.getRootDir());
 		if (StringUtils.isNotBlank(outputPath))
 			return new FilePath(rootDir, outputPath);
-        return rootDir;
+		return rootDir;
 	}
 
 	@Override

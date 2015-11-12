@@ -15,16 +15,16 @@
 */
 package hudson.plugins.robot;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import hudson.plugins.robot.model.RobotResult;
-import junit.framework.TestCase;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import junit.framework.TestCase;
 
 
 public class RobotProjectActionTest extends TestCase {
