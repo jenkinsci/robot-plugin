@@ -5,7 +5,7 @@
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 *
-*    http://www.apache.org/licenses/LICENSE-2.0
+*	http://www.apache.org/licenses/LICENSE-2.0
 *
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
@@ -56,8 +56,8 @@ public class RobotResult extends RobotTestObject {
 	 * @return null if not found
 	 */
 	public RobotTestObject findObjectById(String id){
-        if (id.contains("/")) {
-            String suiteName = id.substring(0, id.indexOf("/"));
+		if (id.contains("/")) {
+			String suiteName = id.substring(0, id.indexOf("/"));
 			String childId = id.substring(id.indexOf("/")+1, id.length());
 			RobotSuiteResult suite = suites.get(suiteName);
 			return suite.findObjectById(childId);
@@ -290,11 +290,11 @@ public class RobotResult extends RobotTestObject {
 		criticalFailed = 0;
 		duration = 0;
 
-        Collection<RobotSuiteResult> newSuites = getSuites();
-        HashMap<String, RobotSuiteResult> newMap = new HashMap<String, RobotSuiteResult>(newSuites.size());
+		Collection<RobotSuiteResult> newSuites = getSuites();
+		HashMap<String, RobotSuiteResult> newMap = new HashMap<String, RobotSuiteResult>(newSuites.size());
 
-        for (RobotSuiteResult suite : newSuites) {
-            suite.tally(robotBuildAction);
+		for (RobotSuiteResult suite : newSuites) {
+			suite.tally(robotBuildAction);
 			failed += suite.getFailed();
 			passed += suite.getPassed();
 			criticalFailed += suite.getCriticalFailed();
@@ -367,8 +367,8 @@ public class RobotResult extends RobotTestObject {
 		while((build = build.getPreviousBuild()) != null) {
 			RobotBuildAction parentAction = build.getAction(getParentAction().getClass());
 			if(parentAction != null) {
-                return parentAction.getResult();
-            }
+				return parentAction.getResult();
+			}
 		}
 		return null;
 	}
