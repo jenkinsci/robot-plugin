@@ -38,7 +38,7 @@ public class RobotProjectActionTest extends TestCase {
 
 	protected void tearDown() throws SecurityException {
 		if(robotFile.exists())
-				robotFile.delete();
+			robotFile.delete();
 	}
 
 	public void testShouldNotDisplayGraph() throws IOException {
@@ -56,7 +56,7 @@ public class RobotProjectActionTest extends TestCase {
 		when(build.getProject()).thenReturn(p);
 		when(build.getRootDir()).thenReturn(tmpDir);
 		RobotResult result = mock(RobotResult.class);
-		RobotBuildAction buildAction = new RobotBuildAction(build, result, "", null, null, null);
+		RobotBuildAction buildAction = new RobotBuildAction(build, result, "", null, null, null, false);
 		when(build.getAction(RobotBuildAction.class)).thenReturn(buildAction);
 		when(p.getLastBuild()).thenReturn(build);
 
@@ -72,7 +72,7 @@ public class RobotProjectActionTest extends TestCase {
 		when(buildWithAction.getProject()).thenReturn(p);
 		when(buildWithAction.getRootDir()).thenReturn(tmpDir);
 		RobotResult result = mock(RobotResult.class);
-		RobotBuildAction buildAction = new RobotBuildAction(buildWithAction, result,"", null, null, null);
+		RobotBuildAction buildAction = new RobotBuildAction(buildWithAction, result, "", null, null, null, false);
 		when(buildWithAction.getAction(RobotBuildAction.class)).thenReturn(buildAction);
 
 		when(p.getLastBuild()).thenReturn(lastBuild);

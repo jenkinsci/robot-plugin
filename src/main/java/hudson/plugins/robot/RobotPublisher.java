@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *	http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,7 +32,6 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
-import hudson.tasks.test.TestResultAggregator;
 import hudson.util.FormValidation;
 
 import java.io.IOException;
@@ -66,6 +65,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	final private double passThreshold;
 	final private double unstableThreshold;
 	private String[] otherFiles;
+	final private boolean enableCache;
 
 	//Default to true
 	private boolean onlyCritical = true;
@@ -75,26 +75,27 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 * Create new publisher for Robot Framework results
 	 *
 	 * @param outputPath
-	 *            Path to Robot Framework's output files
+	 *			Path to Robot Framework's output files
 	 * @param outputFileName
-	 *            Name of Robot output xml
+	 *			Name of Robot output xml
 	 * @param disableArchiveOutput
-	 *            Disable Archiving output xml file to server
+	 *			Disable Archiving output xml file to server
 	 * @param reportFileName
-	 *            Name of Robot report html
+	 *			Name of Robot report html
 	 * @param logFileName
-	 *            Name of Robot log html
+	 *			Name of Robot log html
 	 * @param passThreshold
-	 *            Threshold of test pass percentage for successful builds
+	 *			Threshold of test pass percentage for successful builds
 	 * @param unstableThreshold
-	 *            Threhold of test pass percentage for unstable builds
+	 *			Threhold of test pass percentage for unstable builds
 	 * @param onlyCritical
-	 *            True if only critical tests are included in pass percentage
+	 *			True if only critical tests are included in pass percentage
 	 */
 	@DataBoundConstructor
 	public RobotPublisher(String outputPath, String outputFileName,
-			boolean disableArchiveOutput, String reportFileName, String logFileName,
-			double passThreshold, double unstableThreshold, boolean onlyCritical, String otherFiles) {
+						  boolean disableArchiveOutput, String reportFileName, String logFileName,
+						  double passThreshold, double unstableThreshold,
+						  boolean onlyCritical, String otherFiles, boolean enableCache) {
 		this.outputPath = outputPath;
 		this.outputFileName = outputFileName;
 		this.disableArchiveOutput = disableArchiveOutput;
@@ -103,6 +104,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 		this.unstableThreshold = unstableThreshold;
 		this.logFileName = logFileName;
 		this.onlyCritical = onlyCritical;
+		this.enableCache = enableCache;
 
 		String[] filemasks = otherFiles.split(",");
 		for (int i = 0; i < filemasks.length; i++){
@@ -223,7 +225,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 */
 	@Override
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher,
-			BuildListener listener) throws InterruptedException, IOException {
+						   BuildListener listener) throws InterruptedException, IOException {
 		if (build.getResult() != Result.ABORTED) {
 			PrintStream logger = listener.getLogger();
 			logger.println(Messages.robot_publisher_started());
@@ -266,7 +268,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 			logger.println(Messages.robot_publisher_assigning());
 
-			RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener, getReportFileName(), getLogFileName());
+			RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener, getReportFileName(), getLogFileName(), enableCache);
 			build.addAction(action);
 
 			logger.println(Messages.robot_publisher_done());
@@ -294,7 +296,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 		FilePath srcDir = new FilePath(build.getWorkspace(), inputPath);
 		FilePath destDir = new FilePath(new FilePath(build.getRootDir()),
 				FILE_ARCHIVE_DIR);
-	    srcDir.copyRecursiveTo(filemaskToCopy, destDir);
+		srcDir.copyRecursiveTo(filemaskToCopy, destDir);
 	}
 
 	/**
@@ -341,13 +343,12 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 * failed before the tests it won't be changed to successful.
 	 *
 	 * @param build
-	 *            Build to be evaluated
+	 *			Build to be evaluated
 	 * @param result
-	 *            Results associated to build
+	 *			Results associated to build
 	 * @return Result of build
 	 */
-	protected Result getBuildResult(AbstractBuild<?, ?> build,
-			RobotResult result) {
+	protected Result getBuildResult(AbstractBuild<?, ?> build, RobotResult result) {
 		if (build.getResult() != Result.FAILURE) {
 			double passPercentage = result.getPassPercentage(onlyCritical);
 			if (passPercentage < getUnstableThreshold()) {

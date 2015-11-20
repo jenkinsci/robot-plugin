@@ -5,7 +5,7 @@
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 *
-*    http://www.apache.org/licenses/LICENSE-2.0
+*	http://www.apache.org/licenses/LICENSE-2.0
 *
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
@@ -54,11 +54,12 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 
 	private transient WeakReference<RobotResult> resultReference;
 	private transient String reportFileName;
-	private String outputPath;
-	private String logFileLink;
-	private String logHtmlLink;
-	private AbstractBuild<?, ?> build;
+	private final String outputPath;
+	private final String logFileLink;
+	private final String logHtmlLink;
+	private final boolean enableCache;
 	private RobotResult result;
+	private final AbstractBuild<?, ?> build;
 
 	static {
 		XSTREAM.alias("result",RobotResult.class);
@@ -67,22 +68,22 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		XSTREAM.registerConverter(new HeapSpaceStringConverter(),100);
 	}
 
-
 	/**
 	 * Create new Robot build action
 	 * @param build Build which this action is associated to
 	 * @param result Robot result
 	 * @param outputPath Path where the Robot report is stored relative to build root
 	 * @param logFileLink
-	 * @param reportFileLink
+	 * @param logHtmlLink
 	 */
 	public RobotBuildAction(AbstractBuild<?, ?> build, RobotResult result,
-			String outputPath, BuildListener listener, String logFileLink, String logHtmlLink) {
+							String outputPath, BuildListener listener, String logFileLink, String logHtmlLink, boolean enableCache) {
 		super(build);
 		this.build = build;
 		this.outputPath = outputPath;
 		this.logFileLink = logFileLink;
 		this.logHtmlLink = logHtmlLink;
+		this.enableCache = enableCache;
 		setResult(result, listener);
 	}
 
@@ -109,16 +110,17 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	/**
 	 * Loads new data to {@link RobotResult}.
 	 */
-	public synchronized void setResult(RobotResult result, BuildListener listener) {
-	  result.tally(this);
+	private synchronized void setResult(RobotResult result, BuildListener listener) {
+		result.tally(this);
+
 		try {
 			getDataFile().write(result);
 		} catch (IOException e) {
 			e.printStackTrace(listener.fatalError("Failed to save the Robot test result"));
 		}
 
-        this.resultReference = new WeakReference<RobotResult>(result);
-    }
+		cacheRobotResult(result);
+	}
 
 	private XmlFile getDataFile() {
 	   return new XmlFile(XSTREAM, new File(getOwner().getRootDir(), "robot_results.xml"));
@@ -129,26 +131,34 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	 */
 	public synchronized RobotResult getResult() {
 		RobotResult returnable;
+
 		if (result != null) return result;
+
 		if (resultReference == null) {
 			returnable = load();
-			resultReference = new WeakReference<RobotResult>(returnable);
+			cacheRobotResult(returnable);
 		} else {
 			returnable = resultReference.get();
 		}
 
 		if (returnable == null) {
 			returnable = load();
-			resultReference = new WeakReference<RobotResult>(returnable);
+			cacheRobotResult(returnable);
 		}
 		return returnable;
+	}
+
+	private void cacheRobotResult(RobotResult result) {
+		if (enableCache) {
+			resultReference = new WeakReference<RobotResult>(result);
+		}
 	}
 
 	/**
 	 * Loads a {@link RobotResult} from disk.
 	 */
 	private RobotResult load() {
-		RobotResult loadedResult = null;
+		RobotResult loadedResult;
 		try {
 			loadedResult = (RobotResult)getDataFile().read();
 		} catch (IOException e) {
@@ -189,8 +199,8 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	 * @return test object
 	 */
 	public RobotTestObject findObjectById(String id) {
-        return getResult().findObjectById(id);
-    }
+		return getResult().findObjectById(id);
+	}
 
 	/**
 	 * Get the result object which is responsible for UI. If an old project doesn't have it provides buildaction as this.
@@ -262,7 +272,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		FilePath rootDir = new FilePath(build.getRootDir());
 		if (StringUtils.isNotBlank(outputPath))
 			return new FilePath(rootDir, outputPath);
-        return rootDir;
+		return rootDir;
 	}
 
 	@Override
