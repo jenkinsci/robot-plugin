@@ -255,12 +255,16 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		if (req.checkIfModified(t, rsp))
 			return;
 
+		String maxBuildsReq = req.getParameter("maxBuildsToShow");
+		if (maxBuildsReq == null || maxBuildsReq.isEmpty())
+			maxBuildsReq = "0"; // show all builds by default
+
 		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(getResult(),
 				Boolean.valueOf(req.getParameter("zoomSignificant")), false,
 				Boolean.valueOf(req.getParameter("hd")),
 				Boolean.valueOf(req.getParameter("failedOnly")),
 				Boolean.valueOf(req.getParameter("criticalOnly")),
-				Integer.valueOf(req.getParameter("maxBuildsToShow")));
+				Integer.valueOf(maxBuildsReq));
 		g.doPng(req, rsp);
 	}
 
