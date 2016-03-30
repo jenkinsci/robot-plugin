@@ -19,6 +19,7 @@ import hudson.FilePath;
 import hudson.model.AbstractBuild;
 import hudson.model.Api;
 import hudson.model.DirectoryBrowserSupport;
+import hudson.model.Run;
 import hudson.plugins.robot.RobotBuildAction;
 
 import java.io.IOException;
@@ -367,7 +368,7 @@ public class RobotResult extends RobotTestObject {
 	 * {@inheritDoc}
 	 */
 	public RobotResult getPreviousResult(){
-		AbstractBuild<?,?> build = getOwner();
+		Run<?,?> build = getOwner();
 		if (build == null) {
 			return null;
 		}

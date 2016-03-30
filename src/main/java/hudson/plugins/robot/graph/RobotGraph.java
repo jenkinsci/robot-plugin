@@ -16,6 +16,7 @@
 package hudson.plugins.robot.graph;
 
 import hudson.model.AbstractBuild;
+import hudson.model.Run;
 import hudson.util.Graph;
 import hudson.util.ShiftedCategoryAxis;
 
@@ -56,7 +57,7 @@ public class RobotGraph extends Graph {
 	 * @param xLabel X label name
 	 * @param scale the size 1 is graph of default size. This is multiplied by scale.
 	 */
-	public static RobotGraph getRobotGraph(AbstractBuild<?, ?> owner,
+	public static RobotGraph getRobotGraph(Run<?, ?> owner,
 			CategoryDataset categoryDataset, String yLabel, String xLabel,
 			int scale, boolean binaryData, double lowerBound, double upperBound, Color...colors) {
 		int width = scale * RobotGraph.DEFAULT_CHART_WIDTH;
@@ -75,7 +76,7 @@ public class RobotGraph extends Graph {
 	 * @param chartHeight Chart height in pixels
 	 * @param fontSize Chart font size
 	 */
-	private RobotGraph(AbstractBuild<?, ?> owner,
+	private RobotGraph(Run<?, ?> owner,
 			CategoryDataset categoryDataset, String yLabel, String xLabel,
 			int chartWidth, int chartHeight, int fontSize, boolean binaryData, double lowerBound, double upperBound, Color...colors) {
 		super(owner.getTimestamp(), chartWidth, chartHeight);
