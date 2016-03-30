@@ -17,6 +17,7 @@ package hudson.plugins.robot.model;
 
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractModelObject;
+import hudson.model.Run;
 import hudson.plugins.robot.RobotBuildAction;
 import hudson.plugins.robot.graph.RobotGraphHelper;
 import hudson.util.ChartUtil;
@@ -140,7 +141,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	 * Return the build that this result belongs to.
 	 * @return Build object. Null if no build.
 	 */
-	public AbstractBuild<?,?> getOwner(){
+	public Run<?,?> getOwner(){
 		return getParentAction() == null ? null : getParentAction().getOwner();
 	}
 

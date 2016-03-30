@@ -15,6 +15,7 @@
 */
 package hudson.plugins.robot.graph;
 
+import hudson.model.Run;
 import hudson.plugins.robot.Messages;
 import hudson.plugins.robot.model.RobotTestObject;
 import hudson.util.ChartUtil;
@@ -82,7 +83,7 @@ public class RobotGraphHelper {
 			}
 
 			ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(
-					testObject.getOwner());
+					(Run<?,?>)testObject.getOwner());
 
 			values.add(passed);
 			rows.add(Messages.robot_trendgraph_passed());
@@ -125,7 +126,7 @@ public class RobotGraphHelper {
 			 testObject = testObject.getPreviousResult(), buildsLeftToShow--)
 		{
 			ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(
-					testObject.getOwner());
+					(Run<?,?>)testObject.getOwner());
 			builder.add((double)testObject.getDuration() / scale, "Duration", label);
 		}
 		int graphScale = hd ? 3 : 1;

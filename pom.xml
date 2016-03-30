@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.447</version><!-- which version of Hudson is this plugin built against? -->
+    <version>1.609.3</version><!-- which version of Hudson is this plugin built against? -->
   </parent>
 
   <artifactId>robot</artifactId>
@@ -29,17 +29,28 @@
 
   <dependencies>
     <dependency>
-         <groupId>org.mockito</groupId>
-         <artifactId>mockito-core</artifactId>
-         <version>1.8.0</version>
-         <scope>test</scope>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>1.10.19</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
-         <groupId>org.jenkins-ci.plugins</groupId>
-         <artifactId>token-macro</artifactId>
-         <version>1.5.1</version>
-         <optional>true</optional>
+      <groupId>org.jenkins-ci.plugins</groupId>
+      <artifactId>junit</artifactId>
+      <version>1.9</version>
     </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins</groupId>
+      <artifactId>matrix-project</artifactId>
+      <version>1.4.1</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+       <groupId>org.jenkins-ci.plugins</groupId>
+       <artifactId>token-macro</artifactId>
+       <version>1.5.1</version>
+       <optional>true</optional>
+    </dependency>    
 </dependencies>
 
   <distributionManagement>
