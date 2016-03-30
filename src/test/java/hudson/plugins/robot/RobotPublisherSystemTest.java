@@ -463,7 +463,7 @@ public class RobotPublisherSystemTest extends HudsonTestCase {
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='main-panel']//img[@id='passfailgraph']");
 
 		page = wc.goTo("job/matrix-robot/3");
-		WebAssert.assertElementPresentByXPath(page, "//div[@id='main-panel-content']//a[@href='/job/matrix-robot/3/robot']");
+		WebAssert.assertElementPresentByXPath(page, "//div[@id='main-panel']//a[@href='/job/matrix-robot/3/robot']");
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='main-panel']//h4[contains(.,'Robot Test Summary:')]");
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='main-panel']//a[@href='/job/matrix-robot/3/robot' and contains(text(),'Browse results')]");
 	}
