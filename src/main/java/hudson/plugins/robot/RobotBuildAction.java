@@ -17,14 +17,13 @@ package hudson.plugins.robot;
 
 import hudson.FilePath;
 import hudson.XmlFile;
-import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
-import hudson.model.DirectoryBrowserSupport;
+import hudson.model.*;
 import hudson.plugins.robot.graph.RobotGraphHelper;
 import hudson.plugins.robot.model.RobotTestObject;
 import hudson.plugins.robot.model.RobotCaseResult;
 import hudson.plugins.robot.model.RobotResult;
 import hudson.plugins.robot.model.RobotSuiteResult;
+
 import hudson.tasks.test.AbstractTestResultAction;
 import hudson.util.ChartUtil;
 import hudson.util.Graph;
@@ -54,12 +53,12 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 
 	private transient WeakReference<RobotResult> resultReference;
 	private transient String reportFileName;
-	private final String outputPath;
-	private final String logFileLink;
-	private final String logHtmlLink;
+	private String outputPath;
+	private String logFileLink;
+	private String logHtmlLink;
 	private final boolean enableCache;
+	private Run<?, ?> build;
 	private RobotResult result;
-	private final AbstractBuild<?, ?> build;
 
 	static {
 		XSTREAM.alias("result",RobotResult.class);
@@ -74,10 +73,9 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	 * @param result Robot result
 	 * @param outputPath Path where the Robot report is stored relative to build root
 	 * @param logFileLink
-	 * @param logHtmlLink
 	 */
-	public RobotBuildAction(AbstractBuild<?, ?> build, RobotResult result,
-							String outputPath, BuildListener listener, String logFileLink, String logHtmlLink, boolean enableCache) {
+	public RobotBuildAction(Run<?, ?> build, RobotResult result,
+			String outputPath, TaskListener listener, String logFileLink, String logHtmlLink, boolean enableCache) {
 		super(build);
 		this.build = build;
 		this.outputPath = outputPath;
@@ -91,7 +89,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	 * Get build associated to action
 	 * @return build object
 	 */
-	public AbstractBuild<?, ?> getOwner() {
+	public Run<?, ?> getOwner() {
 		return build;
 	}
 
@@ -110,9 +108,8 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	/**
 	 * Loads new data to {@link RobotResult}.
 	 */
-	private synchronized void setResult(RobotResult result, BuildListener listener) {
+	public synchronized void setResult(RobotResult result, TaskListener listener) {
 		result.tally(this);
-
 		try {
 			getDataFile().write(result);
 		} catch (IOException e) {
@@ -123,7 +120,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	}
 
 	private XmlFile getDataFile() {
-	   return new XmlFile(XSTREAM, new File(getOwner().getRootDir(), "robot_results.xml"));
+		return new XmlFile(XSTREAM, new File(getOwner().getRootDir(), "robot_results.xml"));
 	}
 
 	/**
@@ -255,12 +252,16 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		if (req.checkIfModified(t, rsp))
 			return;
 
+		String maxBuildsReq = req.getParameter("maxBuildsToShow");
+		if (maxBuildsReq == null || maxBuildsReq.isEmpty())
+			maxBuildsReq = "0"; // show all builds by default
+
 		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(getResult(),
 				Boolean.valueOf(req.getParameter("zoomSignificant")), false,
 				Boolean.valueOf(req.getParameter("hd")),
 				Boolean.valueOf(req.getParameter("failedOnly")),
 				Boolean.valueOf(req.getParameter("criticalOnly")),
-				Integer.valueOf(req.getParameter("maxBuildsToShow")));
+				Integer.valueOf(maxBuildsReq));
 		g.doPng(req, rsp);
 	}
 
