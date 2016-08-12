@@ -113,22 +113,23 @@ public class RobotGraphHelper {
 
 		int scale = 1;
 		int buildsLeftToShow = maxBuildsToShow > 0? maxBuildsToShow: -1;
+
+		List<NumberOnlyBuildLabel> labels = new ArrayList<NumberOnlyBuildLabel>();
+		List<Long> durations = new ArrayList<Long>();
+
 		for (RobotTestObject testObject = rootObject;
 			 testObject != null && buildsLeftToShow != 0;
-			 testObject = testObject.getPreviousResult(), buildsLeftToShow--)
-		{
+			 testObject = testObject.getPreviousResult(), buildsLeftToShow--) {
+
 			scale = getTimeScaleFactor(testObject.getDuration(), scale);
+			labels.add(new ChartUtil.NumberOnlyBuildLabel(testObject.getOwner()));
+			durations.add(testObject.getDuration());
 		}
 
-		buildsLeftToShow = maxBuildsToShow > 0? maxBuildsToShow: -1;
-		for (RobotTestObject testObject = rootObject;
-			 testObject != null && buildsLeftToShow != 0;
-			 testObject = testObject.getPreviousResult(), buildsLeftToShow--)
-		{
-			ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(
-					(Run<?,?>)testObject.getOwner());
-			builder.add((double)testObject.getDuration() / scale, "Duration", label);
+		for (int i = 0; i < labels.size(); i++) {
+			builder.add((double) durations.get(i) / scale, "Duration", labels.get(i));
 		}
+
 		int graphScale = hd ? 3 : 1;
 		return RobotGraph.getRobotGraph(rootObject.getOwner(), builder.build(), "Duration (" + getTimeScaleString(scale) + ")",
 				  Messages.robot_trendgraph_builds(), graphScale, false, 0, 0, Color.cyan);
