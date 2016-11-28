@@ -247,12 +247,19 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
+
+                String maxBuildsToShow = new String();
+                maxBuildsToShow = req.getParameter("maxBuildsToShow");
+                if (maxBuildsToShow == null) {
+                   maxBuildsToShow = "0";
+                }
+
 		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(this,
 				Boolean.valueOf(req.getParameter("zoomSignificant")),
 				false, Boolean.valueOf(req.getParameter("hd")),
 				Boolean.valueOf(req.getParameter("failedOnly")),
 				Boolean.valueOf(req.getParameter("criticalOnly")),
-				Integer.valueOf(req.getParameter("maxBuildsToShow")));
+				Integer.valueOf(maxBuildsToShow));
 		g.doPng(req, rsp);
 	}
 
