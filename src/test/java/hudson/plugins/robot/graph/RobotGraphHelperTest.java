@@ -83,21 +83,21 @@ public class RobotGraphHelperTest extends TestCase {
 
 	public void testShouldLimitDurationGraphDataSet() throws Exception {
 		RobotGraph limitedResultsGraph = RobotGraphHelper.createDurationGraphForTestObject(
-				mockResult2, false, 1);
+				mockResult2, false, 1,false);
 
 		assertEquals(1, limitedResultsGraph.getDataset().getColumnCount());
 	}
 
 	public void testShouldReturnAllDurationGraphDataIfNotLimited() throws Exception {
 		RobotGraph notlimitedResultsGraph = RobotGraphHelper.createDurationGraphForTestObject(
-				mockResult2, false, 0);
+				mockResult2, false, 0, false);
 
 		assertEquals(2, notlimitedResultsGraph.getDataset().getColumnCount());
 	}
 
 	public void testShouldReturnAllDurationDataIfLimitIsBiggerThanDataAmount() throws Exception {
 		RobotGraph notlimitedResultsGraph = RobotGraphHelper.createDurationGraphForTestObject(
-				mockResult2, false, 10);
+				mockResult2, false, 10, false);
 
 		assertEquals(2, notlimitedResultsGraph.getDataset().getColumnCount());
 	}

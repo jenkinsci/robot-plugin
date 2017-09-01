@@ -45,6 +45,8 @@ public class RobotGraph extends Graph {
 	private double lowerBound;
 	private double upperBound;
 	private int fontSize;
+	private boolean preview;
+
 	public static final int DEFAULT_CHART_WIDTH = 500;
 	public static final int DEFAULT_CHART_HEIGHT = 200;
 	public static final int DEFAULT_FONT_SIZE = 12;
@@ -59,11 +61,11 @@ public class RobotGraph extends Graph {
 	 */
 	public static RobotGraph getRobotGraph(Run<?, ?> owner,
 			CategoryDataset categoryDataset, String yLabel, String xLabel,
-			int scale, boolean binaryData, double lowerBound, double upperBound, Color...colors) {
-		int width = scale * RobotGraph.DEFAULT_CHART_WIDTH;
-		int heigth = scale * RobotGraph.DEFAULT_CHART_HEIGHT;
-		int fontSize = scale * RobotGraph.DEFAULT_FONT_SIZE;
-		return new RobotGraph(owner, categoryDataset, yLabel, xLabel, width, heigth, fontSize, binaryData, lowerBound, upperBound, colors);
+			double scale, boolean preview, boolean binaryData, double lowerBound, double upperBound, Color...colors) {
+		int width = (int)(scale * RobotGraph.DEFAULT_CHART_WIDTH);
+		int heigth = (int)(scale * RobotGraph.DEFAULT_CHART_HEIGHT);
+		int fontSize = (int)(scale * RobotGraph.DEFAULT_FONT_SIZE);
+		return new RobotGraph(owner, categoryDataset, yLabel, xLabel, width, heigth, fontSize, preview, binaryData, lowerBound, upperBound, colors);
 	}
 
 	/**
@@ -78,7 +80,7 @@ public class RobotGraph extends Graph {
 	 */
 	private RobotGraph(Run<?, ?> owner,
 			CategoryDataset categoryDataset, String yLabel, String xLabel,
-			int chartWidth, int chartHeight, int fontSize, boolean binaryData, double lowerBound, double upperBound, Color...colors) {
+			int chartWidth, int chartHeight, int fontSize, boolean preview,boolean binaryData, double lowerBound, double upperBound, Color...colors) {
 		super(owner.getTimestamp(), chartWidth, chartHeight);
 		this.yLabel = yLabel;
 		this.xLabel = xLabel;
@@ -88,6 +90,7 @@ public class RobotGraph extends Graph {
 		this.lowerBound = lowerBound;
 		this.upperBound = upperBound;
 		this.fontSize = fontSize;
+		this.preview = preview;
 	}
 
 	public CategoryDataset getDataset(){
@@ -100,51 +103,71 @@ public class RobotGraph extends Graph {
 	 */
 	protected JFreeChart createGraph() {
 
-		final JFreeChart chart = ChartFactory.createStackedAreaChart(null,
-			null, yLabel, categoryDataset, PlotOrientation.VERTICAL, true,
-			true, false);
-
-		final LegendTitle legend = chart.getLegend();
-		legend.setPosition(RectangleEdge.RIGHT);
-
+		final JFreeChart chart = ChartFactory.createStackedAreaChart(null,null, preview ? null : yLabel, categoryDataset, PlotOrientation.VERTICAL, !preview,true, false);
 		chart.setBackgroundPaint(Color.white);
+
+		final Font font = new Font("Dialog", Font.PLAIN, fontSize);
+
+		if (preview) chart.clearSubtitles();
+		else {
+			final LegendTitle legend = chart.getLegend();
+			legend.setPosition(RectangleEdge.RIGHT);
+			legend.setItemFont(font);
+		}
 
 		final CategoryPlot plot = (CategoryPlot) chart.getPlot();
 		plot.setForegroundAlpha(0.7f);
 		plot.setBackgroundPaint(Color.white);
 		plot.setRangeGridlinePaint(Color.darkGray);
 
-		final CategoryAxis domainAxis = new ShiftedCategoryAxis(xLabel);
-		domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
-		domainAxis.setLowerMargin(0.0);
-		domainAxis.setUpperMargin(0.0);
-		domainAxis.setCategoryMargin(0.0);
-		plot.setDomainAxis(domainAxis);
+		setXaxis(font, plot);
+		setYaxis(font, plot);
 
-		final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-		if(binaryData){
-			rangeAxis.setUpperBound(1);
-		} else if (upperBound != 0){
-			rangeAxis.setUpperBound(upperBound);
-		} else {
-			rangeAxis.setAutoRange(true);
-		}
-		rangeAxis.setLowerBound(lowerBound);
-		Font font = new Font("Dialog", Font.PLAIN, fontSize);
-		plot.getDomainAxis().setLabelFont(font);
-		plot.getDomainAxis().setTickLabelFont(font);
-		plot.getRangeAxis().setLabelFont(font);
-		plot.getRangeAxis().setTickLabelFont(font);
-		legend.setItemFont(font);
 		final CategoryItemRenderer renderer = plot.getRenderer();
 
 		for(int i = 0; i < colors.length; i++){
 			renderer.setSeriesPaint(i, colors[i]);
 		}
 
-		plot.setInsets(new RectangleInsets(15.0, 0, 0, 5.0));
+		RectangleInsets bounds = preview ? RectangleInsets.ZERO_INSETS : new RectangleInsets(15.0, 0, 0, 5.0);
+		plot.setInsets(bounds);
 
 		return chart;
+	}
+
+	private void setYaxis(Font font, CategoryPlot plot) {
+		final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+		if (preview) {
+			rangeAxis.setVisible(false);
+		} else {
+			rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+			if (binaryData) {
+				rangeAxis.setUpperBound(1);
+			} else if (upperBound != 0) {
+				rangeAxis.setUpperBound(upperBound);
+			} else {
+				rangeAxis.setAutoRange(true);
+			}
+			rangeAxis.setLowerBound(lowerBound);
+			rangeAxis.setLabelFont(font);
+			rangeAxis.setTickLabelFont(font);
+		}
+	}
+
+	private void setXaxis(Font font, CategoryPlot plot) {
+		CategoryAxis domainAxis;
+		if (preview) {
+			domainAxis = new CategoryAxis();
+			domainAxis.setVisible(false);
+		} else {
+			domainAxis = new ShiftedCategoryAxis(xLabel);
+			domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+			domainAxis.setLowerMargin(0.0);
+			domainAxis.setUpperMargin(0.0);
+			domainAxis.setCategoryMargin(0.0);
+			domainAxis.setLabelFont(font);
+			domainAxis.setTickLabelFont(font);
+		}
+		plot.setDomainAxis(domainAxis);
 	}
 }

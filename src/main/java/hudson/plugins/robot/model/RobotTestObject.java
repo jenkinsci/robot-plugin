@@ -267,7 +267,8 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 		if(!isNeedToGenerate(req, rsp)) return;
 		Graph g = RobotGraphHelper.createDurationGraphForTestObject(this,
 				req.hasParameter("hd"),
- 				Integer.valueOf(req.getParameter("maxBuildsToShow")));
+ 				Integer.valueOf(req.getParameter("maxBuildsToShow")),
+				req.hasParameter("preview"));
 		g.doPng(req, rsp);
 	}
 

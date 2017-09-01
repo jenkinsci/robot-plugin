@@ -100,7 +100,7 @@ public class RobotGraphHelper {
 		}
 		int graphScale = hd ? 3 : 1;
 		return RobotGraph.getRobotGraph(rootObject.getOwner(), createSortedDataset(values, rows, columns), Messages.robot_trendgraph_testcases(),
-				Messages.robot_trendgraph_builds(), graphScale, binarydata, lowerbound, upperbound, Color.green, Color.red);
+				Messages.robot_trendgraph_builds(), graphScale, false, binarydata, lowerbound, upperbound, Color.green, Color.red);
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class RobotGraphHelper {
 	 * @param rootObject rootObject The dataset will be taken from rootObject backwards.
 	 * @return
 	 */
-	public static RobotGraph createDurationGraphForTestObject(RobotTestObject rootObject, boolean hd, int maxBuildsToShow) {
+	public static RobotGraph createDurationGraphForTestObject(RobotTestObject rootObject, boolean hd, int maxBuildsToShow, boolean preview) {
 		DataSetBuilder<String, NumberOnlyBuildLabel> builder = new DataSetBuilder<String, NumberOnlyBuildLabel>();
 
 		int scale = 1;
@@ -130,9 +130,9 @@ public class RobotGraphHelper {
 			builder.add((double) durations.get(i) / scale, "Duration", labels.get(i));
 		}
 
-		int graphScale = hd ? 3 : 1;
+		double graphScale = preview ? 0.15 : (hd ? 3 : 1);
 		return RobotGraph.getRobotGraph(rootObject.getOwner(), builder.build(), "Duration (" + getTimeScaleString(scale) + ")",
-				  Messages.robot_trendgraph_builds(), graphScale, false, 0, 0, Color.cyan);
+				  Messages.robot_trendgraph_builds(), graphScale, preview, false, 0, 0, Color.cyan);
 	}
 
 	private static CategoryDataset createSortedDataset(List<Number> values, List<String> rows, List<NumberOnlyBuildLabel> columns) {
