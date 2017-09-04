@@ -40,6 +40,32 @@ public class RobotListViewColumn extends ListViewColumn {
 		return 0;
 	}
 
+	public double getPassPercent(Job job) {
+		RobotResult lastRobotResult = getLastRobotResult(job);
+		if (lastRobotResult==null) return 100;
+		return lastRobotResult.getPassPercentage();
+	}
+
+	public String getRobotPath(Job job) {
+		return "/job/"+job.getName()+"/"+job.getLastBuild().number+"/robot/";
+	}
+
+	public String getLogUrl(Job job) {
+		return getRobotPath(job)+"report/log.html";
+	}
+
+	public String getTrendUrl(Job job) {
+		return getRobotPath(job)+"durationGraph?maxBuildsToShow="+getBuildsToShowInResultsColumn();
+	}
+
+	public String getTrendHdUrl(Job job) {
+		return getTrendUrl(job) + "&hd";
+	}
+
+	public String getTrendPreviewUrl(Job job) {
+		return getTrendUrl(job) + "&preview";
+	}
+
 	private RobotResult getLastRobotResult(Job job){
 		Run build = job.getLastCompletedBuild();
 		if(build != null) {
@@ -49,6 +75,10 @@ public class RobotListViewColumn extends ListViewColumn {
 			}
 		}
 		return null;
+	}
+
+	public int getBuildsToShowInResultsColumn() {
+		return ((DescriptorImpl) this.getDescriptor()).getBuildsToShowInResultsColumn();
 	}
 
 	public boolean isRobotResultsColumnEnabled() {
@@ -68,6 +98,9 @@ public class RobotListViewColumn extends ListViewColumn {
 
 		public boolean isRobotResultsColumnEnabled() {
 			return globalConfig.isRobotResultsColumnEnabled();
+		}
+		public int getBuildsToShowInResultsColumn() {
+			return globalConfig.getBuildsToShowInResultsColumn();
 		}
 	}
 }

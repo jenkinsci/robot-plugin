@@ -17,22 +17,25 @@ package hudson.plugins.robot.graph;
 
 import hudson.model.Run;
 import hudson.plugins.robot.Messages;
+import hudson.plugins.robot.RobotConfig;
 import hudson.plugins.robot.model.RobotTestObject;
 import hudson.util.ChartUtil;
-import hudson.util.Graph;
 import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 import hudson.util.DataSetBuilder;
 
 import java.awt.Color;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.TreeSet;
-
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 public class RobotGraphHelper {
 
+	private static final RobotConfig config = new RobotConfig();
 	private static int SECONDSCALE = 1000;
 	private static int MINUTESCALE = 60000;
 	private static int HOURSCALE = 3600000;
@@ -109,12 +112,12 @@ public class RobotGraphHelper {
 	 * @return
 	 */
 	public static RobotGraph createDurationGraphForTestObject(RobotTestObject rootObject, boolean hd, int maxBuildsToShow, boolean preview) {
-		DataSetBuilder<String, NumberOnlyBuildLabel> builder = new DataSetBuilder<String, NumberOnlyBuildLabel>();
+		DataSetBuilder<String, String> builder = new DataSetBuilder<String, String>();
 
 		int scale = 1;
 		int buildsLeftToShow = maxBuildsToShow > 0? maxBuildsToShow: -1;
 
-		List<NumberOnlyBuildLabel> labels = new ArrayList<NumberOnlyBuildLabel>();
+		List<String> labels = new ArrayList<String>();
 		List<Long> durations = new ArrayList<Long>();
 
 		for (RobotTestObject testObject = rootObject;
@@ -122,7 +125,9 @@ public class RobotGraphHelper {
 			 testObject = testObject.getPreviousResult(), buildsLeftToShow--) {
 
 			scale = getTimeScaleFactor(testObject.getDuration(), scale);
-			labels.add(new ChartUtil.NumberOnlyBuildLabel(testObject.getOwner()));
+			Date startTime = testObject.getOwner().getTime();
+			int run = testObject.getOwner().number;
+			labels.add(formatBuildLabel(run,startTime));
 			durations.add(testObject.getDuration());
 		}
 
@@ -130,9 +135,15 @@ public class RobotGraphHelper {
 			builder.add((double) durations.get(i) / scale, "Duration", labels.get(i));
 		}
 
-		double graphScale = preview ? 0.15 : (hd ? 3 : 1);
+		double graphScale = hd ? 3 : 1;
 		return RobotGraph.getRobotGraph(rootObject.getOwner(), builder.build(), "Duration (" + getTimeScaleString(scale) + ")",
 				  Messages.robot_trendgraph_builds(), graphScale, preview, false, 0, 0, Color.cyan);
+	}
+
+	private static String formatBuildLabel(int run, Date startTime) {
+		String format = getXAxisLabelFormat().replace("$build",""+run);
+		DateFormat df =	new SimpleDateFormat(format);
+		return df.format(startTime);
 	}
 
 	private static CategoryDataset createSortedDataset(List<Number> values, List<String> rows, List<NumberOnlyBuildLabel> columns) {
@@ -176,4 +187,11 @@ public class RobotGraphHelper {
 		else if(scale == HOURSCALE) return "h";
 		return "ms";
 	}
+
+	public static String getXAxisLabelFormat() {
+		return config.getXAxisLabelFormat();
+	}
+
+
+
 }

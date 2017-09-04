@@ -64,7 +64,7 @@ public class RobotGraph extends Graph {
 			double scale, boolean preview, boolean binaryData, double lowerBound, double upperBound, Color...colors) {
 		int width = (int)(scale * RobotGraph.DEFAULT_CHART_WIDTH);
 		int heigth = (int)(scale * RobotGraph.DEFAULT_CHART_HEIGHT);
-		int fontSize = (int)(scale * RobotGraph.DEFAULT_FONT_SIZE);
+		int fontSize = (int)(Math.sqrt(scale) * RobotGraph.DEFAULT_FONT_SIZE);  // use sqrt to scale font slower
 		return new RobotGraph(owner, categoryDataset, yLabel, xLabel, width, heigth, fontSize, preview, binaryData, lowerBound, upperBound, colors);
 	}
 
@@ -107,18 +107,8 @@ public class RobotGraph extends Graph {
 		chart.setBackgroundPaint(Color.white);
 
 		final Font font = new Font("Dialog", Font.PLAIN, fontSize);
-
-		if (preview) chart.clearSubtitles();
-		else {
-			final LegendTitle legend = chart.getLegend();
-			legend.setPosition(RectangleEdge.RIGHT);
-			legend.setItemFont(font);
-		}
-
-		final CategoryPlot plot = (CategoryPlot) chart.getPlot();
-		plot.setForegroundAlpha(0.7f);
-		plot.setBackgroundPaint(Color.white);
-		plot.setRangeGridlinePaint(Color.darkGray);
+		setLegend(chart, font);
+		final CategoryPlot plot = initPlot(chart);
 
 		setXaxis(font, plot);
 		setYaxis(font, plot);
@@ -133,6 +123,25 @@ public class RobotGraph extends Graph {
 		plot.setInsets(bounds);
 
 		return chart;
+	}
+
+	private CategoryPlot initPlot(JFreeChart chart) {
+		final CategoryPlot plot = (CategoryPlot) chart.getPlot();
+		plot.setForegroundAlpha(0.7f);
+		plot.setBackgroundPaint(Color.white);
+		plot.setRangeGridlinePaint(Color.darkGray);
+		plot.setRangeGridlinesVisible(!preview);
+		plot.setOutlineVisible(!preview);
+		return plot;
+	}
+
+	private void setLegend(JFreeChart chart, Font font) {
+		if (preview) chart.clearSubtitles();
+		else {
+			final LegendTitle legend = chart.getLegend();
+			legend.setPosition(RectangleEdge.RIGHT);
+			legend.setItemFont(font);
+		}
 	}
 
 	private void setYaxis(Font font, CategoryPlot plot) {
