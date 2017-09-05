@@ -1,7 +1,6 @@
 package hudson.plugins.robot.graph;
 
 import hudson.model.Run;
-import hudson.plugins.robot.RobotConfig;
 import hudson.plugins.robot.model.RobotTestObject;
 
 import java.text.SimpleDateFormat;
@@ -13,14 +12,14 @@ public class RobotBuildLabel implements Comparable<RobotBuildLabel>
     private final int buildNr;
     private final String buildLabel;
 
-	public RobotBuildLabel(RobotTestObject obj, RobotConfig config) {
+	public RobotBuildLabel(RobotTestObject obj, String format) {
         Run<?,?> build = obj.getOwner();
         buildNr = build.number;
-        buildLabel = formatBuildLabel(config, build.getTime());
+        buildLabel = formatBuildLabel(format, build.getTime());
     }
 
-    private String formatBuildLabel(RobotConfig config, Date startTime) {
-        String pattern = config.getXAxisLabelFormat().replace("$build",""+buildNr);
+    private String formatBuildLabel(String format, Date startTime) {
+        String pattern = format.replace("$build",""+buildNr);
         return new SimpleDateFormat(pattern).format(startTime);
     }
 

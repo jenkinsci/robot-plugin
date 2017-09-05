@@ -19,6 +19,7 @@ import hudson.model.AbstractBuild;
 import hudson.model.AbstractModelObject;
 import hudson.model.Run;
 import hudson.plugins.robot.RobotBuildAction;
+import hudson.plugins.robot.RobotConfig;
 import hudson.plugins.robot.graph.RobotGraphHelper;
 import hudson.util.ChartUtil;
 import hudson.util.Graph;
@@ -247,11 +248,13 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
+		String labelFormat = RobotConfig.getInstance().getXAxisLabelFormat();
 		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(this,
 				Boolean.valueOf(req.getParameter("zoomSignificant")),
 				false, Boolean.valueOf(req.getParameter("hd")),
 				Boolean.valueOf(req.getParameter("failedOnly")),
 				Boolean.valueOf(req.getParameter("criticalOnly")),
+				labelFormat,
 				Integer.valueOf(req.getParameter("maxBuildsToShow")));
 		g.doPng(req, rsp);
 	}
@@ -265,9 +268,11 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	public void doDurationGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
+		String labelFormat = RobotConfig.getInstance().getXAxisLabelFormat();
 		Graph g = RobotGraphHelper.createDurationGraphForTestObject(this,
 				req.hasParameter("hd"),
  				Integer.valueOf(req.getParameter("maxBuildsToShow")),
+				labelFormat,
 				req.hasParameter("preview"));
 		g.doPng(req, rsp);
 	}

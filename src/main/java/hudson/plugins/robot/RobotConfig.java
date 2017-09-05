@@ -16,6 +16,10 @@ public class RobotConfig extends GlobalConfiguration {
 		load();
 	}
 
+	public static RobotConfig getInstance() {
+		return GlobalConfiguration.all().get(RobotConfig.class);
+	}
+
 	@Override
 	public boolean configure(StaplerRequest req, JSONObject o) throws FormException {
 		// Get Robot Framework section

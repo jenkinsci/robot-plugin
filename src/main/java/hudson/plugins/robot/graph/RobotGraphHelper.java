@@ -16,10 +16,8 @@
 package hudson.plugins.robot.graph;
 
 import hudson.plugins.robot.Messages;
-import hudson.plugins.robot.RobotConfig;
 import hudson.plugins.robot.model.RobotTestObject;
 import hudson.util.DataSetBuilder;
-import jenkins.model.GlobalConfiguration;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
@@ -49,8 +47,8 @@ public class RobotGraphHelper {
 																 boolean hd,
 																 boolean failedOnly,
 																 boolean criticalOnly,
+																 String labelFormat,
 																 int maxBuildsToShow) {
-		RobotConfig config = GlobalConfiguration.all().get(RobotConfig.class);
 		List<Number> values = new ArrayList<Number>();
 		List<String> rows = new ArrayList<String>();
 		List<RobotBuildLabel> columns = new ArrayList<RobotBuildLabel>();
@@ -80,7 +78,7 @@ public class RobotGraphHelper {
 					upperbound = failed.intValue() + passed.intValue();
 			}
 
-			RobotBuildLabel label = new RobotBuildLabel(testObject,config);
+			RobotBuildLabel label = new RobotBuildLabel(testObject,labelFormat);
 
 			values.add(passed);
 			rows.add(Messages.robot_trendgraph_passed());
@@ -105,8 +103,7 @@ public class RobotGraphHelper {
 	 * @param rootObject rootObject The dataset will be taken from rootObject backwards.
 	 * @return
 	 */
-	public static RobotGraph createDurationGraphForTestObject(RobotTestObject rootObject, boolean hd, int maxBuildsToShow, boolean preview) {
-		RobotConfig config = GlobalConfiguration.all().get(RobotConfig.class);
+	public static RobotGraph createDurationGraphForTestObject(RobotTestObject rootObject, boolean hd, int maxBuildsToShow, String labelFormat, boolean preview) {
 		DataSetBuilder<String, RobotBuildLabel> builder = new DataSetBuilder<String, RobotBuildLabel>();
 
 		int scale = 1;
@@ -120,7 +117,7 @@ public class RobotGraphHelper {
 			 testObject = testObject.getPreviousResult(), buildsLeftToShow--) {
 
 			scale = getTimeScaleFactor(testObject.getDuration(), scale);
-			labels.add(new RobotBuildLabel(testObject, config));
+			labels.add(new RobotBuildLabel(testObject, labelFormat));
 			durations.add(testObject.getDuration());
 		}
 
