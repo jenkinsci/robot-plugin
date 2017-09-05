@@ -16,8 +16,10 @@
 package hudson.plugins.robot.graph;
 
 import hudson.plugins.robot.Messages;
+import hudson.plugins.robot.RobotConfig;
 import hudson.plugins.robot.model.RobotTestObject;
 import hudson.util.DataSetBuilder;
+import jenkins.model.GlobalConfiguration;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
@@ -48,6 +50,7 @@ public class RobotGraphHelper {
 																 boolean failedOnly,
 																 boolean criticalOnly,
 																 int maxBuildsToShow) {
+		RobotConfig config = GlobalConfiguration.all().get(RobotConfig.class);
 		List<Number> values = new ArrayList<Number>();
 		List<String> rows = new ArrayList<String>();
 		List<RobotBuildLabel> columns = new ArrayList<RobotBuildLabel>();
@@ -77,7 +80,7 @@ public class RobotGraphHelper {
 					upperbound = failed.intValue() + passed.intValue();
 			}
 
-			RobotBuildLabel label = new RobotBuildLabel(testObject);
+			RobotBuildLabel label = new RobotBuildLabel(testObject,config);
 
 			values.add(passed);
 			rows.add(Messages.robot_trendgraph_passed());
@@ -103,6 +106,7 @@ public class RobotGraphHelper {
 	 * @return
 	 */
 	public static RobotGraph createDurationGraphForTestObject(RobotTestObject rootObject, boolean hd, int maxBuildsToShow, boolean preview) {
+		RobotConfig config = GlobalConfiguration.all().get(RobotConfig.class);
 		DataSetBuilder<String, RobotBuildLabel> builder = new DataSetBuilder<String, RobotBuildLabel>();
 
 		int scale = 1;
@@ -116,7 +120,7 @@ public class RobotGraphHelper {
 			 testObject = testObject.getPreviousResult(), buildsLeftToShow--) {
 
 			scale = getTimeScaleFactor(testObject.getDuration(), scale);
-			labels.add(new RobotBuildLabel(testObject));
+			labels.add(new RobotBuildLabel(testObject, config));
 			durations.add(testObject.getDuration());
 		}
 

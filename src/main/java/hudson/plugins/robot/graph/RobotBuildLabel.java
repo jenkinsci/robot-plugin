@@ -10,18 +10,16 @@ import java.util.Date;
 
 public class RobotBuildLabel implements Comparable<RobotBuildLabel>
 {
-    private static final RobotConfig config = new RobotConfig();
-
     private final int buildNr;
     private final String buildLabel;
 
-	public RobotBuildLabel(RobotTestObject obj) {
+	public RobotBuildLabel(RobotTestObject obj, RobotConfig config) {
         Run<?,?> build = obj.getOwner();
         buildNr = build.number;
-        buildLabel = formatBuildLabel(build.getTime());
+        buildLabel = formatBuildLabel(config, build.getTime());
     }
 
-    private String formatBuildLabel(Date startTime) {
+    private String formatBuildLabel(RobotConfig config, Date startTime) {
         String pattern = config.getXAxisLabelFormat().replace("$build",""+buildNr);
         return new SimpleDateFormat(pattern).format(startTime);
     }
