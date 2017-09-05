@@ -9,35 +9,34 @@ import java.util.Date;
 
 public class RobotBuildLabel implements Comparable<RobotBuildLabel>
 {
-    private final int buildNr;
+    private final Run<?,?> run;
     private final String buildLabel;
 
 	public RobotBuildLabel(RobotTestObject obj, String format) {
-        Run<?,?> build = obj.getOwner();
-        buildNr = build.number;
-        buildLabel = formatBuildLabel(format, build.getTime());
+        run = obj.getOwner();
+        buildLabel = formatBuildLabel(format, run.getTime());
     }
 
     private String formatBuildLabel(String format, Date startTime) {
-        String pattern = format.replace("$build",""+buildNr);
+        String pattern = format.replace("$build",""+run.number);
         return new SimpleDateFormat(pattern).format(startTime);
     }
 
 	@Override
 	public int compareTo(RobotBuildLabel that) {
-        return this.buildNr-that.buildNr;
+        return this.run.number-that.run.number;
 	}
 
     @Override
     public boolean equals(Object o) {
         if(!(o instanceof RobotBuildLabel))    return false;
         RobotBuildLabel that = (RobotBuildLabel) o;
-        return buildNr==that.buildNr;
+        return run==that.run;
     }
 
     @Override
     public int hashCode() {
-        return buildNr;
+        return run.hashCode();
     }
 
     @Override
