@@ -15,27 +15,19 @@
 */
 package hudson.plugins.robot.graph;
 
-import hudson.model.Run;
 import hudson.plugins.robot.Messages;
-import hudson.plugins.robot.RobotConfig;
 import hudson.plugins.robot.model.RobotTestObject;
-import hudson.util.ChartUtil;
-import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 import hudson.util.DataSetBuilder;
-
-import java.awt.Color;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TreeSet;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeSet;
+
 public class RobotGraphHelper {
 
-	private static final RobotConfig config = new RobotConfig();
 	private static int SECONDSCALE = 1000;
 	private static int MINUTESCALE = 60000;
 	private static int HOURSCALE = 3600000;
@@ -58,7 +50,7 @@ public class RobotGraphHelper {
 																 int maxBuildsToShow) {
 		List<Number> values = new ArrayList<Number>();
 		List<String> rows = new ArrayList<String>();
-		List<NumberOnlyBuildLabel> columns = new ArrayList<NumberOnlyBuildLabel>();
+		List<RobotBuildLabel> columns = new ArrayList<RobotBuildLabel>();
 
 		double lowerbound = 0;
 		double upperbound = 0;
@@ -85,8 +77,7 @@ public class RobotGraphHelper {
 					upperbound = failed.intValue() + passed.intValue();
 			}
 
-			ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(
-					(Run<?,?>)testObject.getOwner());
+			RobotBuildLabel label = new RobotBuildLabel(testObject);
 
 			values.add(passed);
 			rows.add(Messages.robot_trendgraph_passed());
@@ -112,12 +103,12 @@ public class RobotGraphHelper {
 	 * @return
 	 */
 	public static RobotGraph createDurationGraphForTestObject(RobotTestObject rootObject, boolean hd, int maxBuildsToShow, boolean preview) {
-		DataSetBuilder<String, String> builder = new DataSetBuilder<String, String>();
+		DataSetBuilder<String, RobotBuildLabel> builder = new DataSetBuilder<String, RobotBuildLabel>();
 
 		int scale = 1;
 		int buildsLeftToShow = maxBuildsToShow > 0? maxBuildsToShow: -1;
 
-		List<String> labels = new ArrayList<String>();
+		List<RobotBuildLabel> labels = new ArrayList<RobotBuildLabel>();
 		List<Long> durations = new ArrayList<Long>();
 
 		for (RobotTestObject testObject = rootObject;
@@ -125,9 +116,7 @@ public class RobotGraphHelper {
 			 testObject = testObject.getPreviousResult(), buildsLeftToShow--) {
 
 			scale = getTimeScaleFactor(testObject.getDuration(), scale);
-			Date startTime = testObject.getOwner().getTime();
-			int run = testObject.getOwner().number;
-			labels.add(formatBuildLabel(run,startTime));
+			labels.add(new RobotBuildLabel(testObject));
 			durations.add(testObject.getDuration());
 		}
 
@@ -140,20 +129,13 @@ public class RobotGraphHelper {
 				  Messages.robot_trendgraph_builds(), graphScale, preview, false, 0, 0, Color.cyan);
 	}
 
-	private static String formatBuildLabel(int run, Date startTime) {
-		String format = getXAxisLabelFormat().replace("$build",""+run);
-		DateFormat df =	new SimpleDateFormat(format);
-		return df.format(startTime);
-	}
-
-	private static CategoryDataset createSortedDataset(List<Number> values, List<String> rows, List<NumberOnlyBuildLabel> columns) {
+	private static CategoryDataset createSortedDataset(List<Number> values, List<String> rows, List<RobotBuildLabel> columns) {
 		// Code from DataSetBuilder, reversed row order for passed tests to go
 		// first into dataset for nicer order when rendered in chart
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
 		TreeSet<String> rowSet = new TreeSet<String>(rows);
-		TreeSet<ChartUtil.NumberOnlyBuildLabel> colSet = new TreeSet<ChartUtil.NumberOnlyBuildLabel>(
-				columns);
+		TreeSet<RobotBuildLabel> colSet = new TreeSet<RobotBuildLabel>(columns);
 
 		Comparable[] _rows = rowSet.toArray(new Comparable[rowSet.size()]);
 		Comparable[] _cols = colSet.toArray(new Comparable[colSet.size()]);
@@ -188,10 +170,5 @@ public class RobotGraphHelper {
 		return "ms";
 	}
 
-	public static String getXAxisLabelFormat() {
-		return config.getXAxisLabelFormat();
-	}
-
-
-
 }
+
