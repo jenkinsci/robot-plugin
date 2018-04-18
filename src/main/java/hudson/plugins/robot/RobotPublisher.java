@@ -191,6 +191,13 @@ public class RobotPublisher extends Recorder implements Serializable,
 		return onlyCritical;
 	}
 
+	/**
+	 * Gets value of enableCache
+	 *
+	 * @return
+	 */
+	public boolean getEnableCache() { return enableCache; }
+
 
 	/**
 	 * Gets the comma separated list of other filemasks to copy into build dir
