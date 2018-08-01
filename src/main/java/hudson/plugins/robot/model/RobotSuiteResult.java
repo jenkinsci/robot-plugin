@@ -171,6 +171,14 @@ public class RobotSuiteResult extends RobotTestObject {
 	public void addCaseResult(RobotCaseResult caseResult) {
 		if(caseResults == null)
 			this.caseResults = new HashMap<String, RobotCaseResult>();
+		int i = 1;
+		String originalName = caseResult.getName();
+		String checkedTestName = originalName;
+		while(caseResults.get(checkedTestName) != null){
+		    checkedTestName = originalName + "_" + i;
+		    i++;
+		}
+		caseResult.setDuplicateSafeName(checkedTestName);
 		caseResults.put(caseResult.getDuplicateSafeName(), caseResult);
 	}
 
