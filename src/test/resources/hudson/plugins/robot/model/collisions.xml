@@ -17,6 +17,20 @@
 </tags>
 <status status="FAIL" endtime="20130722 15:01:31.513" critical="yes" starttime="20130722 15:01:31.510">in subsuite</status>
 </test>
+<test id="s1-s1-s1-t2" name="Subsuite example">
+<kw type="kw" name="BuiltIn.Fail">
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<arguments>
+<arg>in subsuite</arg>
+</arguments>
+<msg timestamp="20130722 15:01:31.513" level="FAIL">in subsuite</msg>
+<status status="FAIL" endtime="20130722 15:01:31.513" starttime="20130722 15:01:31.510"></status>
+</kw>
+<doc></doc>
+<tags>
+</tags>
+<status status="FAIL" endtime="20130722 15:01:31.513" critical="yes" starttime="20130722 15:01:31.510">in subsuite</status>
+</test>
 <doc></doc>
 <metadata>
 </metadata>
@@ -68,14 +82,14 @@
 </suite>
 <statistics>
 <total>
-<stat fail="3" pass="0">Critical Tests</stat>
-<stat fail="3" pass="0">All Tests</stat>
+<stat fail="4" pass="0">Critical Tests</stat>
+<stat fail="4" pass="0">All Tests</stat>
 </total>
 <tag>
 </tag>
 <suite>
-<stat fail="3" pass="0" id="s1" name="Collisions">Collisions</stat>
-<stat fail="1" pass="0" id="s1-s1" name="Hello">Collisions.Hello</stat>
+<stat fail="4" pass="0" id="s1" name="Collisions">Collisions</stat>
+<stat fail="2" pass="0" id="s1-s1" name="Hello">Collisions.Hello</stat>
 <stat fail="1" pass="0" id="s1-s1-s1" name="In Subsuite">Collisions.Hello.In Subsuite</stat>
 <stat fail="2" pass="0" id="s1-s2" name="Hello">Collisions.Hello</stat>
 </suite>

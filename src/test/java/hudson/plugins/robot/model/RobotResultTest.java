@@ -223,7 +223,7 @@ public class RobotResultTest extends TestCase {
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("collisions.xml", null, null);
 		RobotResult res = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("collisions.xml").toURI()).getParentFile(), null);
 		List<RobotCaseResult> failers = res.getAllFailedCases();
-		assertEquals(3, failers.size());
+		assertEquals(4, failers.size());
 	}
 
 	public void testShouldParseWholeSuiteDuration() throws Exception {
