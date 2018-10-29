@@ -260,8 +260,8 @@ public class RobotCaseResult extends RobotTestObject{
 
 	@Override
 	public long getCriticalFailed() {
-		if(isPassed() && isCritical()) return 0;
-		return 1;
+		if(!isPassed() && isCritical()) return 1;
+		return 0;
 	}
 
 	@Override
