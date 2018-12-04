@@ -41,6 +41,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	private RobotTestObject parent;
 	private String name;
 	private Map<String, RobotCaseResult> caseResults;
+	private String elapsedTime;
 	private String startTime;
 	private String endTime;
 	private transient int failed;
@@ -182,6 +183,10 @@ public class RobotSuiteResult extends RobotTestObject {
 		caseResults.put(caseResult.getDuplicateSafeName(), caseResult);
 	}
 
+	public void setElapsedTime(String elapsedTime) {
+		this.elapsedTime = elapsedTime;
+	}
+	
 	public void setStartTime(String startTime){
 		this.startTime = startTime;
 	}
@@ -192,8 +197,11 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	@Override
 	public long getDuration() {
-		if (StringUtils.isEmpty(this.startTime) || StringUtils.isEmpty(this.endTime))
-				return duration;
+		if (StringUtils.isNotEmpty(this.elapsedTime)) {
+			return Long.parseLong(this.elapsedTime);
+		} else if (StringUtils.isEmpty(this.startTime) || StringUtils.isEmpty(this.endTime)) {
+			return duration;
+		}
 
 		try{
 			return RobotCaseResult.timeDifference(this.startTime, this.endTime);
