@@ -1,0 +1,53 @@
+<!--
+Copyright 2008-2014 Nokia Solutions and Networks Oy
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:entry title="${%output.directory}" description="${%output.directory.description}" field="outputPath">
+    <f:textbox />
+  </f:entry>
+  <f:advanced>
+    <f:entry title="${%advanced.outputxml}" description="${%advanced.outputxml.description}" field="outputFileName">
+      <f:textbox />
+    </f:entry>
+    <f:entry title="${%advanced.reporthtml}" description="${%advanced.reporthtml.description}" field="reportFileName">
+        <f:textbox />
+    </f:entry>
+    <f:entry title="${%advanced.loghtml}" description="${%advanced.loghtml.description}" field="logFileName">
+        <f:textbox />
+    </f:entry>
+    <f:entry title="${%advanced.otherfiles}" description="${%advanced.otherfiles.description}" field="otherFiles">
+        <f:textbox />
+    </f:entry>
+    <f:entry title="${%advanced.disablearchiveoutputxml}" description="${%advanced.disablearchiveoutputxml.description}" field="disableArchiveOutput">
+        <f:checkbox />
+    </f:entry>
+    <f:entry title="${%advanced.enableCache}" description="${%advanced.enableCache.description}" field="enableCache">
+        <f:checkbox default="true"/>
+    </f:entry>
+  </f:advanced>
+  <f:entry title="${%thresholds.label}" help="/plugin/robot/help-thresholds.html">
+    <table width="100%">
+    <f:entry title="&lt;img src=&quot;${rootURL}/images/16x16/yellow.gif&quot;/&gt; %" field="unstableThreshold">
+      <f:textbox/>
+    </f:entry>
+    <f:entry title="&lt;img src=&quot;${rootURL}/images/16x16/blue.gif&quot;/&gt; %" field="passThreshold">
+           <f:textbox />
+    </f:entry>
+    <f:entry field="onlyCritical">
+        <f:checkbox default="true"/>${%thresholds.onlycritical}
+    </f:entry>
+    </table>
+  </f:entry>
+</j:jelly>
