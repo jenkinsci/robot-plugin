@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>	
 <!--
 Copyright 2008-2014 Nokia Solutions and Networks Oy
 
@@ -13,7 +14,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<?xml version="1.0" encoding="UTF-8"?>	
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
   <f:entry title="${%output.directory}" description="${%output.directory.description}" field="outputPath">

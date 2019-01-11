@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>	
 <!--
 Copyright 2008-2014 Nokia Solutions and Networks Oy
 
@@ -13,7 +14,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<?xml version="1.0" encoding="UTF-8"?>	
 <?jelly escape-by-default='true'?>
 <div>
   This publisher stores <a href="http://code.google.com/p/robotframework/" title="Robot Framework homepage">Robot Framework</a> test reports for builds and shows summaries of them in project and build views along with trend graph.
