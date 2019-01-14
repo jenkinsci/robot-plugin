@@ -46,6 +46,9 @@ import org.kohsuke.stapler.StaplerResponse;
 
 import com.thoughtworks.xstream.XStream;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+@SuppressFBWarnings(value="UG_SYNC_SET_UNSYNC_GET", justification="Methods are synchronized")
 public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction> implements StaplerProxy {
 
 	private static final Logger logger = Logger.getLogger(RobotBuildAction.class.getName());
@@ -76,7 +79,8 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	 */
 	public RobotBuildAction(Run<?, ?> build, RobotResult result,
 			String outputPath, TaskListener listener, String logFileLink, String logHtmlLink, boolean enableCache) {
-		super(build);
+		super();
+		super.onAttached(build);
 		this.build = build;
 		this.outputPath = outputPath;
 		this.logFileLink = logFileLink;
@@ -108,7 +112,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	/**
 	 * Loads new data to {@link RobotResult}.
 	 */
-	public synchronized void setResult(RobotResult result, TaskListener listener) {
+	synchronized public void setResult(RobotResult result, TaskListener listener) {
 		result.tally(this);
 		try {
 			getDataFile().write(result);
@@ -118,15 +122,11 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 
 		cacheRobotResult(result);
 	}
-
-	private XmlFile getDataFile() {
-		return new XmlFile(XSTREAM, new File(getOwner().getRootDir(), "robot_results.xml"));
-	}
-
+	
 	/**
 	 * Returns Robotresult. If not in memory loads it from disk.
 	 */
-	public synchronized RobotResult getResult() {
+	synchronized public RobotResult getResult() {
 		RobotResult returnable;
 
 		if (result != null) return result;
@@ -143,6 +143,10 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 			cacheRobotResult(returnable);
 		}
 		return returnable;
+	}
+
+	private XmlFile getDataFile() {
+		return new XmlFile(XSTREAM, new File(getOwner().getRootDir(), "robot_results.xml"));
 	}
 
 	private void cacheRobotResult(RobotResult result) {
@@ -261,7 +265,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 				Boolean.valueOf(req.getParameter("hd")),
 				Boolean.valueOf(req.getParameter("failedOnly")),
 				Boolean.valueOf(req.getParameter("criticalOnly")),
-				Integer.valueOf(maxBuildsReq));
+				Integer.parseInt(maxBuildsReq));
 		g.doPng(req, rsp);
 	}
 

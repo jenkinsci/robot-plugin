@@ -98,12 +98,14 @@ public class AggregatedRobotAction implements Action {
 				false, Boolean.valueOf(req.getParameter("hd")),
 				Boolean.valueOf(req.getParameter("failedOnly")),
 				Boolean.valueOf(req.getParameter("criticalOnly")),
-				Integer.valueOf(req.getParameter("maxBuildsToShow")));
+				Integer.parseInt(req.getParameter("maxBuildsToShow")));
 		g.doPng(req, rsp);
 	}
 
-	public class AggregatedRobotResult extends RobotResult {
-		AggregatedRobotAction parent;
+	public static class AggregatedRobotResult extends RobotResult {
+
+		private static final long serialVersionUID = 1L;
+		private final transient AggregatedRobotAction parent;
 		private int passed, failed, criticalPassed, criticalFailed;
 
 		public AggregatedRobotResult(AggregatedRobotAction parent) {

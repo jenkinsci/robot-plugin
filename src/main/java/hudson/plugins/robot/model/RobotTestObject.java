@@ -252,7 +252,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 				false, Boolean.valueOf(req.getParameter("hd")),
 				Boolean.valueOf(req.getParameter("failedOnly")),
 				Boolean.valueOf(req.getParameter("criticalOnly")),
-				Integer.valueOf(req.getParameter("maxBuildsToShow")));
+				Integer.parseInt(req.getParameter("maxBuildsToShow")));
 		g.doPng(req, rsp);
 	}
 
@@ -267,7 +267,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 		if(!isNeedToGenerate(req, rsp)) return;
 		Graph g = RobotGraphHelper.createDurationGraphForTestObject(this,
 				req.hasParameter("hd"),
- 				Integer.valueOf(req.getParameter("maxBuildsToShow")));
+ 				Integer.parseInt(req.getParameter("maxBuildsToShow")));
 		g.doPng(req, rsp);
 	}
 
