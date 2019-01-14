@@ -14,8 +14,8 @@ limitations under the License.
 
 ==================
 
-This plugin publishes Robot Framework (http://code.google.com/p/robotframework/)
-test reports for Hudson.
+This plugin publishes Robot Framework (https://robotframework.org/)
+test reports for Jenkins (2.7.1 or newer).
 
-See http://wiki.jenkins-ci.org/display/JENKINS/Robot+Framework+Plugin
+See https://wiki.jenkins.io/display/JENKINS/Robot+Framework+Plugin
 for more information.

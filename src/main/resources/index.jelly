@@ -16,5 +16,5 @@ limitations under the License.
 -->
 <?jelly escape-by-default='true'?>
 <div>
-  This publisher stores <a href="http://code.google.com/p/robotframework/" title="Robot Framework homepage">Robot Framework</a> test reports for builds and shows summaries of them in project and build views along with trend graph.
+  This publisher stores <a href="https://robotframework.org/" title="Robot Framework homepage">Robot Framework</a> test reports for builds and shows summaries of them in project and build views along with trend graph.
 </div>
