@@ -396,7 +396,8 @@ public class RobotPublisherSystemTest {
 	@Test 
     public void testRobotPipelineStep() throws Exception {
         WorkflowJob pipelineJob = j.jenkins.createProject(WorkflowJob.class, "pipelineJob");
-        String outputPath = new File("src/test/resources/hudson/plugins/robot").getAbsolutePath();
+        // Replace because of Windows path escapes in pipeline config
+        String outputPath = new File("src/test/resources/hudson/plugins/robot").getAbsolutePath().replace("\\", "\\\\");
         String outputFileName = "low_failure_output.xml";
         pipelineJob.setDefinition(new CpsFlowDefinition("node {robot outputFileName: '"+outputFileName+"', outputPath: '"+outputPath+"'}", true));
         j.assertLogContains("Done publishing Robot results.", j.assertBuildStatusSuccess(pipelineJob.scheduleBuild2(0)));
