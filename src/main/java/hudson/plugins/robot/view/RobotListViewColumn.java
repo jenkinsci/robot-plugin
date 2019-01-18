@@ -49,7 +49,7 @@ public class RobotListViewColumn extends ListViewColumn {
 	public String getRobotPath(Job job) {
 		Run build = job.getLastCompletedBuild();
 		int lastBuildNr = build==null? 1 : build.number;
-		return "/job/"+job.getName()+"/"+lastBuildNr+"/robot/";
+		return job.getShortUrl() + "/" + lastBuildNr+ "/robot/";
 	}
 
 	public String getLogUrl(Job job) {
