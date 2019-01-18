@@ -153,8 +153,12 @@
 	</pluginRepositories>
 	<issueManagement>
 		<system>Jira</system>
-		<url>https://issues.jenkins-ci.org</url>
+		<url>https://issues.jenkins-ci.org/issues?jql=component%20%3D%20robot-plugin</url>
 	</issueManagement>
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>https://ci.jenkins.io/blue/organizations/jenkins/Plugins%2Frobot-plugin</url>
+	</ciManagement>
 </project>
 
 
