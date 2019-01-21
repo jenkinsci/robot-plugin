@@ -28,6 +28,8 @@ import static org.mockito.Mockito.*;
 
 public class RobotGraphHelperTest extends TestCase {
 
+	private static final String xLabelFormat = "#$build";
+
 	private RobotResult mockResult1;
 	private RobotResult mockResult2;
 
@@ -62,42 +64,42 @@ public class RobotGraphHelperTest extends TestCase {
 
 	public void testShouldLimitResultsGraphDataSet() throws Exception {
 		RobotGraph limitedResultsGraph = RobotGraphHelper.createTestResultsGraphForTestObject(
-				mockResult2, false, false, false, false, false, 1);
+				mockResult2, false, false, false, false, false, xLabelFormat,1);
 
 		assertEquals(1, limitedResultsGraph.getDataset().getColumnCount());
 	}
 
 	public void testShouldReturnAllResultsGraphDataIfNotLimited() throws Exception {
 		RobotGraph notlimitedResultsGraph = RobotGraphHelper.createTestResultsGraphForTestObject(
-				mockResult2, false, false, false, false, false, 0);
+				mockResult2, false, false, false, false, false, xLabelFormat,0);
 
 		assertEquals(2, notlimitedResultsGraph.getDataset().getColumnCount());
 	}
 
 	public void testShouldReturnAllResultsGraphDataIfLimitIsBiggerThanDataAmount() throws Exception {
 		RobotGraph notlimitedResultsGraph = RobotGraphHelper.createTestResultsGraphForTestObject(
-				mockResult2, false, false, false, false, false, 10);
+				mockResult2, false, false, false, false, false, xLabelFormat,10);
 
 		assertEquals(2, notlimitedResultsGraph.getDataset().getColumnCount());
 	}
 
 	public void testShouldLimitDurationGraphDataSet() throws Exception {
 		RobotGraph limitedResultsGraph = RobotGraphHelper.createDurationGraphForTestObject(
-				mockResult2, false, 1);
+				mockResult2, false, 1,xLabelFormat,false);
 
 		assertEquals(1, limitedResultsGraph.getDataset().getColumnCount());
 	}
 
 	public void testShouldReturnAllDurationGraphDataIfNotLimited() throws Exception {
 		RobotGraph notlimitedResultsGraph = RobotGraphHelper.createDurationGraphForTestObject(
-				mockResult2, false, 0);
+				mockResult2, false, 0, xLabelFormat,false);
 
 		assertEquals(2, notlimitedResultsGraph.getDataset().getColumnCount());
 	}
 
 	public void testShouldReturnAllDurationDataIfLimitIsBiggerThanDataAmount() throws Exception {
 		RobotGraph notlimitedResultsGraph = RobotGraphHelper.createDurationGraphForTestObject(
-				mockResult2, false, 10);
+				mockResult2, false, 10, xLabelFormat,false);
 
 		assertEquals(2, notlimitedResultsGraph.getDataset().getColumnCount());
 	}
