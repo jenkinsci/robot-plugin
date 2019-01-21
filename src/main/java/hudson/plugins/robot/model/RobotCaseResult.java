@@ -16,6 +16,7 @@
 package hudson.plugins.robot.model;
 
 import hudson.model.Run;
+import hudson.plugins.robot.RobotConfig;
 import hudson.plugins.robot.graph.RobotGraphHelper;
 import hudson.util.Graph;
 
@@ -240,9 +241,10 @@ public class RobotCaseResult extends RobotTestObject{
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
+		String labelFormat = RobotConfig.getInstance().getXAxisLabelFormat();
 		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(this, false, true,
-				Boolean.valueOf(req.getParameter("hd")), false, false,
-				Integer.parseInt(req.getParameter("maxBuildsToShow")));
+				  Boolean.valueOf(req.getParameter("hd")), false, false, labelFormat,
+				  Integer.valueOf(req.getParameter("maxBuildsToShow")));
 		g.doPng(req, rsp);
 	}
 

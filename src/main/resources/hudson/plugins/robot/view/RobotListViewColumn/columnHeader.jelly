@@ -26,7 +26,7 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
     <j:if test="${it.isRobotResultsColumnEnabled()}">
         <th width="1" style="white-space:nowrap;">
-            Robot Results
+            Robot Results + Duration Trend
         </th>
     </j:if>
 </j:jelly>

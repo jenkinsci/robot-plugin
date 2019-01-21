@@ -260,12 +260,14 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		if (maxBuildsReq == null || maxBuildsReq.isEmpty())
 			maxBuildsReq = "0"; // show all builds by default
 
+		String labelFormat = RobotConfig.getInstance().getXAxisLabelFormat();
 		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(getResult(),
 				Boolean.valueOf(req.getParameter("zoomSignificant")), false,
 				Boolean.valueOf(req.getParameter("hd")),
 				Boolean.valueOf(req.getParameter("failedOnly")),
 				Boolean.valueOf(req.getParameter("criticalOnly")),
-				Integer.parseInt(maxBuildsReq));
+				labelFormat,
+				Integer.valueOf(maxBuildsReq));
 		g.doPng(req, rsp);
 	}
 

@@ -15,21 +15,16 @@
 */
 package hudson.plugins.robot.graph;
 
-import hudson.model.Run;
 import hudson.plugins.robot.Messages;
 import hudson.plugins.robot.model.RobotTestObject;
-import hudson.util.ChartUtil;
-import hudson.util.Graph;
-import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 import hudson.util.DataSetBuilder;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
-
-import org.jfree.data.category.CategoryDataset;
-import org.jfree.data.category.DefaultCategoryDataset;
 
 public class RobotGraphHelper {
 
@@ -52,10 +47,11 @@ public class RobotGraphHelper {
 																 boolean hd,
 																 boolean failedOnly,
 																 boolean criticalOnly,
+																 String labelFormat,
 																 int maxBuildsToShow) {
 		List<Number> values = new ArrayList<Number>();
 		List<String> rows = new ArrayList<String>();
-		List<NumberOnlyBuildLabel> columns = new ArrayList<NumberOnlyBuildLabel>();
+		List<RobotBuildLabel> columns = new ArrayList<RobotBuildLabel>();
 
 		double lowerbound = 0;
 		double upperbound = 0;
@@ -82,8 +78,7 @@ public class RobotGraphHelper {
 					upperbound = failed.intValue() + passed.intValue();
 			}
 
-			ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(
-					(Run<?,?>)testObject.getOwner());
+			RobotBuildLabel label = new RobotBuildLabel(testObject,labelFormat);
 
 			values.add(passed);
 			rows.add(Messages.robot_trendgraph_passed());
@@ -100,7 +95,7 @@ public class RobotGraphHelper {
 		}
 		int graphScale = hd ? 3 : 1;
 		return RobotGraph.getRobotGraph(rootObject.getOwner(), createSortedDataset(values, rows, columns), Messages.robot_trendgraph_testcases(),
-				Messages.robot_trendgraph_builds(), graphScale, binarydata, lowerbound, upperbound, Color.green, Color.red);
+				Messages.robot_trendgraph_builds(), graphScale, false, binarydata, lowerbound, upperbound, Color.green, Color.red);
 	}
 
 	/**
@@ -108,13 +103,13 @@ public class RobotGraphHelper {
 	 * @param rootObject rootObject The dataset will be taken from rootObject backwards.
 	 * @return
 	 */
-	public static RobotGraph createDurationGraphForTestObject(RobotTestObject rootObject, boolean hd, int maxBuildsToShow) {
-		DataSetBuilder<String, NumberOnlyBuildLabel> builder = new DataSetBuilder<String, NumberOnlyBuildLabel>();
+	public static RobotGraph createDurationGraphForTestObject(RobotTestObject rootObject, boolean hd, int maxBuildsToShow, String labelFormat, boolean preview) {
+		DataSetBuilder<String, RobotBuildLabel> builder = new DataSetBuilder<String, RobotBuildLabel>();
 
 		int scale = 1;
 		int buildsLeftToShow = maxBuildsToShow > 0? maxBuildsToShow: -1;
 
-		List<NumberOnlyBuildLabel> labels = new ArrayList<NumberOnlyBuildLabel>();
+		List<RobotBuildLabel> labels = new ArrayList<RobotBuildLabel>();
 		List<Long> durations = new ArrayList<Long>();
 
 		for (RobotTestObject testObject = rootObject;
@@ -122,7 +117,7 @@ public class RobotGraphHelper {
 			 testObject = testObject.getPreviousResult(), buildsLeftToShow--) {
 
 			scale = getTimeScaleFactor(testObject.getDuration(), scale);
-			labels.add(new ChartUtil.NumberOnlyBuildLabel(testObject.getOwner()));
+			labels.add(new RobotBuildLabel(testObject, labelFormat));
 			durations.add(testObject.getDuration());
 		}
 
@@ -130,19 +125,18 @@ public class RobotGraphHelper {
 			builder.add((double) durations.get(i) / scale, "Duration", labels.get(i));
 		}
 
-		int graphScale = hd ? 3 : 1;
+		double graphScale = hd ? 3 : 1;
 		return RobotGraph.getRobotGraph(rootObject.getOwner(), builder.build(), "Duration (" + getTimeScaleString(scale) + ")",
-				  Messages.robot_trendgraph_builds(), graphScale, false, 0, 0, Color.cyan);
+				  Messages.robot_trendgraph_builds(), graphScale, preview, false, 0, 0, Color.cyan);
 	}
 
-	private static CategoryDataset createSortedDataset(List<Number> values, List<String> rows, List<NumberOnlyBuildLabel> columns) {
+	private static CategoryDataset createSortedDataset(List<Number> values, List<String> rows, List<RobotBuildLabel> columns) {
 		// Code from DataSetBuilder, reversed row order for passed tests to go
 		// first into dataset for nicer order when rendered in chart
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
 		TreeSet<String> rowSet = new TreeSet<String>(rows);
-		TreeSet<ChartUtil.NumberOnlyBuildLabel> colSet = new TreeSet<ChartUtil.NumberOnlyBuildLabel>(
-				columns);
+		TreeSet<RobotBuildLabel> colSet = new TreeSet<RobotBuildLabel>(columns);
 
 		Comparable[] _rows = rowSet.toArray(new Comparable[rowSet.size()]);
 		Comparable[] _cols = colSet.toArray(new Comparable[colSet.size()]);
@@ -176,4 +170,6 @@ public class RobotGraphHelper {
 		else if(scale == HOURSCALE) return "h";
 		return "ms";
 	}
+
 }
+

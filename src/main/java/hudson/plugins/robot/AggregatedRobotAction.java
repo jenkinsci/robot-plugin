@@ -93,12 +93,14 @@ public class AggregatedRobotAction implements Action {
 		if (req.checkIfModified(t, rsp))
 			return;
 
+		String labelFormat = RobotConfig.getInstance().getXAxisLabelFormat();
 		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(getResult(),
 				Boolean.valueOf(req.getParameter("zoomSignificant")),
 				false, Boolean.valueOf(req.getParameter("hd")),
 				Boolean.valueOf(req.getParameter("failedOnly")),
 				Boolean.valueOf(req.getParameter("criticalOnly")),
-				Integer.parseInt(req.getParameter("maxBuildsToShow")));
+				labelFormat,
+				Integer.valueOf(req.getParameter("maxBuildsToShow")));
 		g.doPng(req, rsp);
 	}
 

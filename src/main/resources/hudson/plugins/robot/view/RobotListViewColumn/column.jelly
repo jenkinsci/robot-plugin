@@ -27,7 +27,14 @@ THE SOFTWARE.
   <j:if test="${it.isRobotResultsColumnEnabled()}">
       <td style="white-space:nowrap;">
       <j:if test="${it.getTotal(job) != 0}">
-          ${it.getPass(job)} / ${it.getTotal(job)} passed <img src="${rootURL}/plugin/robot/robot.png" />
+          <div style="position: relative; z-index: 1;" title="${it.getPassPercent(job)}% pass">
+              <a href="${it.getLogUrl(job)}" style="width:100px;height:25px; background:#FF0000;display:inline-block">
+                  <span style="position:absolute; left:4px; top:4px; z-index:2; color:#000">${it.getPass(job)} / ${it.getTotal(job)} pass</span>
+                  <div style="background:#00FF00;width:${it.getPassPercent(job)}%;height:100%;float:left;" ></div>
+              </a>
+              <a href="${it.getTrendHdUrl(job)}" style="height:25px"><img style="height:25px;vertical-align:top" src="${it.getTrendPreviewUrl(job)}" /></a>
+          </div>
+
       </j:if>
       </td>
   </j:if>

@@ -20,5 +20,11 @@ limitations under the License.
     <f:entry field="robotResultsColumnEnabled">
       <f:checkbox name="robotResultsColumnEnabled"/>Display "Robot Results" column in the job list view
     </f:entry>
+    <f:entry field="buildsToShowInResultsColumn">
+      <f:number name="buildsToShowInResultsColumn"/>Amount of runs to show in trend preview of "Robot Results" column
+    </f:entry>
+    <f:entry field="xAxisLabelFormat">
+      <f:textbox name="xAxisLabelFormat"/>Pattern to format x axis label in trend graphs. You can use $build for build number beside all letters from java class DateTimeFormatter (e.g. MM-dd HH:mm). Already created and cached images are not affected.
+    </f:entry>
   </f:section>
 </j:jelly>
