@@ -100,7 +100,7 @@ public class AggregatedRobotAction implements Action {
 				Boolean.valueOf(req.getParameter("failedOnly")),
 				Boolean.valueOf(req.getParameter("criticalOnly")),
 				labelFormat,
-				Integer.valueOf(req.getParameter("maxBuildsToShow")));
+				Integer.parseInt(req.getParameter("maxBuildsToShow")));
 		g.doPng(req, rsp);
 	}
 

@@ -267,7 +267,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 				Boolean.valueOf(req.getParameter("failedOnly")),
 				Boolean.valueOf(req.getParameter("criticalOnly")),
 				labelFormat,
-				Integer.valueOf(maxBuildsReq));
+				Integer.parseInt(maxBuildsReq));
 		g.doPng(req, rsp);
 	}
 

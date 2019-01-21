@@ -243,8 +243,8 @@ public class RobotCaseResult extends RobotTestObject{
 		if(!isNeedToGenerate(req, rsp)) return;
 		String labelFormat = RobotConfig.getInstance().getXAxisLabelFormat();
 		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(this, false, true,
-				  Boolean.valueOf(req.getParameter("hd")), false, false, labelFormat,
-				  Integer.valueOf(req.getParameter("maxBuildsToShow")));
+				  Boolean.parseBoolean(req.getParameter("hd")), false, false, labelFormat,
+				  Integer.parseInt(req.getParameter("maxBuildsToShow")));
 		g.doPng(req, rsp);
 	}
 
