@@ -30,6 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.export.Exported;
 
 public class RobotSuiteResult extends RobotTestObject {
 
@@ -93,6 +94,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	/**
 	 * Get the name of this suite
 	 */
+	@Exported
 	public String getName(){
 		return name;
 	}
