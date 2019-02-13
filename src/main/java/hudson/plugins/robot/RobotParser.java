@@ -137,11 +137,19 @@ public class RobotParser {
 			suite.setParent(parent);
 			suite.setName(reader.getAttributeValue(null, "name"));
 			suite.setId(reader.getAttributeValue(null, "id"));
+			suite.setDescription("");
 			//parse children, which can be test cases or test suites
 			while(reader.hasNext()){
 				reader.next();
 				if(reader.isStartElement()){
 					String tagName = reader.getLocalName();
+					if("doc".equals(tagName)){
+						reader.next();
+						if (reader.hasText()) {
+							suite.setDescription(reader.getText());
+						}
+						reader.next();
+					}
 					if("suite".equals(tagName)){
 						suite.addChild(processSuite(reader, suite, baseDirectory));
 					} else if("test".equals(tagName)){
@@ -264,12 +272,20 @@ public class RobotParser {
 			setCriticalityIfAvailable(reader, caseResult);
 			caseResult.setId(reader.getAttributeValue(null, "id"));
 			//parse test tags
-			String tag = ignoreUntilStarts(reader, "tags", "status");
-			if (tag == "tags") {
+			caseResult.setDescription("");
+			caseResult.addTags(new ArrayList<String>());
+			String xmlTag = ignoreUntilStarts(reader, "doc", "tags", "status");
+			if (xmlTag == "doc") {
+				reader.next();
+				if (reader.hasText()) {
+					caseResult.setDescription(reader.getText());
+				}
+				reader.next();
+				xmlTag = ignoreUntilStarts(reader, "tags", "status");
+			}
+			if (xmlTag == "tags") {
 				caseResult.addTags(processTags(reader));
-				ignoreUntilStarts(reader, "status");
-			} else {
-				caseResult.addTags(new ArrayList<String>());
+				xmlTag = ignoreUntilStarts(reader, "status");
 			}
 			//parse test details from nested status
 			caseResult.setPassed("PASS".equals(reader.getAttributeValue(null, "status")));

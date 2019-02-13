@@ -77,6 +77,11 @@ public class RobotResult extends RobotTestObject {
 		return "";
 	}
 
+	@Override
+	public String getDescription() {
+		return "";
+	}
+
 	/**
 	 * Get number of passed critical tests.
 	 * @return

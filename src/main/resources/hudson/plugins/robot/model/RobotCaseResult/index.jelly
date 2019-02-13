@@ -32,6 +32,7 @@ limitations under the License.
       <tbody>
       <tr><th class="${status}">TEST CASE:</th><td><strong>${it.name}</strong><j:if test="${!it.critical}"> (non-critical)</j:if></td></tr>
       <tr><th>Tags:</th><td>${it.commaSeparatedTags}</td></tr>
+      <tr><th>Description:</th><td>${it.description}</td></tr>
       <tr><th>Duration:</th><td>${it.humanReadableDuration} (${it.getDurationDiff(prevcase)})</td></tr>
       <tr><th>Status:</th><td><span class="${status}">${status}</span> (<j:if test="${!it.critical}">non-</j:if>critical)</td></tr>
       <j:if test="${!it.isPassed()}">
