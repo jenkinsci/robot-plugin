@@ -19,6 +19,11 @@
       <name>Janne Piironen</name>
       <email>janne.piironen@gmail.com</email>
     </developer>
+    <developer>
+      <id>aleksisimell</id>
+      <name>Aleksi Simell</name>
+      <email>aleksi.simell@eficode.com</email>
+    </developer>
   </developers>
 
   <scm>
