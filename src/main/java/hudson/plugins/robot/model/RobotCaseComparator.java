@@ -15,9 +15,12 @@
 */
 package hudson.plugins.robot.model;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
-public class RobotCaseComparator implements Comparator<RobotCaseResult> {
+public class RobotCaseComparator implements Comparator<RobotCaseResult>, Serializable  {
+
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	public int compare(RobotCaseResult result1, RobotCaseResult result2) {

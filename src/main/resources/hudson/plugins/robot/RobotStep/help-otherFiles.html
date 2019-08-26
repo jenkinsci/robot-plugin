@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>	
 <!--
 Copyright 2008-2014 Nokia Solutions and Networks Oy
 
@@ -14,13 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-  <l:layout>
-  <st:include it="${it.owner}" page="sidepanel.jelly"/>
-    <l:main-panel>
-      <h1>${%notfound.header}</h1>
-      <p>${%notfound.message(it.parentAction.robotDir)}</p>
-    </l:main-panel>
-  </l:layout>
-</j:jelly>
+<div>
+<p>Comma separated list of file names relative to output path. Supports <a href="http://ant.apache.org/manual/dirtasks.html#patterns">Ant GLOB</a> style wildcards (e.g. **/screenshot*.jpg).</p>
+<p>You can save any artifacts related to tests (e.g. Selenium screenshots) in the robot directory by configuring the filenames here. Items that are linked to the robot log files - like screenshots - have to be explicitly saved here in order to view them in the stored logs.</p>
+</div>

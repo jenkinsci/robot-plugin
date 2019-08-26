@@ -103,11 +103,13 @@ public class RobotPublisher extends Recorder implements Serializable,
 		this.onlyCritical = onlyCritical;
 		this.enableCache = enableCache;
 
-		String[] filemasks = otherFiles.split(",");
-		for (int i = 0; i < filemasks.length; i++){
-			filemasks[i] = StringUtils.strip(filemasks[i]);
+		if (otherFiles != null) {
+			String[] filemasks = otherFiles.split(",");
+			for (int i = 0; i < filemasks.length; i++){
+				filemasks[i] = StringUtils.strip(filemasks[i]);
+			}
+			this.otherFiles = filemasks;
 		}
-		this.otherFiles = filemasks;
 	}
 
 	/**
