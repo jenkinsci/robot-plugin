@@ -17,7 +17,6 @@ package hudson.plugins.robot.model;
 
 import hudson.plugins.robot.RobotBuildAction;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +28,6 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
 
 public class RobotSuiteResult extends RobotTestObject {
 
