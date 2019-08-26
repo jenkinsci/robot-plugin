@@ -15,7 +15,6 @@
 */
 package hudson.plugins.robot.model;
 
-import hudson.model.AbstractBuild;
 import hudson.model.Run;
 import hudson.plugins.robot.RobotConfig;
 import hudson.plugins.robot.graph.RobotGraphHelper;
@@ -163,10 +162,13 @@ public class RobotCaseResult extends RobotTestObject{
 		List<String> tags = getTags();
 		if (tags.size()==0)
 			return "";
-		String result = "";
-		for (String tag: tags)
-			result += tag+", ";
-		return result.substring(0, result.length()-2);
+		else {
+			StringBuffer buf = new StringBuffer();
+			for (String tag: tags)
+				buf.append(tag+", ");
+			String result = buf.toString();
+			return result.substring(0, result.length()-2);
+		}
 	}
 
 	public void addTags(List<String> taglist){
@@ -241,8 +243,8 @@ public class RobotCaseResult extends RobotTestObject{
 		if(!isNeedToGenerate(req, rsp)) return;
 		String labelFormat = RobotConfig.getInstance().getXAxisLabelFormat();
 		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(this, false, true,
-				Boolean.valueOf(req.getParameter("hd")), false, false, labelFormat,
-				Integer.valueOf(req.getParameter("maxBuildsToShow")));
+				  Boolean.parseBoolean(req.getParameter("hd")), false, false, labelFormat,
+				  Integer.parseInt(req.getParameter("maxBuildsToShow")));
 		g.doPng(req, rsp);
 	}
 

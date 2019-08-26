@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -250,12 +251,27 @@ public class RobotResult extends RobotTestObject {
 	 * Get all top level suites
 	 * @return Collection of suiteresults
 	 */
-	@Exported
 	public Collection<RobotSuiteResult> getSuites(){
 		if (suites != null)
 			return suites.values();
 		return Collections.emptyList();
 	}
+	
+	@Exported
+	public List<String> getExecutedSuites() {
+		List<String> executedSuites = new ArrayList<String>();
+		for (RobotSuiteResult robotSuiteResult : this.getAllSuites()) {
+			RobotTestObject rto = robotSuiteResult.getParent();
+			String name = robotSuiteResult.getName();	
+			while (rto != null && !rto.getName().isEmpty()) {
+				name = rto.getName()+"."+name;
+				rto = rto.getParent();
+			}
+			executedSuites.add(name);
+		}
+		return executedSuites;	
+	}
+	
 
 	/**
 	 * Get all testsuites related to result.
@@ -275,7 +291,6 @@ public class RobotResult extends RobotTestObject {
 	 * Get all failed test cases related to result.
 	 * @return list of test case results
 	 */
-	@Exported
 	public List<RobotCaseResult> getAllFailedCases(){
 		List<RobotCaseResult> allFailedCases = new ArrayList<RobotCaseResult>();
 		for(RobotSuiteResult suite : getSuites()){
@@ -284,6 +299,21 @@ public class RobotResult extends RobotTestObject {
 		}
 		Collections.sort(allFailedCases, new RobotCaseComparator());
 		return allFailedCases;
+	}
+	
+	@Exported
+	public List<String> getFailedCases() {
+		List<String> failedCases = new ArrayList<String>();
+		for (RobotCaseResult robotCaseResult : this.getAllFailedCases()) {
+			RobotTestObject rto = robotCaseResult.getParent();
+			String name = robotCaseResult.getName();	
+			while (rto != null && !rto.getName().isEmpty()) {
+				name = rto.getName()+"."+name;
+				rto = rto.getParent();
+			}
+			failedCases.add(name);
+		}
+		return failedCases;
 	}
 
 	/**

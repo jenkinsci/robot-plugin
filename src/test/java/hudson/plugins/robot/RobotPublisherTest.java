@@ -18,6 +18,9 @@ package hudson.plugins.robot;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+
 import hudson.model.FreeStyleBuild;
 import hudson.model.Result;
 import hudson.model.AbstractBuild;
@@ -112,6 +115,14 @@ public class RobotPublisherTest extends TestCase {
 		when(mockBuild.getResult()).thenReturn(Result.SUCCESS);
 
 		assertEquals(Result.UNSTABLE, publisher.getBuildResult(mockBuild, result));
-
 	}
+	
+	public void testShouldHandleDurationWithoutTimes() throws Exception {
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("rebot_output.xml", null, null);
+		RobotResult result = remoteOperation.invoke(new File(RobotPublisherTest.class.getResource("rebot_output.xml").toURI()).getParentFile(), null);
+		result.tally(null);
+
+		assertEquals(151, result.getDuration());
+	}
+	
 }

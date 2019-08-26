@@ -152,6 +152,7 @@ public class RobotParser {
 							suite.failTeardown();
 						}
 					} else if("status".equals(tagName)){
+						suite.setElapsedTime(reader.getAttributeValue(null, "elapsedtime"));
 						suite.setStartTime(reader.getAttributeValue(null, "starttime"));
 						suite.setEndTime(reader.getAttributeValue(null, "endtime"));
 					}

@@ -5,6 +5,7 @@ import hudson.model.TaskListener;
 import hudson.model.AbstractBuild;
 import hudson.model.Hudson;
 import hudson.plugins.robot.RobotBuildAction;
+import jenkins.model.Jenkins;
 
 import java.io.IOException;
 
@@ -20,7 +21,7 @@ public class RobotReportLinkTokenMacro extends DataBoundTokenMacro {
 			InterruptedException {
 		RobotBuildAction action = context.getAction(RobotBuildAction.class);
 		if (action!=null){
-			String rootURL = (Hudson.getInstance() != null) ? Hudson.getInstance().getRootUrl() : "";
+			String rootURL = (Jenkins.getInstanceOrNull() != null) ? Jenkins.getInstance().getRootUrl() : "";
 			if (action.getLogFileLink() == null)
 				return rootURL + context.getUrl()+ action.getUrlName() + "/report/";
 			else

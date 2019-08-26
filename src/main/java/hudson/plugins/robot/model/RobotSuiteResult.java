@@ -17,7 +17,6 @@ package hudson.plugins.robot.model;
 
 import hudson.plugins.robot.RobotBuildAction;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +28,6 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
 
 public class RobotSuiteResult extends RobotTestObject {
 
@@ -41,6 +39,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	private RobotTestObject parent;
 	private String name;
 	private Map<String, RobotCaseResult> caseResults;
+	private String elapsedTime;
 	private String startTime;
 	private String endTime;
 	private transient int failed;
@@ -182,6 +181,10 @@ public class RobotSuiteResult extends RobotTestObject {
 		caseResults.put(caseResult.getDuplicateSafeName(), caseResult);
 	}
 
+	public void setElapsedTime(String elapsedTime) {
+		this.elapsedTime = elapsedTime;
+	}
+	
 	public void setStartTime(String startTime){
 		this.startTime = startTime;
 	}
@@ -192,8 +195,11 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	@Override
 	public long getDuration() {
-		if (StringUtils.isEmpty(this.startTime) || StringUtils.isEmpty(this.endTime))
-				return duration;
+		if (StringUtils.isNotEmpty(this.elapsedTime)) {
+			return Long.parseLong(this.elapsedTime);
+		} else if (StringUtils.isEmpty(this.startTime) || StringUtils.isEmpty(this.endTime)) {
+			return duration;
+		}
 
 		try{
 			return RobotCaseResult.timeDifference(this.startTime, this.endTime);
