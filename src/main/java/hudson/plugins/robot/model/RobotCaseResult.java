@@ -42,6 +42,7 @@ public class RobotCaseResult extends RobotTestObject{
 	private boolean critical;
 	private String errorMsg;
 	private String name;
+	private String description;
 	private String starttime;
 	private String endtime;
 	private List<String> tags;
@@ -77,6 +78,18 @@ public class RobotCaseResult extends RobotTestObject{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	/**

@@ -49,6 +49,8 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 
 	public abstract String getName();
 
+	public abstract String getDescription();
+
 	public abstract  RobotTestObject getParent();
 
 	private String duplicateSafeName;

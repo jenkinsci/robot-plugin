@@ -41,6 +41,7 @@ limitations under the License.
       <table class="summary">
       <tbody>
         <tr><th class="${status}">TEST SUITE:</th><td><strong>${it.name}</strong></td></tr>
+        <tr><th>Description:</th><td>${it.description}</td></tr>
         <tr><th>Duration:</th><td>${it.humanReadableDuration} (${it.getDurationDiff(prevresult)})</td></tr>
         <tr><th>Status:</th><td>${it.criticalTotal} critical test, ${it.criticalPassed} passed, <span class="${status}">${it.criticalFailed}</span> failed<br/>
                               ${it.total} test total (${h.getDiffString(it.total - prevresult.total)}), ${it.passed} passed, <span class="${total_status}">${it.failed}</span> failed</td></tr>

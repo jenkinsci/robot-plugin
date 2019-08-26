@@ -38,6 +38,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	private Map<String, RobotSuiteResult> children;
 	private RobotTestObject parent;
 	private String name;
+	private String description;
 	private Map<String, RobotCaseResult> caseResults;
 	private String elapsedTime;
 	private String startTime;
@@ -98,6 +99,17 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	public void setName(String name){
 		this.name = name;
+	}
+
+	/**
+	 * Get the description of this suite
+	 */
+	public String getDescription(){
+		return description;
+	}
+
+	public void setDescription(String description){
+		this.description = description;
 	}
 
 	/**

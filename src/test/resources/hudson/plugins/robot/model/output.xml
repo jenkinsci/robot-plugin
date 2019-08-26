@@ -298,7 +298,7 @@
 			starttime="20100629 11:08:54.306">
 		</status>
 	<test critical="yes" name="Hello" timeout="">
-				<doc></doc>
+				<doc>Test</doc>
 				<kw type="kw" name="BuiltIn.Should Be Equal" timeout="">
 					<doc>Fails if the given objects are unequal.</doc>
 					<arguments>

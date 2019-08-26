@@ -21,6 +21,7 @@ limitations under the License.
   <table class="summary listsummary">
         <tbody>
         <tr><th>Tags:</th><td>${it.commaSeparatedTags}</td></tr>
+        <tr><th>Description:</th><td>${it.description}</td></tr>
         <tr><th>Message:</th><td><pre><st:out value="${it.errorMsg}"/></pre></td></tr>
         </tbody>
   </table>
