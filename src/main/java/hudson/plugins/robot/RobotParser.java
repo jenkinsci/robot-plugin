@@ -148,9 +148,7 @@ public class RobotParser {
 						if (reader.hasText()) {
 							suite.setDescription(reader.getText());
 						}
-						reader.next();
-					}
-					if("suite".equals(tagName)){
+					} else if("suite".equals(tagName)){
 						suite.addChild(processSuite(reader, suite, baseDirectory));
 					} else if("test".equals(tagName)){
 						suite.addCaseResult(processTest(reader, suite));
@@ -285,7 +283,7 @@ public class RobotParser {
 			}
 			if (xmlTag == "tags") {
 				caseResult.addTags(processTags(reader));
-				xmlTag = ignoreUntilStarts(reader, "status");
+				ignoreUntilStarts(reader, "status");
 			}
 			//parse test details from nested status
 			caseResult.setPassed("PASS".equals(reader.getAttributeValue(null, "status")));
