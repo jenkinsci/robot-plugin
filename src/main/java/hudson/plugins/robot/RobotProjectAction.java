@@ -42,7 +42,7 @@ public class RobotProjectAction implements Action {
 
 	/**
 	 * Get associated project.
-	 * @return
+	 * @return the project
 	 */
 	public AbstractProject<?, ?> getProject() {
 		return project;
@@ -50,7 +50,7 @@ public class RobotProjectAction implements Action {
 
 	/**
 	 * Returns true if there are any builds in the associated project.
-	 * @return
+	 * @return true if there are any builds in the associated project.
 	 */
 	public boolean isDisplayGraph() {
 		if (getLastBuildAction() != null)
@@ -76,10 +76,10 @@ public class RobotProjectAction implements Action {
 
 	/**
 	 * Return robot trend graph in the request.
-	 * @param req
-	 * @param rsp
-	 * @throws IOException
-	 * @throws ServletException
+	 * @param req StaplerRequest
+	 * @param rsp StaplerResponse
+	 * @throws IOException thrown exception
+	 * @throws ServletException thrown exception
 	 */
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException, ServletException {
@@ -105,9 +105,9 @@ public class RobotProjectAction implements Action {
 
 	/**
 	 * Show Robot html report of the latest build. If no builds are associated with Robot, returns info page.
-	 * @param req
-	 * @param rsp
-	 * @throws IOException
+	 * @param req StaplerRequest
+	 * @param rsp StaplerResponse
+	 * @throws IOException thrown exception
 	 */
 	public void doIndex(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {

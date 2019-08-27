@@ -16,7 +16,6 @@
 package hudson.plugins.robot.model;
 
 import hudson.FilePath;
-import hudson.model.AbstractBuild;
 import hudson.model.Api;
 import hudson.model.DirectoryBrowserSupport;
 import hudson.model.Run;
@@ -30,7 +29,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -85,7 +83,7 @@ public class RobotResult extends RobotTestObject {
 
 	/**
 	 * Get number of passed critical tests.
-	 * @return
+	 * @return number of passed critical tests
 	 */
 	@Exported
 	public long getCriticalPassed(){
@@ -96,7 +94,7 @@ public class RobotResult extends RobotTestObject {
 
 	/**
 	 * Get number of failed critical tests.
-	 * @return
+	 * @return number of failed critical tests
 	 */
 	@Exported
 	public long getCriticalFailed(){
@@ -107,7 +105,7 @@ public class RobotResult extends RobotTestObject {
 
 	/**
 	 * Get total number of critical tests.
-	 * @return
+	 * @return total number of critical tests
 	 */
 	@Exported
 	public long getCriticalTotal(){
@@ -118,7 +116,7 @@ public class RobotResult extends RobotTestObject {
 
 	/**
 	 * Get number of all passed tests.
-	 * @return
+	 * @return number of all passed tests
 	 */
 	@Exported
 	public long getOverallPassed(){
@@ -129,7 +127,7 @@ public class RobotResult extends RobotTestObject {
 
 	/**
 	 * Get number of all failed tests.
-	 * @return
+	 * @return number of all failed tests
 	 */
 	@Exported
 	public long getOverallFailed(){
@@ -140,7 +138,7 @@ public class RobotResult extends RobotTestObject {
 
 	/**
 	 * Get number of all tests.
-	 * @return
+	 * @return number of all tests
 	 */
 	@Exported
 	public long getOverallTotal(){
@@ -162,8 +160,8 @@ public class RobotResult extends RobotTestObject {
 	}
 
 	/**
-	 * Get the timestamp of the original test run
-	 * @return
+	 * Get the timestamp of the original test run.
+	 * @return timestamp of the original test run
 	 */
 	@Exported
 	public String getTimeStamp() {
@@ -171,8 +169,8 @@ public class RobotResult extends RobotTestObject {
 	}
 
 	/**
-	 * Set the timestamp of test run
-	 * @param timeStamp
+	 * Set the timestamp of test run.
+	 * @param timeStamp The wanted timestamp.
 	 */
 	public void setTimeStamp(String timeStamp) {
 		this.timeStamp = timeStamp;
@@ -226,7 +224,7 @@ public class RobotResult extends RobotTestObject {
 
 	/**
 	 * Get top level suite by name
-	 * @param name
+	 * @param name suite name
 	 * @return suite result, null when not found
 	 */
 	public RobotSuiteResult getSuite(String name) {
@@ -236,7 +234,7 @@ public class RobotResult extends RobotTestObject {
 	/**
 	 * Add a suite to this result. If suite with same name exists, store this
 	 * with sequential numbering
-	 * @param suite
+	 * @param suite RobotSuiteResult to add
 	 */
 	public void addSuite(RobotSuiteResult suite){
 		if(suites == null)
@@ -323,7 +321,7 @@ public class RobotResult extends RobotTestObject {
 
 	/**
 	 * Count the totals in result tree and assign parent action.
-	 * @param robotBuildAction
+	 * @param robotBuildAction The action to be used as the base
 	 */
 	public void tally(RobotBuildAction robotBuildAction){
 		setParentAction(robotBuildAction);
@@ -350,10 +348,10 @@ public class RobotResult extends RobotTestObject {
 
 	/**
 	 * Return the object represented by url-string
-	 * @param token
-	 * @param req
-	 * @param rsp
-	 * @return
+	 * @param token Token
+	 * @param req StaplerRequest
+	 * @param rsp StaplerResponse
+	 * @return object represented by url-string
 	 */
 	public Object getDynamic(String token, StaplerRequest req, StaplerResponse rsp){
 		return suites.get(token);
@@ -361,11 +359,12 @@ public class RobotResult extends RobotTestObject {
 
 	/**
 	 * Serves Robot html report via robot url. Shows not found page if file is missing. If reportfilename is specified, the report is served (To be compatible with v1.0 builds)
-	 * @param req
-	 * @param rsp
-	 * @throws IOException
-	 * @throws ServletException
-	 * @throws InterruptedException
+	 * @param req StaplerRequest
+	 * @param rsp StaplerResponse
+	 * @throws IOException thrown exception
+	 * @throws ServletException thrown exception
+	 * @throws InterruptedException thrown exception
+	 * @return DirectoryBrowserSupport for the report or null
 	 */
 	public DirectoryBrowserSupport doReport(StaplerRequest req, StaplerResponse rsp)
 			throws IOException, ServletException, InterruptedException {

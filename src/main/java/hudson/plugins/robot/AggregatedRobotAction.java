@@ -77,9 +77,9 @@ public class AggregatedRobotAction implements Action {
 
 	/**
 	 * Return robot trend graph in the request.
-	 * @param req
-	 * @param rsp
-	 * @throws java.io.IOException
+	 * @param req The used StaplerRequest
+	 * @param rsp The used StaplerResponse
+	 * @throws IOException thrown exception
 	 */
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {

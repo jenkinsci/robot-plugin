@@ -75,7 +75,10 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	 * @param build Build which this action is associated to
 	 * @param result Robot result
 	 * @param outputPath Path where the Robot report is stored relative to build root
-	 * @param logFileLink
+	 * @param logFileLink Link for the log file
+	 * @param logHtmlLink  Link for the log html
+	 * @param listener TaskListener from Jenkins
+	 * @param enableCache Whether we want to enable caching or not
 	 */
 	public RobotBuildAction(Run<?, ?> build, RobotResult result,
 			String outputPath, TaskListener listener, String logFileLink, String logHtmlLink, boolean enableCache) {
@@ -111,6 +114,8 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 
 	/**
 	 * Loads new data to {@link RobotResult}.
+	 * @param listener TaskListener from Jenkins
+	 * @param result RobotResult to set
 	 */
 	synchronized public void setResult(RobotResult result, TaskListener listener) {
 		result.tally(this);
@@ -213,11 +218,11 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 
 	/**
 	 * Serves Robot html report via robot url. Shows not found page if file is missing.
-	 * @param req
-	 * @param rsp
-	 * @throws IOException
-	 * @throws ServletException
-	 * @throws InterruptedException
+	 * @param req StaplerRequest
+	 * @param rsp StaplerResponse
+	 * @throws IOException thrown exception
+	 * @throws ServletException thrown exception
+	 * @throws InterruptedException thrown exception
 	 */
 	public void doIndex(StaplerRequest req, StaplerResponse rsp)
 			throws IOException, ServletException, InterruptedException {
@@ -239,9 +244,9 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 
 	/**
 	 * Return robot trend graph in the request.
-	 * @param req
-	 * @param rsp
-	 * @throws IOException
+	 * @param req StaplerRequest
+	 * @param rsp StaplerResponse
+	 * @throws IOException thrown exception
 	 */
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
@@ -273,7 +278,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 
 	/**
 	 * Return path of robot files in build
-	 * @return
+	 * @return path of robot files in build
 	 */
 	public FilePath getRobotDir() {
 		FilePath rootDir = new FilePath(build.getRootDir());

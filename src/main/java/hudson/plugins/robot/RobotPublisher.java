@@ -84,9 +84,13 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 * @param passThreshold
 	 *			Threshold of test pass percentage for successful builds
 	 * @param unstableThreshold
-	 *			Threhold of test pass percentage for unstable builds
+	 *			Threshold of test pass percentage for unstable builds
 	 * @param onlyCritical
 	 *			True if only critical tests are included in pass percentage
+	 * @param otherFiles
+	 * 			Other files to be saved
+	 * @param enableCache
+	 * 			True if caching is used
 	 */
 	@DataBoundConstructor
 	public RobotPublisher(String outputPath, String outputFileName,
@@ -113,9 +117,8 @@ public class RobotPublisher extends Recorder implements Serializable,
 	}
 
 	/**
-	 * Gets the output	 path of Robot files
-	 *
-	 * @return
+	 * Gets the output path of Robot files
+	 * @return the output path of Robot files
 	 */
 	public String getOutputPath() {
 		return outputPath;
@@ -124,19 +127,17 @@ public class RobotPublisher extends Recorder implements Serializable,
 	/**
 	 * Gets the name of output xml file. Reverts to default if empty or
 	 * whitespace.
-	 *
-	 * @return
+	 * @return the name of output xml file
 	 */
 	public String getOutputFileName() {
 		if (StringUtils.isBlank(outputFileName))
 			return DEFAULT_OUTPUT_FILE;
 		return outputFileName;
 	}
-	/*
+
+	/**
 	* Get the value of disable Archive of output xml checkbox
-	*
-	*
-	* @return
+	* @return the value of disable Archive of output xml checkbox
 	*/
 	public boolean getDisableArchiveOutput() {
 		return disableArchiveOutput;
@@ -145,8 +146,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	/**
 	 * Gets the name of report html file. Reverts to default if empty or
 	 * whitespace.
-	 *
-	 * @return
+	 * @return the name of report html file
 	 */
 	public String getReportFileName() {
 		if (StringUtils.isBlank(reportFileName))
@@ -157,8 +157,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	/**
 	 * Gets the name of log html file. Reverts to default if empty or
 	 * whitespace.
-	 *
-	 * @return
+	 * @return the name of log html file
 	 */
 	public String getLogFileName() {
 		if (StringUtils.isBlank(logFileName))
@@ -168,8 +167,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 	/**
 	 * Gets the test pass percentage threshold for successful builds.
-	 *
-	 * @return
+	 * @return the test pass percentage threshold for successful builds
 	 */
 	public double getPassThreshold() {
 		return passThreshold;
@@ -177,8 +175,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 	/**
 	 * Gets the test pass percentage threshold for unstable builds.
-	 *
-	 * @return
+	 * @return the test pass percentage threshold for unstable builds
 	 */
 	public double getUnstableThreshold() {
 		return unstableThreshold;
@@ -186,8 +183,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 	/**
 	 * Gets if only critical tests should be accounted for the thresholds.
-	 *
-	 * @return
+	 * @return true if only critical tests should be accounted for the thresholds
 	 */
 	public boolean getOnlyCritical() {
 		return onlyCritical;
@@ -195,8 +191,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 	/**
 	 * Gets value of enableCache
-	 *
-	 * @return
+	 * @return true if cache is enabled
 	 */
 	public boolean getEnableCache() { return enableCache; }
 
@@ -289,11 +284,11 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 	/**
 	 * Copy files with given filemasks from input path relative to build into specific build file archive dir
-	 * @param build
+	 * @param build The Jenkins run
 	 * @param inputPath Base path for copy. Relative to build workspace.
 	 * @param filemaskToCopy List of Ant GLOB style filemasks to copy from dirs specified at inputPathMask
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException thrown exception
+	 * @throws InterruptedException thrown exception
 	 */
 	public static void copyFilesToBuildDir(Run<?, ?> build, FilePath workspace,
 			String inputPath, String filemaskToCopy) throws IOException, InterruptedException {
@@ -305,7 +300,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 	/**
 	 * Return filename without file suffix.
-	 * @param filename
+	 * @param filename Filename with suffix
 	 * @return filename as string
 	 */
 	public static String trimSuffix(String filename) {
@@ -318,7 +313,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 	/**
 	 * Return file suffix from string.
-	 * @param filename
+	 * @param filename Filename with suffix
 	 * @return file suffix as string
 	 */
 	public static String getSuffix(String filename) {
@@ -332,8 +327,8 @@ public class RobotPublisher extends Recorder implements Serializable,
 	/**
 	 * Add wildcard to filemasks between name and file extension in order to copy split output
 	 * e.g. output-001.xml, output-002.xml etc.
-	 * @param filemasks
-	 * @return
+	 * @param filemasks Files to be masked with wildcards
+	 * @return Updated array of filemasks
 	 */
 	private static String[] modifyMasksforSplittedOutput(String[] filemasks){
 		for (int i = 0; i < filemasks.length; i++){
@@ -392,11 +387,10 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 		/**
 		 * Validates the unstable threshold input field.
-		 *
-		 * @param value
-		 * @return
-		 * @throws IOException
-		 * @throws ServletException
+		 * @param value Value to be checked for the threshold
+		 * @return OK if value is within threshold
+		 * @throws IOException thrown exception
+		 * @throws ServletException thrown exception
 		 */
 		public FormValidation doCheckUnstableThreshold(
 				@QueryParameter String value) throws IOException,
@@ -410,11 +404,10 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 		/**
 		 * Validates the pass threshold input field.
-		 *
-		 * @param value
-		 * @return
-		 * @throws IOException
-		 * @throws ServletException
+		 * @param value Value to be checked for the threshold
+		 * @return OK if value is within threshold
+		 * @throws IOException thrown exception
+		 * @throws ServletException thrown exception
 		 */
 		public FormValidation doCheckPassThreshold(@QueryParameter String value)
 				throws IOException, ServletException {

@@ -58,6 +58,11 @@ public class RobotGraph extends Graph {
 	 * @param yLabel Y label name
 	 * @param xLabel X label name
 	 * @param scale the size 1 is graph of default size. This is multiplied by scale.
+	 * @param binaryData binary data
+	 * @param colors Used colors
+	 * @param lowerBound Lower bound for the graph
+	 * @param upperBound Upper bound for the graph
+	 * @param preview True if preview is enabled
 	 */
 	public static RobotGraph getRobotGraph(Run<?, ?> owner,
 			CategoryDataset categoryDataset, String yLabel, String xLabel,
@@ -77,6 +82,11 @@ public class RobotGraph extends Graph {
 	 * @param chartWidth Chart width in pixels
 	 * @param chartHeight Chart height in pixels
 	 * @param fontSize Chart font size
+	 * @param binaryData binary data
+	 * @param colors Used colors
+	 * @param lowerBound Lower bound for the graph
+	 * @param upperBound Upper bound for the graph
+	 * @param preview True if preview is enabled
 	 */
 	private RobotGraph(Run<?, ?> owner,
 			CategoryDataset categoryDataset, String yLabel, String xLabel,

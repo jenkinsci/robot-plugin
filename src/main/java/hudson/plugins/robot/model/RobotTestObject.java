@@ -94,7 +94,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 
 	/**
 	 * Generates the full packagename
-	 * @return
+	 * @return package name
 	 */
 	public String getRelativePackageName(RobotTestObject thisObject) {
 		StringBuilder sb = new StringBuilder(getName());
@@ -120,7 +120,8 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 
 	/**
 	 * Get path in tree relative to given TestObject
-	 * @return
+	 * @param thisObject The wanted testobject
+	 * @return Path to TestObject
 	 */
 	public String getRelativeId(RobotTestObject thisObject){
 		StringBuilder sb = new StringBuilder(urlEncode(getDuplicateSafeName()));
@@ -150,8 +151,8 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 
 	/**
 	 * Get the corresponding result object from a given build
-	 * @param build
-	 * @return
+	 * @param build The Jenkins build
+	 * @return TestObject for given build
 	 */
 	public RobotTestObject getResultInBuild(AbstractBuild<?,?> build) {
 		parentAction = build.getAction(RobotBuildAction.class);
@@ -181,10 +182,10 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 
 	/**
 	 * Figure out if there's been changes since last request.
-	 * @param req
-	 * @param rsp
-	 * @return
-	 * @throws IOException
+	 * @param req StaplerRequest
+	 * @param rsp StaplerResponse
+	 * @return true if modified, false otherwise
+	 * @throws IOException thrown exception
 	 */
 	protected boolean isNeedToGenerate(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
@@ -202,7 +203,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 
 	/**
 	 * Get duration of this testobject run
-	 * @return
+	 * @return Duration of this testobject run
 	 */
 	public long getDuration() {
 		return duration;
@@ -210,7 +211,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 
 	/**
 	 * Wrapper for calling formatting from jelly
-	 * @return
+	 * @return Duration in human readable form
 	 */
 	public String getHumanReadableDuration(){
 		return DurationFormatUtils.formatDurationHMS(getDuration());
@@ -243,9 +244,9 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 
 	/**
 	 * Return robot trend graph in the request.
-	 * @param req
-	 * @param rsp
-	 * @throws IOException
+	 * @param req StaplerRequest
+	 * @param rsp StaplerResponse
+	 * @throws IOException thrown exception
 	 */
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
@@ -263,9 +264,9 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 
 	/**
 	 * Return duration graph of the case in the request.
-	 * @param req
-	 * @param rsp
-	 * @throws IOException
+	 * @param req StaplerRequest
+	 * @param rsp StaplerResponse
+	 * @throws IOException thrown exception
 	 */
 	public void doDurationGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
