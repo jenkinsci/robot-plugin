@@ -287,6 +287,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 * @param build The Jenkins run
 	 * @param inputPath Base path for copy. Relative to build workspace.
 	 * @param filemaskToCopy List of Ant GLOB style filemasks to copy from dirs specified at inputPathMask
+	 * @param workspace Build workspace
 	 * @throws IOException thrown exception
 	 * @throws InterruptedException thrown exception
 	 */

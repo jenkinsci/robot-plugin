@@ -53,9 +53,10 @@ public class RobotCaseResult extends RobotTestObject{
 	/**
 	 * Difference between string timevalues in format yyyyMMdd HH:mm:ss.SS (Java DateFormat).
 	 * Difference is calculated time2 - time1.
-	 * @param time1
-	 * @param time2
-	 * @return
+	 * @param time1 Start time
+	 * @param time2 End time
+	 * @return Elapsed time from start to end
+	 * @throws ParseException thrown exception
 	 */
 	public static long timeDifference(String time1, String time2) throws ParseException{
 		long difference = 0;
@@ -214,6 +215,7 @@ public class RobotCaseResult extends RobotTestObject{
 
 	/**
 	 * Gives the corresponding caseresult from previous build
+	 * @return Previous result
 	 */
 	public RobotCaseResult getPreviousResult(){
 		if (parent == null) return null;
@@ -247,9 +249,9 @@ public class RobotCaseResult extends RobotTestObject{
 
 	/**
 	 * Return duration graph of the case in the request.
-	 * @param req
-	 * @param rsp
-	 * @throws IOException
+	 * @param req StaplerRequest
+	 * @param rsp StaplerResponse
+	 * @throws IOException thrown exception
 	 */
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {

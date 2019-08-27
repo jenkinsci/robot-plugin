@@ -52,8 +52,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	/**
 	 * Adds a nested suite to this suite. If a suite exists with the same name
 	 * it will be overwritten with this one.
-	 *
-	 * @param child
+	 * @param child Child to be added
 	 */
 	public void addChild(RobotSuiteResult child) {
 		if(children == null)
@@ -71,7 +70,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Get the immediate child suites of this suite
-	 * @return
+	 * @return the immediate child suites of this suite
 	 */
 	public Collection<RobotSuiteResult> getChildSuites() {
 		if (children != null)
@@ -81,6 +80,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Get the parent object of this suite in tree
+	 * @return the parent object of this suite in tree
 	 */
 	public RobotTestObject getParent() {
 		return parent;
@@ -92,6 +92,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Get the name of this suite
+	 * @return Suite name
 	 */
 	public String getName(){
 		return name;
@@ -103,6 +104,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Get the description of this suite
+	 * @return Suite description
 	 */
 	public String getDescription(){
 		return description;
@@ -114,7 +116,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Get all case results belonging to this suite
-	 * @return
+	 * @return Collection of all case results belonging to this suite
 	 */
 	public Collection<RobotCaseResult> getCaseResults() {
 		if(caseResults != null) {
@@ -127,7 +129,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Get number of all failed tests
-	 * @return
+	 * @return number of all failed tests
 	 */
 	public int getFailed() {
 		return failed;
@@ -135,7 +137,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Get number of all passed tests
-	 * @return
+	 * @return number of all passed tests
 	 */
 	public int getPassed() {
 		return passed;
@@ -143,7 +145,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Get number of all tests
-	 * @return
+	 * @return number of all tests
 	 */
 	public int getTotal() {
 		return passed + failed;
@@ -151,7 +153,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Get number of passed critical tests
-	 * @return
+	 * @return number of passed critical tests
 	 */
 	public long getCriticalPassed() {
 		return criticalPassed;
@@ -159,7 +161,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Get number of failed critical tests
-	 * @return
+	 * @return number of failed critical tests
 	 */
 	public long getCriticalFailed() {
 		return criticalFailed;
@@ -167,7 +169,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Get number of all critical tests
-	 * @return
+	 * @return number of all critical tests
 	 */
 	public int getCriticalTotal() {
 		return criticalPassed + criticalFailed;
@@ -176,8 +178,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	/**
 	 * Adds a test case result to this suite. If a case exists with the same
 	 * name it will be overwritten with this one.
-	 *
-	 * @param caseResult
+	 * @param caseResult Case to be added
 	 */
 	public void addCaseResult(RobotCaseResult caseResult) {
 		if(caseResults == null)
@@ -231,7 +232,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Get nested suite result by duplicate safe unencoded name
-	 * @param name
+	 * @param name suite name
 	 * @return suite result, null if none found
 	 */
 	public RobotSuiteResult getSuite(String name) {
@@ -242,7 +243,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Get case result by duplicate safe unencoded name
-	 * @param name
+	 * @param name case name
 	 * @return case result, null if none found
 	 */
 	public RobotCaseResult getCase(String name) {
@@ -274,10 +275,10 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Get suite or case result by url encoded name
-	 * @param token
-	 * @param req
-	 * @param rsp
-	 * @return
+	 * @param token token
+	 * @param req StaplerRequest
+	 * @param rsp StaplerResponse
+	 * @return suite or case result by url encoded name
 	 */
 	public Object getDynamic(String token, StaplerRequest req,
 							 StaplerRequest rsp) {
@@ -290,7 +291,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Get all children of this suite
-	 * @return
+	 * @return all children of this suite
 	 */
 	public List<RobotSuiteResult> getAllChildSuites() {
 		List<RobotSuiteResult> allChildSuites = new ArrayList<RobotSuiteResult>();
@@ -305,7 +306,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Get all failed cases in this suite and its child suites
-	 * @return
+	 * @return all failed cases in this suite and its child suites
 	 */
 	public List<RobotCaseResult> getAllFailedCases() {
 		List<RobotCaseResult> failedCases = new ArrayList<RobotCaseResult>();
@@ -321,7 +322,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Get all cases in this suite and its child suites
-	 * @return
+	 * @return all cases in this suite and its child suites
 	 */
 	public List<RobotCaseResult> getAllCases() {
 		List<RobotCaseResult> cases = new ArrayList<RobotCaseResult>();
@@ -342,7 +343,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Count total values from children and set same parentaction to all
-	 * @param parentAction
+	 * @param parentAction Common parent action
 	 */
 	public void tally(RobotBuildAction parentAction) {
 		setParentAction(parentAction);
@@ -382,8 +383,8 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * Get object by path in tree
-	 * @param id
-	 * @return
+	 * @param id path to object
+	 * @return Found Object
 	 */
 	public RobotTestObject findObjectById(String id) {
 		if(id.indexOf("/") >= 0){
@@ -398,7 +399,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * If suites with same name exist, the originals are kept
-	 * @param childSuites
+	 * @param childSuites Child suites to be added
 	 */
 	public void addChildren(Collection<RobotSuiteResult> childSuites) {
 		for(RobotSuiteResult child : childSuites){
@@ -408,7 +409,7 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	/**
 	 * If cases with same name exist, the originals are kept
-	 * @param newCaseResults
+	 * @param newCaseResults New case results to be added
 	 */
 	public void addCaseResults(Collection<RobotCaseResult> newCaseResults) {
 		for(RobotCaseResult caseResult : newCaseResults){

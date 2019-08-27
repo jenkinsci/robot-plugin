@@ -43,9 +43,7 @@ public class RobotStep extends Step {
 	
 	/**
 	 * Create new Robot step action that runs the tests and generates reports
-	 * @param result Robot result
 	 * @param outputPath Path where the Robot report is stored relative to build root
-	 * @param logFileLink
 	 */
 	@DataBoundConstructor
 	public RobotStep(String outputPath) {

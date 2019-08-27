@@ -63,6 +63,7 @@ public class RobotGraph extends Graph {
 	 * @param lowerBound Lower bound for the graph
 	 * @param upperBound Upper bound for the graph
 	 * @param preview True if preview is enabled
+	 * @return Graph
 	 */
 	public static RobotGraph getRobotGraph(Run<?, ?> owner,
 			CategoryDataset categoryDataset, String yLabel, String xLabel,

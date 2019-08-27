@@ -94,6 +94,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 
 	/**
 	 * Generates the full packagename
+	 * @param thisObject Robot test object
 	 * @return package name
 	 */
 	public String getRelativePackageName(RobotTestObject thisObject) {
@@ -175,6 +176,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	 * 59c8eec3e16f28baf1288848fccbac228bbe4748, July 2013. This method allows
 	 * accessing the tests from old saved results.
 	 * TODO: Remove this after a year or so?
+	 * @return Name in old format
 	 */
 	protected String getOldFormatName() {
 		return getName().replaceAll("[/\\ :;#?]", "_");
