@@ -122,7 +122,9 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		try {
 			getDataFile().write(result);
 		} catch (IOException e) {
-			e.printStackTrace(listener.fatalError("Failed to save the Robot test result"));
+			if (listener != null) {
+				e.printStackTrace(listener.fatalError("Failed to save the Robot test result"));
+			}
 		}
 
 		cacheRobotResult(result);
