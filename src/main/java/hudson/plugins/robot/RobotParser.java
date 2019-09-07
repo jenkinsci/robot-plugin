@@ -261,6 +261,13 @@ public class RobotParser {
 			throw xmlException("Could not find end of element "+element, reader);
 		}
 
+		private String getSpacesPerNestedLevel(int level) {
+			StringBuffer spaces = new StringBuffer();
+			for (int i = 0; i < level; i++) {
+				spaces.append("  ");
+			}
+			return spaces.toString();
+		}
 
 		private RobotCaseResult processTest(XMLStreamReader reader, RobotSuiteResult result) throws XMLStreamException {
 			RobotCaseResult caseResult = new RobotCaseResult();
@@ -273,8 +280,44 @@ public class RobotParser {
 			//parse test tags
 			caseResult.setDescription("");
 			caseResult.addTags(new ArrayList<String>());
-			String xmlTag = ignoreUntilStarts(reader, "doc", "tags", "status");
-			if (xmlTag == "doc") {
+			StringBuffer stackTrace = new StringBuffer();
+
+			//parse stacktrace
+			String xmlTag = ignoreUntilStarts(reader, "kw", "doc", "tags", "status");
+			if (xmlTag == "kw") {
+				//get all sequential keywords
+				do {
+					//get all nested keywords 
+					int nestedCount = 0;
+					do {
+						String kw = reader.getAttributeValue(null, "name");
+						stackTrace.append(getSpacesPerNestedLevel(nestedCount) + kw);
+						xmlTag = ignoreUntilStarts(reader, "kw", "arguments", "status");
+						//get arguments of current keyword
+						if (xmlTag == "arguments") {
+							xmlTag = ignoreUntilStarts(reader, "arg");
+							do {
+								reader.next(); //skip arg start
+								stackTrace.append("    " + reader.getText());
+								reader.next(); //skip text
+								reader.next(); //skip arg end
+								reader.next(); //skip WS
+							} while (reader.isStartElement() && reader.getLocalName() == "arg");
+							xmlTag = ignoreUntilStarts(reader, "kw", "status");
+						}
+						stackTrace.append("\n");
+						nestedCount++;
+					} while (xmlTag == "kw");
+					for (int i = 0; i < nestedCount; i++) {
+						ignoreUntilEnds(reader, "status");
+						ignoreUntilEnds(reader, "kw");
+						xmlTag = ignoreUntilStarts(reader, "kw", "doc", "tags", "status");
+					}
+				} while (xmlTag == "kw");
+			}
+			caseResult.setStackTrace(stackTrace.toString());
+
+			if (xmlTag == "doc") { 
 				reader.next();
 				if (reader.hasText()) {
 					caseResult.setDescription(reader.getText());

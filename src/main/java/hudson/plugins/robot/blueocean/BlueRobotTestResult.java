@@ -42,12 +42,12 @@ public class BlueRobotTestResult extends BlueTestResult {
 
 	@Override
 	public String getErrorStackTrace() {
-		return "";
+		return result.getStackTrace();
 	}
 
 	@Override
 	public String getErrorDetails() {
-		return "";
+		return result.getErrorMsg();
 	}
 
 	@Override
