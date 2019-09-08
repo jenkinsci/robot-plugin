@@ -348,6 +348,10 @@ public class RobotParser {
 					}
 				}
 			}
+			// reset stack trace if the test is passed
+			if (caseResult.isPassed()) {
+				caseResult.setStackTrace("");
+			}
 			ignoreUntilEnds(reader, "test");
 			return caseResult;
 		}

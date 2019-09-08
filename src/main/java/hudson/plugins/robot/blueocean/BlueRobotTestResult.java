@@ -47,7 +47,7 @@ public class BlueRobotTestResult extends BlueTestResult {
 
 	@Override
 	public String getErrorDetails() {
-		return result.getErrorMsg();
+		return result.getErrorMsg() == null ? "" : result.getErrorMsg();
 	}
 
 	@Override
