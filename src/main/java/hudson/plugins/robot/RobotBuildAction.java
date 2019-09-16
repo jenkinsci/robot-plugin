@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -321,5 +322,9 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	@Override
 	public String getUrlName() {
 		return "robot";
+	}
+
+	public List<RobotCaseResult> getAllTests() {
+		return getResult().getAllCases();
 	}
 }

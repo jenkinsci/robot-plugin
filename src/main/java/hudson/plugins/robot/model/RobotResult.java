@@ -426,4 +426,14 @@ public class RobotResult extends RobotTestObject {
 	}
 
 	public Api getApi() { return new Api(this); }
+	
+	public List<RobotCaseResult> getAllCases() {
+		List<RobotCaseResult> allCases = new ArrayList<>();
+		for (RobotSuiteResult suite : getSuites()) {
+			List<RobotCaseResult> cases = suite.getAllCases();
+			allCases.addAll(cases);
+		}
+		Collections.sort(allCases, new RobotCaseComparator());
+		return allCases;
+	}
 }
