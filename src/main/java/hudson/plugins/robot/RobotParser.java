@@ -15,6 +15,8 @@
  */
 package hudson.plugins.robot;
 
+import org.apache.commons.lang.StringUtils;
+
 import hudson.AbortException;
 import hudson.FilePath;
 import hudson.Util;
@@ -44,10 +46,12 @@ import org.jenkinsci.remoting.RoleChecker;
 
 public class RobotParser {
 
-	public RobotResult parse(String outputFileLocations, String outputPath, Run<?, ?> build, FilePath workSpace, String logFileName, String reportFileName)
+	public RobotResult parse(String outputFileLocations, String outputPath, Run<?, ?> build,
+							 FilePath workSpace, String logFileName, String reportFileName,
+							 String includeTags[], String excludeTags[])
 	throws InterruptedException, IOException {
 		RobotResult result = new FilePath(workSpace, outputPath).act(
-				new RobotParserCallable(outputFileLocations, logFileName, reportFileName));
+				new RobotParserCallable(outputFileLocations, logFileName, reportFileName, includeTags, excludeTags));
 		return result;
 	}
 
@@ -58,11 +62,29 @@ public class RobotParser {
 		private final String outputFileLocations;
 		private final String logFileName;
 		private final String reportFileName;
+		private final String[] includeTags;
+		private final String[] excludeTags;
 
-		public RobotParserCallable(String outputFileLocations, String logFileName, String reportFileName) {
+		private String[] filterTags(String tags[]) {
+			List<String> out = new ArrayList<String>();
+			if (tags != null) {
+				for (String tag : tags) {
+					tag = StringUtils.strip(tag);
+					if (StringUtils.isNotEmpty(tag)) {
+						out.add(tag);
+					}
+				}
+			}
+			return out.toArray(new String[0]);
+		}
+
+		public RobotParserCallable(String outputFileLocations, String logFileName, String reportFileName,
+							      String includeTags[], String excludeTags[]) {
 			this.outputFileLocations = outputFileLocations;
 			this.logFileName = logFileName;
 			this.reportFileName = reportFileName;
+			this.includeTags = filterTags(includeTags);
+			this.excludeTags = filterTags(excludeTags);
 		}
 
 		public RobotResult invoke(File ws, VirtualChannel channel)
@@ -151,7 +173,28 @@ public class RobotParser {
 					} else if("suite".equals(tagName)){
 						suite.addChild(processSuite(reader, suite, baseDirectory));
 					} else if("test".equals(tagName)){
-						suite.addCaseResult(processTest(reader, suite));
+						RobotCaseResult test = processTest(reader, suite);
+						List<String> tags = test.getTags();
+						// If no include tags are given, default is to include
+						boolean include = includeTags.length == 0;
+
+						for (String tag : includeTags) {
+							if (tags.contains(tag)) {
+								include = true;
+								break;
+							}
+						}
+
+						for (String tag : excludeTags) {
+							if (tags.contains(tag)) {
+								include = false;
+								break;
+							}
+						}
+
+						if (include) {
+							suite.addCaseResult(test);
+						}
 					} else if("kw".equals(tagName) && "teardown".equals(reader.getAttributeValue(null, "type"))) {
 						ignoreUntilStarts(reader, "status");
 						if ("FAIL".equals(reader.getAttributeValue(null, "status"))) {

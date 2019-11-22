@@ -29,6 +29,12 @@ limitations under the License.
     <f:entry title="${%advanced.loghtml}" description="${%advanced.loghtml.description}" field="logFileName">
         <f:textbox />
     </f:entry>
+    <f:entry title="${%advanced.includeTags}" description="${%advanced.includeTags.description}" field="includeTags">
+        <f:textbox />
+    </f:entry>
+    <f:entry title="${%advanced.excludeTags}" description="${%advanced.excludeTags.description}" field="excludeTags">
+        <f:textbox />
+    </f:entry>
     <f:entry title="${%advanced.otherfiles}" description="${%advanced.otherfiles.description}" field="otherFiles">
         <f:textbox />
     </f:entry>

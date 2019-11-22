@@ -38,6 +38,8 @@ public class RobotStep extends Step {
 	private @CheckForNull String[] otherFiles;
 	private boolean enableCache = true;
 	private boolean onlyCritical = true;
+	private @CheckForNull String[] includeTags;
+	private @CheckForNull String[] excludeTags;
 
 	
 	
@@ -89,7 +91,15 @@ public class RobotStep extends Step {
 	public boolean getOnlyCritical() {
 		return this.onlyCritical;
 	}
-	
+
+	public String getIncludeTags() {
+		return StringUtils.join(includeTags, ",");
+	}
+
+	public String getExcludeTags() {
+		return StringUtils.join(excludeTags, ",");
+	}	
+
 	@DataBoundSetter
 	public void setReportFileName(String reportFileName) {
 		this.reportFileName = Util.fixEmpty(reportFileName);
@@ -139,6 +149,22 @@ public class RobotStep extends Step {
 				filemasks[i] = StringUtils.strip(filemasks[i]);
 			}
 			this.otherFiles = filemasks;
+		}
+	}
+
+	@DataBoundSetter
+	public void setIncludeTags(String includeTags) {
+		includeTags = Util.fixEmpty(includeTags);
+		if (includeTags != null) {
+			this.includeTags = includeTags.split("[, ]+");
+		}
+	}
+
+	@DataBoundSetter
+	public void setExcludeTags(String excludeTags) {
+		excludeTags = Util.fixEmpty(excludeTags);
+		if (excludeTags != null) {
+			this.excludeTags = excludeTags.split("[, ]+");
 		}
 	}
 
