@@ -11,7 +11,7 @@
 	<name>Robot Framework plugin</name>
 	<description>Shows Robot Framework test results in project</description>
 	<packaging>hpi</packaging>
-	<url>https://wiki.jenkins.io/display/JENKINS/Robot+Framework+Plugin</url>
+	<url>https://github.com/jenkinsci/robot-plugin/blob/master/doc/README.md</url>
 
 	<developers>
 		<developer>
