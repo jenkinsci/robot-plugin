@@ -84,6 +84,7 @@ public class RobotParser {
 			for(String file : files){
 				XMLInputFactory factory = XMLInputFactory.newInstance();
 				factory.setProperty(XMLInputFactory.IS_COALESCING, Boolean.TRUE);
+				factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
 				File baseDirectory = resultScanner.getBasedir();
 				File reportFile = new File(baseDirectory, file);
 

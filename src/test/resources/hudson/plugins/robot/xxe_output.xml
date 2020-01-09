@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE test [
+        <!ENTITY xxe SYSTEM "file:///etc/passwd">
+        ]>
+<robot generated="20191216 11:38:07.725" generator="Robot 3.1.1 (Python 3.5.3 on linux)" rpa="false">
+    <suite id="s1" name="suite 1" source="/root/robot/test.rst">
+        <test id="s1-t1" name="Sample Code 2: launches ls and checks that ntpd is inside">
+            <kw library="Process" name="Run Process">
+                <doc>Runs a process and waits for it to complete.</doc>
+                <arguments>
+                    <arg>ls</arg>
+                </arguments>
+                <assign>
+                    <var>${result}</var>
+                </assign>
+                <msg timestamp="20191216 11:38:07.773" level="INFO">Starting process:
+                    ls</msg>
+                <msg timestamp="20191216 11:38:07.779" level="INFO">Waiting for process to complete.</msg>
+                <msg timestamp="20191216 11:38:07.782" level="INFO">Process completed.</msg>
+                <msg timestamp="20191216 11:38:07.783" level="INFO">${result} = &lt;result object with rc 0&gt;</msg>
+                <status starttime="20191216 11:38:07.773" endtime="20191216 11:38:07.783" status="PASS"></status>
+            </kw>
+            <kw library="BuiltIn" name="Should Contain">
+                <doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+                <arguments>
+                    <arg>${result.stdout}</arg>
+                    <arg>ntpd</arg>
+                </arguments>
+                <msg timestamp="20191216 11:38:07.784" level="FAIL">'log.html
+                    output.xml
+                    report.html
+                    test.rst' does not contain 'ntpd'</msg>
+                <status starttime="20191216 11:38:07.783" endtime="20191216 11:38:07.784" status="FAIL"></status>
+            </kw>
+            <status starttime="20191216 11:38:07.772" endtime="20191216 11:38:07.785" critical="yes" status="FAIL">
+                &xxe;
+            </status>
+        </test>
+        <status starttime="20191216 11:38:07.726" endtime="20191216 11:38:07.785" status="FAIL"></status>
+    </suite>
+    <statistics>
+        <total>
+            <stat fail="1" pass="0">Critical Tests</stat>
+            <stat fail="1" pass="0">All Tests</stat>
+        </total>
+        <tag>
+        </tag>
+        <suite>
+            <stat fail="1" pass="0" name="Test" id="s1">Test</stat>
+        </suite>
+    </statistics>
+    <errors>
+        <msg timestamp="20191216 11:38:07.723" level="WARN">Automatically parsing other than '*.robot' files is deprecated. Convert '/root/robot/test.rst' to '*.robot' format or use '--extension' to explicitly configure which files to parse.</msg>
+    </errors>
+</robot>
