@@ -97,12 +97,10 @@ build. Conversely, the project view sidepanel link won't go away until
 after configuration change/resave in project. We're working on a
 solution to this.
 
-![](images/loghtml_sidepanel.png){.confluence-embedded-image
-.confluence-thumbnail .confluence-content-image-border height="150"}  
+![](images/loghtml_sidepanel.png)
 *Sidepanel link*
 
-![](images/robo_loglink_projectpage.png){.confluence-embedded-image
-.confluence-thumbnail .confluence-content-image-border width="150"}  
+![](images/robo_loglink_projectpage.png)  
 *Summary link*
 
 #### Configuring Robot overall pass/fail to show in the project list
@@ -120,8 +118,7 @@ solution to this.
     [http://YOURJENKINSHOST/configure](http://yourjenkinshost/configure){}
     )and select your newly created view to be the default one.
 
-![](images/robot_view_column.png){.confluence-embedded-image
-.confluence-thumbnail .confluence-content-image-border}  
+![](images/robot_view_column.png)
 *List view column in action*
 
 #### Using token macros in e-mail report
@@ -162,23 +159,19 @@ set your unstable threshold so that the build never goes to failure.
 
 ##### Config
 
-![](images/config1.png){.confluence-embedded-image
-.confluence-thumbnail .confluence-content-image-border}
+![](images/config1.png)
 
 ##### Project view
 
-![](images/project_page.png){.confluence-embedded-image
-.confluence-thumbnail .confluence-content-image-border}
+![](images/project_page.png)
 
 ##### Build view
 
-![](images/build_page.png){.confluence-embedded-image
-.confluence-thumbnail .confluence-content-image-border}
+![](images/build_page.png)
 
 ##### Detailed build view
 
-![](images/detailed.png){.confluence-embedded-image
-.confluence-thumbnail .confluence-content-image-border}
+![](images/detailed.png)
 
 ## Bugs
 
