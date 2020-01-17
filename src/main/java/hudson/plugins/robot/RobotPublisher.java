@@ -63,6 +63,8 @@ public class RobotPublisher extends Recorder implements Serializable,
 	final private double unstableThreshold;
 	private String[] otherFiles;
 	final private boolean enableCache;
+	private String[] includeTags;
+	private String[] excludeTags;
 
 	//Default to true
 	private boolean onlyCritical = true;
@@ -91,12 +93,17 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 * 			Other files to be saved
 	 * @param enableCache
 	 * 			True if caching is used
+	 * @param includeTags
+	 * 			Include only tests with these tags
+	 * @param excludeTags
+	 * 			Exclude tests with these tags
 	 */
 	@DataBoundConstructor
 	public RobotPublisher(String outputPath, String outputFileName,
 						  boolean disableArchiveOutput, String reportFileName, String logFileName,
 						  double passThreshold, double unstableThreshold,
-						  boolean onlyCritical, String otherFiles, boolean enableCache) {
+						  boolean onlyCritical, String otherFiles, boolean enableCache,
+						  String includeTags, String excludeTags) {
 		this.outputPath = outputPath;
 		this.outputFileName = outputFileName;
 		this.disableArchiveOutput = disableArchiveOutput;
@@ -113,6 +120,14 @@ public class RobotPublisher extends Recorder implements Serializable,
 				filemasks[i] = StringUtils.strip(filemasks[i]);
 			}
 			this.otherFiles = filemasks;
+		}
+
+		if (includeTags != null) {
+			this.includeTags = includeTags.split("[, ]+");
+		}
+
+		if (excludeTags != null) {
+			this.excludeTags = excludeTags.split("[, ]+");
 		}
 	}
 
@@ -205,6 +220,22 @@ public class RobotPublisher extends Recorder implements Serializable,
 	}
 
 	/**
+	 * Gets the comma separated list of tags to include
+	 * @return List of tags as string
+	 */
+	public String getIncludeTags() {
+		return StringUtils.join(includeTags, ",");
+	}
+
+	/**
+	 * Gets the comma separated list of tags to exclude
+	 * @return List of tags as string
+	 */
+	public String getExcludeTags() {
+		return StringUtils.join(excludeTags, ",");
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -218,7 +249,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	protected RobotResult parse(String expandedTestResults, String outputPath, Run<?,?> build, FilePath workspace,
 			Launcher launcher, TaskListener listener) throws IOException,
 			InterruptedException {
-		return new RobotParser().parse(expandedTestResults, outputPath, build, workspace, getLogFileName(), getReportFileName());
+		return new RobotParser().parse(expandedTestResults, outputPath, build, workspace, getLogFileName(), getReportFileName(), includeTags, excludeTags);
 	}
 
 	/**
@@ -229,6 +260,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 		if (build.getResult() != Result.ABORTED) {
 			PrintStream logger = listener.getLogger();
 			logger.println(Messages.robot_publisher_started());
+			logger.println(String.format("Using '%s', '%s'", StringUtils.join(includeTags, ","), StringUtils.join(excludeTags, ",")));
 			logger.println(Messages.robot_publisher_parsing());
 			RobotResult result;
 

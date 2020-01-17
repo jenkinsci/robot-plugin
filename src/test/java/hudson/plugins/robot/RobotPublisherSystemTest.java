@@ -57,12 +57,12 @@ public class RobotPublisherSystemTest {
 	public void testRoundTripConfig() throws Exception {
 		FreeStyleProject p = j.jenkins.createProject(FreeStyleProject.class, "testRoundTripConfig");
 		RobotPublisher before = new RobotPublisher("a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png",
-				false);
+				false, "include,include2", "exclude,exclude2");
 		p.getPublishersList().add(before);
 		j.configRoundtrip(p);
 		RobotPublisher after = p.getPublishersList().get(RobotPublisher.class);
 		assertThat(
-				"outputPath,outputFileName,reportFileName,logFileName,passThreshold,unstableThreshold,onlyCritical,otherFiles",
+				"outputPath,outputFileName,reportFileName,logFileName,passThreshold,unstableThreshold,onlyCritical,otherFiles,includeTags,excludeTags",
 				before, samePropertyValuesAs(after));
 	}
 
@@ -70,7 +70,7 @@ public class RobotPublisherSystemTest {
 	public void testConfigView() throws Exception {
 		FreeStyleProject p = j.jenkins.createProject(FreeStyleProject.class, "testConfigView");
 		RobotPublisher before = new RobotPublisher("a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png",
-				false);
+				false, "include,include2", "exclude,exclude2");
 		p.getPublishersList().add(before);
 		HtmlPage page = j.createWebClient().getPage(p, "configure");
 		WebAssert.assertTextPresent(page, "Publish Robot Framework");
@@ -82,6 +82,10 @@ public class RobotPublisherSystemTest {
 		WebAssert.assertInputContainsValue(page, "_.reportFileName", "c");
 		WebAssert.assertInputPresent(page, "_.logFileName");
 		WebAssert.assertInputContainsValue(page, "_.logFileName", "d");
+		WebAssert.assertInputPresent(page, "_.includeTags");
+		WebAssert.assertInputContainsValue(page, "_.includeTags", "include,include2");
+		WebAssert.assertInputPresent(page, "_.excludeTags");
+		WebAssert.assertInputContainsValue(page, "_.excludeTags", "exclude,exclude2");
 		WebAssert.assertInputPresent(page, "_.unstableThreshold");
 		WebAssert.assertInputContainsValue(page, "_.unstableThreshold", "27.0");
 		WebAssert.assertInputPresent(page, "_.passThreshold");

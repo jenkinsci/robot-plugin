@@ -36,7 +36,7 @@ public class RobotGraphHelperTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("output.xml", null, null);
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("output.xml", null, null, null, null);
 		RobotResult result = remoteOperation.invoke(new File(new RobotGraphHelperTest().getClass().getResource("output.xml").toURI()).getParentFile(), null);
 		result.tally(null);
 

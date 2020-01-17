@@ -38,7 +38,7 @@ public class RobotPublisherTest {
 	}
 
 	private RobotPublisher getRobotPublisher(double passThreshold, double unstableThreshold) {
-		return new RobotPublisher("", "", false, "", "", passThreshold, unstableThreshold, onlyCritical, "", false);
+		return new RobotPublisher("", "", false, "", "", passThreshold, unstableThreshold, onlyCritical, "", false, null, null);
 	}
 
 	@Test
@@ -112,7 +112,7 @@ public class RobotPublisherTest {
 
 	@Test
 	public void testShouldUnstableLowFailures() throws Exception{
-		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("low_failure_output.xml", null, null);
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("low_failure_output.xml", null, null, null, null);
 		RobotResult result = remoteOperation.invoke(new File(RobotPublisherTest.class.getResource("low_failure_output.xml").toURI()).getParentFile(), null);
 		result.tally(null);
 
@@ -129,7 +129,7 @@ public class RobotPublisherTest {
 	
 	@Test
 	public void testShouldHandleDurationWithoutTimes() throws Exception {
-		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("rebot_output.xml", null, null);
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("rebot_output.xml", null, null, null, null);
 		RobotResult result = remoteOperation.invoke(new File(RobotPublisherTest.class.getResource("rebot_output.xml").toURI()).getParentFile(), null);
 		result.tally(null);
 
