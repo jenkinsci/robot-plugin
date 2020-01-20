@@ -94,9 +94,9 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 */
 	@DataBoundConstructor
 	public RobotPublisher(String outputPath, String outputFileName,
-						  boolean disableArchiveOutput, String reportFileName, String logFileName,
-						  double passThreshold, double unstableThreshold,
-						  boolean onlyCritical, String otherFiles, boolean enableCache) {
+						boolean disableArchiveOutput, String reportFileName, String logFileName,
+						double passThreshold, double unstableThreshold,
+						boolean onlyCritical, String otherFiles, boolean enableCache) {
 		this.outputPath = outputPath;
 		this.outputFileName = outputFileName;
 		this.disableArchiveOutput = disableArchiveOutput;
@@ -270,6 +270,17 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 			RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener, getReportFileName(), getLogFileName(), enableCache);
 			build.addAction(action);
+
+			// set RobotProjectAction as project action
+			Job<?,?> job = build.getParent();
+			if (job != null) {
+				RobotProjectAction projectAction = new RobotProjectAction(job);
+				try {
+					job.addOrReplaceAction(projectAction);
+				} catch (UnsupportedOperationException e) {
+					// it is possible that the action collection is an unmodifiable collection
+				}
+			}
 
 			logger.println(Messages.robot_publisher_done());
 			logger.println(Messages.robot_publisher_checking());

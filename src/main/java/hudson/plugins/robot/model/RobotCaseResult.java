@@ -46,6 +46,7 @@ public class RobotCaseResult extends RobotTestObject{
 	private String starttime;
 	private String endtime;
 	private List<String> tags;
+	private String stackTrace;
 
 	private RobotSuiteResult parent;
 	private int failedSince;
@@ -140,6 +141,14 @@ public class RobotCaseResult extends RobotTestObject{
 
 	public void setErrorMsg(String errorMsg) {
 		this.errorMsg = errorMsg;
+	}
+	
+	public String getStackTrace() {
+		return stackTrace;
+	}
+
+	public void setStackTrace(String stackTrace) {
+		this.stackTrace = stackTrace;
 	}
 
 	public void setPassed(boolean passed) {

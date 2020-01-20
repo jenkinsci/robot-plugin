@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 3.1.2 (Python 3.7.4 on win32)" generated="20190908 18:40:27.915" rpa="false">
+<suite id="s1" name="Robot" source="C:\robot">
+<suite id="s1-s1" name="Test" source="C:\robot\test.robot">
+<test id="s1-s1-t1" name="My Test">
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${MESSAGE}</arg>
+</arguments>
+<msg timestamp="20190908 18:40:27.949" level="INFO">Hello, world!</msg>
+<status status="PASS" starttime="20190908 18:40:27.949" endtime="20190908 18:40:27.949"></status>
+</kw>
+<kw name="My Keyword">
+<arguments>
+<arg>C:/</arg>
+</arguments>
+<kw name="Directory Should Exist" library="OperatingSystem">
+<doc>Fails unless the given path points to an existing directory.</doc>
+<arguments>
+<arg>${path}</arg>
+</arguments>
+<msg timestamp="20190908 18:40:27.950" level="INFO" html="yes">Directory '&lt;a href="file://C:\"&gt;C:\&lt;/a&gt;' exists.</msg>
+<status status="PASS" starttime="20190908 18:40:27.950" endtime="20190908 18:40:27.950"></status>
+</kw>
+<status status="PASS" starttime="20190908 18:40:27.950" endtime="20190908 18:40:27.950"></status>
+</kw>
+<doc>Example test</doc>
+<status status="PASS" starttime="20190908 18:40:27.949" endtime="20190908 18:40:27.950" critical="yes"></status>
+</test>
+<test id="s1-s1-t2" name="Another Test">
+<kw name="Should Be Equal" library="BuiltIn">
+<doc>Fails if the given objects are unequal.</doc>
+<arguments>
+<arg>${MESSAGE}</arg>
+<arg>Hello, world!</arg>
+</arguments>
+<status status="PASS" starttime="20190908 18:40:27.954" endtime="20190908 18:40:27.955"></status>
+</kw>
+<doc>Example</doc>
+<status status="PASS" starttime="20190908 18:40:27.950" endtime="20190908 18:40:27.955" critical="yes"></status>
+</test>
+<test id="s1-s1-t3" name="Failed Test">
+<kw name="Fail" library="BuiltIn">
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<arguments>
+<arg>This fails!</arg>
+</arguments>
+<msg timestamp="20190908 18:40:27.956" level="FAIL">This fails!</msg>
+<status status="FAIL" starttime="20190908 18:40:27.955" endtime="20190908 18:40:27.956"></status>
+</kw>
+<doc>Example</doc>
+<status status="FAIL" starttime="20190908 18:40:27.955" endtime="20190908 18:40:27.956" critical="yes">This fails!</status>
+</test>
+<test id="s1-s1-t4" name="Nested failed test">
+<kw name="My failed Keyword">
+<kw name="The real failed keyword">
+<kw name="Fail" library="BuiltIn">
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<arguments>
+<arg>Really fails!</arg>
+</arguments>
+<msg timestamp="20190908 18:40:27.957" level="FAIL">Really fails!</msg>
+<status status="FAIL" starttime="20190908 18:40:27.957" endtime="20190908 18:40:27.957"></status>
+</kw>
+<status status="FAIL" starttime="20190908 18:40:27.957" endtime="20190908 18:40:27.957"></status>
+</kw>
+<status status="FAIL" starttime="20190908 18:40:27.956" endtime="20190908 18:40:27.957"></status>
+</kw>
+<doc>Example</doc>
+<status status="FAIL" starttime="20190908 18:40:27.956" endtime="20190908 18:40:27.957" critical="yes">Really fails!</status>
+</test>
+<test id="s1-s1-t5" name="Nested with not first">
+<kw name="Should Be Equal" library="BuiltIn">
+<doc>Fails if the given objects are unequal.</doc>
+<arguments>
+<arg>${MESSAGE}</arg>
+<arg>Hello, world!</arg>
+</arguments>
+<status status="PASS" starttime="20190908 18:40:27.958" endtime="20190908 18:40:27.958"></status>
+</kw>
+<kw name="Should Be Equal" library="BuiltIn">
+<doc>Fails if the given objects are unequal.</doc>
+<arguments>
+<arg>${MESSAGE}</arg>
+<arg>Hello, world!</arg>
+</arguments>
+<status status="PASS" starttime="20190908 18:40:27.958" endtime="20190908 18:40:27.958"></status>
+</kw>
+<kw name="My failed Keyword">
+<kw name="The real failed keyword">
+<kw name="Fail" library="BuiltIn">
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<arguments>
+<arg>Really fails!</arg>
+</arguments>
+<msg timestamp="20190908 18:40:27.959" level="FAIL">Really fails!</msg>
+<status status="FAIL" starttime="20190908 18:40:27.959" endtime="20190908 18:40:27.959"></status>
+</kw>
+<status status="FAIL" starttime="20190908 18:40:27.958" endtime="20190908 18:40:27.959"></status>
+</kw>
+<status status="FAIL" starttime="20190908 18:40:27.958" endtime="20190908 18:40:27.959"></status>
+</kw>
+<doc>Example</doc>
+<status status="FAIL" starttime="20190908 18:40:27.957" endtime="20190908 18:40:27.959" critical="yes">Really fails!</status>
+</test>
+<doc>Example using the space separated plain text format.</doc>
+<status status="FAIL" starttime="20190908 18:40:27.940" endtime="20190908 18:40:27.959"></status>
+</suite>
+<status status="FAIL" starttime="20190908 18:40:27.916" endtime="20190908 18:40:27.960"></status>
+</suite>
+<statistics>
+<total>
+<stat pass="2" fail="3">Critical Tests</stat>
+<stat pass="2" fail="3">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="2" fail="3" id="s1" name="Robot">Robot</stat>
+<stat pass="2" fail="3" id="s1-s1" name="Test">Robot.Test</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

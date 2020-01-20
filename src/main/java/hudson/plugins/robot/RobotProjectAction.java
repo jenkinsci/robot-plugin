@@ -16,8 +16,8 @@
 package hudson.plugins.robot;
 
 import hudson.model.Action;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
+import hudson.model.Job;
+import hudson.model.Run;
 import hudson.util.ChartUtil;
 
 import java.io.IOException;
@@ -30,13 +30,13 @@ import org.kohsuke.stapler.StaplerResponse;
 
 public class RobotProjectAction implements Action {
 
-	private AbstractProject<?, ?> project;
+	private Job<?, ?> project;
 
 	/**
 	 * Create new Robot project action
 	 * @param project Project which this action will be applied to
 	 */
-	public RobotProjectAction(AbstractProject<?, ?> project) {
+	public RobotProjectAction(Job<?, ?> project) {
 		this.project = project;
 	}
 
@@ -44,7 +44,7 @@ public class RobotProjectAction implements Action {
 	 * Get associated project.
 	 * @return the project
 	 */
-	public AbstractProject<?, ?> getProject() {
+	public Job<?, ?> getProject() {
 		return project;
 	}
 
@@ -64,7 +64,7 @@ public class RobotProjectAction implements Action {
 	 * @return null if action not found or no build
 	 */
 	public Action getLastBuildAction(){
-		AbstractBuild<?, ?> lastBuild = getLastBuildWithRobot();
+		Run<?, ?> lastBuild = getLastBuildWithRobot();
 		if(lastBuild != null){
 			RobotBuildAction action = (RobotBuildAction)lastBuild.getAction(RobotBuildAction.class);
 			if (action == null)
@@ -93,7 +93,7 @@ public class RobotProjectAction implements Action {
 		if (req.checkIfModified(t, rsp))
 			return;
 
-		AbstractBuild<?,?> lastBuild = getLastBuildWithRobot();
+		Run<?,?> lastBuild = getLastBuildWithRobot();
 		rsp.sendRedirect2("../" + lastBuild.getNumber() + "/" + getUrlName()
 			+ "/graph?zoomSignificant="+Boolean.valueOf(req.getParameter("zoomSignificant"))
 			+ "&hd="+Boolean.valueOf(req.getParameter("hd"))
@@ -111,7 +111,7 @@ public class RobotProjectAction implements Action {
 	 */
 	public void doIndex(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
-		AbstractBuild<?,?> lastBuild = getLastBuildWithRobot();
+		Run<?,?> lastBuild = getLastBuildWithRobot();
 		if (lastBuild == null) {
 			rsp.sendRedirect2("nodata");
 		} else {
@@ -121,11 +121,11 @@ public class RobotProjectAction implements Action {
 	}
 
 
-	private AbstractBuild<?, ?> getLastBuildWithRobot() {
-		AbstractBuild<?, ?> lastBuild = (AbstractBuild<?, ?>) project
-				.getLastBuild();
+	private Run<?, ?> getLastBuildWithRobot() {
+		Run<?, ?> lastBuild = (Run<?, ?>) project.getLastBuild();
 		while (lastBuild != null
-				&& (lastBuild.getAction(RobotBuildAction.class) == null && lastBuild.getAction(AggregatedRobotAction.class) == null)) {
+				&& (lastBuild.getAction(RobotBuildAction.class) == null 
+				&& lastBuild.getAction(AggregatedRobotAction.class) == null)) {
 			lastBuild = lastBuild.getPreviousBuild();
 		}
 		return lastBuild;
