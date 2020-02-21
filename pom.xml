@@ -24,6 +24,16 @@
 			<name>Aleksi Simell</name>
 			<email>aleksi.simell@eficode.com</email>
 		</developer>
+		<developer>
+			<id>tattoo</id>
+			<name>Tatu Kairi</name>
+			<email>tatu.kairi@eficode.com</email>
+		</developer>
+		<developer>
+			<id>hifi</id>
+			<name>Juho Saarinen</name>
+			<email>juho.saarinen@eficode.com</email>
+		</developer>
 	</developers>
 
 	<properties>
