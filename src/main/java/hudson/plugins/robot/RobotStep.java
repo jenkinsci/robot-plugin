@@ -28,10 +28,12 @@ public class RobotStep extends Step {
 	
 	private static final Logger logger = Logger.getLogger(RobotStep.class.getName());
 
+	private @CheckForNull String archiveDirName;
 	private final @Nonnull String outputPath;
 	private @CheckForNull String reportFileName;
 	private @CheckForNull String logFileName;
 	private @CheckForNull String outputFileName;
+	private boolean disableCopyFilesToBuildDir;
 	private boolean disableArchiveOutput;
 	private double passThreshold;
 	private double unstableThreshold;
@@ -50,6 +52,10 @@ public class RobotStep extends Step {
 		this.outputPath = outputPath;
 	}
 	
+	public String getArchiveDirName() {
+		return this.archiveDirName;
+	}
+	
 	public String getOutputPath() {
 		return this.outputPath;
 	}
@@ -64,6 +70,10 @@ public class RobotStep extends Step {
 	
 	public String getOutputFileName() {
 		return this.outputFileName;
+	}
+	
+	public boolean getDisableCopyFilesToBuildDir() {
+		return this.disableCopyFilesToBuildDir;
 	}
 	
 	public boolean getDisableArchiveOutput() {
@@ -91,6 +101,11 @@ public class RobotStep extends Step {
 	}
 	
 	@DataBoundSetter
+	public void setArchiveDirName(String archiveDirName) {
+		this.archiveDirName = Util.fixEmpty(archiveDirName);
+	}
+
+	@DataBoundSetter
 	public void setReportFileName(String reportFileName) {
 		this.reportFileName = Util.fixEmpty(reportFileName);
 	}
@@ -103,6 +118,11 @@ public class RobotStep extends Step {
 	@DataBoundSetter
 	public void setOutputFileName(String outputFileName) {
 		this.outputFileName = Util.fixEmpty(outputFileName);
+	}
+	
+	@DataBoundSetter
+	public void setDisableCopyFilesToBuildDir(boolean disableCopyFilesToBuildDir) {
+		this.disableCopyFilesToBuildDir = disableCopyFilesToBuildDir;
 	}
 	
 	@DataBoundSetter

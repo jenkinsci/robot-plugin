@@ -49,15 +49,17 @@ public class RobotPublisher extends Recorder implements Serializable,
 	private static final long serialVersionUID = 1L;
 
 	protected static final String DEFAULT_REPORT_FILE = "report.html";
-	protected static final String FILE_ARCHIVE_DIR = "robot-plugin";
+	protected static final String DEFAULT_ARCHIVE_DIR = "robot-plugin";
 
 	private static final String DEFAULT_OUTPUT_FILE = "output.xml";
 	private static final String DEFAULT_LOG_FILE = "log.html";
 
+	final private String archiveDirName;
 	final private String outputPath;
 	final private String reportFileName;
 	final private String logFileName;
 	final private String outputFileName;
+	final private boolean disableCopyFilesToBuildDir;
 	final private boolean disableArchiveOutput;
 	final private double passThreshold;
 	final private double unstableThreshold;
@@ -71,10 +73,14 @@ public class RobotPublisher extends Recorder implements Serializable,
 	/**
 	 * Create new publisher for Robot Framework results
 	 *
+	 * @param archiveDirName
+	 *			Name of Archive dir
 	 * @param outputPath
 	 *			Path to Robot Framework's output files
 	 * @param outputFileName
 	 *			Name of Robot output xml
+	 * @param disableCopyFilesToBuildDir
+	 *			Disable copying files to build dir to server
 	 * @param disableArchiveOutput
 	 *			Disable Archiving output xml file to server
 	 * @param reportFileName
@@ -93,12 +99,14 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 * 			True if caching is used
 	 */
 	@DataBoundConstructor
-	public RobotPublisher(String outputPath, String outputFileName,
-						boolean disableArchiveOutput, String reportFileName, String logFileName,
+	public RobotPublisher(String archiveDirName, String outputPath, String outputFileName,
+						boolean disableCopyFilesToBuildDir, boolean disableArchiveOutput, String reportFileName, String logFileName,
 						double passThreshold, double unstableThreshold,
 						boolean onlyCritical, String otherFiles, boolean enableCache) {
+		this.archiveDirName = archiveDirName;
 		this.outputPath = outputPath;
 		this.outputFileName = outputFileName;
+		this.disableCopyFilesToBuildDir = disableCopyFilesToBuildDir;
 		this.disableArchiveOutput = disableArchiveOutput;
 		this.reportFileName = reportFileName;
 		this.passThreshold = passThreshold;
@@ -115,7 +123,18 @@ public class RobotPublisher extends Recorder implements Serializable,
 			this.otherFiles = filemasks;
 		}
 	}
-
+	
+	/**
+	 * Gets the name of archive dir. Reverts to default if empty or
+	 * whitespace.
+	 * @return the name of archive dir
+	 */
+	public String getArchiveDirName() {
+		if (StringUtils.isBlank(archiveDirName))
+			return DEFAULT_ARCHIVE_DIR;
+		return archiveDirName;
+	}
+	
 	/**
 	 * Gets the output path of Robot files
 	 * @return the output path of Robot files
@@ -142,6 +161,14 @@ public class RobotPublisher extends Recorder implements Serializable,
 	public boolean getDisableArchiveOutput() {
 		return disableArchiveOutput;
 		}
+	
+	/**
+	 * Get the value of disable copy files to build dir checkbox
+	 * @return the value of disable copy files to build dir checkbox
+	 */
+	public boolean getDisableCopyFilesToBuildDir() {
+		return disableCopyFilesToBuildDir;
+	}
 
 	/**
 	 * Gets the name of report html file. Reverts to default if empty or
@@ -245,17 +272,19 @@ public class RobotPublisher extends Recorder implements Serializable,
 				logger.println(Messages.robot_publisher_done());
 				logger.println(Messages.robot_publisher_copying());
 
-				//Save configured Robot files (including split output) to build dir
-				copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","));
-
-				if (!getDisableArchiveOutput()){
-					copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedOutputFileName}), ","));
-				}
-
-				//Save other configured files to build dir
-				if(StringUtils.isNotBlank(getOtherFiles())) {
-					String filemask = buildEnv.expand(getOtherFiles());
-					copyFilesToBuildDir(build, workspace, expandedOutputPath, filemask);
+				if (!getDisableCopyFilesToBuildDir()){					
+					//Save configured Robot files (including split output) to build dir
+					copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","));
+	
+					if (!getDisableArchiveOutput()){
+						copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedOutputFileName}), ","));
+					}
+	
+					//Save other configured files to build dir
+					if(StringUtils.isNotBlank(getOtherFiles())) {
+						String filemask = buildEnv.expand(getOtherFiles());
+						copyFilesToBuildDir(build, workspace, expandedOutputPath, filemask);
+					}
 				}
 
 				logger.println(Messages.robot_publisher_done());
@@ -268,7 +297,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 			logger.println(Messages.robot_publisher_assigning());
 
-			RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener, getReportFileName(), getLogFileName(), enableCache);
+			RobotBuildAction action = new RobotBuildAction(build, result, getArchiveDirName(), listener, getReportFileName(), getLogFileName(), enableCache);
 			build.addAction(action);
 
 			// set RobotProjectAction as project action
@@ -302,12 +331,12 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 * @throws IOException thrown exception
 	 * @throws InterruptedException thrown exception
 	 */
-	public static void copyFilesToBuildDir(Run<?, ?> build, FilePath workspace,
+	public void copyFilesToBuildDir(Run<?, ?> build, FilePath workspace,
 			String inputPath, String filemaskToCopy) throws IOException, InterruptedException {
 		FilePath srcDir = new FilePath(workspace, inputPath);
 		FilePath destDir = new FilePath(new FilePath(build.getRootDir()),
-				FILE_ARCHIVE_DIR);
-		srcDir.copyRecursiveTo(filemaskToCopy, destDir);
+				getArchiveDirName());
+		srcDir.copyRecursiveTo(filemaskToCopy, destDir);			
 	}
 
 	/**
