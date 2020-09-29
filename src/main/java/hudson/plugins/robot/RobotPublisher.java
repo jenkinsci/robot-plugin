@@ -271,15 +271,14 @@ public class RobotPublisher extends Recorder implements Serializable,
 			RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener, getReportFileName(), getLogFileName(), enableCache);
 			build.addAction(action);
 
-			// set RobotProjectAction as project action
+			// set RobotProjectAction as project action for Blue Ocean
 			Job<?,?> job = build.getParent();
-			if (job != null) {
-				RobotProjectAction projectAction = new RobotProjectAction(job);
-				try {
-					job.addOrReplaceAction(projectAction);
-				} catch (UnsupportedOperationException e) {
-					// it is possible that the action collection is an unmodifiable collection
-				}
+			RobotProjectAction projectAction = new RobotProjectAction(job);
+			try {
+				job.addOrReplaceAction(projectAction);
+			} catch (UnsupportedOperationException|NullPointerException e) {
+				// it is possible that the action collection is an unmodifiable collection
+				// NullPointerException is thrown if a freestyle job runs
 			}
 
 			logger.println(Messages.robot_publisher_done());
