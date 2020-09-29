@@ -303,7 +303,6 @@ public class RobotParser {
 									stackTrace.append("    " + reader.getText());
 									reader.next(); //skip text
 									reader.next(); //skip arg end
-									reader.next(); //skip WS
 								}
 							}
 							xmlTag = ignoreUntilStarts(reader, "kw", "status");
