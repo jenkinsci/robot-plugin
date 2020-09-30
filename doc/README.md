@@ -49,7 +49,9 @@ Tracker](https://issues.jenkins-ci.org/issues/?jql=project+%3D+JENKINS+AND+compo
     0` to empower the plugin in deciding if the build is success/failure
     (by default Robot exits with error code when there's any failed
     tests). You can do this for example by adding `--nostatusrc` to your
-    test run.
+    test run (see
+    [Robot Framework user guide](http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#return-codes)
+    for details).
 5.  Select: Post-build Actions -\> Publish Robot Framework test results
 6.  Set path where your results are located (in above example command
     `my_robot_results`)
