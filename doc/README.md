@@ -105,7 +105,7 @@ build. Conversely, the project view side panel link won't go away until
 after configuration change/resave in project. We're working on a
 solution to this.
 
-![](images/loghtml_side panel.png)
+![](images/loghtml_sidepanel.png)
 *side panel link*
 
 ![](images/robo_loglink_projectpage.png)  
