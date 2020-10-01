@@ -24,6 +24,7 @@ public class RobotFailedCasesTokenMacro extends DataBoundTokenMacro {
 		return evaluate(context, context.getWorkspace(), listener, macroName);
 	}
 
+	// Required for pipeline
 	@Override
 	public String evaluate(Run<?, ?> context, FilePath workspace, TaskListener listener, String macroName) throws MacroEvaluationException {
 		RobotBuildAction action = context.getAction(RobotBuildAction.class);
