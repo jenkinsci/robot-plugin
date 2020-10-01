@@ -1,6 +1,8 @@
 package hudson.plugins.robot.tokens;
 
 import hudson.Extension;
+import hudson.FilePath;
+import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.model.AbstractBuild;
 import hudson.plugins.robot.RobotBuildAction;
@@ -19,17 +21,22 @@ public class RobotFailedCasesTokenMacro extends DataBoundTokenMacro {
 	public String evaluate(AbstractBuild<?, ?> context, TaskListener listener,
 			String macroName) throws MacroEvaluationException, IOException,
 			InterruptedException {
+		return evaluate(context, context.getWorkspace(), listener, macroName);
+	}
+
+	@Override
+	public String evaluate(Run<?, ?> context, FilePath workspace, TaskListener listener, String macroName) throws MacroEvaluationException {
 		RobotBuildAction action = context.getAction(RobotBuildAction.class);
 		if (action!=null){
 			RobotResult result = action.getResult();
 			StringBuilder builder = new StringBuilder();
-			
+
 			String newline = "";
 			for (RobotCaseResult failedCase : result.getAllFailedCases()){
 				builder.append(newline).append(failedCase.getRelativePackageName(result));
 				newline = "\n";
 			}
-			
+
 			return builder.toString();
 		}
 		return "";
