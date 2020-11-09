@@ -50,7 +50,7 @@ public class RobotResult extends RobotTestObject {
 
 	private String timeStamp;
 
-	private transient int passed, failed, criticalPassed, criticalFailed;
+	private transient int passed, failed, skipped, criticalPassed, criticalFailed;
 
 	//backwards compatibility with old builds
 	private transient List<RobotResultStatistics> overallStats;
@@ -134,6 +134,17 @@ public class RobotResult extends RobotTestObject {
 		if(overallStats == null) return failed;
 		if(overallStats.isEmpty()) return 0;
 		return overallStats.get(1).getFail();
+	}
+
+	/**
+	 * Get number of all skipped tests.
+	 * @return number of all skipped tests
+	 */
+	@Exported
+	public long getOverallSkipped(){
+		if(overallStats == null) return skipped;
+		if(overallStats.isEmpty()) return 0;
+		return overallStats.get(1).getSkip();
 	}
 
 	/**
@@ -265,7 +276,7 @@ public class RobotResult extends RobotTestObject {
 		List<String> executedSuites = new ArrayList<String>();
 		for (RobotSuiteResult robotSuiteResult : this.getAllSuites()) {
 			RobotTestObject rto = robotSuiteResult.getParent();
-			String name = robotSuiteResult.getName();	
+			String name = robotSuiteResult.getName();
 			while (rto != null && !rto.getName().isEmpty()) {
 				name = rto.getName()+"."+name;
 				rto = rto.getParent();
@@ -338,6 +349,7 @@ public class RobotResult extends RobotTestObject {
 			suite.tally(robotBuildAction);
 			failed += suite.getFailed();
 			passed += suite.getPassed();
+			skipped += suite.getSkipped();
 			criticalFailed += suite.getCriticalFailed();
 			criticalPassed += suite.getCriticalPassed();
 			duration += suite.getDuration();
@@ -423,6 +435,11 @@ public class RobotResult extends RobotTestObject {
 	@Override
 	public int getPassed() {
 		return (int) getOverallPassed();
+	}
+
+	@Override
+	public int getSkipped() {
+		return (int)getOverallSkipped();
 	}
 
 	public Api getApi() { return new Api(this); }
