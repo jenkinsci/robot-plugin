@@ -39,6 +39,7 @@ public class RobotCaseResult extends RobotTestObject{
 	private static final Logger LOGGER = Logger.getLogger(RobotCaseResult.class.getName());
 
 	private boolean passed;
+	private boolean skipped;
 	private boolean critical;
 	private String errorMsg;
 	private String name;
@@ -155,6 +156,10 @@ public class RobotCaseResult extends RobotTestObject{
 		this.passed = passed;
 	}
 
+	public void setSkipped(boolean skipped) {
+		this.skipped = skipped;
+	}
+
 	public void setCritical(boolean critical) {
 		this.critical = critical;
 	}
@@ -169,6 +174,10 @@ public class RobotCaseResult extends RobotTestObject{
 
 	public boolean isPassed() {
 		return passed;
+	}
+
+	public boolean isSkipped() {
+		return skipped;
 	}
 
 	public boolean isCritical() {
@@ -274,13 +283,19 @@ public class RobotCaseResult extends RobotTestObject{
 
 	@Override
 	public int getFailed() {
-		if(isPassed()) return 0;
+		if(isPassed() || isSkipped()) return 0;
 		return 1;
 	}
 
 	@Override
 	public int getPassed() {
 		if(isPassed()) return 1;
+		return 0;
+	}
+
+	@Override
+	public int getSkipped() {
+		if (isSkipped()) return 1;
 		return 0;
 	}
 
