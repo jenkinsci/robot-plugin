@@ -54,9 +54,9 @@ public class RobotGraphHelper {
 																 boolean criticalOnly,
 																 String labelFormat,
 																 int maxBuildsToShow) {
-		List<Number> values = new ArrayList<Number>();
-		List<String> rows = new ArrayList<String>();
-		List<RobotBuildLabel> columns = new ArrayList<RobotBuildLabel>();
+		List<Number> values = new ArrayList<>();
+		List<String> rows = new ArrayList<>();
+		List<RobotBuildLabel> columns = new ArrayList<>();
 
 		double lowerbound = 0;
 		double upperbound = 0;
@@ -118,8 +118,8 @@ public class RobotGraphHelper {
 		int scale = 1;
 		int buildsLeftToShow = maxBuildsToShow > 0? maxBuildsToShow: -1;
 
-		List<RobotBuildLabel> labels = new ArrayList<RobotBuildLabel>();
-		List<Long> durations = new ArrayList<Long>();
+		List<RobotBuildLabel> labels = new ArrayList<>();
+		List<Long> durations = new ArrayList<>();
 
 		for (RobotTestObject testObject = rootObject;
 			 testObject != null && buildsLeftToShow != 0;
@@ -144,8 +144,8 @@ public class RobotGraphHelper {
 		// first into dataset for nicer order when rendered in chart
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-		TreeSet<String> rowSet = new TreeSet<String>(rows);
-		TreeSet<RobotBuildLabel> colSet = new TreeSet<RobotBuildLabel>(columns);
+		TreeSet<String> rowSet = new TreeSet<>(rows);
+		TreeSet<RobotBuildLabel> colSet = new TreeSet<>(columns);
 
 		Comparable[] _rows = rowSet.toArray(new Comparable[rowSet.size()]);
 		Comparable[] _cols = colSet.toArray(new Comparable[colSet.size()]);

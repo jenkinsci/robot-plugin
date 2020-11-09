@@ -32,7 +32,7 @@ public class RobotFailedCasesTokenMacroTest extends TestCase {
 		
 		RobotResult result = Mockito.mock(RobotResult.class);
 		
-		List<RobotCaseResult> failedList = new ArrayList<RobotCaseResult>();
+		List<RobotCaseResult> failedList = new ArrayList<>();
 		
 		RobotCaseResult case1 = Mockito.mock(RobotCaseResult.class);
 		Mockito.when(case1.getRelativePackageName(result)).thenReturn("Failcases.subcases.Failure1");

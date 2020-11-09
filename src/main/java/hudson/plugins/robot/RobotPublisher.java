@@ -209,7 +209,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 */
 	@Override
 	public Collection<Action> getProjectActions(AbstractProject<?, ?> project) {
-		Collection<Action> actions = new ArrayList<Action>();
+		Collection<Action> actions = new ArrayList<>();
 		RobotProjectAction roboAction = new RobotProjectAction(project);
 		actions.add(roboAction);
 		return actions;

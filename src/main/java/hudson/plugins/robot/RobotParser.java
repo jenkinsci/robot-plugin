@@ -202,7 +202,7 @@ public class RobotParser {
 		}
 
 		private String ignoreUntilStarts(XMLStreamReader reader, String... elements) throws XMLStreamException {
-			List<String> elementStack = new ArrayList<String>();
+			List<String> elementStack = new ArrayList<>();
 			while(reader.hasNext()) {
 				reader.next();
 				if (reader.isStartElement()) {
@@ -237,7 +237,7 @@ public class RobotParser {
 		}
 
 		private void ignoreUntilEnds(XMLStreamReader reader, String element) throws XMLStreamException {
-			List<String> elementStack = new ArrayList<String>();
+			List<String> elementStack = new ArrayList<>();
 			while(reader.hasNext()) {
 				reader.next();
 				if (reader.isStartElement()) {
@@ -280,7 +280,7 @@ public class RobotParser {
 			caseResult.setId(reader.getAttributeValue(null, "id"));
 			//parse test tags
 			caseResult.setDescription("");
-			caseResult.addTags(new ArrayList<String>());
+			caseResult.addTags(new ArrayList<>());
 			StringBuffer stackTrace = new StringBuffer();
 
 			//parse stacktrace
@@ -365,7 +365,7 @@ public class RobotParser {
 		}
 
 		private List<String> processTags(XMLStreamReader reader) throws XMLStreamException {
-			List<String> taglist = new ArrayList<String>();
+			List<String> taglist = new ArrayList<>();
 			while(reader.hasNext()){
 				reader.next();
 				if(reader.isStartElement() && "tag".equals(reader.getLocalName())){

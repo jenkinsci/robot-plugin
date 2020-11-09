@@ -45,6 +45,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	private String endTime;
 	private transient int failed;
 	private transient int passed;
+	private transient int skipped;
 	private transient int criticalPassed;
 	private transient int criticalFailed;
 
@@ -143,12 +144,16 @@ public class RobotSuiteResult extends RobotTestObject {
 		return passed;
 	}
 
+	public int getSkipped() {
+		return skipped;
+	}
+
 	/**
 	 * Get number of all tests
 	 * @return number of all tests
 	 */
 	public int getTotal() {
-		return passed + failed;
+		return passed + failed + skipped;
 	}
 
 	/**
@@ -294,7 +299,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * @return all children of this suite
 	 */
 	public List<RobotSuiteResult> getAllChildSuites() {
-		List<RobotSuiteResult> allChildSuites = new ArrayList<RobotSuiteResult>();
+		List<RobotSuiteResult> allChildSuites = new ArrayList<>();
 		for (RobotSuiteResult suite : getChildSuites()) {
 			allChildSuites.add(suite);
 			List<RobotSuiteResult> childSuites = suite.getAllChildSuites();
@@ -309,7 +314,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * @return all failed cases in this suite and its child suites
 	 */
 	public List<RobotCaseResult> getAllFailedCases() {
-		List<RobotCaseResult> failedCases = new ArrayList<RobotCaseResult>();
+		List<RobotCaseResult> failedCases = new ArrayList<>();
 		for(RobotCaseResult caseResult : getCaseResults()){
 			if(!caseResult.isPassed()) failedCases.add(caseResult);
 		}

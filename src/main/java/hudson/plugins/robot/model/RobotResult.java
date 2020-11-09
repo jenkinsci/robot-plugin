@@ -153,7 +153,7 @@ public class RobotResult extends RobotTestObject {
 	 */
 	@Exported
 	public long getOverallTotal(){
-		if(overallStats == null) return failed + passed;
+		if(overallStats == null) return failed + passed + skipped;
 		if(overallStats.isEmpty()) return 0;
 		return overallStats.get(1).getTotal();
 	}
@@ -249,7 +249,7 @@ public class RobotResult extends RobotTestObject {
 	 */
 	public void addSuite(RobotSuiteResult suite){
 		if(suites == null)
-			this.suites = new HashMap<String, RobotSuiteResult>();
+			this.suites = new HashMap<>();
 		int i = 1;
 		String originalName = suite.getName();
 		String checkedSuiteName = originalName;
@@ -273,7 +273,7 @@ public class RobotResult extends RobotTestObject {
 	
 	@Exported
 	public List<String> getExecutedSuites() {
-		List<String> executedSuites = new ArrayList<String>();
+		List<String> executedSuites = new ArrayList<>();
 		for (RobotSuiteResult robotSuiteResult : this.getAllSuites()) {
 			RobotTestObject rto = robotSuiteResult.getParent();
 			String name = robotSuiteResult.getName();
@@ -292,7 +292,7 @@ public class RobotResult extends RobotTestObject {
 	 * @return List of suiteresults
 	 */
 	public List<RobotSuiteResult> getAllSuites(){
-		List<RobotSuiteResult> allSuites = new ArrayList<RobotSuiteResult>();
+		List<RobotSuiteResult> allSuites = new ArrayList<>();
 		for(RobotSuiteResult suite : getSuites()){
 			allSuites.add(suite);
 			List<RobotSuiteResult> childSuites = suite.getAllChildSuites();
@@ -306,7 +306,7 @@ public class RobotResult extends RobotTestObject {
 	 * @return list of test case results
 	 */
 	public List<RobotCaseResult> getAllFailedCases(){
-		List<RobotCaseResult> allFailedCases = new ArrayList<RobotCaseResult>();
+		List<RobotCaseResult> allFailedCases = new ArrayList<>();
 		for(RobotSuiteResult suite : getSuites()){
 			List<RobotCaseResult> failedCases = suite.getAllFailedCases();
 			allFailedCases.addAll(failedCases);
@@ -317,7 +317,7 @@ public class RobotResult extends RobotTestObject {
 	
 	@Exported
 	public List<String> getFailedCases() {
-		List<String> failedCases = new ArrayList<String>();
+		List<String> failedCases = new ArrayList<>();
 		for (RobotCaseResult robotCaseResult : this.getAllFailedCases()) {
 			RobotTestObject rto = robotCaseResult.getParent();
 			String name = robotCaseResult.getName();	
@@ -343,7 +343,7 @@ public class RobotResult extends RobotTestObject {
 		duration = 0;
 
 		Collection<RobotSuiteResult> newSuites = getSuites();
-		HashMap<String, RobotSuiteResult> newMap = new HashMap<String, RobotSuiteResult>(newSuites.size());
+		HashMap<String, RobotSuiteResult> newMap = new HashMap<>(newSuites.size());
 
 		for (RobotSuiteResult suite : newSuites) {
 			suite.tally(robotBuildAction);
