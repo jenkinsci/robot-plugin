@@ -18,7 +18,6 @@ package hudson.plugins.robot;
 import hudson.AbortException;
 import hudson.FilePath;
 import hudson.Util;
-import hudson.model.AbstractBuild;
 import hudson.model.Run;
 import hudson.plugins.robot.model.RobotTestObject;
 import hudson.plugins.robot.model.RobotCaseResult;
@@ -46,9 +45,8 @@ public class RobotParser {
 
 	public RobotResult parse(String outputFileLocations, String outputPath, Run<?, ?> build, FilePath workSpace, String logFileName, String reportFileName)
 	throws InterruptedException, IOException {
-		RobotResult result = new FilePath(workSpace, outputPath).act(
+		return new FilePath(workSpace, outputPath).act(
 				new RobotParserCallable(outputFileLocations, logFileName, reportFileName));
-		return result;
 	}
 
 	public static final class RobotParserCallable implements
