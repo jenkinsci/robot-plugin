@@ -89,7 +89,7 @@ public class RobotParser {
 				//get the potential directories emerging from the use of GLOB filemask accounted in the splitted file parsing
 				String dirFromFileGLOB = new File(file).getParent();
 				if(dirFromFileGLOB != null)
-					baseDirectory = new File(baseDirectory, dirFromFileGLOB.toString());
+					baseDirectory = new File(baseDirectory, dirFromFileGLOB);
 				FileInputStream inputStream = new FileInputStream(reportFile);
 				try {
 					XMLStreamReader reader = factory.createXMLStreamReader(inputStream, "UTF-8");
