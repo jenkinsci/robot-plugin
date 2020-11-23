@@ -248,12 +248,12 @@ public class RobotPublisher extends Recorder implements Serializable,
 				//Save configured Robot files (including split output) to build dir
 				copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","));
 
-				if (!getDisableArchiveOutput()){
+				if (!getDisableArchiveOutput()) {
 					copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedOutputFileName}), ","));
 				}
 
 				//Save other configured files to build dir
-				if(StringUtils.isNotBlank(getOtherFiles())) {
+				if (StringUtils.isNotBlank(getOtherFiles())) {
 					String filemask = buildEnv.expand(getOtherFiles());
 					copyFilesToBuildDir(build, workspace, expandedOutputPath, filemask);
 				}
@@ -265,11 +265,11 @@ public class RobotPublisher extends Recorder implements Serializable,
 				build.addAction(action);
 
 				// set RobotProjectAction as project action for Blue Ocean
-				Job<?,?> job = build.getParent();
+				Job<?, ?> job = build.getParent();
 				RobotProjectAction projectAction = new RobotProjectAction(job);
 				try {
 					job.addOrReplaceAction(projectAction);
-				} catch (UnsupportedOperationException|NullPointerException e) {
+				} catch (UnsupportedOperationException | NullPointerException e) {
 					// it is possible that the action collection is an unmodifiable collection
 					// NullPointerException is thrown if a freestyle job runs
 				}
@@ -283,6 +283,8 @@ public class RobotPublisher extends Recorder implements Serializable,
 				logger.println(Messages.robot_publisher_done());
 				logger.println(Messages.robot_publisher_finished());
 
+			} catch (RuntimeException e) {
+				throw e;
 			} catch (Exception e) {
 				logger.println(Messages.robot_publisher_fail());
 				e.printStackTrace(logger);
