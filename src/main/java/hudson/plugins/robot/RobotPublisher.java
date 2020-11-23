@@ -259,36 +259,35 @@ public class RobotPublisher extends Recorder implements Serializable,
 				}
 
 				logger.println(Messages.robot_publisher_done());
+				logger.println(Messages.robot_publisher_assigning());
+
+				RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener, expandedReportFileName, expandedLogFileName, enableCache);
+				build.addAction(action);
+
+				// set RobotProjectAction as project action for Blue Ocean
+				Job<?,?> job = build.getParent();
+				RobotProjectAction projectAction = new RobotProjectAction(job);
+				try {
+					job.addOrReplaceAction(projectAction);
+				} catch (UnsupportedOperationException|NullPointerException e) {
+					// it is possible that the action collection is an unmodifiable collection
+					// NullPointerException is thrown if a freestyle job runs
+				}
+
+				logger.println(Messages.robot_publisher_done());
+				logger.println(Messages.robot_publisher_checking());
+
+				Result buildResult = getBuildResult(build, result);
+				build.setResult(buildResult);
+
+				logger.println(Messages.robot_publisher_done());
+				logger.println(Messages.robot_publisher_finished());
+
 			} catch (Exception e) {
 				logger.println(Messages.robot_publisher_fail());
 				e.printStackTrace(logger);
 				build.setResult(Result.FAILURE);
-				return;
 			}
-
-			logger.println(Messages.robot_publisher_assigning());
-
-			RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener, getReportFileName(), getLogFileName(), enableCache);
-			build.addAction(action);
-
-			// set RobotProjectAction as project action for Blue Ocean
-			Job<?,?> job = build.getParent();
-			RobotProjectAction projectAction = new RobotProjectAction(job);
-			try {
-				job.addOrReplaceAction(projectAction);
-			} catch (UnsupportedOperationException|NullPointerException e) {
-				// it is possible that the action collection is an unmodifiable collection
-				// NullPointerException is thrown if a freestyle job runs
-			}
-
-			logger.println(Messages.robot_publisher_done());
-			logger.println(Messages.robot_publisher_checking());
-
-			Result buildResult = getBuildResult(build, result);
-			build.setResult(buildResult);
-
-			logger.println(Messages.robot_publisher_done());
-			logger.println(Messages.robot_publisher_finished());
 		}
 	}
 
