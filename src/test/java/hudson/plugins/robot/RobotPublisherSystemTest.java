@@ -241,6 +241,35 @@ public class RobotPublisherSystemTest {
 
 	@LocalData
 	@Test
+	public void testSummariesWithVariablesInFileNames() throws Exception {
+		WebClient wc = this.executeJobAndGetWebClient("files-with-env-vars");
+
+		HtmlPage page = wc.goTo("job/files-with-env-vars/");
+		WebAssert.assertElementPresentByXPath(page, "//div[@id='tasks']//a[@href='/jenkins/job/files-with-env-vars/robot']");
+		WebAssert.assertElementPresentByXPath(page, "//div[@id='main-panel']//h4[contains(.,'Latest Robot Results:')]");
+		WebAssert.assertElementPresentByXPath(page, "//div[@id='main-panel']//img[@id='passfailgraph']");
+		WebAssert.assertElementPresentByXPath(page,
+				"//div[@id='main-panel']//a[@href='/jenkins/job/files-with-env-vars/1/robot' and contains(text(),'Browse results')]");
+		WebAssert.assertElementPresentByXPath(page,
+				"//div[@id='main-panel']//a[@href='/jenkins/job/files-with-env-vars/1/robot/report/report_1.html' and contains(text(), 'Open report_1.html')]");
+		WebAssert.assertElementPresentByXPath(page,
+				"//div[@id='main-panel']//a[@href='/jenkins/job/files-with-env-vars/1/robot/report/log_1.html' and contains(text(), 'Open log_1.html')]");
+		verifyTotalsTable(page, 6, 1, "83.3", 6, 1, "83.3");
+
+		page = wc.goTo("job/files-with-env-vars/1/");
+		WebAssert.assertElementPresentByXPath(page, "//div[@id='tasks']//a[@href='/jenkins/job/files-with-env-vars/1/robot']");
+		WebAssert.assertElementPresentByXPath(page, "//div[@id='main-panel']//h4[contains(.,'Robot Test Summary:')]");
+		WebAssert.assertElementPresentByXPath(page,
+				"//div[@id='main-panel']//a[@href='/jenkins/job/files-with-env-vars/1/robot' and contains(text(),'Browse results')]");
+		WebAssert.assertElementPresentByXPath(page,
+				"//div[@id='main-panel']//a[@href='/jenkins/job/files-with-env-vars/1/robot/report/report_1.html' and contains(text(), 'Open report_1.html')]");
+		WebAssert.assertElementPresentByXPath(page,
+				"//div[@id='main-panel']//a[@href='/jenkins/job/files-with-env-vars/1/robot/report/log_1.html' and contains(text(), 'Open log_1.html')]");
+		verifyTotalsTable(page, 6, 1, "83.3", 6, 1, "83.3");
+	}
+
+	@LocalData
+	@Test
 	public void testRobot29Outputs() throws Exception {
 		WebClient wc = this.executeJobAndGetWebClient("robot29output");
 		HtmlPage page = wc.goTo("job/robot29output/");

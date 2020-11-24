@@ -67,7 +67,6 @@ public class RobotPublisher extends Recorder implements Serializable,
 	//Default to true
 	private boolean onlyCritical = true;
 
-
 	/**
 	 * Create new publisher for Robot Framework results
 	 *
@@ -215,10 +214,10 @@ public class RobotPublisher extends Recorder implements Serializable,
 		return actions;
 	}
 
-	protected RobotResult parse(String expandedTestResults, String outputPath, Run<?,?> build, FilePath workspace,
+	protected RobotResult parse(String expandedTestResults, String expandedLogFileName, String expandedReportFileName, String outputPath, Run<?,?> build, FilePath workspace,
 			Launcher launcher, TaskListener listener) throws IOException,
 			InterruptedException {
-		return new RobotParser().parse(expandedTestResults, outputPath, build, workspace, getLogFileName(), getReportFileName());
+		return new RobotParser().parse(expandedTestResults, outputPath, build, workspace, expandedLogFileName, expandedReportFileName);
 	}
 
 	/**
@@ -240,7 +239,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 				String expandedLogFileName = buildEnv.expand(getLogFileName());
 				String logFileJavascripts = trimSuffix(expandedLogFileName) + ".js";
 
-				result = parse(expandedOutputFileName, expandedOutputPath, build, workspace, launcher, listener);
+				result = parse(expandedOutputFileName, expandedLogFileName, expandedReportFileName, expandedOutputPath, build, workspace, launcher, listener);
 
 				logger.println(Messages.robot_publisher_done());
 				logger.println(Messages.robot_publisher_copying());
@@ -248,47 +247,48 @@ public class RobotPublisher extends Recorder implements Serializable,
 				//Save configured Robot files (including split output) to build dir
 				copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","));
 
-				if (!getDisableArchiveOutput()){
+				if (!getDisableArchiveOutput()) {
 					copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedOutputFileName}), ","));
 				}
 
 				//Save other configured files to build dir
-				if(StringUtils.isNotBlank(getOtherFiles())) {
+				if (StringUtils.isNotBlank(getOtherFiles())) {
 					String filemask = buildEnv.expand(getOtherFiles());
 					copyFilesToBuildDir(build, workspace, expandedOutputPath, filemask);
 				}
 
 				logger.println(Messages.robot_publisher_done());
+				logger.println(Messages.robot_publisher_assigning());
+
+				RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener, expandedReportFileName, expandedLogFileName, enableCache);
+				build.addAction(action);
+
+				// set RobotProjectAction as project action for Blue Ocean
+				Job<?, ?> job = build.getParent();
+				RobotProjectAction projectAction = new RobotProjectAction(job);
+				try {
+					job.addOrReplaceAction(projectAction);
+				} catch (UnsupportedOperationException | NullPointerException e) {
+					// it is possible that the action collection is an unmodifiable collection
+					// NullPointerException is thrown if a freestyle job runs
+				}
+
+				logger.println(Messages.robot_publisher_done());
+				logger.println(Messages.robot_publisher_checking());
+
+				Result buildResult = getBuildResult(build, result);
+				build.setResult(buildResult);
+
+				logger.println(Messages.robot_publisher_done());
+				logger.println(Messages.robot_publisher_finished());
+
+			} catch (RuntimeException e) {
+				throw e;
 			} catch (Exception e) {
 				logger.println(Messages.robot_publisher_fail());
 				e.printStackTrace(logger);
 				build.setResult(Result.FAILURE);
-				return;
 			}
-
-			logger.println(Messages.robot_publisher_assigning());
-
-			RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener, getReportFileName(), getLogFileName(), enableCache);
-			build.addAction(action);
-
-			// set RobotProjectAction as project action for Blue Ocean
-			Job<?,?> job = build.getParent();
-			RobotProjectAction projectAction = new RobotProjectAction(job);
-			try {
-				job.addOrReplaceAction(projectAction);
-			} catch (UnsupportedOperationException|NullPointerException e) {
-				// it is possible that the action collection is an unmodifiable collection
-				// NullPointerException is thrown if a freestyle job runs
-			}
-
-			logger.println(Messages.robot_publisher_done());
-			logger.println(Messages.robot_publisher_checking());
-
-			Result buildResult = getBuildResult(build, result);
-			build.setResult(buildResult);
-
-			logger.println(Messages.robot_publisher_done());
-			logger.println(Messages.robot_publisher_finished());
 		}
 	}
 
