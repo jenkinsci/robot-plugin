@@ -67,7 +67,6 @@ public class RobotPublisher extends Recorder implements Serializable,
 	//Default to true
 	private boolean onlyCritical = true;
 
-
 	/**
 	 * Create new publisher for Robot Framework results
 	 *
@@ -215,10 +214,10 @@ public class RobotPublisher extends Recorder implements Serializable,
 		return actions;
 	}
 
-	protected RobotResult parse(String expandedTestResults, String outputPath, Run<?,?> build, FilePath workspace,
+	protected RobotResult parse(String expandedTestResults, String expandedLogFileName, String expandedReportFileName, String outputPath, Run<?,?> build, FilePath workspace,
 			Launcher launcher, TaskListener listener) throws IOException,
 			InterruptedException {
-		return new RobotParser().parse(expandedTestResults, outputPath, build, workspace, getLogFileName(), getReportFileName());
+		return new RobotParser().parse(expandedTestResults, outputPath, build, workspace, expandedLogFileName, expandedReportFileName);
 	}
 
 	/**
@@ -240,7 +239,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 				String expandedLogFileName = buildEnv.expand(getLogFileName());
 				String logFileJavascripts = trimSuffix(expandedLogFileName) + ".js";
 
-				result = parse(expandedOutputFileName, expandedOutputPath, build, workspace, launcher, listener);
+				result = parse(expandedOutputFileName, expandedLogFileName, expandedReportFileName, expandedOutputPath, build, workspace, launcher, listener);
 
 				logger.println(Messages.robot_publisher_done());
 				logger.println(Messages.robot_publisher_copying());
