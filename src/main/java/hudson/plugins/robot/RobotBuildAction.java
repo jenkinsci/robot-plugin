@@ -221,6 +221,10 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		return getResult();
 	}
 
+	public String getxAxisLabel() {
+		return xAxisLabel;
+	}
+
 	/**
 	 * Serves Robot html report via robot url. Shows not found page if file is missing.
 	 * @param req StaplerRequest
@@ -270,7 +274,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		if (maxBuildsReq == null || maxBuildsReq.isEmpty())
 			maxBuildsReq = "0"; // show all builds by default
 
-		String labelFormat = RobotConfig.getInstance().getXAxisLabelFormat();
+		String labelFormat = StringUtils.isBlank(xAxisLabel) ? RobotConfig.getInstance().getXAxisLabelFormat() : xAxisLabel;
 		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(getResult(),
 				Boolean.valueOf(req.getParameter("zoomSignificant")), false,
 				Boolean.valueOf(req.getParameter("hd")),
