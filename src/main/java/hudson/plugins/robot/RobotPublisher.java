@@ -270,7 +270,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 				logger.println(Messages.robot_publisher_done());
 				logger.println(Messages.robot_publisher_assigning());
 
-				RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener, expandedReportFileName, expandedLogFileName, enableCache);
+				RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener, expandedReportFileName, expandedLogFileName, enableCache, overwriteXAxisLabel);
 				build.addAction(action);
 
 				// set RobotProjectAction as project action for Blue Ocean

@@ -63,6 +63,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	private final boolean enableCache;
 	private Run<?, ?> build;
 	private RobotResult result;
+	private String xAxisLabel;
 
 	static {
 		XSTREAM.alias("result",RobotResult.class);
@@ -82,7 +83,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	 * @param enableCache Whether we want to enable caching or not
 	 */
 	public RobotBuildAction(Run<?, ?> build, RobotResult result,
-			String outputPath, TaskListener listener, String logFileLink, String logHtmlLink, boolean enableCache) {
+			String outputPath, TaskListener listener, String logFileLink, String logHtmlLink, boolean enableCache, String xAxisLabel) {
 		super();
 		super.onAttached(build);
 		this.build = build;
@@ -90,6 +91,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		this.logFileLink = logFileLink;
 		this.logHtmlLink = logHtmlLink;
 		this.enableCache = enableCache;
+		this.xAxisLabel = xAxisLabel;
 		setResult(result, listener);
 	}
 
