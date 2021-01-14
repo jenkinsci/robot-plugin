@@ -253,7 +253,8 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
-		String labelFormat = RobotConfig.getInstance().getXAxisLabelFormat();
+		String label = parentAction.getxAxisLabel();
+		String labelFormat = StringUtils.isBlank(label) ? RobotConfig.getInstance().getXAxisLabelFormat() : label;
 		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(this,
 				Boolean.parseBoolean(req.getParameter("zoomSignificant")),
 				false, Boolean.parseBoolean(req.getParameter("hd")),
@@ -273,7 +274,8 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	public void doDurationGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
-		String labelFormat = RobotConfig.getInstance().getXAxisLabelFormat();
+		String label = parentAction.getxAxisLabel();
+		String labelFormat = StringUtils.isBlank(label) ? RobotConfig.getInstance().getXAxisLabelFormat() : label;
 		Graph g = RobotGraphHelper.createDurationGraphForTestObject(this,
 				req.hasParameter("hd"),
  				Integer.parseInt(req.getParameter("maxBuildsToShow")),

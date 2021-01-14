@@ -62,6 +62,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	final private double passThreshold;
 	final private double unstableThreshold;
 	private String[] otherFiles;
+	final private String overwriteXAxisLabel;
 	final private boolean enableCache;
 
 	//Default to true
@@ -95,7 +96,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	public RobotPublisher(String outputPath, String outputFileName,
 						boolean disableArchiveOutput, String reportFileName, String logFileName,
 						double passThreshold, double unstableThreshold,
-						boolean onlyCritical, String otherFiles, boolean enableCache) {
+						boolean onlyCritical, String otherFiles, boolean enableCache, String overwriteXAxisLabel) {
 		this.outputPath = outputPath;
 		this.outputFileName = outputFileName;
 		this.disableArchiveOutput = disableArchiveOutput;
@@ -105,6 +106,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 		this.logFileName = logFileName;
 		this.onlyCritical = onlyCritical;
 		this.enableCache = enableCache;
+		this.overwriteXAxisLabel = overwriteXAxisLabel;
 
 		if (otherFiles != null) {
 			String[] filemasks = otherFiles.split(",");
@@ -204,6 +206,14 @@ public class RobotPublisher extends Recorder implements Serializable,
 	}
 
 	/**
+	 * Gets the value of overwriteXAxisLabel
+	 * @return X axis label for the trend
+	 */
+	public String getOverwriteXAxisLabel() {
+		return overwriteXAxisLabel;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -260,7 +270,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 				logger.println(Messages.robot_publisher_done());
 				logger.println(Messages.robot_publisher_assigning());
 
-				RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener, expandedReportFileName, expandedLogFileName, enableCache);
+				RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener, expandedReportFileName, expandedLogFileName, enableCache, overwriteXAxisLabel);
 				build.addAction(action);
 
 				// set RobotProjectAction as project action for Blue Ocean
