@@ -20,6 +20,9 @@ limitations under the License.
     <f:textbox />
   </f:entry>
   <f:advanced>
+    <f:entry title="${%advanced.archivedirname}" description="${%advanced.archivedirname.description}" field="archiveDirName">
+      <f:textbox default="robot-plugin"/>
+    </f:entry>
     <f:entry title="${%advanced.outputxml}" description="${%advanced.outputxml.description}" field="outputFileName">
       <f:textbox />
     </f:entry>
@@ -31,6 +34,9 @@ limitations under the License.
     </f:entry>
     <f:entry title="${%advanced.otherfiles}" description="${%advanced.otherfiles.description}" field="otherFiles">
         <f:textbox />
+    </f:entry>
+    <f:entry title="${%advanced.disablecopyfilestobuilddir}" description="${%advanced.disablecopyfilestobuilddir.description}" field="disableCopyFilesToBuildDir">
+        <f:checkbox default="false"/>
     </f:entry>
     <f:entry title="${%advanced.disablearchiveoutputxml}" description="${%advanced.disablearchiveoutputxml.description}" field="disableArchiveOutput">
         <f:checkbox />
