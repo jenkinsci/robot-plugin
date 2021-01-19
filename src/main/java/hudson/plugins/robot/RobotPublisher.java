@@ -267,9 +267,9 @@ public class RobotPublisher extends Recorder implements Serializable,
 				result = parse(expandedOutputFileName, expandedLogFileName, expandedReportFileName, expandedOutputPath, build, workspace, launcher, listener);
 
 				logger.println(Messages.robot_publisher_done());
-				logger.println(Messages.robot_publisher_copying());
 
 				if (!DEFAULT_JENKINS_ARCHIVE_DIR.equalsIgnoreCase(getArchiveDirName())) {
+					logger.println(Messages.robot_publisher_copying());
 					//Save configured Robot files (including split output) to build dir
 					copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","));
 
@@ -282,9 +282,9 @@ public class RobotPublisher extends Recorder implements Serializable,
 						String filemask = buildEnv.expand(getOtherFiles());
 						copyFilesToBuildDir(build, workspace, expandedOutputPath, filemask);
 					}
+					logger.println(Messages.robot_publisher_done());
 				}
 
-				logger.println(Messages.robot_publisher_done());
 				logger.println(Messages.robot_publisher_assigning());
 
 				RobotBuildAction action = new RobotBuildAction(build, result, getArchiveDirName(), listener, expandedReportFileName, expandedLogFileName, enableCache, overwriteXAxisLabel);
