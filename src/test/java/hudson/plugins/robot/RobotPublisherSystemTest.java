@@ -56,7 +56,7 @@ public class RobotPublisherSystemTest {
 	@Test
 	public void testRoundTripConfig() throws Exception {
 		FreeStyleProject p = j.jenkins.createProject(FreeStyleProject.class, "testRoundTripConfig");
-		RobotPublisher before = new RobotPublisher(null, "a", "b", false, false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png",
+		RobotPublisher before = new RobotPublisher(null, "a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png",
 				false, "");
 		p.getPublishersList().add(before);
 		j.configRoundtrip(p);
@@ -69,7 +69,7 @@ public class RobotPublisherSystemTest {
 	@Test
 	public void testConfigView() throws Exception {
 		FreeStyleProject p = j.jenkins.createProject(FreeStyleProject.class, "testConfigView");
-		RobotPublisher before = new RobotPublisher(null, "a", "b", false, false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png",
+		RobotPublisher before = new RobotPublisher(null, "a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png",
 				false, "");
 		p.getPublishersList().add(before);
 		HtmlPage page = j.createWebClient().getPage(p, "configure");
