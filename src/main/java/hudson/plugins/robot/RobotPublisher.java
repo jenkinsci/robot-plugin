@@ -50,6 +50,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 	protected static final String DEFAULT_REPORT_FILE = "report.html";
 	protected static final String DEFAULT_ARCHIVE_DIR = "robot-plugin";
+	protected static final String DEFAULT_JENKINS_ARCHIVE_DIR = "archive";
 
 	private static final String DEFAULT_OUTPUT_FILE = "output.xml";
 	private static final String DEFAULT_LOG_FILE = "log.html";
@@ -59,7 +60,6 @@ public class RobotPublisher extends Recorder implements Serializable,
 	final private String reportFileName;
 	final private String logFileName;
 	final private String outputFileName;
-	final private boolean disableCopyFilesToBuildDir;
 	final private boolean disableArchiveOutput;
 	final private double passThreshold;
 	final private double unstableThreshold;
@@ -79,8 +79,6 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 *			Path to Robot Framework's output files
 	 * @param outputFileName
 	 *			Name of Robot output xml
-	 * @param disableCopyFilesToBuildDir
-	 *			Disable copying files to build dir to server
 	 * @param disableArchiveOutput
 	 *			Disable Archiving output xml file to server
 	 * @param reportFileName
@@ -100,13 +98,12 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 */
 	@DataBoundConstructor
 	public RobotPublisher(String archiveDirName, String outputPath, String outputFileName,
-						  boolean disableCopyFilesToBuildDir, boolean disableArchiveOutput, String reportFileName, String logFileName,
+						  boolean disableArchiveOutput, String reportFileName, String logFileName,
 						  double passThreshold, double unstableThreshold,
 						  boolean onlyCritical, String otherFiles, boolean enableCache, String overwriteXAxisLabel) {
 		this.archiveDirName = archiveDirName;
 		this.outputPath = outputPath;
 		this.outputFileName = outputFileName;
-		this.disableCopyFilesToBuildDir = disableCopyFilesToBuildDir;
 		this.disableArchiveOutput = disableArchiveOutput;
 		this.reportFileName = reportFileName;
 		this.passThreshold = passThreshold;
@@ -161,14 +158,6 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 */
 	public boolean getDisableArchiveOutput() {
 		return disableArchiveOutput;
-	}
-
-	/**
-	 * Get the value of disable copy files to build dir checkbox
-	 * @return the value of disable copy files to build dir checkbox
-	 */
-	public boolean getDisableCopyFilesToBuildDir() {
-		return disableCopyFilesToBuildDir;
 	}
 
 	/**
@@ -280,7 +269,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 				logger.println(Messages.robot_publisher_done());
 				logger.println(Messages.robot_publisher_copying());
 
-				if (!getDisableCopyFilesToBuildDir()) {
+				if (!DEFAULT_JENKINS_ARCHIVE_DIR.equalsIgnoreCase(getArchiveDirName())) {
 					//Save configured Robot files (including split output) to build dir
 					copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","));
 

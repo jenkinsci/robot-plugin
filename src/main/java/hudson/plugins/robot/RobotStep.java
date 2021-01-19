@@ -33,7 +33,6 @@ public class RobotStep extends Step {
 	private @CheckForNull String reportFileName;
 	private @CheckForNull String logFileName;
 	private @CheckForNull String outputFileName;
-	private boolean disableCopyFilesToBuildDir;
 	private boolean disableArchiveOutput;
 	private double passThreshold;
 	private double unstableThreshold;
@@ -71,10 +70,6 @@ public class RobotStep extends Step {
 	
 	public String getOutputFileName() {
 		return this.outputFileName;
-	}
-	
-	public boolean getDisableCopyFilesToBuildDir() {
-		return this.disableCopyFilesToBuildDir;
 	}
 	
 	public boolean getDisableArchiveOutput() {
@@ -123,11 +118,6 @@ public class RobotStep extends Step {
 	@DataBoundSetter
 	public void setOutputFileName(String outputFileName) {
 		this.outputFileName = Util.fixEmpty(outputFileName);
-	}
-	
-	@DataBoundSetter
-	public void setDisableCopyFilesToBuildDir(boolean disableCopyFilesToBuildDir) {
-		this.disableCopyFilesToBuildDir = disableCopyFilesToBuildDir;
 	}
 	
 	@DataBoundSetter
