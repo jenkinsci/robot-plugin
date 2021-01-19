@@ -294,16 +294,17 @@ public class RobotParser {
 						String kw = reader.getAttributeValue(null, "name");
 						stackTrace.append(getSpacesPerNestedLevel(nestedCount) + kw);
 						xmlTag = ignoreUntilStarts(reader, "kw", "arguments", "status");
-						//get arguments of current keyword
+						//get arguments of current keyword if any
 						if (xmlTag == "arguments") {
-							xmlTag = ignoreUntilStarts(reader, "arg");
-							do {
-								reader.next(); //skip arg start
-								stackTrace.append("    " + reader.getText());
-								reader.next(); //skip text
-								reader.next(); //skip arg end
-								reader.next(); //skip WS
-							} while (reader.isStartElement() && reader.getLocalName() == "arg");
+							while (reader.hasNext() && !(reader.isEndElement() && reader.getLocalName() == "arguments")) {
+								reader.next();
+								if (reader.isStartElement() && reader.getLocalName() == "arg") {
+									reader.next(); //skip arg start
+									stackTrace.append("    " + reader.getText());
+									reader.next(); //skip text
+									reader.next(); //skip arg end
+								}
+							}
 							xmlTag = ignoreUntilStarts(reader, "kw", "status");
 						}
 						stackTrace.append("\n");

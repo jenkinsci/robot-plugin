@@ -40,6 +40,7 @@ public class RobotStep extends Step {
 	private @CheckForNull String[] otherFiles;
 	private boolean enableCache = true;
 	private boolean onlyCritical = true;
+	private @CheckForNull String overwriteXAxisLabel;
 
 	
 	
@@ -98,6 +99,10 @@ public class RobotStep extends Step {
 	
 	public boolean getOnlyCritical() {
 		return this.onlyCritical;
+	}
+
+	public String getOverwriteXAxisLabel() {
+		return this.overwriteXAxisLabel;
 	}
 	
 	@DataBoundSetter
@@ -160,6 +165,11 @@ public class RobotStep extends Step {
 			}
 			this.otherFiles = filemasks;
 		}
+	}
+
+	@DataBoundSetter
+	public void setOverwriteXAxisLabel(String overwriteXAxisLabel) {
+		this.overwriteXAxisLabel = overwriteXAxisLabel;
 	}
 
 	@Override

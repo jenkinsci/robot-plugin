@@ -57,7 +57,7 @@ public class RobotPublisherSystemTest {
 	public void testRoundTripConfig() throws Exception {
 		FreeStyleProject p = j.jenkins.createProject(FreeStyleProject.class, "testRoundTripConfig");
 		RobotPublisher before = new RobotPublisher(null, "a", "b", false, false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png",
-				false);
+				false, "");
 		p.getPublishersList().add(before);
 		j.configRoundtrip(p);
 		RobotPublisher after = p.getPublishersList().get(RobotPublisher.class);
@@ -70,7 +70,7 @@ public class RobotPublisherSystemTest {
 	public void testConfigView() throws Exception {
 		FreeStyleProject p = j.jenkins.createProject(FreeStyleProject.class, "testConfigView");
 		RobotPublisher before = new RobotPublisher(null, "a", "b", false, false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png",
-				false);
+				false, "");
 		p.getPublishersList().add(before);
 		HtmlPage page = j.createWebClient().getPage(p, "configure");
 		WebAssert.assertTextPresent(page, "Publish Robot Framework");
@@ -237,6 +237,35 @@ public class RobotPublisherSystemTest {
 		WebAssert.assertElementPresentByXPath(page,
 				"//div[@id='main-panel']//a[@href='/jenkins/job/robot/1/robot/report/log.html' and contains(text(), 'Open log.html')]");
 		verifyTotalsTable(page, 8, 4, "50.0", 8, 4, "50.0");
+	}
+
+	@LocalData
+	@Test
+	public void testSummariesWithVariablesInFileNames() throws Exception {
+		WebClient wc = this.executeJobAndGetWebClient("files-with-env-vars");
+
+		HtmlPage page = wc.goTo("job/files-with-env-vars/");
+		WebAssert.assertElementPresentByXPath(page, "//div[@id='tasks']//a[@href='/jenkins/job/files-with-env-vars/robot']");
+		WebAssert.assertElementPresentByXPath(page, "//div[@id='main-panel']//h4[contains(.,'Latest Robot Results:')]");
+		WebAssert.assertElementPresentByXPath(page, "//div[@id='main-panel']//img[@id='passfailgraph']");
+		WebAssert.assertElementPresentByXPath(page,
+				"//div[@id='main-panel']//a[@href='/jenkins/job/files-with-env-vars/1/robot' and contains(text(),'Browse results')]");
+		WebAssert.assertElementPresentByXPath(page,
+				"//div[@id='main-panel']//a[@href='/jenkins/job/files-with-env-vars/1/robot/report/report_1.html' and contains(text(), 'Open report_1.html')]");
+		WebAssert.assertElementPresentByXPath(page,
+				"//div[@id='main-panel']//a[@href='/jenkins/job/files-with-env-vars/1/robot/report/log_1.html' and contains(text(), 'Open log_1.html')]");
+		verifyTotalsTable(page, 6, 1, "83.3", 6, 1, "83.3");
+
+		page = wc.goTo("job/files-with-env-vars/1/");
+		WebAssert.assertElementPresentByXPath(page, "//div[@id='tasks']//a[@href='/jenkins/job/files-with-env-vars/1/robot']");
+		WebAssert.assertElementPresentByXPath(page, "//div[@id='main-panel']//h4[contains(.,'Robot Test Summary:')]");
+		WebAssert.assertElementPresentByXPath(page,
+				"//div[@id='main-panel']//a[@href='/jenkins/job/files-with-env-vars/1/robot' and contains(text(),'Browse results')]");
+		WebAssert.assertElementPresentByXPath(page,
+				"//div[@id='main-panel']//a[@href='/jenkins/job/files-with-env-vars/1/robot/report/report_1.html' and contains(text(), 'Open report_1.html')]");
+		WebAssert.assertElementPresentByXPath(page,
+				"//div[@id='main-panel']//a[@href='/jenkins/job/files-with-env-vars/1/robot/report/log_1.html' and contains(text(), 'Open log_1.html')]");
+		verifyTotalsTable(page, 6, 1, "83.3", 6, 1, "83.3");
 	}
 
 	@LocalData

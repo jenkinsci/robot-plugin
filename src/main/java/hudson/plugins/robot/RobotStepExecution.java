@@ -28,7 +28,7 @@ public class RobotStepExecution extends SynchronousNonBlockingStepExecution<Void
     @Override protected Void run() throws Exception {
     	FilePath workspace = getContext().get(FilePath.class);
         workspace.mkdirs();
-    	RobotPublisher rp = new RobotPublisher(step.getArchiveDirName(), step.getOutputPath(), step.getOutputFileName(), step.getDisableCopyFilesToBuildDir(), step.getDisableArchiveOutput(), step.getReportFileName(), step.getLogFileName(), step.getPassThreshold(), step.getUnstableThreshold(), step.getOnlyCritical(), step.getOtherFiles(), step.getEnableCache());
+    	RobotPublisher rp = new RobotPublisher(step.getArchiveDirName(), step.getOutputPath(), step.getOutputFileName(), step.getDisableCopyFilesToBuildDir(), step.getDisableArchiveOutput(), step.getReportFileName(), step.getLogFileName(), step.getPassThreshold(), step.getUnstableThreshold(), step.getOnlyCritical(), step.getOtherFiles(), step.getEnableCache(), step.getOverwriteXAxisLabel());
     	rp.perform(getContext().get(Run.class), workspace, getContext().get(Launcher.class), getContext().get(TaskListener.class));
     	return null;
     }

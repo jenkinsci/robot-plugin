@@ -23,6 +23,7 @@ import hudson.plugins.robot.graph.RobotGraphHelper;
 import hudson.plugins.robot.model.RobotResult;
 import hudson.util.ChartUtil;
 import hudson.util.Graph;
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -92,8 +93,8 @@ public class AggregatedRobotAction implements Action {
 
 		if (req.checkIfModified(t, rsp))
 			return;
-
-		String labelFormat = RobotConfig.getInstance().getXAxisLabelFormat();
+		String label = getChildBuildAction(build).getxAxisLabel();
+		String labelFormat = StringUtils.isBlank(label) ? RobotConfig.getInstance().getXAxisLabelFormat() : label;
 		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(getResult(),
 				Boolean.valueOf(req.getParameter("zoomSignificant")),
 				false, Boolean.valueOf(req.getParameter("hd")),
