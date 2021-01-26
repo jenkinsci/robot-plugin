@@ -56,7 +56,7 @@ public class RobotPublisherSystemTest {
 	@Test
 	public void testRoundTripConfig() throws Exception {
 		FreeStyleProject p = j.jenkins.createProject(FreeStyleProject.class, "testRoundTripConfig");
-		RobotPublisher before = new RobotPublisher("a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png",
+		RobotPublisher before = new RobotPublisher(null, "a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png",
 				false, "");
 		p.getPublishersList().add(before);
 		j.configRoundtrip(p);
@@ -69,7 +69,7 @@ public class RobotPublisherSystemTest {
 	@Test
 	public void testConfigView() throws Exception {
 		FreeStyleProject p = j.jenkins.createProject(FreeStyleProject.class, "testConfigView");
-		RobotPublisher before = new RobotPublisher("a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png",
+		RobotPublisher before = new RobotPublisher(null, "a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png",
 				false, "");
 		p.getPublishersList().add(before);
 		HtmlPage page = j.createWebClient().getPage(p, "configure");
@@ -97,18 +97,18 @@ public class RobotPublisherSystemTest {
 	public void testPublish() throws Exception {
 		Run lastBuild = this.executeJobWithSuccess("robot");
 
-		File storedOutput = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/output.xml");
-		File storedSplitOutput = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/output-001.xml");
-		File storedReport = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/report.html");
-		File storedSplitReport = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/report.html");
-		File storedLog = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log.html");
-		File storedSplitLog = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log-001.html");
-		File storedJs = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log.js");
-		File storedSplitJs1 = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log-001.js");
-		File storedImage1 = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/screenshot.png");
+		File storedOutput = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/output.xml");
+		File storedSplitOutput = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/output-001.xml");
+		File storedReport = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/report.html");
+		File storedSplitReport = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/report.html");
+		File storedLog = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/log.html");
+		File storedSplitLog = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/log-001.html");
+		File storedJs = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/log.js");
+		File storedSplitJs1 = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/log-001.js");
+		File storedImage1 = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/screenshot.png");
 		File storedImage2 = new File(lastBuild.getRootDir(),
-				RobotPublisher.FILE_ARCHIVE_DIR + "/subfolder/screenshot2.png");
-		File storedDummy = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "dummy.file");
+				RobotPublisher.DEFAULT_ARCHIVE_DIR + "/subfolder/screenshot2.png");
+		File storedDummy = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "dummy.file");
 
 		assertTrue("output.xml was not stored", storedOutput.exists());
 		assertTrue("output-001.xml was not stored", storedSplitOutput.exists());
@@ -128,18 +128,18 @@ public class RobotPublisherSystemTest {
 	public void testDontCopyOuputWhendisableArchiveOutput() throws Exception {
 		Run lastBuild = this.executeJobWithSuccess("disable-archive-output-xml");
 
-		File storedOutput = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/output.xml");
-		File storedSplitOutput = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/output-001.xml");
-		File storedReport = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/report.html");
-		File storedSplitReport = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/report.html");
-		File storedLog = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log.html");
-		File storedSplitLog = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log-001.html");
-		File storedJs = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log.js");
-		File storedSplitJs1 = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/log-001.js");
-		File storedImage1 = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/screenshot.png");
+		File storedOutput = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/output.xml");
+		File storedSplitOutput = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/output-001.xml");
+		File storedReport = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/report.html");
+		File storedSplitReport = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/report.html");
+		File storedLog = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/log.html");
+		File storedSplitLog = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/log-001.html");
+		File storedJs = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/log.js");
+		File storedSplitJs1 = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/log-001.js");
+		File storedImage1 = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/screenshot.png");
 		File storedImage2 = new File(lastBuild.getRootDir(),
-				RobotPublisher.FILE_ARCHIVE_DIR + "/subfolder/screenshot2.png");
-		File storedDummy = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "dummy.file");
+				RobotPublisher.DEFAULT_ARCHIVE_DIR + "/subfolder/screenshot2.png");
+		File storedDummy = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "dummy.file");
 
 		assertFalse("output.xml was copied", storedOutput.exists());
 		assertFalse("output-001.xml was copied", storedSplitOutput.exists());
@@ -159,9 +159,9 @@ public class RobotPublisherSystemTest {
 	public void testDontCopyExcessFilesWhenOtherFilesEmpty() throws Exception {
 		Run lastBuild = this.executeJobWithSuccess("dont-copy");
 
-		File storedOutput = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/output.xml");
-		File storedSplitOutput = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/output-001.xml");
-		File storedDummy = new File(lastBuild.getRootDir(), RobotPublisher.FILE_ARCHIVE_DIR + "/dummy.file");
+		File storedOutput = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/output.xml");
+		File storedSplitOutput = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/output-001.xml");
+		File storedDummy = new File(lastBuild.getRootDir(), RobotPublisher.DEFAULT_ARCHIVE_DIR + "/dummy.file");
 
 		assertTrue("output.xml was not stored", storedOutput.exists());
 		assertTrue("output-001.xml was not stored", storedSplitOutput.exists());
@@ -354,7 +354,7 @@ public class RobotPublisherSystemTest {
 		WebClient wc = j.createWebClient();
 
 		File buildRoot = testProject.getLastBuild().getRootDir();
-		File robotHtmlReport = new File(buildRoot, RobotPublisher.FILE_ARCHIVE_DIR + "/report.html");
+		File robotHtmlReport = new File(buildRoot, RobotPublisher.DEFAULT_ARCHIVE_DIR + "/report.html");
 		if (!robotHtmlReport.delete())
 			fail("Unable to delete report directory");
 

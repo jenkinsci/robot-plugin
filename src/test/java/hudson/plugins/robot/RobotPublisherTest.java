@@ -38,7 +38,7 @@ public class RobotPublisherTest {
 	}
 
 	private RobotPublisher getRobotPublisher(double passThreshold, double unstableThreshold) {
-		return new RobotPublisher("", "", false, "", "", passThreshold, unstableThreshold, onlyCritical, "", false, "");
+		return new RobotPublisher(null, "", "", false, "", "", passThreshold, unstableThreshold, onlyCritical, "", false, "");
 	}
 
 	@Test

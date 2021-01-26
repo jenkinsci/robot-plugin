@@ -28,6 +28,7 @@ public class RobotStep extends Step {
 	
 	private static final Logger logger = Logger.getLogger(RobotStep.class.getName());
 
+	private @CheckForNull String archiveDirName;
 	private final @Nonnull String outputPath;
 	private @CheckForNull String reportFileName;
 	private @CheckForNull String logFileName;
@@ -49,6 +50,10 @@ public class RobotStep extends Step {
 	@DataBoundConstructor
 	public RobotStep(String outputPath) {
 		this.outputPath = outputPath;
+	}
+	
+	public String getArchiveDirName() {
+		return this.archiveDirName;
 	}
 	
 	public String getOutputPath() {
@@ -95,6 +100,11 @@ public class RobotStep extends Step {
 		return this.overwriteXAxisLabel;
 	}
 	
+	@DataBoundSetter
+	public void setArchiveDirName(String archiveDirName) {
+		this.archiveDirName = Util.fixEmpty(archiveDirName);
+	}
+
 	@DataBoundSetter
 	public void setReportFileName(String reportFileName) {
 		this.reportFileName = Util.fixEmpty(reportFileName);

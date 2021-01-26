@@ -49,11 +49,13 @@ public class RobotPublisher extends Recorder implements Serializable,
 	private static final long serialVersionUID = 1L;
 
 	protected static final String DEFAULT_REPORT_FILE = "report.html";
-	protected static final String FILE_ARCHIVE_DIR = "robot-plugin";
+	protected static final String DEFAULT_ARCHIVE_DIR = "robot-plugin";
+	protected static final String DEFAULT_JENKINS_ARCHIVE_DIR = "archive";
 
 	private static final String DEFAULT_OUTPUT_FILE = "output.xml";
 	private static final String DEFAULT_LOG_FILE = "log.html";
 
+	final private String archiveDirName;
 	final private String outputPath;
 	final private String reportFileName;
 	final private String logFileName;
@@ -71,6 +73,8 @@ public class RobotPublisher extends Recorder implements Serializable,
 	/**
 	 * Create new publisher for Robot Framework results
 	 *
+	 * @param archiveDirName
+	 *			Name of Archive dir
 	 * @param outputPath
 	 *			Path to Robot Framework's output files
 	 * @param outputFileName
@@ -93,10 +97,11 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 * 			True if caching is used
 	 */
 	@DataBoundConstructor
-	public RobotPublisher(String outputPath, String outputFileName,
-						boolean disableArchiveOutput, String reportFileName, String logFileName,
-						double passThreshold, double unstableThreshold,
-						boolean onlyCritical, String otherFiles, boolean enableCache, String overwriteXAxisLabel) {
+	public RobotPublisher(String archiveDirName, String outputPath, String outputFileName,
+						  boolean disableArchiveOutput, String reportFileName, String logFileName,
+						  double passThreshold, double unstableThreshold,
+						  boolean onlyCritical, String otherFiles, boolean enableCache, String overwriteXAxisLabel) {
+		this.archiveDirName = archiveDirName;
 		this.outputPath = outputPath;
 		this.outputFileName = outputFileName;
 		this.disableArchiveOutput = disableArchiveOutput;
@@ -115,6 +120,17 @@ public class RobotPublisher extends Recorder implements Serializable,
 			}
 			this.otherFiles = filemasks;
 		}
+	}
+
+	/**
+	 * Gets the name of archive dir. Reverts to default if empty or
+	 * whitespace.
+	 * @return the name of archive dir
+	 */
+	public String getArchiveDirName() {
+		if (StringUtils.isBlank(archiveDirName))
+			return DEFAULT_ARCHIVE_DIR;
+		return archiveDirName;
 	}
 
 	/**
@@ -137,12 +153,12 @@ public class RobotPublisher extends Recorder implements Serializable,
 	}
 
 	/**
-	* Get the value of disable Archive of output xml checkbox
-	* @return the value of disable Archive of output xml checkbox
-	*/
+	 * Get the value of disable Archive of output xml checkbox
+	 * @return the value of disable Archive of output xml checkbox
+	 */
 	public boolean getDisableArchiveOutput() {
 		return disableArchiveOutput;
-		}
+	}
 
 	/**
 	 * Gets the name of report html file. Reverts to default if empty or
@@ -195,7 +211,6 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 * @return true if cache is enabled
 	 */
 	public boolean getEnableCache() { return enableCache; }
-
 
 	/**
 	 * Gets the comma separated list of other filemasks to copy into build dir
@@ -252,45 +267,49 @@ public class RobotPublisher extends Recorder implements Serializable,
 				result = parse(expandedOutputFileName, expandedLogFileName, expandedReportFileName, expandedOutputPath, build, workspace, launcher, listener);
 
 				logger.println(Messages.robot_publisher_done());
-				logger.println(Messages.robot_publisher_copying());
 
-				//Save configured Robot files (including split output) to build dir
-				copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","));
+				if (!DEFAULT_JENKINS_ARCHIVE_DIR.equalsIgnoreCase(getArchiveDirName())) {
+					logger.println(Messages.robot_publisher_copying());
+					//Save configured Robot files (including split output) to build dir
+					copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","));
 
-				if (!getDisableArchiveOutput()) {
-					copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedOutputFileName}), ","));
+					if (!getDisableArchiveOutput()) {
+						copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedOutputFileName}), ","));
+					}
+
+					//Save other configured files to build dir
+					if(StringUtils.isNotBlank(getOtherFiles())) {
+						String filemask = buildEnv.expand(getOtherFiles());
+						copyFilesToBuildDir(build, workspace, expandedOutputPath, filemask);
+					}
+					logger.println(Messages.robot_publisher_done());
 				}
 
-				//Save other configured files to build dir
-				if (StringUtils.isNotBlank(getOtherFiles())) {
-					String filemask = buildEnv.expand(getOtherFiles());
-					copyFilesToBuildDir(build, workspace, expandedOutputPath, filemask);
-				}
-
-				logger.println(Messages.robot_publisher_done());
 				logger.println(Messages.robot_publisher_assigning());
 
-				RobotBuildAction action = new RobotBuildAction(build, result, FILE_ARCHIVE_DIR, listener, expandedReportFileName, expandedLogFileName, enableCache, overwriteXAxisLabel);
+				RobotBuildAction action = new RobotBuildAction(build, result, getArchiveDirName(), listener, expandedReportFileName, expandedLogFileName, enableCache, overwriteXAxisLabel);
 				build.addAction(action);
 
-				// set RobotProjectAction as project action for Blue Ocean
-				Job<?, ?> job = build.getParent();
-				RobotProjectAction projectAction = new RobotProjectAction(job);
-				try {
-					job.addOrReplaceAction(projectAction);
-				} catch (UnsupportedOperationException | NullPointerException e) {
-					// it is possible that the action collection is an unmodifiable collection
-					// NullPointerException is thrown if a freestyle job runs
+				// set RobotProjectAction as project action
+				Job<?,?> job = build.getParent();
+				if (job != null) {
+					RobotProjectAction projectAction = new RobotProjectAction(job);
+					try {
+						job.addOrReplaceAction(projectAction);
+					} catch (UnsupportedOperationException | NullPointerException e) {
+						// it is possible that the action collection is an unmodifiable collection
+						// NullPointerException is thrown if a freestyle job runs
+					}
+
+					logger.println(Messages.robot_publisher_done());
+					logger.println(Messages.robot_publisher_checking());
+
+					Result buildResult = getBuildResult(build, result);
+					build.setResult(buildResult);
+
+					logger.println(Messages.robot_publisher_done());
+					logger.println(Messages.robot_publisher_finished());
 				}
-
-				logger.println(Messages.robot_publisher_done());
-				logger.println(Messages.robot_publisher_checking());
-
-				Result buildResult = getBuildResult(build, result);
-				build.setResult(buildResult);
-
-				logger.println(Messages.robot_publisher_done());
-				logger.println(Messages.robot_publisher_finished());
 
 			} catch (RuntimeException e) {
 				throw e;
@@ -311,11 +330,11 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 * @throws IOException thrown exception
 	 * @throws InterruptedException thrown exception
 	 */
-	public static void copyFilesToBuildDir(Run<?, ?> build, FilePath workspace,
+	public void copyFilesToBuildDir(Run<?, ?> build, FilePath workspace,
 			String inputPath, String filemaskToCopy) throws IOException, InterruptedException {
 		FilePath srcDir = new FilePath(workspace, inputPath);
 		FilePath destDir = new FilePath(new FilePath(build.getRootDir()),
-				FILE_ARCHIVE_DIR);
+				getArchiveDirName());
 		srcDir.copyRecursiveTo(filemaskToCopy, destDir);
 	}
 

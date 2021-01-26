@@ -20,6 +20,9 @@ limitations under the License.
     <f:textbox />
   </f:entry>
   <f:advanced>
+    <f:entry title="${%advanced.archivedirname}" description="${%advanced.archivedirname.description}" field="archiveDirName">
+      <f:textbox default="robot-plugin"/>
+    </f:entry>
     <f:entry title="${%advanced.outputxml}" description="${%advanced.outputxml.description}" field="outputFileName">
       <f:textbox />
     </f:entry>
