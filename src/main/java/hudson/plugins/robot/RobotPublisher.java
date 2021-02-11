@@ -287,7 +287,8 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 				logger.println(Messages.robot_publisher_assigning());
 
-				RobotBuildAction action = new RobotBuildAction(build, result, getArchiveDirName(), listener, expandedReportFileName, expandedLogFileName, enableCache, overwriteXAxisLabel);
+				String label = buildEnv.expand(overwriteXAxisLabel);
+				RobotBuildAction action = new RobotBuildAction(build, result, getArchiveDirName(), listener, expandedReportFileName, expandedLogFileName, enableCache, label);
 				build.addAction(action);
 
 				// set RobotProjectAction as project action
