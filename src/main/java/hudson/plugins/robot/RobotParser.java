@@ -333,7 +333,9 @@ public class RobotParser {
 			}
 			if (xmlTag.equals("tags") || xmlTag.equals("tag")) {
 				caseResult.addTags(processTags(reader));
-				ignoreUntilStarts(reader, "status");
+				if (!reader.getLocalName().equals("status")) {
+					ignoreUntilStarts(reader, "status");
+				}
 			}
 			//parse test details from nested status
 			caseResult.setPassed("PASS".equals(reader.getAttributeValue(null, "status")));
@@ -376,7 +378,7 @@ public class RobotParser {
 							break;
 						}
 					}
-				} else if(reader.isEndElement() && "tags".equals(reader.getLocalName())){
+				} else if((reader.isEndElement() && "tags".equals(reader.getLocalName())) || (reader.isStartElement() && "status".equals(reader.getLocalName()))){
 					break;
 				}
 			}

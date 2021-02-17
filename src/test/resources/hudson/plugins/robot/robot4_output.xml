@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 4.0b3 (Python 3.7.3 on linux)" generated="20210217 06:48:29.470" rpa="false">
+    <suite id="s1" name="Simple" source="/home/jenkins/workspace/rf-plugin/robot-versions/4.0-beta3/simple.robot">
+        <test id="s1-t1" name="Mikki Should Be A Hiiri">
+            <kw name="Should Contain" library="BuiltIn">
+                <arg>${VAR1}</arg>
+                <arg>Hiiri</arg>
+                <doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+                <status status="PASS" starttime="20210217 06:48:29.571" endtime="20210217 06:48:29.571"/>
+            </kw>
+            <tag>mikki</tag>
+            <tag>simple</tag>
+            <status status="PASS" starttime="20210217 06:48:29.570" endtime="20210217 06:48:29.572"/>
+        </test>
+        <test id="s1-t2" name="Aku Should Be An Ankka">
+            <kw name="Should Contain" library="BuiltIn">
+                <arg>${VAR2}</arg>
+                <arg>Ankka</arg>
+                <doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+                <status status="PASS" starttime="20210217 06:48:29.572" endtime="20210217 06:48:29.573"/>
+            </kw>
+            <tag>aku</tag>
+            <tag>simple</tag>
+            <status status="PASS" starttime="20210217 06:48:29.572" endtime="20210217 06:48:29.573"/>
+        </test>
+        <test id="s1-t3" name="Hessu Should Be A Hopo">
+            <kw name="Should Contain" library="BuiltIn">
+                <arg>${VAR3}</arg>
+                <arg>Hopo</arg>
+                <doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+                <status status="PASS" starttime="20210217 06:48:29.574" endtime="20210217 06:48:29.574"/>
+            </kw>
+            <tag>hessu</tag>
+            <tag>simple</tag>
+            <status status="PASS" starttime="20210217 06:48:29.573" endtime="20210217 06:48:29.575"/>
+        </test>
+        <test id="s1-t4" name="Mikki Should Not Be An Ankka">
+            <kw name="Should Not Contain" library="BuiltIn">
+                <arg>${VAR1}</arg>
+                <arg>Ankka</arg>
+                <doc>Fails if ``container`` contains ``item`` one or more times.</doc>
+                <status status="PASS" starttime="20210217 06:48:29.576" endtime="20210217 06:48:29.576"/>
+            </kw>
+            <tag>mikki</tag>
+            <tag>simple</tag>
+            <status status="PASS" starttime="20210217 06:48:29.575" endtime="20210217 06:48:29.576"/>
+        </test>
+        <test id="s1-t5" name="New Mikki Should Be An Ankka">
+            <kw name="Set Variable" library="BuiltIn">
+                <var>${VAR1}</var>
+                <arg>Mikki Ankka</arg>
+                <doc>Returns the given values which can then be assigned to a variables.</doc>
+                <msg timestamp="20210217 06:48:29.577" level="INFO">${VAR1} = Mikki Ankka</msg>
+                <status status="PASS" starttime="20210217 06:48:29.577" endtime="20210217 06:48:29.577"/>
+            </kw>
+            <kw name="Should Contain" library="BuiltIn">
+                <arg>${VAR1}</arg>
+                <arg>Ankka</arg>
+                <doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+                <status status="PASS" starttime="20210217 06:48:29.578" endtime="20210217 06:48:29.578"/>
+            </kw>
+            <tag>mikki</tag>
+            <tag>simple</tag>
+            <status status="PASS" starttime="20210217 06:48:29.577" endtime="20210217 06:48:29.578"/>
+        </test>
+        <test id="s1-t6" name="Hessu Should Be A Mikki">
+            <kw name="Should Contain" library="BuiltIn">
+                <arg>${VAR3}</arg>
+                <arg>mikki</arg>
+                <doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+                <msg timestamp="20210217 06:48:29.580" level="FAIL">'Hessu Hopo' does not contain 'mikki'</msg>
+                <status status="FAIL" starttime="20210217 06:48:29.579" endtime="20210217 06:48:29.580"/>
+            </kw>
+            <doc>This test will fail</doc>
+            <tag>hessu</tag>
+            <tag>simple</tag>
+            <status status="FAIL" starttime="20210217 06:48:29.578" endtime="20210217 06:48:29.580">'Hessu Hopo' does not contain 'mikki'</status>
+        </test>
+        <status status="FAIL" starttime="20210217 06:48:29.473" endtime="20210217 06:48:29.581"/>
+    </suite>
+    <statistics>
+        <total>
+            <stat pass="5" fail="1" skip="0">All Tests</stat>
+        </total>
+        <tag>
+            <stat pass="1" fail="0" skip="0">aku</stat>
+            <stat pass="1" fail="1" skip="0">hessu</stat>
+            <stat pass="3" fail="0" skip="0">mikki</stat>
+            <stat pass="5" fail="1" skip="0">simple</stat>
+        </tag>
+        <suite>
+            <stat pass="5" fail="1" skip="0" id="s1" name="Simple">Simple</stat>
+        </suite>
+    </statistics>
+    <errors>
+    </errors>
+</robot>

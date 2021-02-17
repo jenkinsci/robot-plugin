@@ -163,4 +163,11 @@ public class RobotParserTest {
         final String mask = "nested_output2.xml";
         parse(dir, mask);
     }
+
+    @Test
+    public void testRobot4() {
+        final String dir = ".";
+        final String mask = "robot4_output.xml";
+        parse(dir, mask);
+    }
 }
