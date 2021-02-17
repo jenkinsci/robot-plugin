@@ -63,6 +63,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	private final boolean enableCache;
 	private Run<?, ?> build;
 	private RobotResult result;
+	private String xAxisLabel;
 
 	static {
 		XSTREAM.alias("result",RobotResult.class);
@@ -82,7 +83,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	 * @param enableCache Whether we want to enable caching or not
 	 */
 	public RobotBuildAction(Run<?, ?> build, RobotResult result,
-			String outputPath, TaskListener listener, String logFileLink, String logHtmlLink, boolean enableCache) {
+			String outputPath, TaskListener listener, String logFileLink, String logHtmlLink, boolean enableCache, String xAxisLabel) {
 		super();
 		super.onAttached(build);
 		this.build = build;
@@ -90,6 +91,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		this.logFileLink = logFileLink;
 		this.logHtmlLink = logHtmlLink;
 		this.enableCache = enableCache;
+		this.xAxisLabel = xAxisLabel;
 		setResult(result, listener);
 	}
 
@@ -219,6 +221,10 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		return getResult();
 	}
 
+	public String getxAxisLabel() {
+		return xAxisLabel;
+	}
+
 	/**
 	 * Serves Robot html report via robot url. Shows not found page if file is missing.
 	 * @param req StaplerRequest
@@ -268,7 +274,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		if (maxBuildsReq == null || maxBuildsReq.isEmpty())
 			maxBuildsReq = "0"; // show all builds by default
 
-		String labelFormat = RobotConfig.getInstance().getXAxisLabelFormat();
+		String labelFormat = StringUtils.isBlank(xAxisLabel) ? RobotConfig.getInstance().getXAxisLabelFormat() : xAxisLabel;
 		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(getResult(),
 				Boolean.valueOf(req.getParameter("zoomSignificant")), false,
 				Boolean.valueOf(req.getParameter("hd")),

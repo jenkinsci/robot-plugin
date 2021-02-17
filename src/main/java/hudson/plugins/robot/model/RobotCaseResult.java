@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -274,7 +275,8 @@ public class RobotCaseResult extends RobotTestObject{
 	public void doGraph(StaplerRequest req, StaplerResponse rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
-		String labelFormat = RobotConfig.getInstance().getXAxisLabelFormat();
+		String label = getParentAction().getxAxisLabel();
+		String labelFormat = StringUtils.isBlank(label) ? RobotConfig.getInstance().getXAxisLabelFormat() : label;
 		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(this, false, true,
 				  Boolean.parseBoolean(req.getParameter("hd")), false, false, labelFormat,
 				  Integer.parseInt(req.getParameter("maxBuildsToShow")));
