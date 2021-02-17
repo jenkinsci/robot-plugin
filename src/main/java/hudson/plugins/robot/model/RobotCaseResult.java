@@ -187,7 +187,7 @@ public class RobotCaseResult extends RobotTestObject{
 
 	public List<String> getTags(){
 		if(tags == null)
-			return new ArrayList<String>();
+			return new ArrayList<>();
 		return tags;
 	}
 
@@ -206,7 +206,7 @@ public class RobotCaseResult extends RobotTestObject{
 
 	public void addTags(List<String> taglist){
 		if(tags == null)
-			tags = new ArrayList<String>();
+			tags = new ArrayList<>();
 		tags.addAll(taglist);
 	}
 
