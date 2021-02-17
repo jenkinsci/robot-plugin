@@ -283,7 +283,7 @@ public class RobotParser {
 
 			//parse stacktrace
 			String xmlTag = ignoreUntilStarts(reader, "kw", "doc", "tags", "status");
-			if (xmlTag == "kw") {
+			if (xmlTag.equals("kw")) {
 				//get all sequential keywords
 				int nestedCount = 0;
 				do {
@@ -293,7 +293,7 @@ public class RobotParser {
 						stackTrace.append(getSpacesPerNestedLevel(nestedCount) + kw);
 						xmlTag = ignoreUntilStarts(reader, "kw", "arguments", "status");
 						//get arguments of current keyword if any
-						if (xmlTag == "arguments") {
+						if (xmlTag.equals("arguments")) {
 							while (reader.hasNext() && !(reader.isEndElement() && reader.getLocalName() == "arguments")) {
 								reader.next();
 								if (reader.isStartElement() && reader.getLocalName() == "arg") {
@@ -307,7 +307,7 @@ public class RobotParser {
 						}
 						stackTrace.append("\n");
 						nestedCount++;
-					} while (xmlTag == "kw");
+					} while (xmlTag.equals("kw"));
 					//unroll: after reading a status, the kw must end too
 					do {
 						ignoreUntilEnds(reader, "status");
@@ -318,12 +318,12 @@ public class RobotParser {
 						//- status: a. status of previous kw -> unroll further; b. status of test
 						//- doc||tags: follows last kw (nestedCount must be 0)
 						xmlTag = ignoreUntilStarts(reader, "kw", "doc", "tags", "status");
-					} while (xmlTag == "status" && nestedCount > 0);
-				} while (xmlTag == "kw");
+					} while (xmlTag.equals("status") && nestedCount > 0);
+				} while (xmlTag.equals("kw"));
 			}
 			caseResult.setStackTrace(stackTrace.toString());
 
-			if (xmlTag == "doc") { 
+			if (xmlTag.equals("doc")) {
 				reader.next();
 				if (reader.hasText()) {
 					caseResult.setDescription(reader.getText());
@@ -331,7 +331,7 @@ public class RobotParser {
 				reader.next();
 				xmlTag = ignoreUntilStarts(reader, "tags", "status");
 			}
-			if (xmlTag == "tags") {
+			if (xmlTag.equals("tags")) {
 				caseResult.addTags(processTags(reader));
 				ignoreUntilStarts(reader, "status");
 			}
