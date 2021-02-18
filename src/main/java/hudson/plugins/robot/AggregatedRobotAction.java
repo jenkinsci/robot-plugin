@@ -109,7 +109,7 @@ public class AggregatedRobotAction implements Action {
 
 		private static final long serialVersionUID = 1L;
 		private final transient AggregatedRobotAction parent;
-		private int passed, failed, criticalPassed, criticalFailed;
+		private int passed, failed, skipped, criticalPassed, criticalFailed;
 
 		public AggregatedRobotResult(AggregatedRobotAction parent) {
 			this.parent = parent;
@@ -120,6 +120,7 @@ public class AggregatedRobotAction implements Action {
 			criticalPassed += result.getCriticalPassed();
 			failed += result.getOverallFailed();
 			passed += result.getOverallPassed();
+			skipped += result.getOverallSkipped();
 		}
 
 		@Override
@@ -148,8 +149,13 @@ public class AggregatedRobotAction implements Action {
 		}
 
 		@Override
+		public long getOverallSkipped() {
+			return  skipped;
+		}
+
+		@Override
 		public long getOverallTotal() {
-			return failed + passed;
+			return failed + passed + skipped;
 		}
 
 		@Override
@@ -160,6 +166,11 @@ public class AggregatedRobotAction implements Action {
 		@Override
 		public int getPassed() {
 			return (int) getOverallPassed();
+		}
+
+		@Override
+		public int getSkipped() {
+			return (int) getOverallSkipped();
 		}
 
 		@Override

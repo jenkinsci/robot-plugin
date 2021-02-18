@@ -67,11 +67,13 @@ public class RobotGraphHelper {
 		{
 			Number failed =  !criticalOnly ? testObject.getFailed() : testObject.getCriticalFailed();
 			Number passed = 0;
+			Number skipped = 0;
 			int compareLowerBoundTo;
 			if ( failedOnly) {
 			    compareLowerBoundTo = failed.intValue();
 			} else {
 			    passed = !criticalOnly ? testObject.getPassed() : testObject.getCriticalPassed();
+			    skipped = testObject.getSkipped();
 			    compareLowerBoundTo = passed.intValue();
 			}
 
@@ -92,6 +94,10 @@ public class RobotGraphHelper {
 			values.add(failed);
 			rows.add(Messages.robot_trendgraph_failed());
 			columns.add(label);
+
+			values.add(skipped);
+			rows.add(Messages.robot_trendgraph_skipped());
+			columns.add(label);
 		}
 
 		if(significantData){
@@ -100,7 +106,7 @@ public class RobotGraphHelper {
 		}
 		int graphScale = hd ? 3 : 1;
 		return RobotGraph.getRobotGraph(rootObject.getOwner(), createSortedDataset(values, rows, columns), Messages.robot_trendgraph_testcases(),
-				Messages.robot_trendgraph_builds(), graphScale, false, binarydata, lowerbound, upperbound, Color.green, Color.red);
+				Messages.robot_trendgraph_builds(), graphScale, false, binarydata, lowerbound, upperbound, Color.yellow, Color.green, Color.red);
 	}
 
 	/**

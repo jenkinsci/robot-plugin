@@ -193,7 +193,7 @@ public class RobotPublisherSystemTest {
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='main-panel']//img[@id='passfailgraph']");
 		WebAssert.assertElementPresentByXPath(page,
 				"//div[@id='main-panel']//a[@href='/jenkins/job/oldrobotbuild/1/robot' and contains(text(),'Browse results')]");
-		this.verifyTotalsTable(page, 8, 4, "50.0", 8, 4, "50.0");
+		this.verifyTotalsTable(page, 8, 4, 0, "50.0", 8, 4, "50.0");
 
 		page = wc.goTo("job/oldrobotbuild/robot/");
 		WebAssert.assertTitleEquals(page, "Testcases & Othercases Test Report");
@@ -204,7 +204,7 @@ public class RobotPublisherSystemTest {
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='main-panel']//h4[contains(.,'Robot Test Summary:')]");
 		WebAssert.assertElementPresentByXPath(page,
 				"//div[@id='main-panel']//a[@href='/jenkins/job/oldrobotbuild/1/robot' and contains(text(),'Browse results')]");
-		this.verifyTotalsTable(page, 8, 4, "50.0", 8, 4, "50.0");
+		this.verifyTotalsTable(page, 8, 4, 0,"50.0", 8, 4, "50.0");
 
 		page = wc.goTo("job/oldrobotbuild/1/robot/");
 		WebAssert.assertTitleEquals(page, "Testcases & Othercases Test Report");
@@ -225,7 +225,7 @@ public class RobotPublisherSystemTest {
 				"//div[@id='main-panel']//a[@href='/jenkins/job/robot/1/robot/report/report.html' and contains(text(), 'Open report.html')]");
 		WebAssert.assertElementPresentByXPath(page,
 				"//div[@id='main-panel']//a[@href='/jenkins/job/robot/1/robot/report/log.html' and contains(text(), 'Open log.html')]");
-		verifyTotalsTable(page, 8, 4, "50.0", 8, 4, "50.0");
+		verifyTotalsTable(page, 8, 4, 0,"50.0", 8, 4, "50.0");
 
 		page = wc.goTo("job/robot/1/");
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='tasks']//a[@href='/jenkins/job/robot/1/robot']");
@@ -236,7 +236,7 @@ public class RobotPublisherSystemTest {
 				"//div[@id='main-panel']//a[@href='/jenkins/job/robot/1/robot/report/report.html' and contains(text(), 'Open report.html')]");
 		WebAssert.assertElementPresentByXPath(page,
 				"//div[@id='main-panel']//a[@href='/jenkins/job/robot/1/robot/report/log.html' and contains(text(), 'Open log.html')]");
-		verifyTotalsTable(page, 8, 4, "50.0", 8, 4, "50.0");
+		verifyTotalsTable(page, 8, 4, 0,"50.0", 8, 4, "50.0");
 	}
 
 	@LocalData
@@ -254,7 +254,7 @@ public class RobotPublisherSystemTest {
 				"//div[@id='main-panel']//a[@href='/jenkins/job/files-with-env-vars/1/robot/report/report_1.html' and contains(text(), 'Open report_1.html')]");
 		WebAssert.assertElementPresentByXPath(page,
 				"//div[@id='main-panel']//a[@href='/jenkins/job/files-with-env-vars/1/robot/report/log_1.html' and contains(text(), 'Open log_1.html')]");
-		verifyTotalsTable(page, 6, 1, "83.3", 6, 1, "83.3");
+		verifyTotalsTable(page, 6, 1, 0,"83.3", 6, 1, "83.3");
 
 		page = wc.goTo("job/files-with-env-vars/1/");
 		WebAssert.assertElementPresentByXPath(page, "//div[@id='tasks']//a[@href='/jenkins/job/files-with-env-vars/1/robot']");
@@ -265,7 +265,7 @@ public class RobotPublisherSystemTest {
 				"//div[@id='main-panel']//a[@href='/jenkins/job/files-with-env-vars/1/robot/report/report_1.html' and contains(text(), 'Open report_1.html')]");
 		WebAssert.assertElementPresentByXPath(page,
 				"//div[@id='main-panel']//a[@href='/jenkins/job/files-with-env-vars/1/robot/report/log_1.html' and contains(text(), 'Open log_1.html')]");
-		verifyTotalsTable(page, 6, 1, "83.3", 6, 1, "83.3");
+		verifyTotalsTable(page, 6, 1, 0,"83.3", 6, 1, "83.3");
 	}
 
 	@LocalData
@@ -273,7 +273,7 @@ public class RobotPublisherSystemTest {
 	public void testRobot29Outputs() throws Exception {
 		WebClient wc = this.executeJobAndGetWebClient("robot29output");
 		HtmlPage page = wc.goTo("job/robot29output/");
-		verifyTotalsTable(page, 1, 0, "100.0", 1, 0, "100.0");
+		verifyTotalsTable(page, 1, 0, 0,"100.0", 1, 0, "100.0");
 	}
 
 	@LocalData
@@ -292,7 +292,7 @@ public class RobotPublisherSystemTest {
 				"//div[@id='main-panel']//a[@href='/jenkins/job/several-outputs/1/robot/report/**/report.html' and contains(text(), 'Open **/report.html')]");
 		WebAssert.assertElementPresentByXPath(page,
 				"//div[@id='main-panel']//a[@href='/jenkins/job/several-outputs/1/robot/report/**/log.html' and contains(text(), 'Open **/log.html')]");
-		verifyTotalsTable(page, 2, 0, "100.0", 2, 0, "100.0");
+		verifyTotalsTable(page, 2, 0, 0,"100.0", 2, 0, "100.0");
 	}
 
 	@LocalData
@@ -472,18 +472,20 @@ public class RobotPublisherSystemTest {
 		return testProject;
 	}
 
-	private void verifyTotalsTable(HtmlPage page, int totalTests, int totalFailed, String totalPercents,
+	private void verifyTotalsTable(HtmlPage page, int totalTests, int totalFailed, int totalSkipped, String totalPercents,
 			int totalCritical, int criticalFailed, String criticalPercents) {
 		HtmlTable table = page.getHtmlElementById("robot-summary-table");
-		String expectedTable = "<tableclass=\"table\"id=\"robot-summary-table\"><tbody><tr><th/><th>Total</th><th>Failed</th><th>Passed</th><th>Pass%</th></tr><tr><th>Criticaltests</th><tdclass=\"table-upper-row\"style=\"border-left:0px;\">"
-				+ totalCritical + "</td><tdclass=\"table-upper-row\"><spanclass=\""
-				+ (criticalFailed == 0 ? "pass" : "fail") + "\">" + criticalFailed
-				+ "</span></td><tdclass=\"table-upper-row\">" + (totalCritical - totalFailed)
-				+ "</td><tdclass=\"table-upper-row\">" + criticalPercents
-				+ "</td></tr><tr><th>Alltests</th><tdstyle=\"border-left:0px;\">" + totalTests
-				+ "</td><td><spanclass=\"" + (totalFailed == 0 ? "pass" : "fail") + "\">" + totalFailed
-				+ "</span></td><td>" + (totalTests - totalFailed) + "</td><td>" + totalPercents
-				+ "</td></tr></tbody></table>";
+		String expectedTable = "<tableclass=\"table\"id=\"robot-summary-table\"><tbody><tr><th/><th>Total</th><th>Failed</th><th>Passed</th><th>Skipped</th><th>Pass%</th></tr><tr><th>Criticaltests</th>"
+				+ "<tdclass=\"table-upper-row\"style=\"border-left:0px;\">" + totalCritical + "</td>"
+				+ "<tdclass=\"table-upper-row\"><spanclass=\"" + (criticalFailed == 0 ? "pass" : "fail") + "\">" + criticalFailed + "</span></td>"
+				+ "<tdclass=\"table-upper-row\">" + (totalCritical - totalFailed) + "</td>"
+				+ "<tdclass=\"table-upper-row\">" + totalSkipped + "</td>"
+				+ "<tdclass=\"table-upper-row\">" + criticalPercents + "</td></tr>"
+				+ "<tr><th>Alltests</th><tdstyle=\"border-left:0px;\">" + totalTests + "</td>"
+				+ "<td><spanclass=\"" + (totalFailed == 0 ? "pass" : "fail") + "\">" + totalFailed + "</span></td>"
+				+ "<td>" + (totalTests - totalFailed) + "</td>"
+				+ "<td>" + totalSkipped + "</td>"
+				+ "<td>" + totalPercents + "</td></tr></tbody></table>";
 		assertTrue(table.asXml().replaceAll("\\s", "").contains(expectedTable));
 	}
 
