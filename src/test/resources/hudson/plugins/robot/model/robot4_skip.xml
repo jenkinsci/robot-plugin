@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 4.0b3 (Python 3.7.3 on linux)" generated="20210218 06:46:30.449" rpa="false">
+    <suite id="s1" name="Skip" source="/home/jenkins/workspace/rf-plugin/robot-versions/4.0-beta3/skip.robot">
+        <test id="s1-t1" name="Test 1 Will Always Pass">
+            <kw name="Log" library="BuiltIn">
+                <arg>Will pass</arg>
+                <doc>Logs the given message with the given level.</doc>
+                <msg timestamp="20210218 06:46:30.666" level="INFO">Will pass</msg>
+                <status status="PASS" starttime="20210218 06:46:30.666" endtime="20210218 06:46:30.667"/>
+            </kw>
+            <tag>pass</tag>
+            <status status="PASS" starttime="20210218 06:46:30.665" endtime="20210218 06:46:30.667"/>
+        </test>
+        <test id="s1-t2" name="Test 2 Will Always Pass">
+            <kw name="Log" library="BuiltIn">
+                <arg>Will pass</arg>
+                <doc>Logs the given message with the given level.</doc>
+                <msg timestamp="20210218 06:46:30.668" level="INFO">Will pass</msg>
+                <status status="PASS" starttime="20210218 06:46:30.668" endtime="20210218 06:46:30.668"/>
+            </kw>
+            <tag>pass</tag>
+            <status status="PASS" starttime="20210218 06:46:30.667" endtime="20210218 06:46:30.668"/>
+        </test>
+        <test id="s1-t3" name="Test 3 Will Always Pass">
+            <kw name="Log" library="BuiltIn">
+                <arg>Will pass</arg>
+                <doc>Logs the given message with the given level.</doc>
+                <msg timestamp="20210218 06:46:30.670" level="INFO">Will pass</msg>
+                <status status="PASS" starttime="20210218 06:46:30.669" endtime="20210218 06:46:30.670"/>
+            </kw>
+            <tag>pass</tag>
+            <status status="PASS" starttime="20210218 06:46:30.669" endtime="20210218 06:46:30.670"/>
+        </test>
+        <test id="s1-t4" name="Test 4 Will Always Pass But Is Skipped">
+            <tag>skippable</tag>
+            <status status="SKIP" starttime="20210218 06:46:30.670" endtime="20210218 06:46:30.672">Test skipped with '--skip' command line option.</status>
+        </test>
+        <test id="s1-t5" name="Test 5 Will Always Fail But Is Skipped">
+            <tag>skippable</tag>
+            <status status="SKIP" starttime="20210218 06:46:30.672" endtime="20210218 06:46:30.673">Test skipped with '--skip' command line option.</status>
+        </test>
+        <test id="s1-t6" name="Test 6 Will Always Fail But Is Skipped">
+            <tag>skippable</tag>
+            <status status="SKIP" starttime="20210218 06:46:30.674" endtime="20210218 06:46:30.675">Test skipped with '--skip' command line option.</status>
+        </test>
+        <test id="s1-t7" name="Test 7 Will Always Fail But Is Skipped">
+            <tag>skippable</tag>
+            <status status="SKIP" starttime="20210218 06:46:30.675" endtime="20210218 06:46:30.676">Test skipped with '--skip' command line option.</status>
+        </test>
+        <test id="s1-t8" name="Test 8 Will Always Fail">
+            <kw name="Fail" library="BuiltIn">
+                <doc>Fails the test with the given message and optionally alters its tags.</doc>
+                <msg timestamp="20210218 06:46:30.677" level="FAIL">AssertionError</msg>
+                <status status="FAIL" starttime="20210218 06:46:30.677" endtime="20210218 06:46:30.677"/>
+            </kw>
+            <tag>fail</tag>
+            <status status="FAIL" starttime="20210218 06:46:30.676" endtime="20210218 06:46:30.678">AssertionError</status>
+        </test>
+        <test id="s1-t9" name="Test 9 Will Always Fail">
+            <kw name="Fail" library="BuiltIn">
+                <doc>Fails the test with the given message and optionally alters its tags.</doc>
+                <msg timestamp="20210218 06:46:30.682" level="FAIL">AssertionError</msg>
+                <status status="FAIL" starttime="20210218 06:46:30.681" endtime="20210218 06:46:30.682"/>
+            </kw>
+            <tag>fail</tag>
+            <status status="FAIL" starttime="20210218 06:46:30.680" endtime="20210218 06:46:30.683">AssertionError</status>
+        </test>
+        <test id="s1-t10" name="Test 10 Will Always Fail But Is Skipped On Failure">
+            <kw name="Fail" library="BuiltIn">
+                <doc>Fails the test with the given message and optionally alters its tags.</doc>
+                <msg timestamp="20210218 06:46:30.685" level="FAIL">AssertionError</msg>
+                <status status="FAIL" starttime="20210218 06:46:30.684" endtime="20210218 06:46:30.685"/>
+            </kw>
+            <tag>skipfail</tag>
+            <status status="SKIP" starttime="20210218 06:46:30.684" endtime="20210218 06:46:30.686">Test failed but its tags matched '--SkipOnFailure' and it was marked skipped.
+
+                Original failure:
+                AssertionError</status>
+        </test>
+        <test id="s1-t11" name="Test 11 Will Always Fail But Is Skipped On Failure">
+            <kw name="Fail" library="BuiltIn">
+                <doc>Fails the test with the given message and optionally alters its tags.</doc>
+                <msg timestamp="20210218 06:46:30.687" level="FAIL">AssertionError</msg>
+                <status status="FAIL" starttime="20210218 06:46:30.687" endtime="20210218 06:46:30.687"/>
+            </kw>
+            <tag>skipfail</tag>
+            <status status="SKIP" starttime="20210218 06:46:30.686" endtime="20210218 06:46:30.688">Test failed but its tags matched '--SkipOnFailure' and it was marked skipped.
+
+                Original failure:
+                AssertionError</status>
+        </test>
+        <test id="s1-t12" name="Test 12 Will Always Pass But Is Skipped On Failure">
+            <kw name="Log" library="BuiltIn">
+                <arg>Will Pass</arg>
+                <doc>Logs the given message with the given level.</doc>
+                <msg timestamp="20210218 06:46:30.690" level="INFO">Will Pass</msg>
+                <status status="PASS" starttime="20210218 06:46:30.689" endtime="20210218 06:46:30.690"/>
+            </kw>
+            <tag>skipfail</tag>
+            <status status="PASS" starttime="20210218 06:46:30.688" endtime="20210218 06:46:30.690"/>
+        </test>
+        <doc>When run with `--skip skippable --skiponfailure skipfail`
+            will produce the following results:
+            PASSED 4
+            FAIL 2
+            SKIP 6</doc>
+        <status status="FAIL" starttime="20210218 06:46:30.464" endtime="20210218 06:46:30.691"/>
+    </suite>
+    <statistics>
+        <total>
+            <stat pass="4" fail="2" skip="6">All Tests</stat>
+        </total>
+        <tag>
+            <stat pass="0" fail="2" skip="0">fail</stat>
+            <stat pass="3" fail="0" skip="0">pass</stat>
+            <stat pass="1" fail="0" skip="2">skipfail</stat>
+            <stat pass="0" fail="0" skip="4">skippable</stat>
+        </tag>
+        <suite>
+            <stat pass="4" fail="2" skip="6" id="s1" name="Skip">Skip</stat>
+        </suite>
+    </statistics>
+    <errors>
+    </errors>
+</robot>
