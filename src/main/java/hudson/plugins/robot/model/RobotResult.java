@@ -199,7 +199,8 @@ public class RobotResult extends RobotTestObject {
 			total = getCriticalTotal();
 		} else {
 			passed = getOverallPassed();
-			total = getOverallTotal();
+			// Skipped tests don't count towards pass percentage
+			total = getOverallTotal() - getOverallSkipped();
 		}
 
 		if(total == 0) return 100;
