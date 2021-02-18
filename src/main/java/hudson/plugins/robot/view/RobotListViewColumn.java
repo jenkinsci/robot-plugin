@@ -41,10 +41,24 @@ public class RobotListViewColumn extends ListViewColumn {
 		return 0;
 	}
 
+	public long getSkipped(Item job) {
+		RobotResult lastRobotResult = getLastRobotResult(job);
+		if (lastRobotResult != null) {
+			return lastRobotResult.getOverallSkipped();
+		}
+		return 0;
+	}
+
 	public double getPassPercent(Item job) {
 		RobotResult lastRobotResult = getLastRobotResult(job);
 		if (lastRobotResult==null) return 100;
 		return lastRobotResult.getPassPercentage();
+	}
+
+	public double getSkipPercent(Item job) {
+		RobotResult lastRobotResult = getLastRobotResult(job);
+		if (lastRobotResult == null) return 0;
+		return lastRobotResult.getSkipPercentage();
 	}
 
 	public String getRobotPath(Item job) {

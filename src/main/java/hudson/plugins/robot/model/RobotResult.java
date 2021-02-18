@@ -214,6 +214,12 @@ public class RobotResult extends RobotTestObject {
 		return getPassPercentage(false);
 	}
 
+	@Exported
+	public double getSkipPercentage() {
+		double percentage = (double) getSkipped() / getOverallTotal() * 100;
+		return roundToDecimals(percentage, 1);
+	}
+
 	private static double roundToDecimals(double value, int decimals){
 		BigDecimal bd = new BigDecimal(Double.toString(value));
 		bd = bd.setScale(decimals, BigDecimal.ROUND_DOWN);

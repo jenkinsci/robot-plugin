@@ -24,13 +24,32 @@ THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+    <style type="text/css">
+.pass-text {
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    z-index:2;
+    color:#000;
+    text-shadow:
+        -1px -1px 0 #FFF,
+        -1px 0 0 #FFF,
+        -1px 1px 0 #FFF,
+        0 -1px 0 #FFF,
+        0 1px 0 #FFF,
+        1px -1px 0 #FFF,
+        1px 0 0 #FFF,
+        1px 1px 0 #FFF;
+}
+    </style>
   <j:if test="${it.isRobotResultsColumnEnabled()}">
       <td style="white-space:nowrap;">
       <j:if test="${it.getTotal(job) != 0}">
           <div style="position: relative; z-index: 1;" title="${it.getPassPercent(job)}% pass">
               <a href="${it.getLogUrl(job)}" style="width:100px;height:25px; background:#FF0000;display:inline-block">
-                  <span style="position:absolute; left:4px; top:4px; z-index:2; color:#000">${it.getPass(job)} / ${it.getTotal(job)} pass</span>
-                  <div style="background:#00FF00;width:${it.getPassPercent(job)}%;height:100%;float:left;" ></div>
+                  <span class="pass-text">${it.getPass(job)} / ${it.getTotal(job) - it.getSkipped(job)} pass</span>
+                  <div style="background:#ABABAB;width:${it.getSkipPercent(job)}%;height:100%;float:right;" ></div>
+                  <div style="background:#00FF00;width:${(100-it.getSkipPercent(job))*it.getPassPercent(job)/100}%;height:100%;float:left;" ></div>
               </a>
               <a href="${it.getTrendHdUrl(job)}" style="height:25px"><img style="height:25px;vertical-align:top" src="${it.getTrendPreviewUrl(job)}" /></a>
           </div>

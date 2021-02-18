@@ -106,7 +106,7 @@ public class RobotGraphHelper {
 		}
 		int graphScale = hd ? 3 : 1;
 		return RobotGraph.getRobotGraph(rootObject.getOwner(), createSortedDataset(values, rows, columns), Messages.robot_trendgraph_testcases(),
-				Messages.robot_trendgraph_builds(), graphScale, false, binarydata, lowerbound, upperbound, Color.yellow, Color.green, Color.red);
+				Messages.robot_trendgraph_builds(), graphScale, false, binarydata, lowerbound, upperbound, Color.gray, Color.green, Color.red);
 	}
 
 	/**

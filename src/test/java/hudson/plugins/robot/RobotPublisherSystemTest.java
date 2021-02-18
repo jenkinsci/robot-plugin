@@ -479,7 +479,7 @@ public class RobotPublisherSystemTest {
 				+ "<tdclass=\"table-upper-row\"style=\"border-left:0px;\">" + totalCritical + "</td>"
 				+ "<tdclass=\"table-upper-row\"><spanclass=\"" + (criticalFailed == 0 ? "pass" : "fail") + "\">" + criticalFailed + "</span></td>"
 				+ "<tdclass=\"table-upper-row\">" + (totalCritical - totalFailed) + "</td>"
-				+ "<tdclass=\"table-upper-row\">" + totalSkipped + "</td>"
+				+ "<tdclass=\"table-upper-row\">0</td>"
 				+ "<tdclass=\"table-upper-row\">" + criticalPercents + "</td></tr>"
 				+ "<tr><th>Alltests</th><tdstyle=\"border-left:0px;\">" + totalTests + "</td>"
 				+ "<td><spanclass=\"" + (totalFailed == 0 ? "pass" : "fail") + "\">" + totalFailed + "</span></td>"

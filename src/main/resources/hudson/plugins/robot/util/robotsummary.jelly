@@ -62,7 +62,7 @@ limitations under the License.
         <span class="${criticalFails}">${attrs.action.result.criticalFailed}</span>
       </td>
       <td class="table-upper-row">${attrs.action.result.criticalPassed}</td>
-      <td class="table-upper-row">${attrs.action.result.overallSkipped}</td>
+      <td class="table-upper-row">0</td>
       <td class="table-upper-row">${attrs.action.criticalPassPercentage}</td>
     </tr>
     <tr>

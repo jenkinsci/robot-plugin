@@ -27,7 +27,9 @@ public class BlueRobotTestResult extends BlueTestResult {
 
 	@Override
 	public Status getStatus() {
-		return result.isPassed() ? Status.PASSED : Status.FAILED;
+		if (result.isPassed()) return Status.PASSED;
+		if (result.isSkipped()) return Status.SKIPPED;
+		return Status.FAILED;
 	}
 
 	@Override
