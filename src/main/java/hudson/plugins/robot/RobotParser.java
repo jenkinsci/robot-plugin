@@ -339,6 +339,7 @@ public class RobotParser {
 			}
 			//parse test details from nested status
 			caseResult.setPassed("PASS".equals(reader.getAttributeValue(null, "status")));
+			caseResult.setSkipped("SKIP".equals(reader.getAttributeValue(null, "status")));
 			caseResult.setStarttime(reader.getAttributeValue(null, "starttime"));
 			caseResult.setEndtime(reader.getAttributeValue(null, "endtime"));
 			setCriticalityIfAvailable(reader, caseResult);
@@ -365,7 +366,7 @@ public class RobotParser {
 		}
 
 		private List<String> processTags(XMLStreamReader reader) throws XMLStreamException {
-			List<String> taglist = new ArrayList<>();
+			List<String> tagList = new ArrayList<>();
 
 			while(reader.hasNext()){
 				reader.next();
@@ -373,7 +374,7 @@ public class RobotParser {
 					while(reader.hasNext()){
 						reader.next();
 						if(reader.getEventType() == XMLStreamReader.CHARACTERS){
-							taglist.add(reader.getText());
+							tagList.add(reader.getText());
 						} else if(reader.isEndElement() && "tag".equals(reader.getLocalName())){
 							break;
 						}
@@ -382,7 +383,7 @@ public class RobotParser {
 					break;
 				}
 			}
-			return taglist;
+			return tagList;
 		}
 
 		private static void setCriticalityIfAvailable(XMLStreamReader reader, RobotCaseResult caseResult) {

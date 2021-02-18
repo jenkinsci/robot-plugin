@@ -338,6 +338,7 @@ public class RobotResult extends RobotTestObject {
 		setParentAction(robotBuildAction);
 		failed = 0;
 		passed = 0;
+		skipped = 0;
 		criticalPassed = 0;
 		criticalFailed = 0;
 		duration = 0;

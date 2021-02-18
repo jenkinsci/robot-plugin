@@ -57,6 +57,6 @@ public class RobotResultStatistics implements Serializable {
 	}
 
 	public long getTotal(){
-		return fail + pass;
+		return fail + pass + skip;
 	}
 }
