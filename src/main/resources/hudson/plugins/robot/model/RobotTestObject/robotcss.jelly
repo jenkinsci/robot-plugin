@@ -31,6 +31,9 @@ div.passfail p {
 .FAIL {
     color: #c00;
 }
+.SKIP {
+    color: #fc0;
+}
 span.FAIL {
     font-weight: bold;
 }
