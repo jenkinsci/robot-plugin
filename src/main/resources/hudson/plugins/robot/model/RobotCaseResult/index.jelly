@@ -25,6 +25,9 @@ limitations under the License.
         <j:when test="${it.isPassed()}">
           <j:set var="status" value="PASS" />
         </j:when>
+        <j:when test="${it.isSkipped()}">
+          <j:set var="status" value="SKIP" />
+        </j:when>
         <j:otherwise>
           <j:set var="status" value="FAIL" />
         </j:otherwise>

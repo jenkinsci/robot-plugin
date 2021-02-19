@@ -103,7 +103,7 @@ limitations under the License.
         <tr>
          <td class="pane"><a href="${case.getRelativeId(it)}">${case.name}</a></td>
          <td class="pane" style="text-align:center;"><j:if test="${case.isCritical()}">yes</j:if><j:if test="${!case.isCritical()}">no</j:if></td>
-         <td class="pane ${status}" style="text-align:center;"><j:if test="${case.isPassed()}">PASS</j:if><j:if test="${case.isSkipped()}">SKIP</j:if><j:if test="${!case.isPassed() && !case.isSkipped()}">FAIL</j:if></td>
+         <td class="pane ${status}" style="text-align:center;">${status}</td>
          <td class="pane">${case.humanReadableDuration}<span style="font-size:0.8em">(${case.getDurationDiff(prevcase)})</span></td>
         </tr>
         </j:forEach>
