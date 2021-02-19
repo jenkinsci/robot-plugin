@@ -345,7 +345,7 @@ public class RobotParser {
 			setCriticalityIfAvailable(reader, caseResult);
 			while(reader.hasNext()){
 				reader.next();
-				if(reader.getEventType() == XMLStreamReader.CHARACTERS){
+				if(reader.isCharacters()){
 					String error = reader.getText();
 					caseResult.setErrorMsg(error);
 				} else if (reader.isEndElement()) {
@@ -369,11 +369,10 @@ public class RobotParser {
 			List<String> tagList = new ArrayList<>();
 
 			while(reader.hasNext()){
-				reader.next();
 				if(reader.isStartElement() && "tag".equals(reader.getLocalName())){
 					while(reader.hasNext()){
 						reader.next();
-						if(reader.getEventType() == XMLStreamReader.CHARACTERS){
+						if(reader.isCharacters()){
 							tagList.add(reader.getText());
 						} else if(reader.isEndElement() && "tag".equals(reader.getLocalName())){
 							break;
@@ -382,6 +381,7 @@ public class RobotParser {
 				} else if((reader.isEndElement() && "tags".equals(reader.getLocalName())) || (reader.isStartElement() && "status".equals(reader.getLocalName()))){
 					break;
 				}
+				reader.next();
 			}
 			return tagList;
 		}

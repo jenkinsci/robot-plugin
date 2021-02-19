@@ -323,8 +323,8 @@ public class RobotResultTest {
 		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("robot4_skip.xml").toURI()).getParentFile(), null);
 		result.tally(null);
 
-		RobotCaseResult caseResult = (RobotCaseResult)result.findObjectById("Skip/Test 2 Will Always Pass");
+		RobotCaseResult caseResult = (RobotCaseResult)result.findObjectById("Skip/Test 8 Will Always Fail");
 		String tags = StringUtils.join(caseResult.getTags(), ",");
-		assertEquals("pass,tag2,tag3", tags);
+		assertEquals("fail,tag2,tag3", tags);
 	}
 }
