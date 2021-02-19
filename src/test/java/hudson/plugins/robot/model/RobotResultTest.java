@@ -251,7 +251,7 @@ public class RobotResultTest {
 
 	@Test
 	public void testShouldParseSplittedOutput() throws Exception {
-		 RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("testfile.xml", null, null);
+	 	RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("testfile.xml", null, null);
 		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("testfile.xml").toURI()).getParentFile(), null);
 
 		RobotSuiteResult suite = result.getSuite("nestedSuites");
@@ -315,5 +315,16 @@ public class RobotResultTest {
 		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("robot4_skip.xml").toURI()).getParentFile(), null);
 		result.tally(null);
 		assertEquals(12, result.getOverallTotal());
+	}
+
+	@Test
+	public void testShouldParseTagsFromRobot4() throws Exception {
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("robot4_skip.xml", null, null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("robot4_skip.xml").toURI()).getParentFile(), null);
+		result.tally(null);
+
+		RobotCaseResult caseResult = (RobotCaseResult)result.findObjectById("Skip/Test 2 Will Always Pass");
+		String tags = StringUtils.join(caseResult.getTags(), ",");
+		assertEquals("pass,tag2,tag3", tags);
 	}
 }
