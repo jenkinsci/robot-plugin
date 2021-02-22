@@ -282,7 +282,7 @@ public class RobotParser {
 			StringBuffer stackTrace = new StringBuffer();
 
 			//parse stacktrace
-			String xmlTag = ignoreUntilStarts(reader, "kw", "doc", "tags", "status");
+			String xmlTag = ignoreUntilStarts(reader, "kw", "doc", "tags", "tag", "status");
 			if (xmlTag.equals("kw")) {
 				//get all sequential keywords
 				int nestedCount = 0;
@@ -294,15 +294,7 @@ public class RobotParser {
 						xmlTag = ignoreUntilStarts(reader, "kw", "arguments", "status");
 						//get arguments of current keyword if any
 						if (xmlTag.equals("arguments")) {
-							while (reader.hasNext() && !(reader.isEndElement() && reader.getLocalName().equals("arguments"))) {
-								reader.next();
-								if (reader.isStartElement() && reader.getLocalName().equals("arg")) {
-									reader.next(); //skip arg start
-									stackTrace.append("    " + reader.getText());
-									reader.next(); //skip text
-									reader.next(); //skip arg end
-								}
-							}
+							stackTrace.append(processArgs(reader));
 							xmlTag = ignoreUntilStarts(reader, "kw", "status");
 						}
 						stackTrace.append("\n");
@@ -317,7 +309,7 @@ public class RobotParser {
 						//- kw: a sequential kw follows
 						//- status: a. status of previous kw -> unroll further; b. status of test
 						//- doc||tags: follows last kw (nestedCount must be 0)
-						xmlTag = ignoreUntilStarts(reader, "kw", "doc", "tags", "status");
+						xmlTag = ignoreUntilStarts(reader, "kw", "doc", "tags", "tag", "status");
 					} while (xmlTag.equals("status") && nestedCount > 0);
 				} while (xmlTag.equals("kw"));
 			}
@@ -363,6 +355,20 @@ public class RobotParser {
 			}
 			ignoreUntilEnds(reader, "test");
 			return caseResult;
+		}
+
+		private String processArgs(XMLStreamReader reader) throws  XMLStreamException {
+			StringBuilder stringBuilder = new StringBuilder();
+			while (reader.hasNext() && !(reader.isEndElement() && reader.getLocalName().equals("arguments"))) {
+				reader.next();
+				if (reader.isStartElement() && reader.getLocalName().equals("arg")) {
+					reader.next(); //skip arg start
+					stringBuilder.append("    " + reader.getText());
+					reader.next(); //skip text
+					reader.next(); //skip arg end
+				}
+			}
+			return stringBuilder.toString();
 		}
 
 		private List<String> processTags(XMLStreamReader reader) throws XMLStreamException {
