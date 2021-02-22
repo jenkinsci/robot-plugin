@@ -316,7 +316,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	public List<RobotCaseResult> getAllFailedCases() {
 		List<RobotCaseResult> failedCases = new ArrayList<>();
 		for(RobotCaseResult caseResult : getCaseResults()){
-			if(!caseResult.isPassed()) failedCases.add(caseResult);
+			if(!caseResult.isPassed() && !caseResult.isSkipped()) failedCases.add(caseResult);
 		}
 		for(RobotSuiteResult suite : getChildSuites()){
 			failedCases.addAll(suite.getAllFailedCases());
