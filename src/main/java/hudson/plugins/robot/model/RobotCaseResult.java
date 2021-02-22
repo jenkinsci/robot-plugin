@@ -196,7 +196,7 @@ public class RobotCaseResult extends RobotTestObject{
 		if (tags.size()==0)
 			return "";
 		else {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			for (String tag: tags)
 				buf.append(tag+", ");
 			String result = buf.toString();
@@ -303,7 +303,7 @@ public class RobotCaseResult extends RobotTestObject{
 
 	@Override
 	public long getCriticalFailed() {
-		if((!isPassed() || !isSkipped()) && isCritical()) return 1;
+		if((!isPassed() && !isSkipped()) && isCritical()) return 1;
 		return 0;
 	}
 

@@ -261,7 +261,7 @@ public class RobotParser {
 		}
 
 		private String getSpacesPerNestedLevel(int level) {
-			StringBuffer spaces = new StringBuffer();
+			StringBuilder spaces = new StringBuilder();
 			for (int i = 0; i < level; i++) {
 				spaces.append("  ");
 			}
@@ -279,7 +279,7 @@ public class RobotParser {
 			//parse test tags
 			caseResult.setDescription("");
 			caseResult.addTags(new ArrayList<>());
-			StringBuffer stackTrace = new StringBuffer();
+			StringBuilder stackTrace = new StringBuilder();
 
 			//parse stacktrace
 			String xmlTag = ignoreUntilStarts(reader, "kw", "doc", "tags", "tag", "status");
@@ -350,7 +350,7 @@ public class RobotParser {
 				}
 			}
 			// reset stack trace if the test is passed
-			if (caseResult.isPassed()) {
+			if (caseResult.isPassed() || caseResult.isSkipped()) {
 				caseResult.setStackTrace("");
 			}
 			ignoreUntilEnds(reader, "test");
@@ -395,10 +395,7 @@ public class RobotParser {
 		private static void setCriticalityIfAvailable(XMLStreamReader reader, RobotCaseResult caseResult) {
 			String criticality = reader.getAttributeValue(null, "critical");
 			if (criticality != null) {
-				if(criticality.equals("yes"))
-					caseResult.setCritical(true);
-				else
-					caseResult.setCritical(false);
+				caseResult.setCritical(criticality.equals("yes"));
 			}
 		}
 
