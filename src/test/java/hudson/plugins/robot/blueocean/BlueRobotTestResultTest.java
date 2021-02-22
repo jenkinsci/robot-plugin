@@ -73,4 +73,29 @@ public class BlueRobotTestResultTest {
 			}
 		}
 	}
+
+	@Test
+	public void testRobot4StackTrace() throws Exception {
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("blue_skip.xml", null, null);
+		result = remoteOperation.invoke(new File(BlueRobotTestResultTest.class.getResource("blue_skip.xml").toURI()).getParentFile(), null);
+		result.tally(null);
+		doReturn(result.getAllCases()).when(mockAction).getAllTests();
+
+		BlueRobotTestResult.FactoryImpl factory = new BlueRobotTestResult.FactoryImpl();
+		Result blueResult = factory.getBlueTestResults(mockBuild, mockReachable);
+		for (BlueTestResult tempResult : blueResult.results) {
+			String name = tempResult.getName();
+			String trace = tempResult.getErrorStackTrace();
+			switch (name) {
+				case "Test 8 Will Always Fail":
+					assertEquals("Fail\n", trace);
+					break;
+				case "Test 9 Will Always Fail":
+					assertEquals("Fail    Optional failure message\n", trace);
+					break;
+				default:
+					assertEquals("", trace);
+			}
+		}
+	}
 }
