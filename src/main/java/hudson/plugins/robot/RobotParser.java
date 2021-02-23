@@ -291,11 +291,13 @@ public class RobotParser {
 					do {
 						String kw = reader.getAttributeValue(null, "name");
 						stackTrace.append(getSpacesPerNestedLevel(nestedCount) + kw);
-						xmlTag = ignoreUntilStarts(reader, "kw", "arguments", "status");
+						xmlTag = ignoreUntilStarts(reader, "kw", "arguments", "arg", "status");
 						//get arguments of current keyword if any
-						if (xmlTag.equals("arguments")) {
+						if (xmlTag.equals("arguments") || xmlTag.equals("arg")) {
 							stackTrace.append(processArgs(reader));
-							xmlTag = ignoreUntilStarts(reader, "kw", "status");
+							if (!reader.getLocalName().equals("status") && !reader.getLocalName().equals("kw")) {
+								xmlTag = ignoreUntilStarts(reader, "kw", "status");
+							}
 						}
 						stackTrace.append("\n");
 						nestedCount++;
@@ -359,14 +361,23 @@ public class RobotParser {
 
 		private String processArgs(XMLStreamReader reader) throws  XMLStreamException {
 			StringBuilder stringBuilder = new StringBuilder();
-			while (reader.hasNext() && !(reader.isEndElement() && reader.getLocalName().equals("arguments"))) {
-				reader.next();
-				if (reader.isStartElement() && reader.getLocalName().equals("arg")) {
-					reader.next(); //skip arg start
-					stringBuilder.append("    " + reader.getText());
-					reader.next(); //skip text
-					reader.next(); //skip arg end
+
+			while(reader.hasNext()) {
+				if (reader.isStartElement() && "arg".equals(reader.getLocalName())) {
+					while(reader.hasNext()){
+						reader.next();
+						if(reader.isCharacters()){
+							stringBuilder.append("    " + reader.getText());
+						} else if(reader.isEndElement() && "arg".equals(reader.getLocalName())){
+							break;
+						}
+					}
+				} else if((reader.isEndElement() && "arguments".equals(reader.getLocalName())) ||
+						(reader.isStartElement() && "status".equals(reader.getLocalName())) ||
+						(reader.isStartElement() && "kw".equals(reader.getLocalName()))) {
+					break;
 				}
+				reader.next();
 			}
 			return stringBuilder.toString();
 		}
