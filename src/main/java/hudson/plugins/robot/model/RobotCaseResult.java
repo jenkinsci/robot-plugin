@@ -215,7 +215,7 @@ public class RobotCaseResult extends RobotTestObject{
 	 * @return number of build
 	 */
 	public int getFailedSince(){
-		if (failedSince == 0 && (!isPassed() || !isSkipped())) {
+		if (failedSince == 0 && (!isPassed() && !isSkipped())) {
 			RobotCaseResult previous = getPreviousResult();
 			if(previous != null && !previous.isPassed())
 				this.failedSince = previous.getFailedSince();
