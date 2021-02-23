@@ -178,6 +178,23 @@ and [here](https://content-security-policy.com/) how to change you CSP settings 
 but be aware that **Changing CSP settings will potentially expose you Jenkins instance for
 security vulnerabilities**.
 
+### Robot Framework 4.x compatibility
+
+The plugin supports both Robot Framework 3.x and 4.x output files. However, in order to support both, the plugin
+shows some extra information for both. Test criticality was removed and "SKIP" status was added. So for 3.x the
+results overview will show a `Skipped` column, which will always be 0 and for Robot Frameowork 4.x output files
+the `Critical tests` row will always be 0.
+
+Skipped tests aren't taken into account when calculating pass percentage, but they are calculated to the total
+amount of tests.
+
+![Result overview](images/robot_4_table.png)
+
+Because criticality was removed in Robot Framework 4.0, having the `Use thresholds for critical tests only` checkbox
+checked will always result in a passing step (because pass percentage is always considered to be 100% when there are
+0 tests). In order to have set build status correctly, you **must** uncheck the checkbox or use `onlyCritical: false`
+in your pipeline when you call `robot`.
+
 ### Overall Screenshots
 
 ##### Config
