@@ -37,7 +37,8 @@ public class BlueRobotTestResult extends BlueTestResult {
 
 	@Override
 	public float getDuration() {
-		return result.getDuration();
+		// Blue ocean uses seconds instead of milliseconds
+		return result.getDuration() / (float)1000;
 	}
 
 	@Override
