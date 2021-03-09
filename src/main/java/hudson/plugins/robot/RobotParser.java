@@ -284,36 +284,8 @@ public class RobotParser {
 			//parse stacktrace
 			String xmlTag = ignoreUntilStarts(reader, "kw", "doc", "tags", "tag", "status");
 			if (xmlTag.equals("kw")) {
-				//get all sequential keywords
-				int nestedCount = 0;
-				do {
-					//get all nested keywords 
-					do {
-						String kw = reader.getAttributeValue(null, "name");
-						stackTrace.append(getSpacesPerNestedLevel(nestedCount) + kw);
-						xmlTag = ignoreUntilStarts(reader, "kw", "arguments", "arg", "status");
-						//get arguments of current keyword if any
-						if (xmlTag.equals("arguments") || xmlTag.equals("arg")) {
-							stackTrace.append(processArgs(reader));
-							if (!reader.getLocalName().equals("status") && !reader.getLocalName().equals("kw")) {
-								xmlTag = ignoreUntilStarts(reader, "kw", "status");
-							}
-						}
-						stackTrace.append("\n");
-						nestedCount++;
-					} while (xmlTag.equals("kw"));
-					//unroll: after reading a status, the kw must end too
-					do {
-						ignoreUntilEnds(reader, "status");
-						ignoreUntilEnds(reader, "kw");
-						nestedCount--;
-						//it depends on the next tag:
-						//- kw: a sequential kw follows
-						//- status: a. status of previous kw -> unroll further; b. status of test
-						//- doc||tags: follows last kw (nestedCount must be 0)
-						xmlTag = ignoreUntilStarts(reader, "kw", "doc", "tags", "tag", "status");
-					} while (xmlTag.equals("status") && nestedCount > 0);
-				} while (xmlTag.equals("kw"));
+				stackTrace.append(processKeyword(reader));
+				xmlTag = reader.getLocalName();
 			}
 			caseResult.setStackTrace(stackTrace.toString());
 
@@ -359,7 +331,44 @@ public class RobotParser {
 			return caseResult;
 		}
 
-		private String processArgs(XMLStreamReader reader) throws  XMLStreamException {
+		private String processKeyword(XMLStreamReader reader) throws XMLStreamException {
+			StringBuilder stackTrace = new StringBuilder();
+			//get all sequential keywords
+			int nestedCount = 0;
+			String xmlTag;
+			do {
+				//get all nested keywords
+				do {
+					String kw = reader.getAttributeValue(null, "name");
+					stackTrace.append(getSpacesPerNestedLevel(nestedCount) + kw);
+					xmlTag = ignoreUntilStarts(reader, "kw", "arguments", "arg", "status");
+					//get arguments of current keyword if any
+					if (xmlTag.equals("arguments") || xmlTag.equals("arg")) {
+						stackTrace.append(processArgs(reader));
+						if (!reader.getLocalName().equals("status") && !reader.getLocalName().equals("kw")) {
+							xmlTag = ignoreUntilStarts(reader, "kw", "status");
+						}
+					}
+					stackTrace.append("\n");
+					nestedCount++;
+				} while (xmlTag.equals("kw"));
+				//unroll: after reading a status, the kw must end too
+				do {
+					ignoreUntilEnds(reader, "status");
+					ignoreUntilEnds(reader, "kw");
+					nestedCount--;
+					//it depends on the next tag:
+					//- kw: a sequential kw follows
+					//- status: a. status of previous kw -> unroll further; b. status of test
+					//- doc||tags: follows last kw (nestedCount must be 0)
+					xmlTag = ignoreUntilStarts(reader, "kw", "doc", "tags", "tag", "status");
+				} while (xmlTag.equals("status") && nestedCount > 0);
+			} while (xmlTag.equals("kw"));
+
+			return stackTrace.toString();
+		}
+
+		private String processArgs(XMLStreamReader reader) throws XMLStreamException {
 			StringBuilder stringBuilder = new StringBuilder();
 
 			while(reader.hasNext()) {
