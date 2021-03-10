@@ -82,41 +82,4 @@ public class BlueRobotTestResultTest {
 				.filter(element -> element.getName().equals(filterCondition))
 				.collect(Collectors.toList()).get(0);
 	}
-/*
-	@Test
-	public void testBasic() {
-		BlueRobotTestResult.FactoryImpl factory = new BlueRobotTestResult.FactoryImpl();
-		Result blueResult = factory.getBlueTestResults(mockBuild, mockReachable);
-		for (BlueTestResult tempResult : blueResult.results) {
-			String name = tempResult.getName();
-			String trace = tempResult.getErrorStackTrace();
-			String msg = tempResult.getErrorDetails();
-			switch (name) {
-				case "Failed Test":
-					assertEquals("Fail    This fails!", trace);
-					assertEquals("This fails!", msg);
-					break;
-				case "Nested failed test":
-					assertEquals("My failed Keyword\n  The real failed keyword\n    Fail    Really fails!", trace);
-					assertEquals("Really fails!", msg);
-					break;
-				case "Nested with not first":
-					String helper = "Should Be Equal    ${MESSAGE}    Hello, world!\nShould Be Equal    ${MESSAGE}    Hello, world!\n" + 
-						"My failed Keyword\n  The real failed keyword\n    Fail    Really fails!";
-					assertEquals(helper, trace);
-					assertEquals("Really fails!", msg);
-					break;
-				case "Another Test":
-					assertEquals("", trace);
-					assertEquals("", msg);
-					break;
-				case "My Test":
-					assertEquals("", trace);
-					assertEquals("", msg);
-					break;
-			}
-		}
-	}
-*/
-
 }
