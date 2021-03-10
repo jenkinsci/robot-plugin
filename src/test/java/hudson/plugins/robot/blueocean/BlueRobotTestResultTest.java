@@ -5,6 +5,8 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 import java.io.File;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +40,49 @@ public class BlueRobotTestResultTest {
 		doReturn(result.getAllCases()).when(mockAction).getAllTests();
 		doReturn(new Link("/")).when(mockReachable).getLink();
 	}
-	
+
+	@Test
+	public void testSimpleTrace() {
+		BlueTestResult result = getResult("Failed Test");
+		assertEquals("Fail    This fails!\n", result.getErrorStackTrace());
+		assertEquals("This fails!", result.getErrorDetails());
+	}
+
+	@Test
+	public void testNestedTrace(){
+		BlueTestResult result = getResult("Nested failed test");
+		assertEquals("My failed Keyword\n  The real failed keyword\n    Fail    Really fails!\n", result.getErrorStackTrace());
+		assertEquals("Really fails!", result.getErrorDetails());
+	}
+
+	@Test
+	public void testNestedNotFirst() {
+		BlueTestResult result = getResult("Nested with not first");
+		String helper = "Should Be Equal    ${MESSAGE}    Hello, world!\nShould Be Equal    ${MESSAGE}    Hello, world!\n" +
+				"My failed Keyword\n  The real failed keyword\n    Fail    Really fails!\n";
+		assertEquals(helper, result.getErrorStackTrace());
+		assertEquals("Really fails!", result.getErrorDetails());
+	}
+
+	@Test
+	public void testEmptyMessage(){
+		BlueTestResult result1 = getResult("Another Test");
+		BlueTestResult result2 = getResult("My Test");
+
+		assertEquals("", result1.getErrorStackTrace());
+		assertEquals("", result1.getErrorDetails());
+		assertEquals("", result2.getErrorStackTrace());
+		assertEquals("", result2.getErrorDetails());
+	}
+
+	private BlueTestResult getResult(String filterCondition){
+		BlueRobotTestResult.FactoryImpl factory = new BlueRobotTestResult.FactoryImpl();
+		Result blueResult = factory.getBlueTestResults(mockBuild, mockReachable);
+		return StreamSupport.stream(blueResult.results.spliterator(), false)
+				.filter(element -> element.getName().equals(filterCondition))
+				.collect(Collectors.toList()).get(0);
+	}
+/*
 	@Test
 	public void testBasic() {
 		BlueRobotTestResult.FactoryImpl factory = new BlueRobotTestResult.FactoryImpl();
@@ -49,16 +93,16 @@ public class BlueRobotTestResultTest {
 			String msg = tempResult.getErrorDetails();
 			switch (name) {
 				case "Failed Test":
-					assertEquals("Fail    This fails!\n", trace);
+					assertEquals("Fail    This fails!", trace);
 					assertEquals("This fails!", msg);
 					break;
 				case "Nested failed test":
-					assertEquals("My failed Keyword\n  The real failed keyword\n    Fail    Really fails!\n", trace);
+					assertEquals("My failed Keyword\n  The real failed keyword\n    Fail    Really fails!", trace);
 					assertEquals("Really fails!", msg);
 					break;
 				case "Nested with not first":
 					String helper = "Should Be Equal    ${MESSAGE}    Hello, world!\nShould Be Equal    ${MESSAGE}    Hello, world!\n" + 
-						"My failed Keyword\n  The real failed keyword\n    Fail    Really fails!\n";
+						"My failed Keyword\n  The real failed keyword\n    Fail    Really fails!";
 					assertEquals(helper, trace);
 					assertEquals("Really fails!", msg);
 					break;
@@ -73,29 +117,6 @@ public class BlueRobotTestResultTest {
 			}
 		}
 	}
+*/
 
-	@Test
-	public void testRobot4StackTrace() throws Exception {
-		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("blue_skip.xml", null, null);
-		result = remoteOperation.invoke(new File(BlueRobotTestResultTest.class.getResource("blue_skip.xml").toURI()).getParentFile(), null);
-		result.tally(null);
-		doReturn(result.getAllCases()).when(mockAction).getAllTests();
-
-		BlueRobotTestResult.FactoryImpl factory = new BlueRobotTestResult.FactoryImpl();
-		Result blueResult = factory.getBlueTestResults(mockBuild, mockReachable);
-		for (BlueTestResult tempResult : blueResult.results) {
-			String name = tempResult.getName();
-			String trace = tempResult.getErrorStackTrace();
-			switch (name) {
-				case "Test 8 Will Always Fail":
-					assertEquals("Fail\n", trace);
-					break;
-				case "Test 9 Will Always Fail":
-					assertEquals("Fail    Optional failure message\n", trace);
-					break;
-				default:
-					assertEquals("", trace);
-			}
-		}
-	}
 }
