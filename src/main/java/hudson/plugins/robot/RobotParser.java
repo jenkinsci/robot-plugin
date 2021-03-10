@@ -282,15 +282,15 @@ public class RobotParser {
 			StringBuilder stackTrace = new StringBuilder();
 
 			//parse stacktrace
-			String xmlTag = ignoreUntilStarts(reader, "kw", "doc", "tags", "tag", "status", "for");
-			if (xmlTag.equals("kw")) {
-				stackTrace.append(processKeyword(reader, 0));
-				xmlTag = ignoreUntilStarts(reader, "doc", "tags", "tag", "status");
-			}
-
-			if (xmlTag.equals("for")) {
-				stackTrace.append(processForLoop(reader, 0));
-				xmlTag = ignoreUntilStarts(reader, "doc", "tags", "tag", "status");
+			String xmlTag = ignoreUntilStarts(reader, "kw", "for", "doc", "tags", "tag", "status");
+			while (xmlTag.equals("kw") || xmlTag.equals("for")) {
+				if (xmlTag.equals("kw")) {
+					stackTrace.append(processKeyword(reader, 0));
+				} else {
+					stackTrace.append(processForLoop(reader, 0));
+				}
+				stackTrace.append("\n");
+				xmlTag = ignoreUntilStarts(reader, "kw", "for", "doc", "tags", "tag", "status");
 			}
 
 			caseResult.setStackTrace(stackTrace.toString());
@@ -372,7 +372,12 @@ public class RobotParser {
 		private String processKeyword(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
 			StringBuilder stackTrace = new StringBuilder();
 			String kw = reader.getAttributeValue(null, "name");
-			stackTrace.append(getSpacesPerNestedLevel(nestedCount)).append(kw);
+			String indentation = getSpacesPerNestedLevel(nestedCount);
+			if (indentation.length() > 0) {
+				stackTrace.append("\n");
+			}
+			stackTrace.append(indentation)
+					.append(kw);
 			reader.next();
 			while(reader.hasNext()) {
 				if (reader.isEndElement() && reader.getLocalName().equals("kw")) {
@@ -392,7 +397,6 @@ public class RobotParser {
 							stackTrace.append(processKeyword(reader, nestedCount + 1));
 							break;
 					}
-					stackTrace.append("\n");
 				}
 				reader.next();
 			}
