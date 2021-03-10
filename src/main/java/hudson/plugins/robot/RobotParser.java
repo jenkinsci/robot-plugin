@@ -282,15 +282,17 @@ public class RobotParser {
 			StringBuilder stackTrace = new StringBuilder();
 
 			//parse stacktrace
-			String xmlTag = ignoreUntilStarts(reader, "kw", "for", "doc", "tags", "tag", "status");
-			while (xmlTag.equals("kw") || xmlTag.equals("for")) {
+			String xmlTag = ignoreUntilStarts(reader, "kw", "for", "if", "doc", "tags", "tag", "status");
+			while (xmlTag.equals("kw") || xmlTag.equals("for") || xmlTag.equals("if")) {
 				if (xmlTag.equals("kw")) {
 					stackTrace.append(processKeyword(reader, 0));
-				} else {
+				} else if (xmlTag.equals("for")) {
 					stackTrace.append(processForLoop(reader, 0));
+				} else {
+					stackTrace.append(processIf(reader, 0));
 				}
 				stackTrace.append("\n");
-				xmlTag = ignoreUntilStarts(reader, "kw", "for", "doc", "tags", "tag", "status");
+				xmlTag = ignoreUntilStarts(reader, "kw", "for", "if", "doc", "tags", "tag", "status");
 			}
 
 			caseResult.setStackTrace(stackTrace.toString());
@@ -362,10 +364,44 @@ public class RobotParser {
 					String xmlTag = reader.getLocalName();
 					if (xmlTag.equals("for")) stackTrace.append(processForLoop(reader, nestedCount));
 					if (xmlTag.equals("kw")) stackTrace.append(processKeyword(reader, nestedCount));
+					if (xmlTag.equals("if")) stackTrace.append(processIf(reader, nestedCount));
 				}
 				reader.next();
 			}
 
+			return stackTrace.toString();
+		}
+
+		private String processIf(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
+			StringBuilder stackTrace = new StringBuilder();
+			ignoreUntilStarts(reader, "branch");
+			while (reader.hasNext()) {
+				if (reader.isEndElement() && reader.getLocalName().equals("if")) {
+					break;
+				}
+				if (reader.isStartElement() && reader.getLocalName().equals("branch")) {
+					stackTrace.append(processBranch(reader, nestedCount));
+				}
+				reader.next();
+			}
+
+			return stackTrace.toString();
+		}
+
+		private String processBranch(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
+			StringBuilder stackTrace = new StringBuilder();
+			while(reader.hasNext()) {
+				if (reader.isEndElement() && reader.getLocalName().equals("branch")) {
+					break;
+				}
+				if (reader.isStartElement()) {
+					String xmlTag = reader.getLocalName();
+					if (xmlTag.equals("for")) stackTrace.append(processForLoop(reader, nestedCount));
+					if (xmlTag.equals("kw")) stackTrace.append(processKeyword(reader, nestedCount));
+					if (xmlTag.equals("if")) stackTrace.append(processIf(reader, nestedCount));
+				}
+				reader.next();
+			}
 			return stackTrace.toString();
 		}
 
