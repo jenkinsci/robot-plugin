@@ -218,18 +218,29 @@
             <tag>for</tag>
             <status status="FAIL" starttime="20210310 10:52:28.559" endtime="20210310 10:52:28.578">AssertionError</status>
         </test>
+        <test id="s1-t2" name="For Loop Success">
+            <for flavor="IN RANGE">
+                <var>${x}</var>
+                <value>0</value>
+                <status status="PASS" starttime="20210311 07:44:14.343" endtime="20210311 07:44:14.343"/>
+            </for>
+            <tag>for</tag>
+            <tag>success</tag>
+            <status status="PASS" starttime="20210311 07:44:14.343" endtime="20210311 07:44:14.344"/>
+        </test>
         <status status="FAIL" starttime="20210310 10:52:28.460" endtime="20210310 10:52:28.579"/>
     </suite>
     <statistics>
         <total>
-            <stat pass="0" fail="1" skip="0">All Tests</stat>
+            <stat pass="1" fail="1" skip="0">All Tests</stat>
         </total>
         <tag>
             <stat pass="0" fail="1" skip="0">failure</stat>
-            <stat pass="0" fail="1" skip="0">for</stat>
+            <stat pass="1" fail="1" skip="0">for</stat>
+            <stat pass="1" fail="0" skip="0">success</stat>
         </tag>
         <suite>
-            <stat pass="0" fail="1" skip="0" id="s1" name="Loops">Loops</stat>
+            <stat pass="1" fail="1" skip="0" id="s1" name="Loops">Loops</stat>
         </suite>
     </statistics>
     <errors>
