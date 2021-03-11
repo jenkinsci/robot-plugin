@@ -341,7 +341,6 @@ public class RobotParser {
 
 		private String processForLoop(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
 			StringBuilder stackTrace = new StringBuilder();
-			ignoreUntilStarts(reader, "iter");
 			while (reader.hasNext()) {
 				if (reader.isEndElement() && reader.getLocalName().equals("for")) {
 					break;
@@ -362,9 +361,9 @@ public class RobotParser {
 				}
 				if (reader.isStartElement()) {
 					String xmlTag = reader.getLocalName();
-					if (xmlTag.equals("for")) stackTrace.append(processForLoop(reader, nestedCount));
-					if (xmlTag.equals("kw")) stackTrace.append(processKeyword(reader, nestedCount));
-					if (xmlTag.equals("if")) stackTrace.append(processIf(reader, nestedCount));
+					if (xmlTag.equals("for")) stackTrace.append(processForLoop(reader, nestedCount+1));
+					if (xmlTag.equals("kw")) stackTrace.append(processKeyword(reader, nestedCount+1));
+					if (xmlTag.equals("if")) stackTrace.append(processIf(reader, nestedCount+1));
 				}
 				reader.next();
 			}
@@ -374,7 +373,6 @@ public class RobotParser {
 
 		private String processIf(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
 			StringBuilder stackTrace = new StringBuilder();
-			ignoreUntilStarts(reader, "branch");
 			while (reader.hasNext()) {
 				if (reader.isEndElement() && reader.getLocalName().equals("if")) {
 					break;
@@ -396,9 +394,9 @@ public class RobotParser {
 				}
 				if (reader.isStartElement()) {
 					String xmlTag = reader.getLocalName();
-					if (xmlTag.equals("for")) stackTrace.append(processForLoop(reader, nestedCount));
-					if (xmlTag.equals("kw")) stackTrace.append(processKeyword(reader, nestedCount));
-					if (xmlTag.equals("if")) stackTrace.append(processIf(reader, nestedCount));
+					if (xmlTag.equals("for")) stackTrace.append(processForLoop(reader, nestedCount+1));
+					if (xmlTag.equals("kw")) stackTrace.append(processKeyword(reader, nestedCount+1));
+					if (xmlTag.equals("if")) stackTrace.append(processIf(reader, nestedCount+1));
 				}
 				reader.next();
 			}
@@ -427,10 +425,13 @@ public class RobotParser {
 							stackTrace.append(processArgs(reader));
 							break;
 						case "for":
-							stackTrace.append(processForLoop(reader, nestedCount));
+							stackTrace.append(processForLoop(reader, nestedCount+1));
 							break;
 						case "kw":
-							stackTrace.append(processKeyword(reader, nestedCount + 1));
+							stackTrace.append(processKeyword(reader, nestedCount+1));
+							break;
+						case "if":
+							stackTrace.append(processIf(reader, nestedCount+1));
 							break;
 					}
 				}
