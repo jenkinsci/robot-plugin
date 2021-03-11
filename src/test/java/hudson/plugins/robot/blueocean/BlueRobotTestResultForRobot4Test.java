@@ -73,22 +73,22 @@ public class BlueRobotTestResultForRobot4Test {
     @Test
     public void testForLoopStackTrace() throws Exception {
         BlueTestResult result = getResult("For Loop Failure");
-        String helper = "FOR IN RANGE\n  Log    ${x}\n    Nested Keyword    ${x}   ${arg}\n  Run Keyword If    ${x}==1    Fail\n" +
-                "Log    ${x}\n  Nested Keyword    ${x}    ${arg}\n  Run Keyword If    ${x}==1    Fail\nEND";
+        String helper = "FOR IN RANGE\n  Log    ${x}\n  Nested Keyword    ${x}    ${arg}\n  Run Keyword If    ${x}==1    Fail\n" +
+                "  Log    ${x}\n  Nested Keyword    ${x}    ${arg}\n  Run Keyword If    ${x}==1    Fail\nEND\n";
         assertEquals(helper, result.getErrorStackTrace());
     }
 
     @Test
     public void testIfElseStackTrace() throws Exception {
         BlueTestResult result = getResult("If Else Failure");
-        String helper = "IF\n  Fail\nELSE\n  Nested Keyword    ${var}    ${arg}\n  Fail    ${var}\nEND";
+        String helper = "Set Variable    mikki hiiri\nIF\n  Fail\nELSE\n  Nested Keyword    ${var}    ${arg}\n  Fail    ${var}\nEND\n";
         assertEquals(helper, result.getErrorStackTrace());
     }
 
     @Test
     public void testIfFailure() throws Exception {
         BlueTestResult result = getResult("If Failure");
-        String helper = "IF\n  Nested Keyword    ${var}    ${arg}\n  Fail\nEND";
+        String helper = "Set Variable    mikki hiiri\nIF\n  Nested Keyword    ${var}    ${arg}\n  Fail\nEND\n";
         assertEquals(helper, result.getErrorStackTrace());
     }
 
