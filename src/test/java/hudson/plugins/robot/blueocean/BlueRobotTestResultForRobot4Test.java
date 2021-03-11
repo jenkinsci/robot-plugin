@@ -43,13 +43,13 @@ public class BlueRobotTestResultForRobot4Test {
     @Test
     public void testSimpleStacktrace(){
         BlueTestResult result = getResult("Test 8 Will Always Fail");
-        assertEquals("Fail\n", result.getErrorStackTrace());
+        assertEquals("Fail", result.getErrorStackTrace());
     }
 
     @Test
     public void testStacktraceWithArguments(){
         BlueTestResult result = getResult("Test 9 Will Always Fail");
-        assertEquals("Fail    Optional failure message\n", result.getErrorStackTrace());
+        assertEquals("Fail    Optional failure message", result.getErrorStackTrace());
     }
 
     @Test
@@ -73,22 +73,22 @@ public class BlueRobotTestResultForRobot4Test {
     @Test
     public void testForLoopStackTrace() throws Exception {
         BlueTestResult result = getResult("For Loop Failure");
-        String helper = "FOR IN RANGE\n  Log    ${x}\n  Nested Keyword    ${x}    ${arg}\n  Run Keyword If    ${x}==1    Fail\n" +
-                "  Log    ${x}\n  Nested Keyword    ${x}    ${arg}\n  Run Keyword If    ${x}==1    Fail\nEND\n";
+        String helper = "FOR IN RANGE\n  Log    ${x}\n  Nested Keyword    ${x}\n    Log    ${arg}\n  Run Keyword If    ${x}==1    Fail\n" +
+                "  Log    ${x}\n  Nested Keyword    ${x}\n    Log    ${arg}\n  Run Keyword If    ${x}==1    Fail\n    Fail\nEND";
         assertEquals(helper, result.getErrorStackTrace());
     }
 
     @Test
     public void testIfElseStackTrace() throws Exception {
         BlueTestResult result = getResult("If Else Failure");
-        String helper = "Set Variable    mikki hiiri\nIF\n  Fail\nELSE\n  Nested Keyword    ${var}    ${arg}\n  Fail    ${var}\nEND\n";
+        String helper = "Set Variable    mikki hiiri\nIF\n  Fail\nELSE\n  Nested Keyword    ${var}\n    Log    ${arg}\n  Fail    ${var}\nEND";
         assertEquals(helper, result.getErrorStackTrace());
     }
 
     @Test
     public void testIfFailure() throws Exception {
         BlueTestResult result = getResult("If Failure");
-        String helper = "Set Variable    mikki hiiri\nIF\n  Nested Keyword    ${var}    ${arg}\n  Fail\nEND\n";
+        String helper = "Set Variable    mikki hiiri\nIF\n  Nested Keyword    ${var}\n    Log    ${arg}\n  Fail\nEND";
         assertEquals(helper, result.getErrorStackTrace());
     }
 

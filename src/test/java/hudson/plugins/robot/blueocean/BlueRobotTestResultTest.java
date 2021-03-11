@@ -44,14 +44,14 @@ public class BlueRobotTestResultTest {
 	@Test
 	public void testSimpleTrace() {
 		BlueTestResult result = getResult("Failed Test");
-		assertEquals("Fail    This fails!\n", result.getErrorStackTrace());
+		assertEquals("Fail    This fails!", result.getErrorStackTrace());
 		assertEquals("This fails!", result.getErrorDetails());
 	}
 
 	@Test
 	public void testNestedTrace(){
 		BlueTestResult result = getResult("Nested failed test");
-		assertEquals("My failed Keyword\n  The real failed keyword\n    Fail    Really fails!\n", result.getErrorStackTrace());
+		assertEquals("My failed Keyword\n  The real failed keyword\n    Fail    Really fails!", result.getErrorStackTrace());
 		assertEquals("Really fails!", result.getErrorDetails());
 	}
 
@@ -59,7 +59,7 @@ public class BlueRobotTestResultTest {
 	public void testNestedNotFirst() {
 		BlueTestResult result = getResult("Nested with not first");
 		String helper = "Should Be Equal    ${MESSAGE}    Hello, world!\nShould Be Equal    ${MESSAGE}    Hello, world!\n" +
-				"My failed Keyword\n  The real failed keyword\n    Fail    Really fails!\n";
+				"My failed Keyword\n  The real failed keyword\n    Fail    Really fails!";
 		assertEquals(helper, result.getErrorStackTrace());
 		assertEquals("Really fails!", result.getErrorDetails());
 	}

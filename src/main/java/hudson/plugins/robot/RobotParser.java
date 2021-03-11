@@ -262,6 +262,9 @@ public class RobotParser {
 
 		private String getSpacesPerNestedLevel(int level) {
 			StringBuilder spaces = new StringBuilder();
+			if (level > 0) {
+				spaces.append("\n");
+			}
 			for (int i = 0; i < level; i++) {
 				spaces.append("  ");
 			}
@@ -294,7 +297,7 @@ public class RobotParser {
 				xmlTag = ignoreUntilStarts(reader, "kw", "for", "if", "doc", "tags", "tag", "status");
 			}
 
-			caseResult.setStackTrace(stackTrace.toString());
+			caseResult.setStackTrace(stackTrace.toString().trim().replaceAll("\n+", "\n"));
 
 			if (xmlTag.equals("doc")) {
 				reader.next();
@@ -341,7 +344,7 @@ public class RobotParser {
 		private String processForLoop(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
 			StringBuilder stackTrace = new StringBuilder();
 			String indentation = getSpacesPerNestedLevel(nestedCount);
-			stackTrace.append(indentation + "FOR " + reader.getAttributeValue(null, "flavor") + "\n");
+			stackTrace.append(indentation + "FOR " + reader.getAttributeValue(null, "flavor"));
 			while (reader.hasNext()) {
 				if (reader.isEndElement() && reader.getLocalName().equals("for")) {
 					break;
@@ -381,7 +384,7 @@ public class RobotParser {
 					break;
 				}
 				if (reader.isStartElement() && reader.getLocalName().equals("branch")) {
-					stackTrace.append(indentation + reader.getAttributeValue(null, "type") + "\n");
+					stackTrace.append(indentation + reader.getAttributeValue(null, "type"));
 					stackTrace.append(processBranch(reader, nestedCount+1));
 				}
 				reader.next();
@@ -411,8 +414,7 @@ public class RobotParser {
 			StringBuilder stackTrace = new StringBuilder();
 			String kw = reader.getAttributeValue(null, "name");
 			String indentation = getSpacesPerNestedLevel(nestedCount);
-			stackTrace.append(indentation)
-					.append(kw);
+			stackTrace.append(indentation).append(kw);
 			reader.next();
 			while(reader.hasNext()) {
 				if (reader.isEndElement() && reader.getLocalName().equals("kw")) {
@@ -424,7 +426,7 @@ public class RobotParser {
 						case "arguments":
 						case "arg":
 							stackTrace.append(processArgs(reader));
-							break;
+							continue;
 						case "for":
 							stackTrace.append(processForLoop(reader, nestedCount+1));
 							break;
@@ -446,21 +448,17 @@ public class RobotParser {
 			StringBuilder stringBuilder = new StringBuilder();
 
 			while(reader.hasNext()) {
-				if (reader.isStartElement() && "arg".equals(reader.getLocalName())) {
-					while(reader.hasNext()){
-						if (reader.isEndElement() && "arg".equals(reader.getLocalName())) {
-							break;
-						}
-						if(reader.isCharacters()){
-							stringBuilder.append("    ").append(reader.getText());
-						}
-						reader.next();
+				if (reader.isEndElement() || reader.isStartElement()) {
+					String xmlTag = reader.getLocalName();
+					if (reader.isEndElement() && xmlTag.equals("arguments") ||
+							reader.isStartElement() && xmlTag.equals("status") ||
+							reader.isStartElement() && xmlTag.equals("kw")) {
+						break;
 					}
-				}
-				if((reader.isEndElement() && "arguments".equals(reader.getLocalName())) ||
-						(reader.isStartElement() && "status".equals(reader.getLocalName())) ||
-						(reader.isStartElement() && "kw".equals(reader.getLocalName()))) {
-					break;
+					if (reader.isStartElement() && xmlTag.equals("arg")) {
+						reader.next();
+						stringBuilder.append("    ").append(reader.getText());
+					}
 				}
 				reader.next();
 			}
