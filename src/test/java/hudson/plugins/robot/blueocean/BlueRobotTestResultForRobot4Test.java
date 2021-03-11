@@ -1,5 +1,6 @@
 package hudson.plugins.robot.blueocean;
 
+import static org.junit.Assert.assertEquals;
 import hudson.model.FreeStyleBuild;
 import hudson.plugins.robot.RobotBuildAction;
 import hudson.plugins.robot.RobotParser;
@@ -8,7 +9,6 @@ import io.jenkins.blueocean.rest.Reachable;
 import io.jenkins.blueocean.rest.factory.BlueTestResultFactory.Result;
 import io.jenkins.blueocean.rest.hal.Link;
 import io.jenkins.blueocean.rest.model.BlueTestResult;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,13 +43,13 @@ public class BlueRobotTestResultForRobot4Test {
     @Test
     public void testSimpleStacktrace(){
         BlueTestResult result = getResult("Test 8 Will Always Fail");
-        Assert.assertEquals("Fail\n", result.getErrorStackTrace());
+        assertEquals("Fail\n", result.getErrorStackTrace());
     }
 
     @Test
     public void testStacktraceWithArguments(){
         BlueTestResult result = getResult("Test 9 Will Always Fail");
-        Assert.assertEquals("Fail    Optional failure message\n", result.getErrorStackTrace());
+        assertEquals("Fail    Optional failure message\n", result.getErrorStackTrace());
     }
 
     @Test
@@ -66,8 +66,30 @@ public class BlueRobotTestResultForRobot4Test {
                                             "Test 11 Will Always Fail But Is Skipped On Failure",
                                             "Test 12 Will Always Pass But Is Skipped On Failure")){
             result = getResult(testCase);
-            Assert.assertEquals("", result.getErrorStackTrace());
+            assertEquals("", result.getErrorStackTrace());
         }
+    }
+
+    @Test
+    public void testForLoopStackTrace() throws Exception {
+        BlueTestResult result = getResult("For Loop Failure");
+        String helper = "FOR IN RANGE\n  Log    ${x}\n    Nested Keyword    ${x}   ${arg}\n  Run Keyword If    ${x}==1    Fail\n" +
+                "Log    ${x}\n  Nested Keyword    ${x}    ${arg}\n  Run Keyword If    ${x}==1    Fail\nEND";
+        assertEquals(helper, result.getErrorStackTrace());
+    }
+
+    @Test
+    public void testIfElseStackTrace() throws Exception {
+        BlueTestResult result = getResult("If Else Failure");
+        String helper = "IF\n  Fail\nELSE\n  Nested Keyword    ${var}    ${arg}\n  Fail    ${var}\nEND";
+        assertEquals(helper, result.getErrorStackTrace());
+    }
+
+    @Test
+    public void testIfFailure() throws Exception {
+        BlueTestResult result = getResult("If Failure");
+        String helper = "IF\n  Nested Keyword    ${var}    ${arg}\n  Fail\nEND";
+        assertEquals(helper, result.getErrorStackTrace());
     }
 
     private BlueTestResult getResult(String filterCondition){
