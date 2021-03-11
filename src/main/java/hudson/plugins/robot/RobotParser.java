@@ -291,7 +291,6 @@ public class RobotParser {
 				} else {
 					stackTrace.append(processIf(reader, 0));
 				}
-				stackTrace.append("\n");
 				xmlTag = ignoreUntilStarts(reader, "kw", "for", "if", "doc", "tags", "tag", "status");
 			}
 
@@ -341,15 +340,18 @@ public class RobotParser {
 
 		private String processForLoop(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
 			StringBuilder stackTrace = new StringBuilder();
+			String indentation = getSpacesPerNestedLevel(nestedCount);
+			stackTrace.append(indentation + "FOR " + reader.getAttributeValue(null, "flavor") + "\n");
 			while (reader.hasNext()) {
 				if (reader.isEndElement() && reader.getLocalName().equals("for")) {
 					break;
 				}
 				if (reader.isStartElement() && reader.getLocalName().equals("iter")) {
-					stackTrace.append(processIteration(reader, nestedCount));
+					stackTrace.append(processIteration(reader, nestedCount+1));
 				}
 				reader.next();
 			}
+			stackTrace.append(indentation + "END\n");
 			return stackTrace.toString();
 		}
 
@@ -361,9 +363,9 @@ public class RobotParser {
 				}
 				if (reader.isStartElement()) {
 					String xmlTag = reader.getLocalName();
-					if (xmlTag.equals("for")) stackTrace.append(processForLoop(reader, nestedCount+1));
-					if (xmlTag.equals("kw")) stackTrace.append(processKeyword(reader, nestedCount+1));
-					if (xmlTag.equals("if")) stackTrace.append(processIf(reader, nestedCount+1));
+					if (xmlTag.equals("for")) stackTrace.append(processForLoop(reader, nestedCount));
+					if (xmlTag.equals("kw")) stackTrace.append(processKeyword(reader, nestedCount));
+					if (xmlTag.equals("if")) stackTrace.append(processIf(reader, nestedCount));
 				}
 				reader.next();
 			}
@@ -373,16 +375,18 @@ public class RobotParser {
 
 		private String processIf(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
 			StringBuilder stackTrace = new StringBuilder();
+			String indentation = getSpacesPerNestedLevel(nestedCount);
 			while (reader.hasNext()) {
 				if (reader.isEndElement() && reader.getLocalName().equals("if")) {
 					break;
 				}
 				if (reader.isStartElement() && reader.getLocalName().equals("branch")) {
-					stackTrace.append(processBranch(reader, nestedCount));
+					stackTrace.append(indentation + reader.getAttributeValue(null, "type") + "\n");
+					stackTrace.append(processBranch(reader, nestedCount+1));
 				}
 				reader.next();
 			}
-
+			stackTrace.append(indentation + "END\n");
 			return stackTrace.toString();
 		}
 
@@ -394,9 +398,9 @@ public class RobotParser {
 				}
 				if (reader.isStartElement()) {
 					String xmlTag = reader.getLocalName();
-					if (xmlTag.equals("for")) stackTrace.append(processForLoop(reader, nestedCount+1));
-					if (xmlTag.equals("kw")) stackTrace.append(processKeyword(reader, nestedCount+1));
-					if (xmlTag.equals("if")) stackTrace.append(processIf(reader, nestedCount+1));
+					if (xmlTag.equals("for")) stackTrace.append(processForLoop(reader, nestedCount));
+					if (xmlTag.equals("kw")) stackTrace.append(processKeyword(reader, nestedCount));
+					if (xmlTag.equals("if")) stackTrace.append(processIf(reader, nestedCount));
 				}
 				reader.next();
 			}
@@ -407,9 +411,6 @@ public class RobotParser {
 			StringBuilder stackTrace = new StringBuilder();
 			String kw = reader.getAttributeValue(null, "name");
 			String indentation = getSpacesPerNestedLevel(nestedCount);
-			if (indentation.length() > 0) {
-				stackTrace.append("\n");
-			}
 			stackTrace.append(indentation)
 					.append(kw);
 			reader.next();
@@ -437,7 +438,7 @@ public class RobotParser {
 				}
 				reader.next();
 			}
-
+			stackTrace.append("\n");
 			return stackTrace.toString();
 		}
 
@@ -447,14 +448,16 @@ public class RobotParser {
 			while(reader.hasNext()) {
 				if (reader.isStartElement() && "arg".equals(reader.getLocalName())) {
 					while(reader.hasNext()){
-						reader.next();
-						if(reader.isCharacters()){
-							stringBuilder.append("    ").append(reader.getText());
-						} else if(reader.isEndElement() && "arg".equals(reader.getLocalName())){
+						if (reader.isEndElement() && "arg".equals(reader.getLocalName())) {
 							break;
 						}
+						if(reader.isCharacters()){
+							stringBuilder.append("    ").append(reader.getText());
+						}
+						reader.next();
 					}
-				} else if((reader.isEndElement() && "arguments".equals(reader.getLocalName())) ||
+				}
+				if((reader.isEndElement() && "arguments".equals(reader.getLocalName())) ||
 						(reader.isStartElement() && "status".equals(reader.getLocalName())) ||
 						(reader.isStartElement() && "kw".equals(reader.getLocalName()))) {
 					break;
