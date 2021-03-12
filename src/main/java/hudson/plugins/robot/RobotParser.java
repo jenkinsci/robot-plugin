@@ -436,6 +436,8 @@ public class RobotParser {
 						case "if":
 							stackTrace.append(processIf(reader, nestedCount+1));
 							break;
+						default:
+							break;
 					}
 				}
 				reader.next();
