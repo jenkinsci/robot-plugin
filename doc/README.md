@@ -181,7 +181,7 @@ security vulnerabilities**.
 ### Robot Framework 4.x compatibility
 
 The plugin supports both Robot Framework 3.x and 4.x output files. However, in order to support both, the plugin
-shows some extra information for both. Test criticality was removed and "SKIP" status was added. So for 3.x the
+shows some extra information for both. [In Robot Framework 4.0 test criticality was removed and "SKIP" status was added](https://github.com/robotframework/robotframework/blob/master/doc/releasenotes/rf-4.0.rst). So for 3.x the
 results overview will show a `Skipped` column, which will always be 0 and for Robot Frameowork 4.x output files
 the `Critical tests` row will always be 0.
 
