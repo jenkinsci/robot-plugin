@@ -193,6 +193,8 @@ checked will always result in a passing step (because pass percentage is always 
 0 tests). In order to have set build status correctly, you **must** uncheck the checkbox or use `onlyCritical: false`
 in your pipeline when you call `robot`.
 
+We are planning of dropping support for Robot Framework 3.x and earlier some time in distant future.
+
 ### Overall Screenshots
 
 
