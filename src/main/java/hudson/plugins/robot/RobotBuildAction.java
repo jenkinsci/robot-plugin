@@ -161,7 +161,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 
 	private void cacheRobotResult(RobotResult result) {
 		if (enableCache) {
-			resultReference = new WeakReference<>(result);
+			resultReference = new WeakReference<RobotResult>(result);
 		}
 	}
 
