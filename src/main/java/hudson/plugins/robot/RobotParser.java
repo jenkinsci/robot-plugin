@@ -426,7 +426,7 @@ public class RobotParser {
 						case "arguments":
 						case "arg":
 							stackTrace.append(processArgs(reader));
-							continue;
+							continue;	// processArgs returns with us already in <kw>. We don't want to use reader.next()
 						case "for":
 							stackTrace.append(processForLoop(reader, nestedCount+1));
 							break;
