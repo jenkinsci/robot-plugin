@@ -27,30 +27,33 @@ public class RobotListViewColumn extends ListViewColumn {
 
 	public long getPass(Item job){
 		RobotResult lastRobotResult = getLastRobotResult(job);
-		if(lastRobotResult != null){
-			return lastRobotResult.getOverallPassed();
-		}
-		return 0;
+		return lastRobotResult != null ? lastRobotResult.getOverallPassed() : 0;
 	}
 
 	public long getTotal(Item job){
 		RobotResult lastRobotResult = getLastRobotResult(job);
-		if(lastRobotResult != null){
-			return lastRobotResult.getOverallTotal();
-		}
-		return 0;
+		return lastRobotResult != null ? lastRobotResult.getOverallTotal() : 0;
+	}
+
+	public long getSkipped(Item job) {
+		RobotResult lastRobotResult = getLastRobotResult(job);
+		return lastRobotResult != null ? lastRobotResult.getOverallSkipped() : 0;
 	}
 
 	public double getPassPercent(Item job) {
 		RobotResult lastRobotResult = getLastRobotResult(job);
-		if (lastRobotResult==null) return 100;
-		return lastRobotResult.getPassPercentage();
+		return lastRobotResult != null ? lastRobotResult.getPassPercentage() : 100;
+	}
+
+	public double getSkipPercent(Item job) {
+		RobotResult lastRobotResult = getLastRobotResult(job);
+		return lastRobotResult != null ? lastRobotResult.getSkipPercentage() : 0;
 	}
 
 	public String getRobotPath(Item job) {
 		if (job instanceof Job) {
 			Run<?,?> build = ((Job<?,?>)job).getLastCompletedBuild();
-			int lastBuildNr = build==null? 1 : build.number;
+			int lastBuildNr = build == null ? 1 : build.number;
 			return job.getShortUrl() + lastBuildNr+ "/robot/";
 		}
 		return null;

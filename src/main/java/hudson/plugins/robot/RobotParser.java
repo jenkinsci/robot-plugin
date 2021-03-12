@@ -18,7 +18,6 @@ package hudson.plugins.robot;
 import hudson.AbortException;
 import hudson.FilePath;
 import hudson.Util;
-import hudson.model.AbstractBuild;
 import hudson.model.Run;
 import hudson.plugins.robot.model.RobotTestObject;
 import hudson.plugins.robot.model.RobotCaseResult;
@@ -46,9 +45,8 @@ public class RobotParser {
 
 	public RobotResult parse(String outputFileLocations, String outputPath, Run<?, ?> build, FilePath workSpace, String logFileName, String reportFileName)
 	throws InterruptedException, IOException {
-		RobotResult result = new FilePath(workSpace, outputPath).act(
+		return new FilePath(workSpace, outputPath).act(
 				new RobotParserCallable(outputFileLocations, logFileName, reportFileName));
-		return result;
 	}
 
 	public static final class RobotParserCallable implements
@@ -91,7 +89,7 @@ public class RobotParser {
 				//get the potential directories emerging from the use of GLOB filemask accounted in the splitted file parsing
 				String dirFromFileGLOB = new File(file).getParent();
 				if(dirFromFileGLOB != null)
-					baseDirectory = new File(baseDirectory, dirFromFileGLOB.toString());
+					baseDirectory = new File(baseDirectory, dirFromFileGLOB);
 				FileInputStream inputStream = new FileInputStream(reportFile);
 				try {
 					XMLStreamReader reader = factory.createXMLStreamReader(inputStream, "UTF-8");
@@ -202,7 +200,7 @@ public class RobotParser {
 		}
 
 		private String ignoreUntilStarts(XMLStreamReader reader, String... elements) throws XMLStreamException {
-			List<String> elementStack = new ArrayList<String>();
+			List<String> elementStack = new ArrayList<>();
 			while(reader.hasNext()) {
 				reader.next();
 				if (reader.isStartElement()) {
@@ -237,7 +235,7 @@ public class RobotParser {
 		}
 
 		private void ignoreUntilEnds(XMLStreamReader reader, String element) throws XMLStreamException {
-			List<String> elementStack = new ArrayList<String>();
+			List<String> elementStack = new ArrayList<>();
 			while(reader.hasNext()) {
 				reader.next();
 				if (reader.isStartElement()) {
@@ -263,7 +261,10 @@ public class RobotParser {
 		}
 
 		private String getSpacesPerNestedLevel(int level) {
-			StringBuffer spaces = new StringBuffer();
+			StringBuilder spaces = new StringBuilder();
+			if (level > 0) {
+				spaces.append("\n");
+			}
 			for (int i = 0; i < level; i++) {
 				spaces.append("  ");
 			}
@@ -280,71 +281,47 @@ public class RobotParser {
 			caseResult.setId(reader.getAttributeValue(null, "id"));
 			//parse test tags
 			caseResult.setDescription("");
-			caseResult.addTags(new ArrayList<String>());
-			StringBuffer stackTrace = new StringBuffer();
+			caseResult.addTags(new ArrayList<>());
+			StringBuilder stackTrace = new StringBuilder();
 
 			//parse stacktrace
-			String xmlTag = ignoreUntilStarts(reader, "kw", "doc", "tags", "status");
-			if (xmlTag == "kw") {
-				//get all sequential keywords
-				int nestedCount = 0;
-				do {
-					//get all nested keywords 
-					do {
-						String kw = reader.getAttributeValue(null, "name");
-						stackTrace.append(getSpacesPerNestedLevel(nestedCount) + kw);
-						xmlTag = ignoreUntilStarts(reader, "kw", "arguments", "status");
-						//get arguments of current keyword if any
-						if (xmlTag == "arguments") {
-							while (reader.hasNext() && !(reader.isEndElement() && reader.getLocalName() == "arguments")) {
-								reader.next();
-								if (reader.isStartElement() && reader.getLocalName() == "arg") {
-									reader.next(); //skip arg start
-									stackTrace.append("    " + reader.getText());
-									reader.next(); //skip text
-									reader.next(); //skip arg end
-								}
-							}
-							xmlTag = ignoreUntilStarts(reader, "kw", "status");
-						}
-						stackTrace.append("\n");
-						nestedCount++;
-					} while (xmlTag == "kw");
-					//unroll: after reading a status, the kw must end too
-					do {
-						ignoreUntilEnds(reader, "status");
-						ignoreUntilEnds(reader, "kw");
-						nestedCount--;
-						//it depends on the next tag:
-						//- kw: a sequential kw follows
-						//- status: a. status of previous kw -> unroll further; b. status of test
-						//- doc||tags: follows last kw (nestedCount must be 0)
-						xmlTag = ignoreUntilStarts(reader, "kw", "doc", "tags", "status");
-					} while (xmlTag == "status" && nestedCount > 0);
-				} while (xmlTag == "kw");
+			String xmlTag = ignoreUntilStarts(reader, "kw", "for", "if", "doc", "tags", "tag", "status");
+			while (xmlTag.equals("kw") || xmlTag.equals("for") || xmlTag.equals("if")) {
+				if (xmlTag.equals("if")) {
+					stackTrace.append(processIf(reader, 0));
+				} else if (xmlTag.equals("for")) {
+					stackTrace.append(processForLoop(reader, 0));
+				} else {
+					stackTrace.append(processKeyword(reader, 0));
+				}
+				xmlTag = ignoreUntilStarts(reader, "kw", "for", "if", "doc", "tags", "tag", "status");
 			}
-			caseResult.setStackTrace(stackTrace.toString());
 
-			if (xmlTag == "doc") { 
+			caseResult.setStackTrace(stackTrace.toString().trim().replaceAll("\n+", "\n"));
+
+			if (xmlTag.equals("doc")) {
 				reader.next();
 				if (reader.hasText()) {
 					caseResult.setDescription(reader.getText());
 				}
 				reader.next();
-				xmlTag = ignoreUntilStarts(reader, "tags", "status");
+				xmlTag = ignoreUntilStarts(reader, "tags", "tag", "status");
 			}
-			if (xmlTag == "tags") {
+			if (xmlTag.equals("tags") || xmlTag.equals("tag")) {
 				caseResult.addTags(processTags(reader));
-				ignoreUntilStarts(reader, "status");
+				if (!reader.getLocalName().equals("status")) {
+					ignoreUntilStarts(reader, "status");
+				}
 			}
 			//parse test details from nested status
 			caseResult.setPassed("PASS".equals(reader.getAttributeValue(null, "status")));
+			caseResult.setSkipped("SKIP".equals(reader.getAttributeValue(null, "status")));
 			caseResult.setStarttime(reader.getAttributeValue(null, "starttime"));
 			caseResult.setEndtime(reader.getAttributeValue(null, "endtime"));
 			setCriticalityIfAvailable(reader, caseResult);
 			while(reader.hasNext()){
 				reader.next();
-				if(reader.getEventType() == XMLStreamReader.CHARACTERS){
+				if(reader.isCharacters()){
 					String error = reader.getText();
 					caseResult.setErrorMsg(error);
 				} else if (reader.isEndElement()) {
@@ -357,40 +334,176 @@ public class RobotParser {
 				}
 			}
 			// reset stack trace if the test is passed
-			if (caseResult.isPassed()) {
+			if (caseResult.isPassed() || caseResult.isSkipped()) {
 				caseResult.setStackTrace("");
 			}
 			ignoreUntilEnds(reader, "test");
 			return caseResult;
 		}
 
-		private List<String> processTags(XMLStreamReader reader) throws XMLStreamException {
-			List<String> taglist = new ArrayList<String>();
-			while(reader.hasNext()){
+		private String processForLoop(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
+			StringBuilder stackTrace = new StringBuilder();
+			String indentation = getSpacesPerNestedLevel(nestedCount);
+			stackTrace.append(indentation + "FOR " + reader.getAttributeValue(null, "flavor"));
+			while (reader.hasNext()) {
+				if (reader.isEndElement() && reader.getLocalName().equals("for")) {
+					break;
+				}
+				if (reader.isStartElement() && reader.getLocalName().equals("iter")) {
+					stackTrace.append(processIteration(reader, nestedCount+1));
+				}
 				reader.next();
+			}
+			stackTrace.append(indentation + "END\n");
+			return stackTrace.toString();
+		}
+
+		private String processIteration(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
+			StringBuilder stackTrace = new StringBuilder();
+			while(reader.hasNext()) {
+				if (reader.isEndElement() && reader.getLocalName().equals("iter")) {
+					break;
+				}
+				if (reader.isStartElement()) {
+					String xmlTag = reader.getLocalName();
+					if (xmlTag.equals("for")) {
+						stackTrace.append(processForLoop(reader, nestedCount));
+					}
+					if (xmlTag.equals("kw")) {
+						stackTrace.append(processKeyword(reader, nestedCount));
+					}
+					if (xmlTag.equals("if")) {
+						stackTrace.append(processIf(reader, nestedCount));
+					}
+				}
+				reader.next();
+			}
+
+			return stackTrace.toString();
+		}
+
+		private String processIf(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
+			StringBuilder stackTrace = new StringBuilder();
+			String indentation = getSpacesPerNestedLevel(nestedCount);
+			while (reader.hasNext()) {
+				if (reader.isEndElement() && reader.getLocalName().equals("if")) {
+					break;
+				}
+				if (reader.isStartElement() && reader.getLocalName().equals("branch")) {
+					stackTrace.append(indentation + reader.getAttributeValue(null, "type"));
+					stackTrace.append(processBranch(reader, nestedCount+1));
+				}
+				reader.next();
+			}
+			stackTrace.append(indentation + "END\n");
+			return stackTrace.toString();
+		}
+
+		private String processBranch(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
+			StringBuilder stackTrace = new StringBuilder();
+			while(reader.hasNext()) {
+				if (reader.isEndElement() && reader.getLocalName().equals("branch")) {
+					break;
+				}
+				if (reader.isStartElement()) {
+					String xmlTag = reader.getLocalName();
+					if (xmlTag.equals("for")) {
+						stackTrace.append(processForLoop(reader, nestedCount));
+					}
+					if (xmlTag.equals("kw")) {
+						stackTrace.append(processKeyword(reader, nestedCount));
+					}
+					if (xmlTag.equals("if")) {
+						stackTrace.append(processIf(reader, nestedCount));
+					}
+				}
+				reader.next();
+			}
+			return stackTrace.toString();
+		}
+
+		private String processKeyword(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
+			StringBuilder stackTrace = new StringBuilder();
+			String kw = reader.getAttributeValue(null, "name");
+			String indentation = getSpacesPerNestedLevel(nestedCount);
+			stackTrace.append(indentation).append(kw);
+			reader.next();
+			while(reader.hasNext()) {
+				if (reader.isEndElement() && reader.getLocalName().equals("kw")) {
+					break;
+				}
+				if (reader.isStartElement()) {
+					String xmlTag = reader.getLocalName();
+					switch (xmlTag) {
+						case "arguments":
+						case "arg":
+							stackTrace.append(processArgs(reader));
+							continue;	// processArgs returns with us already in <kw>. We don't want to use reader.next()
+						case "for":
+							stackTrace.append(processForLoop(reader, nestedCount+1));
+							break;
+						case "kw":
+							stackTrace.append(processKeyword(reader, nestedCount+1));
+							break;
+						case "if":
+							stackTrace.append(processIf(reader, nestedCount+1));
+							break;
+						default:
+							break;
+					}
+				}
+				reader.next();
+			}
+			stackTrace.append("\n");
+			return stackTrace.toString();
+		}
+
+		private String processArgs(XMLStreamReader reader) throws XMLStreamException {
+			StringBuilder stringBuilder = new StringBuilder();
+
+			while(reader.hasNext()) {
+				if (reader.isEndElement() || reader.isStartElement()) {
+					String xmlTag = reader.getLocalName();
+					if (reader.isEndElement() && xmlTag.equals("arguments") ||
+							reader.isStartElement() && xmlTag.equals("status") ||
+							reader.isStartElement() && xmlTag.equals("kw")) {
+						break;
+					}
+					if (reader.isStartElement() && xmlTag.equals("arg")) {
+						reader.next();
+						stringBuilder.append("    ").append(reader.getText());
+					}
+				}
+				reader.next();
+			}
+			return stringBuilder.toString();
+		}
+
+		private List<String> processTags(XMLStreamReader reader) throws XMLStreamException {
+			List<String> tagList = new ArrayList<>();
+
+			while(reader.hasNext()){
 				if(reader.isStartElement() && "tag".equals(reader.getLocalName())){
 					while(reader.hasNext()){
 						reader.next();
-						if(reader.getEventType() == XMLStreamReader.CHARACTERS){
-							taglist.add(reader.getText());
+						if(reader.isCharacters()){
+							tagList.add(reader.getText());
 						} else if(reader.isEndElement() && "tag".equals(reader.getLocalName())){
 							break;
 						}
 					}
-				} else if(reader.isEndElement() && "tags".equals(reader.getLocalName())){
+				} else if((reader.isEndElement() && "tags".equals(reader.getLocalName())) || (reader.isStartElement() && "status".equals(reader.getLocalName()))){
 					break;
 				}
+				reader.next();
 			}
-			return taglist;
+			return tagList;
 		}
 
 		private static void setCriticalityIfAvailable(XMLStreamReader reader, RobotCaseResult caseResult) {
 			String criticality = reader.getAttributeValue(null, "critical");
 			if (criticality != null) {
-				if(criticality.equals("yes"))
-					caseResult.setCritical(true);
-				else
-					caseResult.setCritical(false);
+				caseResult.setCritical(criticality.equals("yes"));
 			}
 		}
 

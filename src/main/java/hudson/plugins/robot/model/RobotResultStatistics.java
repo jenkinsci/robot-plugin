@@ -27,6 +27,7 @@ public class RobotResultStatistics implements Serializable {
 
 	private long pass;
 	private long fail;
+	private long skip;
 
 	//backwards compatibility with old builds
 	private transient String name;
@@ -47,7 +48,15 @@ public class RobotResultStatistics implements Serializable {
 		this.fail = fail;
 	}
 
+	public long getSkip() {
+		return skip;
+	}
+
+	public void setSkip(long skip) {
+		this.skip = skip;
+	}
+
 	public long getTotal(){
-		return fail + pass;
+		return fail + pass + skip;
 	}
 }

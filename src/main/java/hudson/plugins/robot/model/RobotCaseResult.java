@@ -40,6 +40,7 @@ public class RobotCaseResult extends RobotTestObject{
 	private static final Logger LOGGER = Logger.getLogger(RobotCaseResult.class.getName());
 
 	private boolean passed;
+	private boolean skipped;
 	private boolean critical;
 	private String errorMsg;
 	private String name;
@@ -156,6 +157,10 @@ public class RobotCaseResult extends RobotTestObject{
 		this.passed = passed;
 	}
 
+	public void setSkipped(boolean skipped) {
+		this.skipped = skipped;
+	}
+
 	public void setCritical(boolean critical) {
 		this.critical = critical;
 	}
@@ -172,13 +177,17 @@ public class RobotCaseResult extends RobotTestObject{
 		return passed;
 	}
 
+	public boolean isSkipped() {
+		return skipped;
+	}
+
 	public boolean isCritical() {
 		return critical;
 	}
 
 	public List<String> getTags(){
 		if(tags == null)
-			return new ArrayList<String>();
+			return new ArrayList<>();
 		return tags;
 	}
 
@@ -187,7 +196,7 @@ public class RobotCaseResult extends RobotTestObject{
 		if (tags.size()==0)
 			return "";
 		else {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			for (String tag: tags)
 				buf.append(tag+", ");
 			String result = buf.toString();
@@ -197,7 +206,7 @@ public class RobotCaseResult extends RobotTestObject{
 
 	public void addTags(List<String> taglist){
 		if(tags == null)
-			tags = new ArrayList<String>();
+			tags = new ArrayList<>();
 		tags.addAll(taglist);
 	}
 
@@ -206,7 +215,7 @@ public class RobotCaseResult extends RobotTestObject{
 	 * @return number of build
 	 */
 	public int getFailedSince(){
-		if (failedSince == 0 && !isPassed()) {
+		if (failedSince == 0 && (!isPassed() && !isSkipped())) {
 			RobotCaseResult previous = getPreviousResult();
 			if(previous != null && !previous.isPassed())
 				this.failedSince = previous.getFailedSince();
@@ -276,7 +285,7 @@ public class RobotCaseResult extends RobotTestObject{
 
 	@Override
 	public int getFailed() {
-		if(isPassed()) return 0;
+		if(isPassed() || isSkipped()) return 0;
 		return 1;
 	}
 
@@ -287,8 +296,14 @@ public class RobotCaseResult extends RobotTestObject{
 	}
 
 	@Override
+	public int getSkipped() {
+		if (isSkipped()) return 1;
+		return 0;
+	}
+
+	@Override
 	public long getCriticalFailed() {
-		if(!isPassed() && isCritical()) return 1;
+		if((!isPassed() && !isSkipped()) && isCritical()) return 1;
 		return 0;
 	}
 

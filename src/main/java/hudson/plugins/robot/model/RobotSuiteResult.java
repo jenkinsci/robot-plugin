@@ -45,6 +45,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	private String endTime;
 	private transient int failed;
 	private transient int passed;
+	private transient int skipped;
 	private transient int criticalPassed;
 	private transient int criticalFailed;
 
@@ -56,7 +57,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	 */
 	public void addChild(RobotSuiteResult child) {
 		if(children == null)
-			this.children = new HashMap<String, RobotSuiteResult>();
+			this.children = new HashMap<>();
 		int i = 1;
 		String originalName = child.getName();
 		String checkedSuiteName = originalName;
@@ -143,12 +144,16 @@ public class RobotSuiteResult extends RobotTestObject {
 		return passed;
 	}
 
+	public int getSkipped() {
+		return skipped;
+	}
+
 	/**
 	 * Get number of all tests
 	 * @return number of all tests
 	 */
 	public int getTotal() {
-		return passed + failed;
+		return passed + failed + skipped;
 	}
 
 	/**
@@ -182,7 +187,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	 */
 	public void addCaseResult(RobotCaseResult caseResult) {
 		if(caseResults == null)
-			this.caseResults = new HashMap<String, RobotCaseResult>();
+			this.caseResults = new HashMap<>();
 		int i = 1;
 		String originalName = caseResult.getName();
 		String checkedTestName = originalName;
@@ -294,7 +299,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * @return all children of this suite
 	 */
 	public List<RobotSuiteResult> getAllChildSuites() {
-		List<RobotSuiteResult> allChildSuites = new ArrayList<RobotSuiteResult>();
+		List<RobotSuiteResult> allChildSuites = new ArrayList<>();
 		for (RobotSuiteResult suite : getChildSuites()) {
 			allChildSuites.add(suite);
 			List<RobotSuiteResult> childSuites = suite.getAllChildSuites();
@@ -309,9 +314,9 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * @return all failed cases in this suite and its child suites
 	 */
 	public List<RobotCaseResult> getAllFailedCases() {
-		List<RobotCaseResult> failedCases = new ArrayList<RobotCaseResult>();
+		List<RobotCaseResult> failedCases = new ArrayList<>();
 		for(RobotCaseResult caseResult : getCaseResults()){
-			if(!caseResult.isPassed()) failedCases.add(caseResult);
+			if(!caseResult.isPassed() && !caseResult.isSkipped()) failedCases.add(caseResult);
 		}
 		for(RobotSuiteResult suite : getChildSuites()){
 			failedCases.addAll(suite.getAllFailedCases());
@@ -325,7 +330,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * @return all cases in this suite and its child suites
 	 */
 	public List<RobotCaseResult> getAllCases() {
-		List<RobotCaseResult> cases = new ArrayList<RobotCaseResult>();
+		List<RobotCaseResult> cases = new ArrayList<>();
 		cases.addAll(getCaseResults());
 		for(RobotSuiteResult suite : getChildSuites()){
 			cases.addAll(suite.getAllCases());
@@ -349,15 +354,18 @@ public class RobotSuiteResult extends RobotTestObject {
 		setParentAction(parentAction);
 		failed = 0;
 		passed = 0;
+		skipped = 0;
 		criticalPassed = 0;
 		criticalFailed = 0;
 		duration = 0;
 
-		HashMap<String, RobotCaseResult> newCases = new HashMap<String, RobotCaseResult>();
+		HashMap<String, RobotCaseResult> newCases = new HashMap<>();
 		for(RobotCaseResult caseResult : getCaseResults()) {
 			if(caseResult.isPassed()) {
 				if(caseResult.isCritical()) criticalPassed++;
 				passed++;
+			} else if(caseResult.isSkipped()) {
+				skipped++;
 			} else {
 				if(caseResult.isCritical()) criticalFailed++;
 				failed++;
@@ -368,11 +376,12 @@ public class RobotSuiteResult extends RobotTestObject {
 		}
 		caseResults = newCases;
 
-		HashMap<String, RobotSuiteResult> newSuites = new HashMap<String, RobotSuiteResult>();
+		HashMap<String, RobotSuiteResult> newSuites = new HashMap<>();
 		for (RobotSuiteResult suite : getChildSuites()) {
 			suite.tally(parentAction);
 			failed += suite.getFailed();
 			passed += suite.getPassed();
+			skipped += suite.getSkipped();
 			criticalFailed += suite.getCriticalFailed();
 			criticalPassed += suite.getCriticalPassed();
 			duration += suite.getDuration();
@@ -413,9 +422,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	 */
 	public void addCaseResults(Collection<RobotCaseResult> newCaseResults) {
 		for(RobotCaseResult caseResult : newCaseResults){
-			if(caseResults.get(caseResult.getDuplicateSafeName()) == null){
-				caseResults.put(caseResult.getDuplicateSafeName(), caseResult);
-			}
+			caseResults.putIfAbsent(caseResult.getDuplicateSafeName(), caseResult);
 		}
 	}
 }

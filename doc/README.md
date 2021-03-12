@@ -107,10 +107,10 @@ build. Conversely, the project view side panel link won't go away until
 after configuration change/resave in project. We're working on a
 solution to this.
 
-![](images/loghtml_sidepanel.png)
+![sidepanel link](images/sidepanel.png)
 *side panel link*
 
-![](images/robo_loglink_projectpage.png)  
+![summary link](images/robot_4_table.png)
 *Summary link*
 
 #### Configuring Robot overall pass/fail to show in the project list
@@ -128,7 +128,7 @@ solution to this.
     [http://YOURJENKINSHOST/configure](http://yourjenkinshost/configure)
     )and select your newly created view to be the default one.
 
-![](images/robot_view_column.png)
+![List view](images/robot_view_column.png)
 *List view column in action*
 
 #### Using token macros in e-mail report
@@ -178,23 +178,34 @@ and [here](https://content-security-policy.com/) how to change you CSP settings 
 but be aware that **Changing CSP settings will potentially expose you Jenkins instance for
 security vulnerabilities**.
 
+### Robot Framework 4.x compatibility
+
+The plugin supports both Robot Framework 3.x and 4.x output files. However, in order to support both, the plugin
+shows some extra information for both. [In Robot Framework 4.0 test criticality was removed and "SKIP" status was added](https://github.com/robotframework/robotframework/blob/master/doc/releasenotes/rf-4.0.rst). So for 3.x the
+results overview will show a `Skipped` column, which will always be 0 and for Robot Frameowork 4.x output files
+the `Critical tests` row will always be 0.
+
+Skipped tests aren't taken into account when calculating pass percentage, but they are calculated to the total
+amount of tests.
+
+Because criticality was removed in Robot Framework 4.0, having the `Use thresholds for critical tests only` checkbox
+checked will always result in a passing step (because pass percentage is always considered to be 100% when there are
+0 tests). In order to have set build status correctly, you **must** uncheck the checkbox or use `onlyCritical: false`
+in your pipeline when you call `robot`.
+
+We are planning of dropping support for Robot Framework 3.x and earlier some time in distant future.
+
 ### Overall Screenshots
 
-##### Config
-
-![](images/config1.png)
 
 ##### Project view
 
-![](images/project_page.png)
+![Build page overview](images/build_page.png)
 
-##### Build view
-
-![](images/build_page.png)
 
 ##### Detailed build view
 
-![](images/detailed.png)
+![Detailed results view](images/detailed.png)
 
 ## Bugs
 

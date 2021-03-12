@@ -50,7 +50,7 @@ public class RobotResult extends RobotTestObject {
 
 	private String timeStamp;
 
-	private transient int passed, failed, criticalPassed, criticalFailed;
+	private transient int passed, failed, skipped, criticalPassed, criticalFailed;
 
 	//backwards compatibility with old builds
 	private transient List<RobotResultStatistics> overallStats;
@@ -137,12 +137,23 @@ public class RobotResult extends RobotTestObject {
 	}
 
 	/**
+	 * Get number of all skipped tests.
+	 * @return number of all skipped tests
+	 */
+	@Exported
+	public long getOverallSkipped(){
+		if(overallStats == null) return skipped;
+		if(overallStats.isEmpty()) return 0;
+		return overallStats.get(1).getSkip();
+	}
+
+	/**
 	 * Get number of all tests.
 	 * @return number of all tests
 	 */
 	@Exported
 	public long getOverallTotal(){
-		if(overallStats == null) return failed + passed;
+		if(overallStats == null) return failed + passed + skipped;
 		if(overallStats.isEmpty()) return 0;
 		return overallStats.get(1).getTotal();
 	}
@@ -188,7 +199,8 @@ public class RobotResult extends RobotTestObject {
 			total = getCriticalTotal();
 		} else {
 			passed = getOverallPassed();
-			total = getOverallTotal();
+			// Skipped tests don't count towards pass percentage
+			total = getOverallTotal() - getOverallSkipped();
 		}
 
 		if(total == 0) return 100;
@@ -200,6 +212,12 @@ public class RobotResult extends RobotTestObject {
 	@Exported
 	public double getPassPercentage(){
 		return getPassPercentage(false);
+	}
+
+	@Exported
+	public double getSkipPercentage() {
+		double percentage = (double) getSkipped() / getOverallTotal() * 100;
+		return roundToDecimals(percentage, 1);
 	}
 
 	private static double roundToDecimals(double value, int decimals){
@@ -238,7 +256,7 @@ public class RobotResult extends RobotTestObject {
 	 */
 	public void addSuite(RobotSuiteResult suite){
 		if(suites == null)
-			this.suites = new HashMap<String, RobotSuiteResult>();
+			this.suites = new HashMap<>();
 		int i = 1;
 		String originalName = suite.getName();
 		String checkedSuiteName = originalName;
@@ -262,10 +280,10 @@ public class RobotResult extends RobotTestObject {
 	
 	@Exported
 	public List<String> getExecutedSuites() {
-		List<String> executedSuites = new ArrayList<String>();
+		List<String> executedSuites = new ArrayList<>();
 		for (RobotSuiteResult robotSuiteResult : this.getAllSuites()) {
 			RobotTestObject rto = robotSuiteResult.getParent();
-			String name = robotSuiteResult.getName();	
+			String name = robotSuiteResult.getName();
 			while (rto != null && !rto.getName().isEmpty()) {
 				name = rto.getName()+"."+name;
 				rto = rto.getParent();
@@ -281,7 +299,7 @@ public class RobotResult extends RobotTestObject {
 	 * @return List of suiteresults
 	 */
 	public List<RobotSuiteResult> getAllSuites(){
-		List<RobotSuiteResult> allSuites = new ArrayList<RobotSuiteResult>();
+		List<RobotSuiteResult> allSuites = new ArrayList<>();
 		for(RobotSuiteResult suite : getSuites()){
 			allSuites.add(suite);
 			List<RobotSuiteResult> childSuites = suite.getAllChildSuites();
@@ -295,7 +313,7 @@ public class RobotResult extends RobotTestObject {
 	 * @return list of test case results
 	 */
 	public List<RobotCaseResult> getAllFailedCases(){
-		List<RobotCaseResult> allFailedCases = new ArrayList<RobotCaseResult>();
+		List<RobotCaseResult> allFailedCases = new ArrayList<>();
 		for(RobotSuiteResult suite : getSuites()){
 			List<RobotCaseResult> failedCases = suite.getAllFailedCases();
 			allFailedCases.addAll(failedCases);
@@ -306,7 +324,7 @@ public class RobotResult extends RobotTestObject {
 	
 	@Exported
 	public List<String> getFailedCases() {
-		List<String> failedCases = new ArrayList<String>();
+		List<String> failedCases = new ArrayList<>();
 		for (RobotCaseResult robotCaseResult : this.getAllFailedCases()) {
 			RobotTestObject rto = robotCaseResult.getParent();
 			String name = robotCaseResult.getName();	
@@ -327,17 +345,19 @@ public class RobotResult extends RobotTestObject {
 		setParentAction(robotBuildAction);
 		failed = 0;
 		passed = 0;
+		skipped = 0;
 		criticalPassed = 0;
 		criticalFailed = 0;
 		duration = 0;
 
 		Collection<RobotSuiteResult> newSuites = getSuites();
-		HashMap<String, RobotSuiteResult> newMap = new HashMap<String, RobotSuiteResult>(newSuites.size());
+		HashMap<String, RobotSuiteResult> newMap = new HashMap<>(newSuites.size());
 
 		for (RobotSuiteResult suite : newSuites) {
 			suite.tally(robotBuildAction);
 			failed += suite.getFailed();
 			passed += suite.getPassed();
+			skipped += suite.getSkipped();
 			criticalFailed += suite.getCriticalFailed();
 			criticalPassed += suite.getCriticalPassed();
 			duration += suite.getDuration();
@@ -423,6 +443,11 @@ public class RobotResult extends RobotTestObject {
 	@Override
 	public int getPassed() {
 		return (int) getOverallPassed();
+	}
+
+	@Override
+	public int getSkipped() {
+		return (int)getOverallSkipped();
 	}
 
 	public Api getApi() { return new Api(this); }

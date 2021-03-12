@@ -54,9 +54,9 @@ public class RobotGraphHelper {
 																 boolean criticalOnly,
 																 String labelFormat,
 																 int maxBuildsToShow) {
-		List<Number> values = new ArrayList<Number>();
-		List<String> rows = new ArrayList<String>();
-		List<RobotBuildLabel> columns = new ArrayList<RobotBuildLabel>();
+		List<Number> values = new ArrayList<>();
+		List<String> rows = new ArrayList<>();
+		List<RobotBuildLabel> columns = new ArrayList<>();
 
 		double lowerbound = 0;
 		double upperbound = 0;
@@ -67,11 +67,13 @@ public class RobotGraphHelper {
 		{
 			Number failed =  !criticalOnly ? testObject.getFailed() : testObject.getCriticalFailed();
 			Number passed = 0;
+			Number skipped = 0;
 			int compareLowerBoundTo;
 			if ( failedOnly) {
 			    compareLowerBoundTo = failed.intValue();
 			} else {
 			    passed = !criticalOnly ? testObject.getPassed() : testObject.getCriticalPassed();
+			    skipped = testObject.getSkipped();
 			    compareLowerBoundTo = passed.intValue();
 			}
 
@@ -92,6 +94,10 @@ public class RobotGraphHelper {
 			values.add(failed);
 			rows.add(Messages.robot_trendgraph_failed());
 			columns.add(label);
+
+			values.add(skipped);
+			rows.add(Messages.robot_trendgraph_skipped());
+			columns.add(label);
 		}
 
 		if(significantData){
@@ -100,7 +106,7 @@ public class RobotGraphHelper {
 		}
 		int graphScale = hd ? 3 : 1;
 		return RobotGraph.getRobotGraph(rootObject.getOwner(), createSortedDataset(values, rows, columns), Messages.robot_trendgraph_testcases(),
-				Messages.robot_trendgraph_builds(), graphScale, false, binarydata, lowerbound, upperbound, Color.green, Color.red);
+				Messages.robot_trendgraph_builds(), graphScale, false, binarydata, lowerbound, upperbound, Color.orange, Color.green, Color.red);
 	}
 
 	/**
@@ -118,8 +124,8 @@ public class RobotGraphHelper {
 		int scale = 1;
 		int buildsLeftToShow = maxBuildsToShow > 0? maxBuildsToShow: -1;
 
-		List<RobotBuildLabel> labels = new ArrayList<RobotBuildLabel>();
-		List<Long> durations = new ArrayList<Long>();
+		List<RobotBuildLabel> labels = new ArrayList<>();
+		List<Long> durations = new ArrayList<>();
 
 		for (RobotTestObject testObject = rootObject;
 			 testObject != null && buildsLeftToShow != 0;
@@ -144,8 +150,8 @@ public class RobotGraphHelper {
 		// first into dataset for nicer order when rendered in chart
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-		TreeSet<String> rowSet = new TreeSet<String>(rows);
-		TreeSet<RobotBuildLabel> colSet = new TreeSet<RobotBuildLabel>(columns);
+		TreeSet<String> rowSet = new TreeSet<>(rows);
+		TreeSet<RobotBuildLabel> colSet = new TreeSet<>(columns);
 
 		Comparable[] _rows = rowSet.toArray(new Comparable[rowSet.size()]);
 		Comparable[] _cols = colSet.toArray(new Comparable[colSet.size()]);

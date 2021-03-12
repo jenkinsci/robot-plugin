@@ -136,7 +136,7 @@ public class RobotResultTest {
 
 	@Test
 	public void testShouldParseFailedNewCriticalCases() throws Exception{
-		 RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml", null, null);
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml", null, null);
 		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("new_critical_output.xml").toURI()).getParentFile(), null);
 		result.tally(null);
 
@@ -251,7 +251,7 @@ public class RobotResultTest {
 
 	@Test
 	public void testShouldParseSplittedOutput() throws Exception {
-		 RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("testfile.xml", null, null);
+	 	RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("testfile.xml", null, null);
 		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("testfile.xml").toURI()).getParentFile(), null);
 
 		RobotSuiteResult suite = result.getSuite("nestedSuites");
@@ -282,5 +282,49 @@ public class RobotResultTest {
 		RobotResult res = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("suite-setup-and-teardown.xml").toURI()).getParentFile(), null);
 		res.tally(null);
 		assertEquals(10141, res.getDuration());
+	}
+
+	@Test
+	public void testShouldParseSkippedTests() throws Exception {
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("robot4_skip.xml", null, null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("robot4_skip.xml").toURI()).getParentFile(), null);
+		result.tally(null);
+		assertEquals(6, result.getSkipped());
+	}
+
+	@Test
+	public void testShouldParsePassedFromRobot4() throws Exception {
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("robot4_skip.xml", null, null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("robot4_skip.xml").toURI()).getParentFile(), null);
+		result.tally(null);
+		assertEquals(4, result.getPassed());
+		assertEquals(66.6, result.getPassPercentage(), 0.1);
+	}
+
+	@Test
+	public void testShouldParseFailedFromRobot4() throws Exception {
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("robot4_skip.xml", null, null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("robot4_skip.xml").toURI()).getParentFile(), null);
+		result.tally(null);
+		assertEquals(2, result.getFailed());
+	}
+
+	@Test
+	public void testShouldParseTotalFromRobot4() throws Exception {
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("robot4_skip.xml", null, null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("robot4_skip.xml").toURI()).getParentFile(), null);
+		result.tally(null);
+		assertEquals(12, result.getOverallTotal());
+	}
+
+	@Test
+	public void testShouldParseTagsFromRobot4() throws Exception {
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("robot4_skip.xml", null, null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("robot4_skip.xml").toURI()).getParentFile(), null);
+		result.tally(null);
+
+		RobotCaseResult caseResult = (RobotCaseResult)result.findObjectById("Skip/Test 8 Will Always Fail");
+		String tags = StringUtils.join(caseResult.getTags(), ",");
+		assertEquals("fail,tag2,tag3", tags);
 	}
 }

@@ -5,6 +5,8 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 import java.io.File;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,39 +40,46 @@ public class BlueRobotTestResultTest {
 		doReturn(result.getAllCases()).when(mockAction).getAllTests();
 		doReturn(new Link("/")).when(mockReachable).getLink();
 	}
-	
+
 	@Test
-	public void testBasic() {
+	public void testSimpleTrace() {
+		BlueTestResult result = getResult("Failed Test");
+		assertEquals("Fail    This fails!", result.getErrorStackTrace());
+		assertEquals("This fails!", result.getErrorDetails());
+	}
+
+	@Test
+	public void testNestedTrace(){
+		BlueTestResult result = getResult("Nested failed test");
+		assertEquals("My failed Keyword\n  The real failed keyword\n    Fail    Really fails!", result.getErrorStackTrace());
+		assertEquals("Really fails!", result.getErrorDetails());
+	}
+
+	@Test
+	public void testNestedNotFirst() {
+		BlueTestResult result = getResult("Nested with not first");
+		String helper = "Should Be Equal    ${MESSAGE}    Hello, world!\nShould Be Equal    ${MESSAGE}    Hello, world!\n" +
+				"My failed Keyword\n  The real failed keyword\n    Fail    Really fails!";
+		assertEquals(helper, result.getErrorStackTrace());
+		assertEquals("Really fails!", result.getErrorDetails());
+	}
+
+	@Test
+	public void testEmptyMessage(){
+		BlueTestResult result1 = getResult("Another Test");
+		BlueTestResult result2 = getResult("My Test");
+
+		assertEquals("", result1.getErrorStackTrace());
+		assertEquals("", result1.getErrorDetails());
+		assertEquals("", result2.getErrorStackTrace());
+		assertEquals("", result2.getErrorDetails());
+	}
+
+	private BlueTestResult getResult(String filterCondition){
 		BlueRobotTestResult.FactoryImpl factory = new BlueRobotTestResult.FactoryImpl();
 		Result blueResult = factory.getBlueTestResults(mockBuild, mockReachable);
-		for (BlueTestResult tempResult : blueResult.results) {
-			String name = tempResult.getName();
-			String trace = tempResult.getErrorStackTrace();
-			String msg = tempResult.getErrorDetails();
-			switch (name) {
-				case "Failed Test":
-					assertEquals("Fail    This fails!\n", trace);
-					assertEquals("This fails!", msg);
-					break;
-				case "Nested failed test":
-					assertEquals("My failed Keyword\n  The real failed keyword\n    Fail    Really fails!\n", trace);
-					assertEquals("Really fails!", msg);
-					break;
-				case "Nested with not first":
-					String helper = "Should Be Equal    ${MESSAGE}    Hello, world!\nShould Be Equal    ${MESSAGE}    Hello, world!\n" + 
-						"My failed Keyword\n  The real failed keyword\n    Fail    Really fails!\n";
-					assertEquals(helper, trace);
-					assertEquals("Really fails!", msg);
-					break;
-				case "Another Test":
-					assertEquals("", trace);
-					assertEquals("", msg);
-					break;
-				case "My Test":
-					assertEquals("", trace);
-					assertEquals("", msg);
-					break;
-			}
-		}
+		return StreamSupport.stream(blueResult.results.spliterator(), false)
+				.filter(element -> element.getName().equals(filterCondition))
+				.collect(Collectors.toList()).get(0);
 	}
 }

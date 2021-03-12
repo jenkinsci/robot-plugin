@@ -48,6 +48,7 @@ limitations under the License.
       <th>Total</th>
       <th>Failed</th>
       <th>Passed</th>
+      <th>Skipped</th>
       <th>Pass %</th>
     </tr>
     <tr>
@@ -61,6 +62,7 @@ limitations under the License.
         <span class="${criticalFails}">${attrs.action.result.criticalFailed}</span>
       </td>
       <td class="table-upper-row">${attrs.action.result.criticalPassed}</td>
+      <td class="table-upper-row">0</td>
       <td class="table-upper-row">${attrs.action.criticalPassPercentage}</td>
     </tr>
     <tr>
@@ -74,6 +76,7 @@ limitations under the License.
         <span class="${totalFails}">${attrs.action.result.overallFailed}</span>
       </td>
       <td>${attrs.action.result.overallPassed}</td>
+      <td>${attrs.action.result.overallSkipped}</td>
       <td>${attrs.action.overallPassPercentage}</td>
     </tr>
   </table>

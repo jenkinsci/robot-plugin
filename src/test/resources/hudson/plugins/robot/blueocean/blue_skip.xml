@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 4.0b3 (Python 3.8.5 on darwin)" generated="20210222 16:05:45.295" rpa="false">
+    <suite id="s1" name="Skip" source="/Users/aleksisimell/projects/jenkinsci/sample_robot/basic-rf-run/skip.robot">
+        <test id="s1-t1" name="Test 1 Will Always Pass">
+            <kw name="Log" library="BuiltIn">
+                <arg>Will pass</arg>
+                <doc>Logs the given message with the given level.</doc>
+                <msg timestamp="20210222 16:05:45.362" level="INFO">Will pass</msg>
+                <status status="PASS" starttime="20210222 16:05:45.362" endtime="20210222 16:05:45.362"/>
+            </kw>
+            <tag>pass</tag>
+            <tag>tag2</tag>
+            <status status="PASS" starttime="20210222 16:05:45.361" endtime="20210222 16:05:45.362"/>
+        </test>
+        <test id="s1-t2" name="Test 2 Will Always Pass">
+            <kw name="Log" library="BuiltIn">
+                <arg>Will pass</arg>
+                <doc>Logs the given message with the given level.</doc>
+                <msg timestamp="20210222 16:05:45.364" level="INFO">Will pass</msg>
+                <status status="PASS" starttime="20210222 16:05:45.363" endtime="20210222 16:05:45.364"/>
+            </kw>
+            <tag>pass</tag>
+            <tag>tag2</tag>
+            <tag>tag3</tag>
+            <status status="PASS" starttime="20210222 16:05:45.363" endtime="20210222 16:05:45.364"/>
+        </test>
+        <test id="s1-t3" name="Test 3 Will Always Pass">
+            <kw name="Log" library="BuiltIn">
+                <arg>Will pass</arg>
+                <doc>Logs the given message with the given level.</doc>
+                <msg timestamp="20210222 16:05:45.365" level="INFO">Will pass</msg>
+                <status status="PASS" starttime="20210222 16:05:45.365" endtime="20210222 16:05:45.365"/>
+            </kw>
+            <status status="PASS" starttime="20210222 16:05:45.364" endtime="20210222 16:05:45.366"/>
+        </test>
+        <test id="s1-t4" name="Test 4 Will Always Pass But Is Skipped">
+            <tag>skippable</tag>
+            <status status="SKIP" starttime="20210222 16:05:45.366" endtime="20210222 16:05:45.367">Test skipped with '--skip' command line option.</status>
+        </test>
+        <test id="s1-t5" name="Test 5 Will Always Fail But Is Skipped">
+            <doc>This test has documentation</doc>
+            <tag>skippable</tag>
+            <status status="SKIP" starttime="20210222 16:05:45.367" endtime="20210222 16:05:45.368">Test skipped with '--skip' command line option.</status>
+        </test>
+        <test id="s1-t6" name="Test 6 Will Always Fail But Is Skipped">
+            <tag>skippable</tag>
+            <tag>tag2</tag>
+            <status status="SKIP" starttime="20210222 16:05:45.368" endtime="20210222 16:05:45.369">Test skipped with '--skip' command line option.</status>
+        </test>
+        <test id="s1-t7" name="Test 7 Will Always Fail But Is Skipped">
+            <tag>skippable</tag>
+            <status status="SKIP" starttime="20210222 16:05:45.369" endtime="20210222 16:05:45.370">Test skipped with '--skip' command line option.</status>
+        </test>
+        <test id="s1-t8" name="Test 8 Will Always Fail">
+            <kw name="Fail" library="BuiltIn">
+                <doc>Fails the test with the given message and optionally alters its tags.</doc>
+                <msg timestamp="20210222 16:05:45.372" level="FAIL">AssertionError</msg>
+                <status status="FAIL" starttime="20210222 16:05:45.371" endtime="20210222 16:05:45.372"/>
+            </kw>
+            <doc>This test has documentation</doc>
+            <tag>fail</tag>
+            <tag>tag2</tag>
+            <tag>tag3</tag>
+            <status status="FAIL" starttime="20210222 16:05:45.370" endtime="20210222 16:05:45.373">AssertionError</status>
+        </test>
+        <test id="s1-t9" name="Test 9 Will Always Fail">
+            <kw name="Fail" library="BuiltIn">
+                <arg>Optional failure message</arg>
+                <doc>Fails the test with the given message and optionally alters its tags.</doc>
+                <msg timestamp="20210222 16:05:45.374" level="FAIL">Optional failure message</msg>
+                <status status="FAIL" starttime="20210222 16:05:45.374" endtime="20210222 16:05:45.374"/>
+            </kw>
+            <tag>fail</tag>
+            <status status="FAIL" starttime="20210222 16:05:45.373" endtime="20210222 16:05:45.375">Optional failure message</status>
+        </test>
+        <test id="s1-t10" name="Test 10 Will Always Fail But Is Skipped On Failure">
+            <kw name="Fail" library="BuiltIn">
+                <doc>Fails the test with the given message and optionally alters its tags.</doc>
+                <msg timestamp="20210222 16:05:45.376" level="FAIL">AssertionError</msg>
+                <status status="FAIL" starttime="20210222 16:05:45.376" endtime="20210222 16:05:45.377"/>
+            </kw>
+            <tag>skipfail</tag>
+            <status status="SKIP" starttime="20210222 16:05:45.376" endtime="20210222 16:05:45.377">Test failed but its tags matched '--SkipOnFailure' and it was marked skipped.
+
+                Original failure:
+                AssertionError</status>
+        </test>
+        <test id="s1-t11" name="Test 11 Will Always Fail But Is Skipped On Failure">
+            <kw name="Fail" library="BuiltIn">
+                <doc>Fails the test with the given message and optionally alters its tags.</doc>
+                <msg timestamp="20210222 16:05:45.379" level="FAIL">AssertionError</msg>
+                <status status="FAIL" starttime="20210222 16:05:45.378" endtime="20210222 16:05:45.379"/>
+            </kw>
+            <tag>skipfail</tag>
+            <tag>tag2</tag>
+            <status status="SKIP" starttime="20210222 16:05:45.378" endtime="20210222 16:05:45.379">Test failed but its tags matched '--SkipOnFailure' and it was marked skipped.
+
+                Original failure:
+                AssertionError</status>
+        </test>
+        <test id="s1-t12" name="Test 12 Will Always Pass But Is Skipped On Failure">
+            <kw name="Log" library="BuiltIn">
+                <arg>Will Pass</arg>
+                <doc>Logs the given message with the given level.</doc>
+                <msg timestamp="20210222 16:05:45.381" level="INFO">Will Pass</msg>
+                <status status="PASS" starttime="20210222 16:05:45.380" endtime="20210222 16:05:45.381"/>
+            </kw>
+            <doc>This test has documentation</doc>
+            <tag>skipfail</tag>
+            <status status="PASS" starttime="20210222 16:05:45.380" endtime="20210222 16:05:45.381"/>
+        </test>
+        <doc>When run with `--skip skippable --skiponfailure skipfail`
+            will produce the following results:
+            PASSED 4
+            FAIL 2
+            SKIP 6</doc>
+        <status status="FAIL" starttime="20210222 16:05:45.297" endtime="20210222 16:05:45.382"/>
+    </suite>
+    <suite id="s1" name="Loops" source="/Users/aleksisimell/projects/jenkinsci/sample_robot/basic-rf-run/loops.robot">
+        <test id="s1-t1" name="For Loop Failure">
+            <for flavor="IN RANGE">
+                <var>${x}</var>
+                <value>2</value>
+                <iter>
+                    <var name="${x}">0</var>
+                    <kw name="Log" library="BuiltIn">
+                        <arg>${x}</arg>
+                        <doc>Logs the given message with the given level.</doc>
+                        <msg timestamp="20210311 13:42:18.375" level="INFO">0</msg>
+                        <status status="PASS" starttime="20210311 13:42:18.374" endtime="20210311 13:42:18.375"/>
+                    </kw>
+                    <kw name="Nested Keyword">
+                        <arg>${x}</arg>
+                        <kw name="Log" library="BuiltIn">
+                            <arg>${arg}</arg>
+                            <doc>Logs the given message with the given level.</doc>
+                            <msg timestamp="20210311 13:42:18.376" level="INFO">0</msg>
+                            <status status="PASS" starttime="20210311 13:42:18.376" endtime="20210311 13:42:18.376"/>
+                        </kw>
+                        <status status="PASS" starttime="20210311 13:42:18.375" endtime="20210311 13:42:18.376"/>
+                    </kw>
+                    <kw name="Run Keyword If" library="BuiltIn">
+                        <arg>${x}==1</arg>
+                        <arg>Fail</arg>
+                        <doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+                        <status status="PASS" starttime="20210311 13:42:18.376" endtime="20210311 13:42:18.376"/>
+                    </kw>
+                    <status status="PASS" starttime="20210311 13:42:18.374" endtime="20210311 13:42:18.376"/>
+                </iter>
+                <iter>
+                    <var name="${x}">1</var>
+                    <kw name="Log" library="BuiltIn">
+                        <arg>${x}</arg>
+                        <doc>Logs the given message with the given level.</doc>
+                        <msg timestamp="20210311 13:42:18.377" level="INFO">1</msg>
+                        <status status="PASS" starttime="20210311 13:42:18.377" endtime="20210311 13:42:18.377"/>
+                    </kw>
+                    <kw name="Nested Keyword">
+                        <arg>${x}</arg>
+                        <kw name="Log" library="BuiltIn">
+                            <arg>${arg}</arg>
+                            <doc>Logs the given message with the given level.</doc>
+                            <msg timestamp="20210311 13:42:18.378" level="INFO">1</msg>
+                            <status status="PASS" starttime="20210311 13:42:18.378" endtime="20210311 13:42:18.378"/>
+                        </kw>
+                        <status status="PASS" starttime="20210311 13:42:18.377" endtime="20210311 13:42:18.378"/>
+                    </kw>
+                    <kw name="Run Keyword If" library="BuiltIn">
+                        <arg>${x}==1</arg>
+                        <arg>Fail</arg>
+                        <doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+                        <kw name="Fail" library="BuiltIn">
+                            <doc>Fails the test with the given message and optionally alters its tags.</doc>
+                            <msg timestamp="20210311 13:42:18.379" level="FAIL">AssertionError</msg>
+                            <status status="FAIL" starttime="20210311 13:42:18.379" endtime="20210311 13:42:18.379"/>
+                        </kw>
+                        <status status="FAIL" starttime="20210311 13:42:18.378" endtime="20210311 13:42:18.379"/>
+                    </kw>
+                    <status status="FAIL" starttime="20210311 13:42:18.377" endtime="20210311 13:42:18.379"/>
+                </iter>
+                <status status="FAIL" starttime="20210311 13:42:18.374" endtime="20210311 13:42:18.379"/>
+            </for>
+            <tag>failure</tag>
+            <tag>for</tag>
+            <status status="FAIL" starttime="20210311 13:42:18.374" endtime="20210311 13:42:18.380">AssertionError</status>
+        </test>
+        <test id="s1-t2" name="If Failure">
+            <kw name="Set Variable" library="BuiltIn">
+                <var>${var}</var>
+                <arg>mikki hiiri</arg>
+                <doc>Returns the given values which can then be assigned to a variables.</doc>
+                <msg timestamp="20210311 13:42:18.381" level="INFO">${var} = mikki hiiri</msg>
+                <status status="PASS" starttime="20210311 13:42:18.381" endtime="20210311 13:42:18.381"/>
+            </kw>
+            <if>
+                <branch type="IF" condition="&quot;${var}&quot;==&quot;mikki hiiri&quot;">
+                    <kw name="Nested Keyword">
+                        <arg>${var}</arg>
+                        <kw name="Log" library="BuiltIn">
+                            <arg>${arg}</arg>
+                            <doc>Logs the given message with the given level.</doc>
+                            <msg timestamp="20210311 13:42:18.382" level="INFO">mikki hiiri</msg>
+                            <status status="PASS" starttime="20210311 13:42:18.382" endtime="20210311 13:42:18.382"/>
+                        </kw>
+                        <status status="PASS" starttime="20210311 13:42:18.382" endtime="20210311 13:42:18.383"/>
+                    </kw>
+                    <kw name="Fail" library="BuiltIn">
+                        <doc>Fails the test with the given message and optionally alters its tags.</doc>
+                        <msg timestamp="20210311 13:42:18.383" level="FAIL">AssertionError</msg>
+                        <status status="FAIL" starttime="20210311 13:42:18.383" endtime="20210311 13:42:18.383"/>
+                    </kw>
+                    <status status="FAIL" starttime="20210311 13:42:18.381" endtime="20210311 13:42:18.383"/>
+                </branch>
+                <status status="FAIL" starttime="20210311 13:42:18.381" endtime="20210311 13:42:18.383"/>
+            </if>
+            <tag>failure</tag>
+            <tag>if</tag>
+            <status status="FAIL" starttime="20210311 13:42:18.380" endtime="20210311 13:42:18.384">AssertionError</status>
+        </test>
+        <test id="s1-t3" name="If Else Failure">
+            <kw name="Set Variable" library="BuiltIn">
+                <var>${var}</var>
+                <arg>mikki hiiri</arg>
+                <doc>Returns the given values which can then be assigned to a variables.</doc>
+                <msg timestamp="20210311 13:42:18.385" level="INFO">${var} = mikki hiiri</msg>
+                <status status="PASS" starttime="20210311 13:42:18.385" endtime="20210311 13:42:18.385"/>
+            </kw>
+            <if>
+                <branch type="IF" condition="&quot;${var}&quot;==&quot;hessu hopo&quot;">
+                    <kw name="Fail" library="BuiltIn">
+                        <doc>Fails the test with the given message and optionally alters its tags.</doc>
+                        <status status="NOT RUN" starttime="20210311 13:42:18.386" endtime="20210311 13:42:18.386"/>
+                    </kw>
+                    <status status="NOT RUN" starttime="20210311 13:42:18.386" endtime="20210311 13:42:18.386"/>
+                </branch>
+                <branch type="ELSE">
+                    <kw name="Nested Keyword">
+                        <arg>${var}</arg>
+                        <kw name="Log" library="BuiltIn">
+                            <arg>${arg}</arg>
+                            <doc>Logs the given message with the given level.</doc>
+                            <msg timestamp="20210311 13:42:18.387" level="INFO">mikki hiiri</msg>
+                            <status status="PASS" starttime="20210311 13:42:18.386" endtime="20210311 13:42:18.387"/>
+                        </kw>
+                        <status status="PASS" starttime="20210311 13:42:18.386" endtime="20210311 13:42:18.387"/>
+                    </kw>
+                    <kw name="Fail" library="BuiltIn">
+                        <arg>${var}</arg>
+                        <doc>Fails the test with the given message and optionally alters its tags.</doc>
+                        <msg timestamp="20210311 13:42:18.387" level="FAIL">mikki hiiri</msg>
+                        <status status="FAIL" starttime="20210311 13:42:18.387" endtime="20210311 13:42:18.387"/>
+                    </kw>
+                    <status status="FAIL" starttime="20210311 13:42:18.386" endtime="20210311 13:42:18.388"/>
+                </branch>
+                <status status="FAIL" starttime="20210311 13:42:18.385" endtime="20210311 13:42:18.388"/>
+            </if>
+            <tag>failure</tag>
+            <tag>if</tag>
+            <status status="FAIL" starttime="20210311 13:42:18.384" endtime="20210311 13:42:18.388">mikki hiiri</status>
+        </test>
+        <status status="FAIL" starttime="20210311 13:42:18.281" endtime="20210311 13:42:18.389"/>
+    </suite>
+    <statistics>
+        <total>
+            <stat pass="4" fail="5" skip="6">All Tests</stat>
+        </total>
+        <tag>
+            <stat pass="0" fail="2" skip="0">fail</stat>
+            <stat pass="0" fail="3" skip="0">failure</stat>
+            <stat pass="0" fail="1" skip="0">for</stat>
+            <stat pass="0" fail="2" skip="0">if</stat>
+            <stat pass="2" fail="0" skip="0">pass</stat>
+            <stat pass="1" fail="0" skip="2">skipfail</stat>
+            <stat pass="0" fail="0" skip="4">skippable</stat>
+            <stat pass="2" fail="1" skip="2">tag2</stat>
+            <stat pass="1" fail="1" skip="0">tag3</stat>
+        </tag>
+        <suite>
+            <stat pass="4" fail="2" skip="6" id="s1" name="Skip">Skip</stat>
+            <stat pass="0" fail="3" skip="0" id="s1" name="Loops">Loops</stat>
+        </suite>
+    </statistics>
+    <errors>
+    </errors>
+</robot>

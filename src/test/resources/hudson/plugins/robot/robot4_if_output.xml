@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 4.0rc1 (Python 3.8.5 on darwin)" generated="20210310 14:21:36.349" rpa="false">
+    <suite id="s1" name="Loops" source="/Users/aleksisimell/projects/jenkinsci/sample_robot/basic-rf-run/loops.robot">
+        <test id="s1-t1" name="If Success">
+            <kw name="Set Variable" library="BuiltIn">
+                <var>${var}</var>
+                <arg>mikki hiiri</arg>
+                <doc>Returns the given values which can then be assigned to a variables.</doc>
+                <msg timestamp="20210310 14:21:36.439" level="INFO">${var} = mikki hiiri</msg>
+                <status status="PASS" starttime="20210310 14:21:36.439" endtime="20210310 14:21:36.439"/>
+            </kw>
+            <if>
+                <branch type="IF" condition="&quot;${var}&quot;==&quot;mikki hiiri&quot;">
+                    <kw name="Log" library="BuiltIn">
+                        <arg>${var}</arg>
+                        <doc>Logs the given message with the given level.</doc>
+                        <msg timestamp="20210310 14:21:36.440" level="INFO">mikki hiiri</msg>
+                        <status status="PASS" starttime="20210310 14:21:36.440" endtime="20210310 14:21:36.440"/>
+                    </kw>
+                    <status status="PASS" starttime="20210310 14:21:36.440" endtime="20210310 14:21:36.440"/>
+                </branch>
+                <status status="PASS" starttime="20210310 14:21:36.439" endtime="20210310 14:21:36.440"/>
+            </if>
+            <tag>if</tag>
+            <tag>success</tag>
+            <status status="PASS" starttime="20210310 14:21:36.438" endtime="20210310 14:21:36.440"/>
+        </test>
+        <test id="s1-t2" name="If Else Success">
+            <kw name="Set Variable" library="BuiltIn">
+                <var>${var}</var>
+                <arg>mikki hiiri</arg>
+                <doc>Returns the given values which can then be assigned to a variables.</doc>
+                <msg timestamp="20210310 14:21:36.442" level="INFO">${var} = mikki hiiri</msg>
+                <status status="PASS" starttime="20210310 14:21:36.442" endtime="20210310 14:21:36.442"/>
+            </kw>
+            <if>
+                <branch type="IF" condition="&quot;${var}&quot;==&quot;hessu hopo&quot;">
+                    <kw name="Fail" library="BuiltIn">
+                        <doc>Fails the test with the given message and optionally alters its tags.</doc>
+                        <status status="NOT RUN" starttime="20210310 14:21:36.443" endtime="20210310 14:21:36.443"/>
+                    </kw>
+                    <status status="NOT RUN" starttime="20210310 14:21:36.443" endtime="20210310 14:21:36.443"/>
+                </branch>
+                <branch type="ELSE">
+                    <kw name="Nested Keyword">
+                        <arg>${var}</arg>
+                        <kw name="Log" library="BuiltIn">
+                            <arg>${arg}</arg>
+                            <doc>Logs the given message with the given level.</doc>
+                            <msg timestamp="20210310 14:21:36.444" level="INFO">mikki hiiri</msg>
+                            <status status="PASS" starttime="20210310 14:21:36.444" endtime="20210310 14:21:36.444"/>
+                        </kw>
+                        <status status="PASS" starttime="20210310 14:21:36.443" endtime="20210310 14:21:36.444"/>
+                    </kw>
+                    <kw name="Log" library="BuiltIn">
+                        <arg>${var}</arg>
+                        <doc>Logs the given message with the given level.</doc>
+                        <msg timestamp="20210310 14:21:36.444" level="INFO">mikki hiiri</msg>
+                        <status status="PASS" starttime="20210310 14:21:36.444" endtime="20210310 14:21:36.444"/>
+                    </kw>
+                    <status status="PASS" starttime="20210310 14:21:36.443" endtime="20210310 14:21:36.445"/>
+                </branch>
+                <status status="PASS" starttime="20210310 14:21:36.442" endtime="20210310 14:21:36.445"/>
+            </if>
+            <tag>if</tag>
+            <tag>success</tag>
+            <status status="PASS" starttime="20210310 14:21:36.441" endtime="20210310 14:21:36.445"/>
+        </test>
+        <test id="s1-t3" name="If Else If Success">
+            <kw name="Set Variable" library="BuiltIn">
+                <var>${var}</var>
+                <arg>mikki hiiri</arg>
+                <doc>Returns the given values which can then be assigned to a variables.</doc>
+                <msg timestamp="20210310 14:21:36.446" level="INFO">${var} = mikki hiiri</msg>
+                <status status="PASS" starttime="20210310 14:21:36.446" endtime="20210310 14:21:36.446"/>
+            </kw>
+            <if>
+                <branch type="IF" condition="&quot;${var}&quot;==&quot;hessu hopo&quot;">
+                    <kw name="Fail" library="BuiltIn">
+                        <doc>Fails the test with the given message and optionally alters its tags.</doc>
+                        <status status="NOT RUN" starttime="20210310 14:21:36.447" endtime="20210310 14:21:36.447"/>
+                    </kw>
+                    <status status="NOT RUN" starttime="20210310 14:21:36.447" endtime="20210310 14:21:36.447"/>
+                </branch>
+                <branch type="ELSE IF" condition="&quot;${var}&quot;==&quot;mikki hiiri&quot;">
+                    <kw name="Log" library="BuiltIn">
+                        <arg>${var}</arg>
+                        <doc>Logs the given message with the given level.</doc>
+                        <msg timestamp="20210310 14:21:36.447" level="INFO">mikki hiiri</msg>
+                        <status status="PASS" starttime="20210310 14:21:36.447" endtime="20210310 14:21:36.447"/>
+                    </kw>
+                    <status status="PASS" starttime="20210310 14:21:36.447" endtime="20210310 14:21:36.448"/>
+                </branch>
+                <branch type="ELSE">
+                    <kw name="Fail" library="BuiltIn">
+                        <doc>Fails the test with the given message and optionally alters its tags.</doc>
+                        <status status="NOT RUN" starttime="20210310 14:21:36.448" endtime="20210310 14:21:36.448"/>
+                    </kw>
+                    <status status="NOT RUN" starttime="20210310 14:21:36.448" endtime="20210310 14:21:36.448"/>
+                </branch>
+                <status status="PASS" starttime="20210310 14:21:36.446" endtime="20210310 14:21:36.448"/>
+            </if>
+            <tag>if</tag>
+            <tag>success</tag>
+            <status status="PASS" starttime="20210310 14:21:36.445" endtime="20210310 14:21:36.448"/>
+        </test>
+        <test id="s1-t4" name="If Failure">
+            <kw name="Set Variable" library="BuiltIn">
+                <var>${var}</var>
+                <arg>mikki hiiri</arg>
+                <doc>Returns the given values which can then be assigned to a variables.</doc>
+                <msg timestamp="20210310 14:21:36.451" level="INFO">${var} = mikki hiiri</msg>
+                <status status="PASS" starttime="20210310 14:21:36.451" endtime="20210310 14:21:36.451"/>
+            </kw>
+            <if>
+                <branch type="IF" condition="&quot;${var}&quot;==&quot;mikki hiiri&quot;">
+                    <kw name="Nested Keyword">
+                        <arg>${var}</arg>
+                        <kw name="Log" library="BuiltIn">
+                            <arg>${arg}</arg>
+                            <doc>Logs the given message with the given level.</doc>
+                            <msg timestamp="20210310 14:21:36.452" level="INFO">mikki hiiri</msg>
+                            <status status="PASS" starttime="20210310 14:21:36.452" endtime="20210310 14:21:36.452"/>
+                        </kw>
+                        <status status="PASS" starttime="20210310 14:21:36.452" endtime="20210310 14:21:36.453"/>
+                    </kw>
+                    <kw name="Fail" library="BuiltIn">
+                        <doc>Fails the test with the given message and optionally alters its tags.</doc>
+                        <msg timestamp="20210310 14:21:36.453" level="FAIL">AssertionError</msg>
+                        <status status="FAIL" starttime="20210310 14:21:36.453" endtime="20210310 14:21:36.453"/>
+                    </kw>
+                    <status status="FAIL" starttime="20210310 14:21:36.452" endtime="20210310 14:21:36.453"/>
+                </branch>
+                <status status="FAIL" starttime="20210310 14:21:36.451" endtime="20210310 14:21:36.453"/>
+            </if>
+            <tag>failure</tag>
+            <tag>if</tag>
+            <status status="FAIL" starttime="20210310 14:21:36.450" endtime="20210310 14:21:36.454">AssertionError</status>
+        </test>
+        <test id="s1-t5" name="If Else Failure">
+            <kw name="Set Variable" library="BuiltIn">
+                <var>${var}</var>
+                <arg>mikki hiiri</arg>
+                <doc>Returns the given values which can then be assigned to a variables.</doc>
+                <msg timestamp="20210310 14:21:36.456" level="INFO">${var} = mikki hiiri</msg>
+                <status status="PASS" starttime="20210310 14:21:36.455" endtime="20210310 14:21:36.456"/>
+            </kw>
+            <if>
+                <branch type="IF" condition="&quot;${var}&quot;==&quot;hessu hopo&quot;">
+                    <kw name="Fail" library="BuiltIn">
+                        <doc>Fails the test with the given message and optionally alters its tags.</doc>
+                        <status status="NOT RUN" starttime="20210310 14:21:36.456" endtime="20210310 14:21:36.456"/>
+                    </kw>
+                    <status status="NOT RUN" starttime="20210310 14:21:36.456" endtime="20210310 14:21:36.456"/>
+                </branch>
+                <branch type="ELSE">
+                    <kw name="Nested Keyword">
+                        <arg>${var}</arg>
+                        <kw name="Log" library="BuiltIn">
+                            <arg>${arg}</arg>
+                            <doc>Logs the given message with the given level.</doc>
+                            <msg timestamp="20210310 14:21:36.457" level="INFO">mikki hiiri</msg>
+                            <status status="PASS" starttime="20210310 14:21:36.457" endtime="20210310 14:21:36.457"/>
+                        </kw>
+                        <status status="PASS" starttime="20210310 14:21:36.457" endtime="20210310 14:21:36.458"/>
+                    </kw>
+                    <kw name="Fail" library="BuiltIn">
+                        <arg>${var}</arg>
+                        <doc>Fails the test with the given message and optionally alters its tags.</doc>
+                        <msg timestamp="20210310 14:21:36.458" level="FAIL">mikki hiiri</msg>
+                        <status status="FAIL" starttime="20210310 14:21:36.458" endtime="20210310 14:21:36.458"/>
+                    </kw>
+                    <status status="FAIL" starttime="20210310 14:21:36.456" endtime="20210310 14:21:36.458"/>
+                </branch>
+                <status status="FAIL" starttime="20210310 14:21:36.456" endtime="20210310 14:21:36.458"/>
+            </if>
+            <tag>failure</tag>
+            <tag>if</tag>
+            <status status="FAIL" starttime="20210310 14:21:36.455" endtime="20210310 14:21:36.459">mikki hiiri</status>
+        </test>
+        <status status="FAIL" starttime="20210310 14:21:36.351" endtime="20210310 14:21:36.460"/>
+    </suite>
+    <statistics>
+        <total>
+            <stat pass="3" fail="2" skip="0">All Tests</stat>
+        </total>
+        <tag>
+            <stat pass="0" fail="2" skip="0">failure</stat>
+            <stat pass="3" fail="2" skip="0">if</stat>
+            <stat pass="3" fail="0" skip="0">success</stat>
+        </tag>
+        <suite>
+            <stat pass="3" fail="2" skip="0" id="s1" name="Loops">Loops</stat>
+        </suite>
+    </statistics>
+    <errors>
+    </errors>
+</robot>

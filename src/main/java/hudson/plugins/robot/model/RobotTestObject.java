@@ -240,6 +240,8 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 
 	public abstract int getPassed();
 
+	public abstract int getSkipped();
+
 	public abstract long getCriticalPassed();
 
 	public abstract long getCriticalFailed();
