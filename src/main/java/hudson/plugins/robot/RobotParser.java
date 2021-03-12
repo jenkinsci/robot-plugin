@@ -401,9 +401,15 @@ public class RobotParser {
 				}
 				if (reader.isStartElement()) {
 					String xmlTag = reader.getLocalName();
-					if (xmlTag.equals("for")) stackTrace.append(processForLoop(reader, nestedCount));
-					if (xmlTag.equals("kw")) stackTrace.append(processKeyword(reader, nestedCount));
-					if (xmlTag.equals("if")) stackTrace.append(processIf(reader, nestedCount));
+					if (xmlTag.equals("for")) {
+						stackTrace.append(processForLoop(reader, nestedCount));
+					}
+					if (xmlTag.equals("kw")) {
+						stackTrace.append(processKeyword(reader, nestedCount));
+					}
+					if (xmlTag.equals("if")) {
+						stackTrace.append(processIf(reader, nestedCount));
+					}
 				}
 				reader.next();
 			}
