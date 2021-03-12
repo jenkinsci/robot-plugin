@@ -287,12 +287,12 @@ public class RobotParser {
 			//parse stacktrace
 			String xmlTag = ignoreUntilStarts(reader, "kw", "for", "if", "doc", "tags", "tag", "status");
 			while (xmlTag.equals("kw") || xmlTag.equals("for") || xmlTag.equals("if")) {
-				if (xmlTag.equals("kw")) {
-					stackTrace.append(processKeyword(reader, 0));
+				if (xmlTag.equals("if")) {
+					stackTrace.append(processIf(reader, 0));
 				} else if (xmlTag.equals("for")) {
 					stackTrace.append(processForLoop(reader, 0));
 				} else {
-					stackTrace.append(processIf(reader, 0));
+					stackTrace.append(processKeyword(reader, 0));
 				}
 				xmlTag = ignoreUntilStarts(reader, "kw", "for", "if", "doc", "tags", "tag", "status");
 			}
