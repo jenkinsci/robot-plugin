@@ -151,7 +151,7 @@ public class RobotParser {
 						suite.addChild(processSuite(reader, suite, baseDirectory));
 					} else if("test".equals(tagName)){
 						suite.addCaseResult(processTest(reader, suite));
-					} else if("kw".equals(tagName) && "teardown".equals(reader.getAttributeValue(null, "type"))) {
+					} else if("kw".equals(tagName) && "teardown".equalsIgnoreCase(reader.getAttributeValue(null, "type"))) {
 						ignoreUntilStarts(reader, "status");
 						if ("FAIL".equals(reader.getAttributeValue(null, "status"))) {
 							suite.failTeardown();
