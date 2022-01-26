@@ -285,16 +285,27 @@ public class RobotParser {
 			StringBuilder stackTrace = new StringBuilder();
 
 			//parse stacktrace
-			String xmlTag = ignoreUntilStarts(reader, "kw", "for", "if", "doc", "tags", "tag", "status");
-			while (xmlTag.equals("kw") || xmlTag.equals("for") || xmlTag.equals("if")) {
-				if (xmlTag.equals("if")) {
-					stackTrace.append(processIf(reader, 0));
-				} else if (xmlTag.equals("for")) {
-					stackTrace.append(processForLoop(reader, 0));
-				} else {
-					stackTrace.append(processKeyword(reader, 0));
+			String[] elements = {"kw", "for", "if", "try", "while", "doc", "tags", "tag", "status"};
+			String xmlTag = ignoreUntilStarts(reader, elements);
+			while (xmlTag.equals("kw") || xmlTag.equals("for") || xmlTag.equals("if") || xmlTag.equals("try") || xmlTag.equals("while")) {
+				switch (xmlTag) {
+					case "if":
+						stackTrace.append(processIf(reader, 0));
+						break;
+					case "for":
+						stackTrace.append(processForLoop(reader, 0));
+						break;
+					case "try":
+						// TODO: Implement
+						break;
+					case "while":
+						// TODO: Implement
+						break;
+					default:
+						stackTrace.append(processKeyword(reader, 0));
+						break;
 				}
-				xmlTag = ignoreUntilStarts(reader, "kw", "for", "if", "doc", "tags", "tag", "status");
+				xmlTag = ignoreUntilStarts(reader, elements);
 			}
 
 			caseResult.setStackTrace(stackTrace.toString().trim().replaceAll("\n+", "\n"));
@@ -366,14 +377,27 @@ public class RobotParser {
 				}
 				if (reader.isStartElement()) {
 					String xmlTag = reader.getLocalName();
-					if (xmlTag.equals("for")) {
-						stackTrace.append(processForLoop(reader, nestedCount));
-					}
-					if (xmlTag.equals("kw")) {
-						stackTrace.append(processKeyword(reader, nestedCount));
-					}
-					if (xmlTag.equals("if")) {
-						stackTrace.append(processIf(reader, nestedCount));
+					switch (xmlTag) {
+						case "for":
+							stackTrace.append(processForLoop(reader, nestedCount));
+							break;
+						case "kw":
+							stackTrace.append(processKeyword(reader, nestedCount));
+							break;
+						case "if":
+							stackTrace.append(processIf(reader, nestedCount));
+							break;
+						case "try":
+							// TODO: Implement
+							break;
+						case "while":
+							// TODO: Implement
+							break;
+						case "return":
+							// TODO: Ipmlement
+							break;
+						default:
+							break;
 					}
 				}
 				reader.next();
@@ -407,14 +431,27 @@ public class RobotParser {
 				}
 				if (reader.isStartElement()) {
 					String xmlTag = reader.getLocalName();
-					if (xmlTag.equals("for")) {
-						stackTrace.append(processForLoop(reader, nestedCount));
-					}
-					if (xmlTag.equals("kw")) {
-						stackTrace.append(processKeyword(reader, nestedCount));
-					}
-					if (xmlTag.equals("if")) {
-						stackTrace.append(processIf(reader, nestedCount));
+					switch (xmlTag) {
+						case "for":
+							stackTrace.append(processForLoop(reader, nestedCount));
+							break;
+						case "kw":
+							stackTrace.append(processKeyword(reader, nestedCount));
+							break;
+						case "if":
+							stackTrace.append(processIf(reader, nestedCount));
+							break;
+						case "try":
+							// TODO: Implement
+							break;
+						case "while":
+							// TODO: Implement
+							break;
+						case "return":
+							// TODO: Implement
+							break;
+						default:
+							break;
 					}
 				}
 				reader.next();
@@ -447,6 +484,15 @@ public class RobotParser {
 							break;
 						case "if":
 							stackTrace.append(processIf(reader, nestedCount+1));
+							break;
+						case "try":
+							// TODO: Implement
+							break;
+						case "while":
+							// TODO: Implement
+							break;
+						case "return":
+							// TODO: Implement
 							break;
 						default:
 							break;
