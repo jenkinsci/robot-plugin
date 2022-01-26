@@ -285,9 +285,10 @@ public class RobotParser {
 			StringBuilder stackTrace = new StringBuilder();
 
 			//parse stacktrace
-			String[] elements = {"kw", "for", "if", "try", "while", "doc", "tags", "tag", "status"};
-			String xmlTag = ignoreUntilStarts(reader, elements);
-			while (xmlTag.equals("kw") || xmlTag.equals("for") || xmlTag.equals("if") || xmlTag.equals("try") || xmlTag.equals("while")) {
+			String[] possible_elements = {"kw", "for", "if", "try", "while", "doc", "tags", "tag", "status"};
+			String[] elements = {"kw", "for", "if", "try", "while"};
+			String xmlTag = ignoreUntilStarts(reader, possible_elements);
+			while (isNameInElements(xmlTag, elements)) {
 				switch (xmlTag) {
 					case "if":
 						stackTrace.append(processIf(reader, 0));
@@ -305,7 +306,7 @@ public class RobotParser {
 						stackTrace.append(processKeyword(reader, 0));
 						break;
 				}
-				xmlTag = ignoreUntilStarts(reader, elements);
+				xmlTag = ignoreUntilStarts(reader, possible_elements);
 			}
 
 			caseResult.setStackTrace(stackTrace.toString().trim().replaceAll("\n+", "\n"));
