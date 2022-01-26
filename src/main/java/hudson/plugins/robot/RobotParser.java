@@ -291,16 +291,12 @@ public class RobotParser {
 			while (isNameInElements(xmlTag, elements)) {
 				switch (xmlTag) {
 					case "if":
-						stackTrace.append(processIf(reader, 0));
+					case "try":
+						stackTrace.append(processBranchable(reader, 0));
 						break;
 					case "for":
-						stackTrace.append(processForLoop(reader, 0));
-						break;
-					case "try":
-						// TODO: Implement
-						break;
 					case "while":
-						// TODO: Implement
+						stackTrace.append(processLoop(reader, 0));
 						break;
 					default:
 						stackTrace.append(processKeyword(reader, 0));
@@ -353,12 +349,16 @@ public class RobotParser {
 			return caseResult;
 		}
 
-		private String processForLoop(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
+		private String processLoop(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
 			StringBuilder stackTrace = new StringBuilder();
 			String indentation = getSpacesPerNestedLevel(nestedCount);
-			stackTrace.append(indentation + "FOR " + reader.getAttributeValue(null, "flavor"));
+			String kind = reader.getLocalName();
+			stackTrace.append(indentation + kind.toUpperCase());
+			if (kind.equals("for")) {
+				stackTrace.append(" " + reader.getAttributeValue(null, "flavor"));
+			}
 			while (reader.hasNext()) {
-				if (reader.isEndElement() && reader.getLocalName().equals("for")) {
+				if (reader.isEndElement() && reader.getLocalName().equals(kind)) {
 					break;
 				}
 				if (reader.isStartElement() && reader.getLocalName().equals("iter")) {
@@ -380,19 +380,15 @@ public class RobotParser {
 					String xmlTag = reader.getLocalName();
 					switch (xmlTag) {
 						case "for":
-							stackTrace.append(processForLoop(reader, nestedCount));
+						case "while":
+							stackTrace.append(processLoop(reader, nestedCount));
 							break;
 						case "kw":
 							stackTrace.append(processKeyword(reader, nestedCount));
 							break;
 						case "if":
-							stackTrace.append(processIf(reader, nestedCount));
-							break;
 						case "try":
-							// TODO: Implement
-							break;
-						case "while":
-							// TODO: Implement
+							stackTrace.append(processBranchable(reader, nestedCount));
 							break;
 						case "return":
 							// TODO: Ipmlement
@@ -407,11 +403,12 @@ public class RobotParser {
 			return stackTrace.toString();
 		}
 
-		private String processIf(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
+		private String processBranchable(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
 			StringBuilder stackTrace = new StringBuilder();
 			String indentation = getSpacesPerNestedLevel(nestedCount);
+			String kind = reader.getLocalName();
 			while (reader.hasNext()) {
-				if (reader.isEndElement() && reader.getLocalName().equals("if")) {
+				if (reader.isEndElement() && reader.getLocalName().equals(kind)) {
 					break;
 				}
 				if (reader.isStartElement() && reader.getLocalName().equals("branch")) {
@@ -434,19 +431,15 @@ public class RobotParser {
 					String xmlTag = reader.getLocalName();
 					switch (xmlTag) {
 						case "for":
-							stackTrace.append(processForLoop(reader, nestedCount));
+						case "while":
+							stackTrace.append(processLoop(reader, nestedCount));
 							break;
 						case "kw":
 							stackTrace.append(processKeyword(reader, nestedCount));
 							break;
 						case "if":
-							stackTrace.append(processIf(reader, nestedCount));
-							break;
 						case "try":
-							// TODO: Implement
-							break;
-						case "while":
-							// TODO: Implement
+							stackTrace.append(processBranchable(reader, nestedCount));
 							break;
 						case "return":
 							// TODO: Implement
@@ -478,19 +471,15 @@ public class RobotParser {
 							stackTrace.append(processArgs(reader));
 							continue;	// processArgs returns with us already in <kw>. We don't want to use reader.next()
 						case "for":
-							stackTrace.append(processForLoop(reader, nestedCount+1));
+						case "while":
+							stackTrace.append(processLoop(reader, nestedCount+1));
 							break;
 						case "kw":
 							stackTrace.append(processKeyword(reader, nestedCount+1));
 							break;
 						case "if":
-							stackTrace.append(processIf(reader, nestedCount+1));
-							break;
 						case "try":
-							// TODO: Implement
-							break;
-						case "while":
-							// TODO: Implement
+							stackTrace.append(processBranchable(reader, nestedCount+1));
 							break;
 						case "return":
 							// TODO: Implement
