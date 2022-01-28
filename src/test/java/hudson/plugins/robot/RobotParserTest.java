@@ -183,6 +183,12 @@ public class RobotParserTest {
         final String dir = ".";
         final String mask = "robot4_if_output.xml";
         parse(dir, mask);
+    }
 
+    @Test
+    public void testRobot5Basic() {
+        final String dir = "robot5";
+        final String mask = "basic_output.xml";
+        parse(dir, mask);
     }
 }
