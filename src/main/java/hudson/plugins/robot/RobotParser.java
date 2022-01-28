@@ -391,7 +391,9 @@ public class RobotParser {
 							stackTrace.append(processBranchable(reader, nestedCount));
 							break;
 						case "return":
-							// TODO: Ipmlement
+						case "break":
+						case "continue":
+							stackTrace.append(processReturnBreakContinue(reader, nestedCount));
 							break;
 						default:
 							break;
@@ -442,7 +444,9 @@ public class RobotParser {
 							stackTrace.append(processBranchable(reader, nestedCount));
 							break;
 						case "return":
-							// TODO: Implement
+						case "break":
+						case "continue":
+							stackTrace.append(processReturnBreakContinue(reader, nestedCount));
 							break;
 						default:
 							break;
@@ -482,7 +486,9 @@ public class RobotParser {
 							stackTrace.append(processBranchable(reader, nestedCount+1));
 							break;
 						case "return":
-							// TODO: Implement
+						case "break":
+						case "continue":
+							stackTrace.append(processReturnBreakContinue(reader, nestedCount+1));
 							break;
 						default:
 							break;
@@ -534,6 +540,22 @@ public class RobotParser {
 				reader.next();
 			}
 			return tagList;
+		}
+
+		private String processReturnBreakContinue(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
+			StringBuilder stringBuilder = new StringBuilder();
+			String kind = reader.getLocalName();
+			stringBuilder.append(getSpacesPerNestedLevel(nestedCount)).append(kind.toUpperCase());
+			while(reader.hasNext()) {
+				if (reader.isEndElement() && reader.getLocalName().equals(kind)) {
+					break;
+				}
+				if (reader.isStartElement() && reader.getLocalName().equals("kw")) {
+					stringBuilder.append(processKeyword(reader, nestedCount+1));
+				}
+				reader.next();
+			}
+			return stringBuilder.toString();
 		}
 
 		private static void setCriticalityIfAvailable(XMLStreamReader reader, RobotCaseResult caseResult) {
