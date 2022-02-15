@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot generator="Robot 5.0a1 (Python 3.8.5 on darwin)" generated="20220128 13:32:43.530" rpa="false" schemaversion="3">
+<robot generator="Robot 5.0b1 (Python 3.8.5 on darwin)" generated="20220214 11:03:22.043" rpa="false" schemaversion="3">
 <suite id="s1" name="Test" source="/Users/aleksisimell/projects/rf5/test.robot">
-<test id="s1-t1" name="Try Except Caught">
+<test id="s1-t1" name="Try Except Caught" line="2">
 <try>
 <branch type="TRY">
 <kw name="Compare">
@@ -11,27 +11,27 @@
 <arg>${arg1}</arg>
 <arg>${arg2}</arg>
 <doc>Fails if the given objects are unequal.</doc>
-<msg timestamp="20220128 13:32:43.576" level="FAIL">mikki != hiiri</msg>
-<status status="FAIL" starttime="20220128 13:32:43.575" endtime="20220128 13:32:43.576"/>
+<msg timestamp="20220214 11:03:22.079" level="FAIL">mikki != hiiri</msg>
+<status status="FAIL" starttime="20220214 11:03:22.077" endtime="20220214 11:03:22.079"/>
 </kw>
-<status status="FAIL" starttime="20220128 13:32:43.574" endtime="20220128 13:32:43.577"/>
+<status status="FAIL" starttime="20220214 11:03:22.077" endtime="20220214 11:03:22.080"/>
 </kw>
-<status status="FAIL" starttime="20220128 13:32:43.574" endtime="20220128 13:32:43.577"/>
+<status status="FAIL" starttime="20220214 11:03:22.076" endtime="20220214 11:03:22.080"/>
 </branch>
 <branch type="EXCEPT">
 <kw name="Log" library="BuiltIn">
 <arg>Error caught</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20220128 13:32:43.577" level="INFO">Error caught</msg>
-<status status="PASS" starttime="20220128 13:32:43.577" endtime="20220128 13:32:43.577"/>
+<msg timestamp="20220214 11:03:22.080" level="INFO">Error caught</msg>
+<status status="PASS" starttime="20220214 11:03:22.080" endtime="20220214 11:03:22.080"/>
 </kw>
-<status status="PASS" starttime="20220128 13:32:43.577" endtime="20220128 13:32:43.577"/>
+<status status="PASS" starttime="20220214 11:03:22.080" endtime="20220214 11:03:22.080"/>
 </branch>
-<status status="PASS" starttime="20220128 13:32:43.574" endtime="20220128 13:32:43.577"/>
+<status status="PASS" starttime="20220214 11:03:22.076" endtime="20220214 11:03:22.081"/>
 </try>
-<status status="PASS" starttime="20220128 13:32:43.573" endtime="20220128 13:32:43.578"/>
+<status status="PASS" starttime="20220214 11:03:22.075" endtime="20220214 11:03:22.081"/>
 </test>
-<test id="s1-t2" name="Try Success Finally">
+<test id="s1-t2" name="Try Success Finally" line="9">
 <try>
 <branch type="TRY">
 <kw name="Compare">
@@ -41,220 +41,220 @@
 <arg>${arg1}</arg>
 <arg>${arg2}</arg>
 <doc>Fails if the given objects are unequal.</doc>
-<status status="PASS" starttime="20220128 13:32:43.579" endtime="20220128 13:32:43.580"/>
+<status status="PASS" starttime="20220214 11:03:22.083" endtime="20220214 11:03:22.084"/>
 </kw>
-<status status="PASS" starttime="20220128 13:32:43.579" endtime="20220128 13:32:43.580"/>
+<status status="PASS" starttime="20220214 11:03:22.082" endtime="20220214 11:03:22.085"/>
 </kw>
-<status status="PASS" starttime="20220128 13:32:43.579" endtime="20220128 13:32:43.580"/>
+<status status="PASS" starttime="20220214 11:03:22.082" endtime="20220214 11:03:22.085"/>
 </branch>
 <branch type="EXCEPT">
 <kw name="Fail" library="BuiltIn">
 <doc>Fails the test with the given message and optionally alters its tags.</doc>
-<status status="NOT RUN" starttime="20220128 13:32:43.580" endtime="20220128 13:32:43.580"/>
+<status status="NOT RUN" starttime="20220214 11:03:22.085" endtime="20220214 11:03:22.085"/>
 </kw>
-<status status="NOT RUN" starttime="20220128 13:32:43.580" endtime="20220128 13:32:43.580"/>
+<status status="NOT RUN" starttime="20220214 11:03:22.085" endtime="20220214 11:03:22.085"/>
 </branch>
 <branch type="FINALLY">
 <kw name="Log" library="BuiltIn">
 <arg>Some message</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20220128 13:32:43.580" level="INFO">Some message</msg>
-<status status="PASS" starttime="20220128 13:32:43.580" endtime="20220128 13:32:43.580"/>
+<msg timestamp="20220214 11:03:22.085" level="INFO">Some message</msg>
+<status status="PASS" starttime="20220214 11:03:22.085" endtime="20220214 11:03:22.085"/>
 </kw>
-<status status="PASS" starttime="20220128 13:32:43.580" endtime="20220128 13:32:43.580"/>
+<status status="PASS" starttime="20220214 11:03:22.085" endtime="20220214 11:03:22.085"/>
 </branch>
-<status status="PASS" starttime="20220128 13:32:43.579" endtime="20220128 13:32:43.580"/>
+<status status="PASS" starttime="20220214 11:03:22.082" endtime="20220214 11:03:22.085"/>
 </try>
-<status status="PASS" starttime="20220128 13:32:43.578" endtime="20220128 13:32:43.581"/>
+<status status="PASS" starttime="20220214 11:03:22.082" endtime="20220214 11:03:22.086"/>
 </test>
-<test id="s1-t3" name="While Until End">
+<test id="s1-t3" name="While Until End" line="18">
 <kw name="Set Variable" library="BuiltIn">
 <var>${x}</var>
 <arg>5</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<msg timestamp="20220128 13:32:43.582" level="INFO">${x} = 5</msg>
-<status status="PASS" starttime="20220128 13:32:43.582" endtime="20220128 13:32:43.582"/>
+<msg timestamp="20220214 11:03:22.087" level="INFO">${x} = 5</msg>
+<status status="PASS" starttime="20220214 11:03:22.087" endtime="20220214 11:03:22.087"/>
 </kw>
 <while condition="${x} &gt; 0">
 <iter>
 <kw name="Log" library="BuiltIn">
 <arg>${x}</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20220128 13:32:43.583" level="INFO">5</msg>
-<status status="PASS" starttime="20220128 13:32:43.583" endtime="20220128 13:32:43.583"/>
+<msg timestamp="20220214 11:03:22.088" level="INFO">5</msg>
+<status status="PASS" starttime="20220214 11:03:22.088" endtime="20220214 11:03:22.088"/>
 </kw>
 <kw name="Evaluate" library="BuiltIn">
 <var>${x}</var>
 <arg>${x}-1</arg>
 <doc>Evaluates the given expression in Python and returns the result.</doc>
-<msg timestamp="20220128 13:32:43.584" level="INFO">${x} = 4</msg>
-<status status="PASS" starttime="20220128 13:32:43.583" endtime="20220128 13:32:43.584"/>
+<msg timestamp="20220214 11:03:22.089" level="INFO">${x} = 4</msg>
+<status status="PASS" starttime="20220214 11:03:22.088" endtime="20220214 11:03:22.089"/>
 </kw>
-<status status="PASS" starttime="20220128 13:32:43.583" endtime="20220128 13:32:43.584"/>
+<status status="PASS" starttime="20220214 11:03:22.088" endtime="20220214 11:03:22.089"/>
 </iter>
 <iter>
 <kw name="Log" library="BuiltIn">
 <arg>${x}</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20220128 13:32:43.584" level="INFO">4</msg>
-<status status="PASS" starttime="20220128 13:32:43.584" endtime="20220128 13:32:43.584"/>
+<msg timestamp="20220214 11:03:22.089" level="INFO">4</msg>
+<status status="PASS" starttime="20220214 11:03:22.089" endtime="20220214 11:03:22.089"/>
 </kw>
 <kw name="Evaluate" library="BuiltIn">
 <var>${x}</var>
 <arg>${x}-1</arg>
 <doc>Evaluates the given expression in Python and returns the result.</doc>
-<msg timestamp="20220128 13:32:43.585" level="INFO">${x} = 3</msg>
-<status status="PASS" starttime="20220128 13:32:43.584" endtime="20220128 13:32:43.585"/>
+<msg timestamp="20220214 11:03:22.090" level="INFO">${x} = 3</msg>
+<status status="PASS" starttime="20220214 11:03:22.089" endtime="20220214 11:03:22.090"/>
 </kw>
-<status status="PASS" starttime="20220128 13:32:43.584" endtime="20220128 13:32:43.585"/>
+<status status="PASS" starttime="20220214 11:03:22.089" endtime="20220214 11:03:22.090"/>
 </iter>
 <iter>
 <kw name="Log" library="BuiltIn">
 <arg>${x}</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20220128 13:32:43.585" level="INFO">3</msg>
-<status status="PASS" starttime="20220128 13:32:43.585" endtime="20220128 13:32:43.585"/>
+<msg timestamp="20220214 11:03:22.091" level="INFO">3</msg>
+<status status="PASS" starttime="20220214 11:03:22.090" endtime="20220214 11:03:22.091"/>
 </kw>
 <kw name="Evaluate" library="BuiltIn">
 <var>${x}</var>
 <arg>${x}-1</arg>
 <doc>Evaluates the given expression in Python and returns the result.</doc>
-<msg timestamp="20220128 13:32:43.586" level="INFO">${x} = 2</msg>
-<status status="PASS" starttime="20220128 13:32:43.585" endtime="20220128 13:32:43.586"/>
+<msg timestamp="20220214 11:03:22.091" level="INFO">${x} = 2</msg>
+<status status="PASS" starttime="20220214 11:03:22.091" endtime="20220214 11:03:22.091"/>
 </kw>
-<status status="PASS" starttime="20220128 13:32:43.585" endtime="20220128 13:32:43.586"/>
+<status status="PASS" starttime="20220214 11:03:22.090" endtime="20220214 11:03:22.091"/>
 </iter>
 <iter>
 <kw name="Log" library="BuiltIn">
 <arg>${x}</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20220128 13:32:43.587" level="INFO">2</msg>
-<status status="PASS" starttime="20220128 13:32:43.586" endtime="20220128 13:32:43.587"/>
+<msg timestamp="20220214 11:03:22.092" level="INFO">2</msg>
+<status status="PASS" starttime="20220214 11:03:22.091" endtime="20220214 11:03:22.092"/>
 </kw>
 <kw name="Evaluate" library="BuiltIn">
 <var>${x}</var>
 <arg>${x}-1</arg>
 <doc>Evaluates the given expression in Python and returns the result.</doc>
-<msg timestamp="20220128 13:32:43.587" level="INFO">${x} = 1</msg>
-<status status="PASS" starttime="20220128 13:32:43.587" endtime="20220128 13:32:43.587"/>
+<msg timestamp="20220214 11:03:22.092" level="INFO">${x} = 1</msg>
+<status status="PASS" starttime="20220214 11:03:22.092" endtime="20220214 11:03:22.092"/>
 </kw>
-<status status="PASS" starttime="20220128 13:32:43.586" endtime="20220128 13:32:43.587"/>
+<status status="PASS" starttime="20220214 11:03:22.091" endtime="20220214 11:03:22.092"/>
 </iter>
 <iter>
 <kw name="Log" library="BuiltIn">
 <arg>${x}</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20220128 13:32:43.588" level="INFO">1</msg>
-<status status="PASS" starttime="20220128 13:32:43.587" endtime="20220128 13:32:43.588"/>
+<msg timestamp="20220214 11:03:22.093" level="INFO">1</msg>
+<status status="PASS" starttime="20220214 11:03:22.092" endtime="20220214 11:03:22.093"/>
 </kw>
 <kw name="Evaluate" library="BuiltIn">
 <var>${x}</var>
 <arg>${x}-1</arg>
 <doc>Evaluates the given expression in Python and returns the result.</doc>
-<msg timestamp="20220128 13:32:43.588" level="INFO">${x} = 0</msg>
-<status status="PASS" starttime="20220128 13:32:43.588" endtime="20220128 13:32:43.588"/>
+<msg timestamp="20220214 11:03:22.093" level="INFO">${x} = 0</msg>
+<status status="PASS" starttime="20220214 11:03:22.093" endtime="20220214 11:03:22.093"/>
 </kw>
-<status status="PASS" starttime="20220128 13:32:43.587" endtime="20220128 13:32:43.588"/>
+<status status="PASS" starttime="20220214 11:03:22.092" endtime="20220214 11:03:22.093"/>
 </iter>
-<status status="PASS" starttime="20220128 13:32:43.582" endtime="20220128 13:32:43.588"/>
+<status status="PASS" starttime="20220214 11:03:22.087" endtime="20220214 11:03:22.093"/>
 </while>
-<status status="PASS" starttime="20220128 13:32:43.581" endtime="20220128 13:32:43.589"/>
+<status status="PASS" starttime="20220214 11:03:22.086" endtime="20220214 11:03:22.093"/>
 </test>
-<test id="s1-t4" name="While Break And Inline If">
+<test id="s1-t4" name="While Break And Inline If" line="25">
 <kw name="Set Variable" library="BuiltIn">
 <var>${x}</var>
 <arg>5</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<msg timestamp="20220128 13:32:43.590" level="INFO">${x} = 5</msg>
-<status status="PASS" starttime="20220128 13:32:43.590" endtime="20220128 13:32:43.590"/>
+<msg timestamp="20220214 11:03:22.095" level="INFO">${x} = 5</msg>
+<status status="PASS" starttime="20220214 11:03:22.095" endtime="20220214 11:03:22.095"/>
 </kw>
 <while condition="${x} &gt; 0">
 <iter>
 <kw name="Log" library="BuiltIn">
 <arg>${x}</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20220128 13:32:43.591" level="INFO">5</msg>
-<status status="PASS" starttime="20220128 13:32:43.591" endtime="20220128 13:32:43.591"/>
+<msg timestamp="20220214 11:03:22.096" level="INFO">5</msg>
+<status status="PASS" starttime="20220214 11:03:22.096" endtime="20220214 11:03:22.096"/>
 </kw>
 <kw name="Evaluate" library="BuiltIn">
 <var>${x}</var>
 <arg>${x}-1</arg>
 <doc>Evaluates the given expression in Python and returns the result.</doc>
-<msg timestamp="20220128 13:32:43.592" level="INFO">${x} = 4</msg>
-<status status="PASS" starttime="20220128 13:32:43.591" endtime="20220128 13:32:43.592"/>
+<msg timestamp="20220214 11:03:22.096" level="INFO">${x} = 4</msg>
+<status status="PASS" starttime="20220214 11:03:22.096" endtime="20220214 11:03:22.096"/>
 </kw>
 <if>
 <branch type="IF" condition="${x} == 2">
 <break>
-<status status="NOT RUN" starttime="20220128 13:32:43.592" endtime="20220128 13:32:43.592"/>
+<status status="NOT RUN" starttime="20220214 11:03:22.097" endtime="20220214 11:03:22.097"/>
 </break>
-<status status="NOT RUN" starttime="20220128 13:32:43.592" endtime="20220128 13:32:43.592"/>
+<status status="NOT RUN" starttime="20220214 11:03:22.097" endtime="20220214 11:03:22.097"/>
 </branch>
-<status status="PASS" starttime="20220128 13:32:43.592" endtime="20220128 13:32:43.592"/>
+<status status="PASS" starttime="20220214 11:03:22.096" endtime="20220214 11:03:22.097"/>
 </if>
-<status status="PASS" starttime="20220128 13:32:43.590" endtime="20220128 13:32:43.593"/>
+<status status="PASS" starttime="20220214 11:03:22.095" endtime="20220214 11:03:22.097"/>
 </iter>
 <iter>
 <kw name="Log" library="BuiltIn">
 <arg>${x}</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20220128 13:32:43.594" level="INFO">4</msg>
-<status status="PASS" starttime="20220128 13:32:43.593" endtime="20220128 13:32:43.594"/>
+<msg timestamp="20220214 11:03:22.097" level="INFO">4</msg>
+<status status="PASS" starttime="20220214 11:03:22.097" endtime="20220214 11:03:22.097"/>
 </kw>
 <kw name="Evaluate" library="BuiltIn">
 <var>${x}</var>
 <arg>${x}-1</arg>
 <doc>Evaluates the given expression in Python and returns the result.</doc>
-<msg timestamp="20220128 13:32:43.594" level="INFO">${x} = 3</msg>
-<status status="PASS" starttime="20220128 13:32:43.594" endtime="20220128 13:32:43.594"/>
+<msg timestamp="20220214 11:03:22.098" level="INFO">${x} = 3</msg>
+<status status="PASS" starttime="20220214 11:03:22.098" endtime="20220214 11:03:22.098"/>
 </kw>
 <if>
 <branch type="IF" condition="${x} == 2">
 <break>
-<status status="NOT RUN" starttime="20220128 13:32:43.595" endtime="20220128 13:32:43.596"/>
+<status status="NOT RUN" starttime="20220214 11:03:22.098" endtime="20220214 11:03:22.098"/>
 </break>
-<status status="NOT RUN" starttime="20220128 13:32:43.595" endtime="20220128 13:32:43.596"/>
+<status status="NOT RUN" starttime="20220214 11:03:22.098" endtime="20220214 11:03:22.098"/>
 </branch>
-<status status="PASS" starttime="20220128 13:32:43.595" endtime="20220128 13:32:43.596"/>
+<status status="PASS" starttime="20220214 11:03:22.098" endtime="20220214 11:03:22.098"/>
 </if>
-<status status="PASS" starttime="20220128 13:32:43.593" endtime="20220128 13:32:43.596"/>
+<status status="PASS" starttime="20220214 11:03:22.097" endtime="20220214 11:03:22.098"/>
 </iter>
 <iter>
 <kw name="Log" library="BuiltIn">
 <arg>${x}</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20220128 13:32:43.597" level="INFO">3</msg>
-<status status="PASS" starttime="20220128 13:32:43.596" endtime="20220128 13:32:43.597"/>
+<msg timestamp="20220214 11:03:22.099" level="INFO">3</msg>
+<status status="PASS" starttime="20220214 11:03:22.099" endtime="20220214 11:03:22.099"/>
 </kw>
 <kw name="Evaluate" library="BuiltIn">
 <var>${x}</var>
 <arg>${x}-1</arg>
 <doc>Evaluates the given expression in Python and returns the result.</doc>
-<msg timestamp="20220128 13:32:43.597" level="INFO">${x} = 2</msg>
-<status status="PASS" starttime="20220128 13:32:43.597" endtime="20220128 13:32:43.597"/>
+<msg timestamp="20220214 11:03:22.100" level="INFO">${x} = 2</msg>
+<status status="PASS" starttime="20220214 11:03:22.099" endtime="20220214 11:03:22.101"/>
 </kw>
 <if>
 <branch type="IF" condition="${x} == 2">
 <break>
-<status status="PASS" starttime="20220128 13:32:43.598" endtime="20220128 13:32:43.598"/>
+<status status="PASS" starttime="20220214 11:03:22.101" endtime="20220214 11:03:22.101"/>
 </break>
-<status status="PASS" starttime="20220128 13:32:43.597" endtime="20220128 13:32:43.598"/>
+<status status="PASS" starttime="20220214 11:03:22.101" endtime="20220214 11:03:22.101"/>
 </branch>
-<status status="PASS" starttime="20220128 13:32:43.597" endtime="20220128 13:32:43.598"/>
+<status status="PASS" starttime="20220214 11:03:22.101" endtime="20220214 11:03:22.101"/>
 </if>
-<status status="PASS" starttime="20220128 13:32:43.596" endtime="20220128 13:32:43.598"/>
+<status status="PASS" starttime="20220214 11:03:22.099" endtime="20220214 11:03:22.101"/>
 </iter>
-<status status="PASS" starttime="20220128 13:32:43.590" endtime="20220128 13:32:43.598"/>
+<status status="PASS" starttime="20220214 11:03:22.095" endtime="20220214 11:03:22.101"/>
 </while>
-<status status="PASS" starttime="20220128 13:32:43.589" endtime="20220128 13:32:43.598"/>
+<status status="PASS" starttime="20220214 11:03:22.094" endtime="20220214 11:03:22.102"/>
 </test>
-<test id="s1-t5" name="Returned From Keyword">
+<test id="s1-t5" name="Returned From Keyword" line="33">
 <kw name="Set Variable" library="BuiltIn">
 <var>${x}</var>
 <arg>5</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<msg timestamp="20220128 13:32:43.599" level="INFO">${x} = 5</msg>
-<status status="PASS" starttime="20220128 13:32:43.599" endtime="20220128 13:32:43.600"/>
+<msg timestamp="20220214 11:03:22.104" level="INFO">${x} = 5</msg>
+<status status="PASS" starttime="20220214 11:03:22.103" endtime="20220214 11:03:22.104"/>
 </kw>
 <kw name="Reduce">
 <var>${y}</var>
@@ -263,36 +263,36 @@
 <var>${result}</var>
 <arg>${arg1}-1</arg>
 <doc>Evaluates the given expression in Python and returns the result.</doc>
-<msg timestamp="20220128 13:32:43.601" level="INFO">${result} = 4</msg>
-<status status="PASS" starttime="20220128 13:32:43.600" endtime="20220128 13:32:43.601"/>
+<msg timestamp="20220214 11:03:22.106" level="INFO">${result} = 4</msg>
+<status status="PASS" starttime="20220214 11:03:22.105" endtime="20220214 11:03:22.106"/>
 </kw>
 <return>
 <value>${result}</value>
-<status status="PASS" starttime="20220128 13:32:43.601" endtime="20220128 13:32:43.601"/>
+<status status="PASS" starttime="20220214 11:03:22.106" endtime="20220214 11:03:22.106"/>
 </return>
 <kw name="Fail" library="BuiltIn">
 <arg>This should not be executed</arg>
 <doc>Fails the test with the given message and optionally alters its tags.</doc>
-<status status="NOT RUN" starttime="20220128 13:32:43.601" endtime="20220128 13:32:43.601"/>
+<status status="NOT RUN" starttime="20220214 11:03:22.106" endtime="20220214 11:03:22.106"/>
 </kw>
-<msg timestamp="20220128 13:32:43.601" level="INFO">${y} = 4</msg>
-<status status="PASS" starttime="20220128 13:32:43.600" endtime="20220128 13:32:43.601"/>
+<msg timestamp="20220214 11:03:22.106" level="INFO">${y} = 4</msg>
+<status status="PASS" starttime="20220214 11:03:22.105" endtime="20220214 11:03:22.107"/>
 </kw>
 <kw name="Log" library="BuiltIn">
 <arg>${y}</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20220128 13:32:43.602" level="INFO">4</msg>
-<status status="PASS" starttime="20220128 13:32:43.602" endtime="20220128 13:32:43.602"/>
+<msg timestamp="20220214 11:03:22.107" level="INFO">4</msg>
+<status status="PASS" starttime="20220214 11:03:22.107" endtime="20220214 11:03:22.108"/>
 </kw>
-<status status="PASS" starttime="20220128 13:32:43.599" endtime="20220128 13:32:43.602"/>
+<status status="PASS" starttime="20220214 11:03:22.102" endtime="20220214 11:03:22.108"/>
 </test>
-<test id="s1-t6" name="Loop Continue">
+<test id="s1-t6" name="Loop Continue" line="38">
 <kw name="Set Variable" library="BuiltIn">
 <var>${x}</var>
 <arg>5</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<msg timestamp="20220128 13:32:43.604" level="INFO">${x} = 5</msg>
-<status status="PASS" starttime="20220128 13:32:43.603" endtime="20220128 13:32:43.604"/>
+<msg timestamp="20220214 11:03:22.110" level="INFO">${x} = 5</msg>
+<status status="PASS" starttime="20220214 11:03:22.110" endtime="20220214 11:03:22.110"/>
 </kw>
 <while condition="${x} &gt; 0">
 <iter>
@@ -300,128 +300,128 @@
 <var>${x}</var>
 <arg>${x}-1</arg>
 <doc>Evaluates the given expression in Python and returns the result.</doc>
-<msg timestamp="20220128 13:32:43.605" level="INFO">${x} = 4</msg>
-<status status="PASS" starttime="20220128 13:32:43.604" endtime="20220128 13:32:43.605"/>
+<msg timestamp="20220214 11:03:22.112" level="INFO">${x} = 4</msg>
+<status status="PASS" starttime="20220214 11:03:22.111" endtime="20220214 11:03:22.112"/>
 </kw>
 <if>
 <branch type="IF" condition="${x}%2==0">
 <continue>
-<status status="PASS" starttime="20220128 13:32:43.605" endtime="20220128 13:32:43.605"/>
+<status status="PASS" starttime="20220214 11:03:22.113" endtime="20220214 11:03:22.113"/>
 </continue>
-<status status="PASS" starttime="20220128 13:32:43.605" endtime="20220128 13:32:43.605"/>
+<status status="PASS" starttime="20220214 11:03:22.113" endtime="20220214 11:03:22.113"/>
 </branch>
-<status status="PASS" starttime="20220128 13:32:43.605" endtime="20220128 13:32:43.605"/>
+<status status="PASS" starttime="20220214 11:03:22.112" endtime="20220214 11:03:22.113"/>
 </if>
 <kw name="Log" library="BuiltIn">
 <arg>${x}</arg>
 <doc>Logs the given message with the given level.</doc>
-<status status="NOT RUN" starttime="20220128 13:32:43.606" endtime="20220128 13:32:43.606"/>
+<status status="NOT RUN" starttime="20220214 11:03:22.113" endtime="20220214 11:03:22.113"/>
 </kw>
-<status status="PASS" starttime="20220128 13:32:43.604" endtime="20220128 13:32:43.606"/>
+<status status="PASS" starttime="20220214 11:03:22.111" endtime="20220214 11:03:22.113"/>
 </iter>
 <iter>
 <kw name="Evaluate" library="BuiltIn">
 <var>${x}</var>
 <arg>${x}-1</arg>
 <doc>Evaluates the given expression in Python and returns the result.</doc>
-<msg timestamp="20220128 13:32:43.610" level="INFO">${x} = 3</msg>
-<status status="PASS" starttime="20220128 13:32:43.607" endtime="20220128 13:32:43.610"/>
+<msg timestamp="20220214 11:03:22.116" level="INFO">${x} = 3</msg>
+<status status="PASS" starttime="20220214 11:03:22.114" endtime="20220214 11:03:22.117"/>
 </kw>
 <if>
 <branch type="IF" condition="${x}%2==0">
 <continue>
-<status status="NOT RUN" starttime="20220128 13:32:43.611" endtime="20220128 13:32:43.611"/>
+<status status="NOT RUN" starttime="20220214 11:03:22.118" endtime="20220214 11:03:22.118"/>
 </continue>
-<status status="NOT RUN" starttime="20220128 13:32:43.611" endtime="20220128 13:32:43.611"/>
+<status status="NOT RUN" starttime="20220214 11:03:22.117" endtime="20220214 11:03:22.118"/>
 </branch>
-<status status="PASS" starttime="20220128 13:32:43.610" endtime="20220128 13:32:43.611"/>
+<status status="PASS" starttime="20220214 11:03:22.117" endtime="20220214 11:03:22.118"/>
 </if>
 <kw name="Log" library="BuiltIn">
 <arg>${x}</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20220128 13:32:43.612" level="INFO">3</msg>
-<status status="PASS" starttime="20220128 13:32:43.611" endtime="20220128 13:32:43.612"/>
+<msg timestamp="20220214 11:03:22.119" level="INFO">3</msg>
+<status status="PASS" starttime="20220214 11:03:22.118" endtime="20220214 11:03:22.119"/>
 </kw>
-<status status="PASS" starttime="20220128 13:32:43.606" endtime="20220128 13:32:43.612"/>
+<status status="PASS" starttime="20220214 11:03:22.114" endtime="20220214 11:03:22.119"/>
 </iter>
 <iter>
 <kw name="Evaluate" library="BuiltIn">
 <var>${x}</var>
 <arg>${x}-1</arg>
 <doc>Evaluates the given expression in Python and returns the result.</doc>
-<msg timestamp="20220128 13:32:43.614" level="INFO">${x} = 2</msg>
-<status status="PASS" starttime="20220128 13:32:43.613" endtime="20220128 13:32:43.614"/>
+<msg timestamp="20220214 11:03:22.120" level="INFO">${x} = 2</msg>
+<status status="PASS" starttime="20220214 11:03:22.119" endtime="20220214 11:03:22.120"/>
 </kw>
 <if>
 <branch type="IF" condition="${x}%2==0">
 <continue>
-<status status="PASS" starttime="20220128 13:32:43.614" endtime="20220128 13:32:43.615"/>
+<status status="PASS" starttime="20220214 11:03:22.120" endtime="20220214 11:03:22.120"/>
 </continue>
-<status status="PASS" starttime="20220128 13:32:43.614" endtime="20220128 13:32:43.615"/>
+<status status="PASS" starttime="20220214 11:03:22.120" endtime="20220214 11:03:22.120"/>
 </branch>
-<status status="PASS" starttime="20220128 13:32:43.614" endtime="20220128 13:32:43.615"/>
+<status status="PASS" starttime="20220214 11:03:22.120" endtime="20220214 11:03:22.121"/>
 </if>
 <kw name="Log" library="BuiltIn">
 <arg>${x}</arg>
 <doc>Logs the given message with the given level.</doc>
-<status status="NOT RUN" starttime="20220128 13:32:43.615" endtime="20220128 13:32:43.615"/>
+<status status="NOT RUN" starttime="20220214 11:03:22.121" endtime="20220214 11:03:22.121"/>
 </kw>
-<status status="PASS" starttime="20220128 13:32:43.613" endtime="20220128 13:32:43.615"/>
+<status status="PASS" starttime="20220214 11:03:22.119" endtime="20220214 11:03:22.121"/>
 </iter>
 <iter>
 <kw name="Evaluate" library="BuiltIn">
 <var>${x}</var>
 <arg>${x}-1</arg>
 <doc>Evaluates the given expression in Python and returns the result.</doc>
-<msg timestamp="20220128 13:32:43.616" level="INFO">${x} = 1</msg>
-<status status="PASS" starttime="20220128 13:32:43.615" endtime="20220128 13:32:43.616"/>
+<msg timestamp="20220214 11:03:22.122" level="INFO">${x} = 1</msg>
+<status status="PASS" starttime="20220214 11:03:22.122" endtime="20220214 11:03:22.122"/>
 </kw>
 <if>
 <branch type="IF" condition="${x}%2==0">
 <continue>
-<status status="NOT RUN" starttime="20220128 13:32:43.616" endtime="20220128 13:32:43.616"/>
+<status status="NOT RUN" starttime="20220214 11:03:22.123" endtime="20220214 11:03:22.123"/>
 </continue>
-<status status="NOT RUN" starttime="20220128 13:32:43.616" endtime="20220128 13:32:43.616"/>
+<status status="NOT RUN" starttime="20220214 11:03:22.123" endtime="20220214 11:03:22.123"/>
 </branch>
-<status status="PASS" starttime="20220128 13:32:43.616" endtime="20220128 13:32:43.616"/>
+<status status="PASS" starttime="20220214 11:03:22.122" endtime="20220214 11:03:22.123"/>
 </if>
 <kw name="Log" library="BuiltIn">
 <arg>${x}</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20220128 13:32:43.617" level="INFO">1</msg>
-<status status="PASS" starttime="20220128 13:32:43.616" endtime="20220128 13:32:43.617"/>
+<msg timestamp="20220214 11:03:22.123" level="INFO">1</msg>
+<status status="PASS" starttime="20220214 11:03:22.123" endtime="20220214 11:03:22.124"/>
 </kw>
-<status status="PASS" starttime="20220128 13:32:43.615" endtime="20220128 13:32:43.617"/>
+<status status="PASS" starttime="20220214 11:03:22.122" endtime="20220214 11:03:22.124"/>
 </iter>
 <iter>
 <kw name="Evaluate" library="BuiltIn">
 <var>${x}</var>
 <arg>${x}-1</arg>
 <doc>Evaluates the given expression in Python and returns the result.</doc>
-<msg timestamp="20220128 13:32:43.620" level="INFO">${x} = 0</msg>
-<status status="PASS" starttime="20220128 13:32:43.618" endtime="20220128 13:32:43.620"/>
+<msg timestamp="20220214 11:03:22.125" level="INFO">${x} = 0</msg>
+<status status="PASS" starttime="20220214 11:03:22.124" endtime="20220214 11:03:22.125"/>
 </kw>
 <if>
 <branch type="IF" condition="${x}%2==0">
 <continue>
-<status status="PASS" starttime="20220128 13:32:43.620" endtime="20220128 13:32:43.620"/>
+<status status="PASS" starttime="20220214 11:03:22.125" endtime="20220214 11:03:22.125"/>
 </continue>
-<status status="PASS" starttime="20220128 13:32:43.620" endtime="20220128 13:32:43.620"/>
+<status status="PASS" starttime="20220214 11:03:22.125" endtime="20220214 11:03:22.125"/>
 </branch>
-<status status="PASS" starttime="20220128 13:32:43.620" endtime="20220128 13:32:43.620"/>
+<status status="PASS" starttime="20220214 11:03:22.125" endtime="20220214 11:03:22.126"/>
 </if>
 <kw name="Log" library="BuiltIn">
 <arg>${x}</arg>
 <doc>Logs the given message with the given level.</doc>
-<status status="NOT RUN" starttime="20220128 13:32:43.621" endtime="20220128 13:32:43.621"/>
+<status status="NOT RUN" starttime="20220214 11:03:22.126" endtime="20220214 11:03:22.126"/>
 </kw>
-<status status="PASS" starttime="20220128 13:32:43.618" endtime="20220128 13:32:43.621"/>
+<status status="PASS" starttime="20220214 11:03:22.124" endtime="20220214 11:03:22.126"/>
 </iter>
-<status status="PASS" starttime="20220128 13:32:43.604" endtime="20220128 13:32:43.621"/>
+<status status="PASS" starttime="20220214 11:03:22.111" endtime="20220214 11:03:22.126"/>
 </while>
-<status status="PASS" starttime="20220128 13:32:43.603" endtime="20220128 13:32:43.622"/>
+<status status="PASS" starttime="20220214 11:03:22.109" endtime="20220214 11:03:22.126"/>
 </test>
-<status status="PASS" starttime="20220128 13:32:43.532" endtime="20220128 13:32:43.623"/>
+<status status="PASS" starttime="20220214 11:03:22.045" endtime="20220214 11:03:22.127"/>
 </suite>
 <statistics>
 <total>
