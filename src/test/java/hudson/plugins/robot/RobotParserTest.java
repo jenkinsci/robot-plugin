@@ -186,9 +186,9 @@ public class RobotParserTest {
     }
 
     @Test
-    public void testRobot5Basic() {
+    public void testRobot5TryExceptFinallyWhileContinue() {
         final String dir = "robot5";
-        final String mask = "basic_output.xml";
+        final String mask = "basic_new_features_output.xml";
         parse(dir, mask);
     }
 }
