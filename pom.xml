@@ -37,21 +37,21 @@
 	</developers>
 
 	<properties>
-		<jenkins.version>2.176.3</jenkins.version>
-		<structs.version>1.17</structs.version>
-		<workflow-step-api.version>2.19</workflow-step-api.version>
-		<workflow-api.version>2.30</workflow-api.version>
-		<junit.version>1.23</junit.version>
-		<workflow-cps.version>2.66</workflow-cps.version>
-		<workflow-support.version>3.2</workflow-support.version>
+		<jenkins.version>2.277.4</jenkins.version>
+		<structs.version>1.22</structs.version>
+		<workflow-step-api.version>2.23</workflow-step-api.version>
+		<workflow-api.version>2.41</workflow-api.version>
+		<junit.version>1.49</junit.version>
+		<workflow-cps.version>2.90</workflow-cps.version>
+		<workflow-support.version>3.7</workflow-support.version>
 		<matrix-project.version>1.7.1</matrix-project.version>
 		<token-macro.version>2.0</token-macro.version>
 		<maven-git-code-format.version>1.25</maven-git-code-format.version>
-		<script-security.version>1.56</script-security.version>
-		<blueocean-rest-impl.version>1.19.0</blueocean-rest-impl.version>
-		<mailer.version>1.20</mailer.version>
+		<script-security.version>1.76</script-security.version>
+		<blueocean-rest-impl.version>1.25.0</blueocean-rest-impl.version>
+		<mailer.version>1.34</mailer.version>
 		<workflow-durable-task-step.version>2.13</workflow-durable-task-step.version>
-		<workflow-job.version>2.11.2</workflow-job.version>
+		<workflow-job.version>2.40</workflow-job.version>
 		<workflow-basic-steps.version>2.6</workflow-basic-steps.version>
 		<java.level>8</java.level>
 	</properties>
@@ -62,7 +62,17 @@
 		<url>https://www.github.com/jenkinsci/robot-plugin</url>
 		<tag>robot-2.0.0</tag>
 	</scm>
-
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>io.jenkins.tools.bom</groupId>
+				<artifactId>bom-2.222.x</artifactId>
+				<version>10</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
@@ -99,13 +109,13 @@
 		<dependency>
 			<groupId>org.jenkins-ci.plugins.workflow</groupId>
 			<artifactId>workflow-basic-steps</artifactId>
-			<version>${workflow-basic-steps.version}</version>
+<!--			<version>${workflow-basic-steps.version}</version>-->
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins.workflow</groupId>
 			<artifactId>workflow-durable-task-step</artifactId>
-			<version>${workflow-durable-task-step.version}</version>
+<!--			<version>${workflow-durable-task-step.version}</version>-->
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -123,7 +133,7 @@
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
 			<artifactId>matrix-project</artifactId>
-			<version>${matrix-project.version}</version>
+<!--			<version>${matrix-project.version}</version>-->
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
@@ -149,6 +159,95 @@
 			<version>${mailer.version}</version>
 			<optional>true</optional>
 		</dependency>
+
+		<!-- RequireUpperBounds -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.12.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>jackson2-api</artifactId>
+			<version>2.12.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>display-url-api</artifactId>
+			<version>2.3.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>scm-api</artifactId>
+			<version>2.6.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>variant</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>credentials</artifactId>
+			<version>2.3.17</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci</groupId>
+			<artifactId>symbol-annotation</artifactId>
+			<version>1.22</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>cloudbees-folder</artifactId>
+			<version>6.15</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jenkins.plugins</groupId>
+			<artifactId>snakeyaml-api</artifactId>
+			<version>1.27.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.30</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+			<version>1.7.30</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+			<version>1.7.30</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>1.7.30</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm</artifactId>
+			<version>9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm-tree</artifactId>
+			<version>9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm-analysis</artifactId>
+			<version>9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm-util</artifactId>
+			<version>9.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<distributionManagement>
