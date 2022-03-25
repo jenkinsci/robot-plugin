@@ -183,6 +183,16 @@ public class RobotParserTest {
         final String dir = ".";
         final String mask = "robot4_if_output.xml";
         parse(dir, mask);
+    }
 
+    /** Robot Framework 5.0 introduced TRY-EXCEPT, WHILE,
+     *  BREAK, and CONTINUE. The output file contains simple
+     *  test cases which use new features.
+     */
+    @Test
+    public void testRobot5TryExceptFinallyWhileContinue() {
+        final String dir = "robot5";
+        final String mask = "basic_new_features_output.xml";
+        parse(dir, mask);
     }
 }
