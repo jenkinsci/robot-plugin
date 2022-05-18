@@ -38,7 +38,7 @@
 
 	<properties>
 		<jenkins.version>2.277.4</jenkins.version>
-		<structs.version>1.22</structs.version>
+		<structs.version>1.23</structs.version>
 		<workflow-step-api.version>2.23</workflow-step-api.version>
 		<workflow-api.version>2.41</workflow-api.version>
 		<junit.version>1.49</junit.version>
@@ -189,12 +189,12 @@
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
 			<artifactId>credentials</artifactId>
-			<version>2.3.19</version>
+			<version>2.6.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci</groupId>
 			<artifactId>symbol-annotation</artifactId>
-			<version>1.22</version>
+			<version>1.23</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
@@ -294,6 +294,10 @@
 		<repository>
 			<id>repo.jenkins-ci.org</id>
 			<url>https://repo.jenkins-ci.org/public/</url>
+		</repository>
+		<repository>
+			<id>maven.jenkins-ci.org</id>
+			<url>https://repo.jenkins-ci.org/releases/</url>
 		</repository>
 	</repositories>
 
