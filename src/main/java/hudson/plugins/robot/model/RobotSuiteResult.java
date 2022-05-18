@@ -315,14 +315,46 @@ public class RobotSuiteResult extends RobotTestObject {
 	 */
 	public List<RobotCaseResult> getAllFailedCases() {
 		List<RobotCaseResult> failedCases = new ArrayList<>();
-		for(RobotCaseResult caseResult : getCaseResults()){
+		for(RobotCaseResult caseResult : getCaseResults()) {
 			if(!caseResult.isPassed() && !caseResult.isSkipped()) failedCases.add(caseResult);
 		}
-		for(RobotSuiteResult suite : getChildSuites()){
+		for(RobotSuiteResult suite : getChildSuites()) {
 			failedCases.addAll(suite.getAllFailedCases());
 		}
 		Collections.sort(failedCases, new RobotCaseComparator());
 		return failedCases;
+	}
+
+	/**
+	 * Get all passed cases in this suite and its child suites
+	 * @return all passed cases in this suite and its child suites
+	 */
+	public List<RobotCaseResult> getAllPassedCases() {
+		List<RobotCaseResult> passedCases = new ArrayList<>();
+		for(RobotCaseResult caseResult : getCaseResults()) {
+			if(caseResult.isPassed()) passedCases.add(caseResult);
+		}
+		for(RobotSuiteResult suite : getChildSuites()) {
+			passedCases.addAll(suite.getAllPassedCases());
+		}
+		Collections.sort(passedCases, new RobotCaseComparator());
+		return passedCases;
+	}
+
+	/**
+	 * Get all skipped cases in this suite and its child suites
+	 * @return all skipped cases in this suite and its child suites
+	 */
+	public List<RobotCaseResult> getAllSkippedCases() {
+		List<RobotCaseResult> skippedCases = new ArrayList<>();
+		for(RobotCaseResult caseResult : getCaseResults()) {
+			if(caseResult.isSkipped()) skippedCases.add(caseResult);
+		}
+		for(RobotSuiteResult suite : getChildSuites()) {
+			skippedCases.addAll(suite.getAllSkippedCases());
+		}
+		Collections.sort(skippedCases, new RobotCaseComparator());
+		return skippedCases;
 	}
 
 	/**
