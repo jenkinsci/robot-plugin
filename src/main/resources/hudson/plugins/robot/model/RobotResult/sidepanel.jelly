@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
   <l:header />
   <l:side-panel>
     <l:tasks>
@@ -23,10 +23,10 @@ limitations under the License.
       <st:include it="${it.owner}" page="tasks.jelly" optional="true"/>
       <st:include it="${it.owner}" page="actions.jelly" optional="true" />
       <j:if test="${it.owner.previousBuild!=null}">
-        <l:task icon="images/24x24/previous.gif" href="${buildUrl.previousBuildUrl}" title="${%Previous Build}" />
+        <l:task icon="icon-previous icon-md" href="${buildUrl.previousBuildUrl}" title="${%Previous Build}" />
       </j:if>
       <j:if test="${it.owner.nextBuild!=null}">
-        <l:task icon="images/24x24/next.gif" href="${buildUrl.nextBuildUrl}" title="${%Next Build}" />
+        <l:task icon="icon-next icon-md" href="${buildUrl.nextBuildUrl}" title="${%Next Build}" />
       </j:if>
     </l:tasks>
   </l:side-panel>
