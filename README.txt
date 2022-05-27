@@ -1,4 +1,5 @@
 Copyright 2008-2014 Nokia Solutions and Networks Oy
+2018- Eficode Oy
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,7 +16,6 @@ limitations under the License.
 ==================
 
 This plugin publishes Robot Framework (https://robotframework.org/)
-test reports for Jenkins (2.7.1 or newer).
+test reports for Jenkins (2.277.4 or newer).
 
-See https://wiki.jenkins.io/display/JENKINS/Robot+Framework+Plugin
-for more information.
+See https://plugins.jenkins.io/robot for more information.
