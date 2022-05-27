@@ -349,7 +349,11 @@ public class RobotResult extends RobotTestObject {
 		Collections.sort(allSkippedCases, new RobotCaseComparator());
 		return allSkippedCases;
 	}
-	
+
+	/**
+	 * Get all failed test case names related to result.
+	 * @return list of test case names as strings
+	 */
 	@Exported
 	public List<String> getFailedCases() {
 		List<String> failedCases = new ArrayList<>();
@@ -360,6 +364,10 @@ public class RobotResult extends RobotTestObject {
 		return failedCases;
 	}
 
+	/**
+	 * Get all passed test case names related to result.
+	 * @return list of test case names as strings
+	 */
 	@Exported
 	public List<String> getPassedCases() {
 		List<String> passedCases = new ArrayList<>();
@@ -370,6 +378,10 @@ public class RobotResult extends RobotTestObject {
 		return passedCases;
 	}
 
+	/**
+	 * Get all skipped test case names related to result.
+	 * @return list of test case names as strings
+	 */
 	@Exported
 	public List<String> getSkippedCases() {
 		List<String> skippedCases = new ArrayList<>();
