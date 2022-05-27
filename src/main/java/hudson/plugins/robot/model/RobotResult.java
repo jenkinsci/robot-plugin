@@ -321,20 +321,85 @@ public class RobotResult extends RobotTestObject {
 		Collections.sort(allFailedCases, new RobotCaseComparator());
 		return allFailedCases;
 	}
-	
+
+	/**
+	 * Get all passed test cases related to result.
+	 * @return list of test case results
+	 */
+	public List<RobotCaseResult> getAllPassedCases(){
+		List<RobotCaseResult> allPassedCases = new ArrayList<>();
+		for(RobotSuiteResult suite : getSuites()){
+			List<RobotCaseResult> passedCases = suite.getAllPassedCases();
+			allPassedCases.addAll(passedCases);
+		}
+		Collections.sort(allPassedCases, new RobotCaseComparator());
+		return allPassedCases;
+	}
+
+	/**
+	 * Get all skipped test cases related to result.
+	 * @return list of test case results
+	 */
+	public List<RobotCaseResult> getAllSkippedCases(){
+		List<RobotCaseResult> allSkippedCases = new ArrayList<>();
+		for(RobotSuiteResult suite : getSuites()){
+			List<RobotCaseResult> skippedCases = suite.getAllSkippedCases();
+			allSkippedCases.addAll(skippedCases);
+		}
+		Collections.sort(allSkippedCases, new RobotCaseComparator());
+		return allSkippedCases;
+	}
+
+	/**
+	 * Get all failed test case names related to result.
+	 * @return list of test case names as strings
+	 */
 	@Exported
 	public List<String> getFailedCases() {
 		List<String> failedCases = new ArrayList<>();
 		for (RobotCaseResult robotCaseResult : this.getAllFailedCases()) {
-			RobotTestObject rto = robotCaseResult.getParent();
-			String name = robotCaseResult.getName();	
-			while (rto != null && !rto.getName().isEmpty()) {
-				name = rto.getName()+"."+name;
-				rto = rto.getParent();
-			}
+			String name = this.getCaseName(robotCaseResult);
 			failedCases.add(name);
 		}
 		return failedCases;
+	}
+
+	/**
+	 * Get all passed test case names related to result.
+	 * @return list of test case names as strings
+	 */
+	@Exported
+	public List<String> getPassedCases() {
+		List<String> passedCases = new ArrayList<>();
+		for (RobotCaseResult robotCaseResult : this.getAllPassedCases()) {
+			String name = this.getCaseName(robotCaseResult);
+			passedCases.add(name);
+		}
+		return passedCases;
+	}
+
+	/**
+	 * Get all skipped test case names related to result.
+	 * @return list of test case names as strings
+	 */
+	@Exported
+	public List<String> getSkippedCases() {
+		List<String> skippedCases = new ArrayList<>();
+		for (RobotCaseResult robotCaseResult : this.getAllSkippedCases()) {
+			String name = this.getCaseName(robotCaseResult);
+			skippedCases.add(name);
+		}
+		return skippedCases;
+	}
+
+	private String getCaseName(RobotCaseResult robotCaseResult) {
+		RobotTestObject rto = robotCaseResult.getParent();
+		String name = robotCaseResult.getName();
+		while (rto != null && !rto.getName().isEmpty()) {
+			name = rto.getName()+"."+name;
+			rto = rto.getParent();
+		}
+		return name;
 	}
 
 	/**
