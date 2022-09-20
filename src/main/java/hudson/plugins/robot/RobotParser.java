@@ -513,7 +513,9 @@ public class RobotParser {
 					}
 					if (reader.isStartElement() && xmlTag.equals("arg")) {
 						reader.next();
-						stringBuilder.append("    ").append(reader.getText());
+						try {
+							stringBuilder.append("    ").append(reader.getText());
+						} catch (IllegalStateException ignore) { }
 					}
 				}
 				reader.next();
