@@ -195,4 +195,11 @@ public class RobotParserTest {
         final String mask = "basic_new_features_output.xml";
         parse(dir, mask);
     }
+
+    @Test
+    public void testEmptyArgTags() {
+        final String dir = ".";
+        final String mask = "empty_args-output.xml";
+        parse(dir, mask);
+    }
 }
