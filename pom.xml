@@ -49,7 +49,7 @@
 		<maven-git-code-format.version>1.25</maven-git-code-format.version>
 		<script-security.version>1.76</script-security.version>
 		<blueocean-rest-impl.version>1.25.0</blueocean-rest-impl.version>
-		<mailer.version>391.ve4a_38c1b_cf4b_</mailer.version>
+		<mailer.version>408.vd726a_1130320</mailer.version>
 		<workflow-durable-task-step.version>2.13</workflow-durable-task-step.version>
 		<workflow-job.version>2.40</workflow-job.version>
 		<workflow-basic-steps.version>2.6</workflow-basic-steps.version>
