@@ -23,6 +23,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -326,5 +329,23 @@ public class RobotResultTest {
 		RobotCaseResult caseResult = (RobotCaseResult)result.findObjectById("Skip/Test 8 Will Always Fail");
 		String tags = StringUtils.join(caseResult.getTags(), ",");
 		assertEquals("fail,tag2,tag3", tags);
+	}
+
+	@Test
+	public void testSuiteNameAttributeMightBeMissingInRobot4() throws Exception {
+		/**
+		 * see more: https://issues.jenkins.io/browse/JENKINS-69807
+		 **/
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("robot4_empty_suite_name.xml", null, null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("robot4_empty_suite_name.xml").toURI()).getParentFile(), null);
+
+		RobotSuiteResult r = result.getSuites().iterator().next();
+		r = r.getChildSuites().iterator().next();
+		RobotCaseResult caseResult = r.getCaseResults().iterator().next();
+
+		// passing null as `thisObject` should not matter, as the name resolving fails first
+		// due to getName() returning `null`
+		caseResult.getRelativePackageName(null);
+
 	}
 }

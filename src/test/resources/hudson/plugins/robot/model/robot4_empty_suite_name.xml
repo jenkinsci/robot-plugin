@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 4.0 (Python 3.9.13 on darwin)" generated="20221012 15:34:38.101" rpa="false" schemaversion="2">
+<suite id="s1" name="Empty Suite Attribute" source="/Users/tkairi/tmp/empty_suite_attribute">
+<suite id="s1-s1" source="/Users/tkairi/tmp/empty_suite_attribute/a_test_suite__.robot">
+<test id="s1-s1-t1" name="TC">
+<kw name="No Operation" library="BuiltIn">
+<doc>Does absolutely nothing.</doc>
+<status status="PASS" starttime="20221012 15:34:38.112" endtime="20221012 15:34:38.112"/>
+</kw>
+<status status="PASS" starttime="20221012 15:34:38.111" endtime="20221012 15:34:38.112"/>
+</test>
+<status status="PASS" starttime="20221012 15:34:38.111" endtime="20221012 15:34:38.112"/>
+</suite>
+<status status="PASS" starttime="20221012 15:34:38.102" endtime="20221012 15:34:38.112"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="1" fail="0" skip="0" id="s1" name="Empty Suite Attribute">Empty Suite Attribute</stat>
+<stat pass="1" fail="0" skip="0" id="s1-s1">Empty Suite Attribute.</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
