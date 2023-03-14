@@ -98,7 +98,14 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	 * @return package name
 	 */
 	public String getRelativePackageName(RobotTestObject thisObject) {
-		StringBuilder sb = new StringBuilder(getName());
+		/*
+		`name` attribute might be missing from suites, see more: https://issues.jenkins.io/browse/JENKINS-69807
+		*/
+		String name = getName();
+		if (name == null){
+			name = "";
+		}
+		StringBuilder sb = new StringBuilder(name);
 		String parentPackage = getRelativeParent(thisObject);
 		if (! "".equals(parentPackage)) {
 			sb.insert(0, parentPackage);
