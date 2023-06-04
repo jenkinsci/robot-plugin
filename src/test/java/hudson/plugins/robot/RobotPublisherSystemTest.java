@@ -44,9 +44,9 @@ import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.JenkinsRule.WebClient;
 import org.jvnet.hudson.test.recipes.LocalData;
 
-import com.gargoylesoftware.htmlunit.WebAssert;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlTable;
+import org.htmlunit.WebAssert;
+import org.htmlunit.html.HtmlPage;
+import org.htmlunit.html.HtmlTable;
 
 public class RobotPublisherSystemTest {
 
