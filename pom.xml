@@ -37,7 +37,7 @@
 	</developers>
 
 	<properties>
-		<jenkins.version>2.289.1</jenkins.version>
+		<jenkins.version>2.387.3</jenkins.version>
 		<structs.version>1.23</structs.version>
 		<workflow-step-api.version>2.23</workflow-step-api.version>
 		<workflow-api.version>2.41</workflow-api.version>
@@ -66,8 +66,8 @@
 		<dependencies>
 			<dependency>
 				<groupId>io.jenkins.tools.bom</groupId>
-				<artifactId>bom-2.222.x</artifactId>
-				<version>10</version>
+				<artifactId>bom-2.387.x</artifactId>
+				<version>2143.ve4c3c9ec790a</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
