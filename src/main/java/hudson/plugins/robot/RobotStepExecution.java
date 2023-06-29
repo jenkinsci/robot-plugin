@@ -2,13 +2,12 @@ package hudson.plugins.robot;
 
 import java.util.logging.Logger;
 
+import hudson.EnvVars;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.SynchronousNonBlockingStepExecution;
 
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.matrix.MatrixBuild;
-import hudson.model.BuildListener;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 
@@ -29,7 +28,7 @@ public class RobotStepExecution extends SynchronousNonBlockingStepExecution<Void
     	FilePath workspace = getContext().get(FilePath.class);
         workspace.mkdirs();
     	RobotPublisher rp = new RobotPublisher(step.getArchiveDirName(), step.getOutputPath(), step.getOutputFileName(), step.getDisableArchiveOutput(), step.getReportFileName(), step.getLogFileName(), step.getPassThreshold(), step.getUnstableThreshold(), step.getOnlyCritical(), step.getOtherFiles(), step.getEnableCache(), step.getOverwriteXAxisLabel());
-    	rp.perform(getContext().get(Run.class), workspace, getContext().get(Launcher.class), getContext().get(TaskListener.class));
+    	rp.perform(getContext().get(Run.class), workspace, getContext().get(EnvVars.class), getContext().get(Launcher.class), getContext().get(TaskListener.class));
     	return null;
     }
 
