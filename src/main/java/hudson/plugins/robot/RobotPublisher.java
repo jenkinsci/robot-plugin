@@ -30,7 +30,6 @@ import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import hudson.util.FormValidation;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
@@ -270,12 +269,11 @@ public class RobotPublisher extends Recorder implements Serializable,
 				logger.println(Messages.robot_publisher_done());
 
 				// Check if log and report files exist
-				File f = new File(expandedLogFileName);
-				if (!f.exists()) {
+				FilePath outputDir = new FilePath(workspace, expandedOutputPath);
+				if (!new FilePath(outputDir, expandedLogFileName).exists()) {
 					logger.println(Messages.robot_publisher_file_not_found() + " " + expandedLogFileName);
 				}
-				f = new File(expandedReportFileName);
-				if (!f.exists()) {
+				if (!new FilePath(outputDir, expandedReportFileName).exists()) {
 					logger.println(Messages.robot_publisher_file_not_found() + " " + expandedReportFileName);
 				}
 
