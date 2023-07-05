@@ -258,7 +258,6 @@ public class RobotPublisher extends Recorder implements Serializable,
 			RobotResult result;
 
 			try {
-//				EnvVars buildEnv = build.getEnvironment(listener);
 				String expandedOutputFileName = buildEnv.expand(getOutputFileName());
 				String expandedOutputPath = buildEnv.expand(getOutputPath());
 				String expandedReportFileName = buildEnv.expand(getReportFileName());
