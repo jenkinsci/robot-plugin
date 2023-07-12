@@ -37,22 +37,12 @@
 	</developers>
 
 	<properties>
-		<jenkins.version>2.346.1</jenkins.version>
-		<structs.version>318.va_f3ccb_729b_71</structs.version>
-		<workflow-step-api.version>625.vd896b_f445a_f8</workflow-step-api.version>
-		<workflow-api.version>1144.v61c3180fa_03f</workflow-api.version>
-		<junit.version>1.53</junit.version>
-		<workflow-cps.version>2.90</workflow-cps.version>
-		<workflow-support.version>813.vb_d7c3d2984a_0</workflow-support.version>
-		<matrix-project.version>1.7.1</matrix-project.version>
+		<jenkins.version>2.346.3</jenkins.version>
+		<junit.version>1166.va_436e268e972</junit.version>
 		<token-macro.version>2.0</token-macro.version>
 		<maven-git-code-format.version>1.25</maven-git-code-format.version>
 		<script-security.version>1229.v4880b_b_e905a_6</script-security.version>
 		<blueocean-rest-impl.version>1.25.0</blueocean-rest-impl.version>
-		<mailer.version>408.vd726a_1130320</mailer.version>
-		<workflow-durable-task-step.version>2.35</workflow-durable-task-step.version>
-		<workflow-job.version>2.40</workflow-job.version>
-		<workflow-basic-steps.version>2.6</workflow-basic-steps.version>
 		<java.level>8</java.level>
 	</properties>
 
@@ -66,8 +56,8 @@
 		<dependencies>
 			<dependency>
 				<groupId>io.jenkins.tools.bom</groupId>
-				<artifactId>bom-2.303.x</artifactId>
-				<version>1500.ve4d05cd32975</version>
+				<artifactId>bom-2.346.x</artifactId>
+				<version>1742.vb_70478c1b_25f</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
@@ -77,7 +67,6 @@
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
 			<artifactId>structs</artifactId>
-			<version>${structs.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -92,48 +81,40 @@
 		<dependency>
 			<groupId>org.jenkins-ci.plugins.workflow</groupId>
 			<artifactId>workflow-step-api</artifactId>
-			<version>${workflow-step-api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins.workflow</groupId>
 			<artifactId>workflow-cps</artifactId>
-			<version>${workflow-cps.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins.workflow</groupId>
 			<artifactId>workflow-job</artifactId>
-			<version>${workflow-job.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins.workflow</groupId>
 			<artifactId>workflow-basic-steps</artifactId>
-<!--			<version>${workflow-basic-steps.version}</version>-->
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins.workflow</groupId>
 			<artifactId>workflow-durable-task-step</artifactId>
-<!--			<version>${workflow-durable-task-step.version}</version>-->
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins.workflow</groupId>
 			<artifactId>workflow-api</artifactId>
-			<version>${workflow-api.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins.workflow</groupId>
 			<artifactId>workflow-support</artifactId>
-			<version>${workflow-support.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
 			<artifactId>matrix-project</artifactId>
-<!--			<version>${matrix-project.version}</version>-->
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
@@ -156,118 +137,98 @@
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
 			<artifactId>mailer</artifactId>
-			<version>${mailer.version}</version>
 			<optional>true</optional>
-		</dependency>
-
-		<!-- RequireUpperBounds -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.12.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins</groupId>
-			<artifactId>jackson2-api</artifactId>
-			<version>2.13.3-285.vc03c0256d517</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins</groupId>
-			<artifactId>display-url-api</artifactId>
-			<version>2.3.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins</groupId>
-			<artifactId>scm-api</artifactId>
-			<version>602.v6a_81757a_31d2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins</groupId>
-			<artifactId>variant</artifactId>
-			<version>1.4</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins</groupId>
-			<artifactId>credentials</artifactId>
-			<version>2.6.1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci</groupId>
-			<artifactId>symbol-annotation</artifactId>
-			<version>1.23</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins</groupId>
-			<artifactId>cloudbees-folder</artifactId>
-			<version>6.15</version>
-		</dependency>
-		<dependency>
-			<groupId>io.jenkins.plugins</groupId>
-			<artifactId>snakeyaml-api</artifactId>
-			<version>1.30.2-76.vc104f7ce9870</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.36</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>log4j-over-slf4j</artifactId>
-			<version>1.7.36</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-jdk14</artifactId>
-			<version>1.7.36</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>1.7.36</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm</artifactId>
-			<version>9.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-tree</artifactId>
-			<version>9.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-analysis</artifactId>
-			<version>9.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-util</artifactId>
-			<version>9.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.kohsuke</groupId>
-			<artifactId>access-modifier-annotation</artifactId>
-			<version>1.27</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci</groupId>
-			<artifactId>annotation-indexer</artifactId>
-			<version>1.16</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.spotbugs</groupId>
-			<artifactId>spotbugs-annotations</artifactId>
-			<version>4.6.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.woodstox</groupId>
 			<artifactId>wstx-asl</artifactId>
 			<version>3.2.9</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.12.0</version>
+		</dependency>
+
+		<!-- RequireUpperBounds -->
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>jackson2-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>display-url-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>scm-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>variant</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>credentials</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci</groupId>
+			<artifactId>symbol-annotation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>cloudbees-folder</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.jenkins.plugins</groupId>
+			<artifactId>snakeyaml-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm-tree</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm-analysis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm-util</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.kohsuke</groupId>
+			<artifactId>access-modifier-annotation</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci</groupId>
+			<artifactId>annotation-indexer</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.github.spotbugs</groupId>
+			<artifactId>spotbugs-annotations</artifactId>
 		</dependency>
 
 	</dependencies>
