@@ -41,7 +41,7 @@
 		<structs.version>318.va_f3ccb_729b_71</structs.version>
 		<workflow-step-api.version>625.vd896b_f445a_f8</workflow-step-api.version>
 		<workflow-api.version>1144.v61c3180fa_03f</workflow-api.version>
-		<junit.version>1.53</junit.version>
+		<junit.version>1166.va_436e268e972</junit.version>
 		<workflow-cps.version>2.90</workflow-cps.version>
 		<workflow-support.version>813.vb_d7c3d2984a_0</workflow-support.version>
 		<matrix-project.version>1.7.1</matrix-project.version>
