@@ -18,14 +18,11 @@ package hudson.plugins.robot;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import hudson.plugins.robot.model.RobotResult;
+import junit.framework.TestCase;
 
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.TestCase;
-import org.mockito.Mockito;
-
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 
