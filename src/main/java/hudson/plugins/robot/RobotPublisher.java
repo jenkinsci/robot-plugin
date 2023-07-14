@@ -36,6 +36,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
 import javax.servlet.ServletException;
 
 import jenkins.tasks.SimpleBuildStep;
@@ -249,7 +250,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void perform(Run<?, ?> build, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
+	public void perform(Run<?, ?> build, @Nonnull FilePath workspace, @Nonnull EnvVars buildEnv, @Nonnull Launcher launcher, @Nonnull TaskListener listener) throws InterruptedException, IOException {
 		if (build.getResult() != Result.ABORTED) {
 			PrintStream logger = listener.getLogger();
 			logger.println(Messages.robot_publisher_started());
@@ -257,7 +258,6 @@ public class RobotPublisher extends Recorder implements Serializable,
 			RobotResult result;
 
 			try {
-				EnvVars buildEnv = build.getEnvironment(listener);
 				String expandedOutputFileName = buildEnv.expand(getOutputFileName());
 				String expandedOutputPath = buildEnv.expand(getOutputPath());
 				String expandedReportFileName = buildEnv.expand(getReportFileName());
@@ -265,8 +265,16 @@ public class RobotPublisher extends Recorder implements Serializable,
 				String logFileJavascripts = trimSuffix(expandedLogFileName) + ".js";
 
 				result = parse(expandedOutputFileName, expandedLogFileName, expandedReportFileName, expandedOutputPath, build, workspace, launcher, listener);
-
 				logger.println(Messages.robot_publisher_done());
+
+				// Check if log and report files exist
+				FilePath outputDir = new FilePath(workspace, expandedOutputPath);
+				if (!new FilePath(outputDir, expandedLogFileName).exists()) {
+					logger.println(Messages.robot_publisher_file_not_found() + " " + expandedLogFileName);
+				}
+				if (!new FilePath(outputDir, expandedReportFileName).exists()) {
+					logger.println(Messages.robot_publisher_file_not_found() + " " + expandedReportFileName);
+				}
 
 				if (!DEFAULT_JENKINS_ARCHIVE_DIR.equalsIgnoreCase(getArchiveDirName())) {
 					logger.println(Messages.robot_publisher_copying());
