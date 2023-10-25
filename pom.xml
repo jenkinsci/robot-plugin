@@ -39,7 +39,7 @@
 	<properties>
 		<jenkins.version>2.346.3</jenkins.version>
 		<junit.version>1166.va_436e268e972</junit.version>
-		<token-macro.version>2.0</token-macro.version>
+		<token-macro.version>2.6</token-macro.version>
 		<maven-git-code-format.version>1.25</maven-git-code-format.version>
 		<script-security.version>1229.v4880b_b_e905a_6</script-security.version>
 		<blueocean-rest-impl.version>1.25.0</blueocean-rest-impl.version>
