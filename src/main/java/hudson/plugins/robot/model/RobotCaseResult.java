@@ -54,8 +54,6 @@ public class RobotCaseResult extends RobotTestObject{
 	private RobotSuiteResult parent;
 	private int failedSince;
 
-	private int schemaVersion;
-
 	/**
 	 * Difference between string timevalues in format yyyyMMdd HH:mm:ss.SS (Java DateFormat).
 	 * Difference is calculated time2 - time1.
@@ -116,7 +114,8 @@ public class RobotCaseResult extends RobotTestObject{
 	public long getDuration() {
 		if (duration != 0)
 			return duration;
-
+		if (elapsedtime != 0)
+			return Double.valueOf(elapsedtime * 1000).longValue(); // convert seconds to milliseconds
 		try{
 			return timeDifference(this.starttime, this.endtime);
 		} catch (ParseException e){
@@ -175,10 +174,6 @@ public class RobotCaseResult extends RobotTestObject{
 
 	public void setCritical(boolean critical) {
 		this.critical = critical;
-	}
-
-	public void setSchemaVersion(int version) {
-		this.schemaVersion = version;
 	}
 
 	public String getDisplayName() {

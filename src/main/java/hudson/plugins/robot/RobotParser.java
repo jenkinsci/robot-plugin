@@ -287,7 +287,6 @@ public class RobotParser {
 
 		private RobotCaseResult processTest(XMLStreamReader reader, RobotSuiteResult result) throws XMLStreamException {
 			RobotCaseResult caseResult = new RobotCaseResult();
-			caseResult.setSchemaVersion(schemaVersion);
 			caseResult.setParent(result);
 			caseResult.setLogFile(this.logFileName);
 			//parse attributes
@@ -342,6 +341,9 @@ public class RobotParser {
 
 			caseResult.setStarttime(reader.getAttributeValue(null, startLocalName));
 			caseResult.setEndtime(reader.getAttributeValue(null, endLocalName));
+			if (schemaVersion >= 5) {
+				caseResult.setElapsedTime(reader.getAttributeValue(null, elapsedLocalName));
+			}
 			setCriticalityIfAvailable(reader, caseResult);
 			while(reader.hasNext()){
 				reader.next();
