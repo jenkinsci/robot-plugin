@@ -57,6 +57,11 @@ public class RobotParser {
 		private final String logFileName;
 		private final String reportFileName;
 
+		private int schemaVersion;
+		private String startLocalName = "starttime";
+		private String elapsedLocalName = "elapsedtime";
+		private String endLocalName = "endtime";
+
 		public RobotParserCallable(String outputFileLocations, String logFileName, String reportFileName) {
 			this.outputFileLocations = outputFileLocations;
 			this.logFileName = logFileName;
@@ -116,6 +121,14 @@ public class RobotParser {
 						//we already have all data from suites and tests so we can stop parsing
 						break;
 					else if("robot".equals(tagName)){
+						String value = reader.getAttributeValue(null, "schemaversion");
+						value = value == null ? "0" : value;
+						schemaVersion = Integer.parseInt(value);
+						if (schemaVersion >= 5) {
+							startLocalName = "start";
+							elapsedLocalName = "elapsed";
+							// endLocalName is no longer used
+						}
 						result.setTimeStamp(reader.getAttributeValue(null, "generated"));
 					} else if("suite".equals(tagName)){
 						result.addSuite(processSuite(reader, result, baseDirectory));
@@ -131,6 +144,7 @@ public class RobotParser {
 				return getSplitXMLSuite(parent, baseDirectory, splitXMLPath);
 			}
 			RobotSuiteResult suite = new RobotSuiteResult();
+			suite.setSchemaVersion(schemaVersion);
 			suite.setLogFile(this.logFileName);
 			suite.setReportFile(this.reportFileName);
 			suite.setParent(parent);
@@ -157,9 +171,9 @@ public class RobotParser {
 							suite.failTeardown();
 						}
 					} else if("status".equals(tagName)){
-						suite.setElapsedTime(reader.getAttributeValue(null, "elapsedtime"));
-						suite.setStartTime(reader.getAttributeValue(null, "starttime"));
-						suite.setEndTime(reader.getAttributeValue(null, "endtime"));
+						suite.setElapsedTime(reader.getAttributeValue(null, elapsedLocalName));
+						suite.setStartTime(reader.getAttributeValue(null, startLocalName));
+						suite.setEndTime(reader.getAttributeValue(null, endLocalName));
 					}
 				} else if (reader.isEndElement() && "suite".equals(reader.getLocalName())) {
 					return suite;
@@ -273,6 +287,7 @@ public class RobotParser {
 
 		private RobotCaseResult processTest(XMLStreamReader reader, RobotSuiteResult result) throws XMLStreamException {
 			RobotCaseResult caseResult = new RobotCaseResult();
+			caseResult.setSchemaVersion(schemaVersion);
 			caseResult.setParent(result);
 			caseResult.setLogFile(this.logFileName);
 			//parse attributes
@@ -324,8 +339,9 @@ public class RobotParser {
 			//parse test details from nested status
 			caseResult.setPassed("PASS".equals(reader.getAttributeValue(null, "status")));
 			caseResult.setSkipped("SKIP".equals(reader.getAttributeValue(null, "status")));
-			caseResult.setStarttime(reader.getAttributeValue(null, "starttime"));
-			caseResult.setEndtime(reader.getAttributeValue(null, "endtime"));
+
+			caseResult.setStarttime(reader.getAttributeValue(null, startLocalName));
+			caseResult.setEndtime(reader.getAttributeValue(null, endLocalName));
 			setCriticalityIfAvailable(reader, caseResult);
 			while(reader.hasNext()){
 				reader.next();

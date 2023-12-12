@@ -49,6 +49,8 @@ public class RobotSuiteResult extends RobotTestObject {
 	private transient int criticalPassed;
 	private transient int criticalFailed;
 
+	private int schemaVersion;
+
 
 	/**
 	 * Adds a nested suite to this suite. If a suite exists with the same name
@@ -122,7 +124,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	public Collection<RobotCaseResult> getCaseResults() {
 		if(caseResults != null) {
 			List<RobotCaseResult> res = new ArrayList(caseResults.values());
-			Collections.sort(res, new RobotCaseComparator());
+			res.sort(new RobotCaseComparator());
 			return res;
 		}
 		return Collections.emptyList();
@@ -180,6 +182,10 @@ public class RobotSuiteResult extends RobotTestObject {
 		return criticalPassed + criticalFailed;
 	}
 
+	public void setSchemaVersion(int version) {
+		this.schemaVersion = version;
+	}
+
 	/**
 	 * Adds a test case result to this suite. If a case exists with the same
 	 * name it will be overwritten with this one.
@@ -202,7 +208,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	public void setElapsedTime(String elapsedTime) {
 		this.elapsedTime = elapsedTime;
 	}
-	
+
 	public void setStartTime(String startTime){
 		this.startTime = startTime;
 	}
@@ -213,6 +219,10 @@ public class RobotSuiteResult extends RobotTestObject {
 
 	@Override
 	public long getDuration() {
+		if (schemaVersion >= 5) {
+			double d = Double.parseDouble(this.elapsedTime) * 1000;
+			return Double.valueOf(d).longValue();
+		}
 		if (StringUtils.isNotEmpty(this.elapsedTime)) {
 			return Long.parseLong(this.elapsedTime);
 		} else if (StringUtils.isEmpty(this.startTime) || StringUtils.isEmpty(this.endTime)) {

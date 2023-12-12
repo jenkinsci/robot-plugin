@@ -75,7 +75,7 @@ public class RobotResultTest {
 		RobotCaseResult caseResult = suite.getCase("Hello");
 		assertNotNull(caseResult);
 	}
-	
+
 	@Test
 	public void testShouldParseCaseDescription(){
 		RobotSuiteResult suite = result.getSuite("Othercases & Testcases");
@@ -111,7 +111,7 @@ public class RobotResultTest {
 		String errorMsg = caseResult.getErrorMsg();
 		assertEquals("Test failed miserably!", errorMsg.trim());
 	}
-	
+
 	@Test
 	public void testShouldParseNewCriticalCases() throws Exception{
 
