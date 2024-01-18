@@ -202,4 +202,11 @@ public class RobotParserTest {
         final String mask = "empty_args-output.xml";
         parse(dir, mask);
     }
+
+    @Test
+    public void testRF7InlineVar() {
+        final String dir = "robot7";
+        final String mask = "inline_var_output.xml";
+        parse(dir, mask);
+    }
 }

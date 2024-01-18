@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.0a1 (Python 3.8.5 on darwin)" generated="2023-11-13T15:33:07.131714" rpa="false" schemaversion="5">
+<suite id="s1" name="Rf7" source="/Users/aleksisimell/projects/tmp/rf7.robot">
+<test id="s1-t1" name="Test Inline Var" line="2">
+<variable name="${local}">
+<var>mikki hiiri</var>
+<status status="PASS" start="2023-11-13T15:33:07.168900" elapsed="0.000162"/>
+</variable>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${local}</arg>
+<arg>mikki hiiri</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2023-11-13T15:33:07.169409" elapsed="0.000416"/>
+</kw>
+<status status="PASS" start="2023-11-13T15:33:07.168330" elapsed="0.001748"/>
+</test>
+<status status="PASS" start="2023-11-13T15:33:07.134805" elapsed="0.035963"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="1" fail="0" skip="0" id="s1" name="Rf7">Rf7</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

@@ -47,6 +47,7 @@ public class RobotCaseResult extends RobotTestObject{
 	private String description;
 	private String starttime;
 	private String endtime;
+	private double elapsedtime;
 	private List<String> tags;
 	private String stackTrace;
 
@@ -61,9 +62,10 @@ public class RobotCaseResult extends RobotTestObject{
 	 * @return Elapsed time from start to end
 	 * @throws ParseException thrown exception
 	 */
-	public static long timeDifference(String time1, String time2) throws ParseException{
+	public static long timeDifference(String time1, String time2) throws ParseException {
 		long difference = 0;
-		DateFormat format = new SimpleDateFormat("yyyyMMdd HH:mm:ss.SS");
+		String dateFormat = "yyyyMMdd HH:mm:ss.SS";
+		DateFormat format = new SimpleDateFormat(dateFormat);
 
 		Date startDate = format.parse(time1);
 		Date endDate = format.parse(time2);
@@ -83,7 +85,7 @@ public class RobotCaseResult extends RobotTestObject{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -112,7 +114,8 @@ public class RobotCaseResult extends RobotTestObject{
 	public long getDuration() {
 		if (duration != 0)
 			return duration;
-
+		if (elapsedtime != 0)
+			return Double.valueOf(elapsedtime * 1000).longValue(); // convert seconds to milliseconds
 		try{
 			return timeDifference(this.starttime, this.endtime);
 		} catch (ParseException e){
@@ -137,6 +140,14 @@ public class RobotCaseResult extends RobotTestObject{
 		this.endtime = endtime;
 	}
 
+	public double getElapsedtime() {
+		return elapsedtime;
+	}
+
+	public void setElapsedTime(String elapsed) {
+		this.elapsedtime = Double.parseDouble(elapsed);
+	}
+
 	public String getErrorMsg() {
 		return errorMsg;
 	}
@@ -144,7 +155,7 @@ public class RobotCaseResult extends RobotTestObject{
 	public void setErrorMsg(String errorMsg) {
 		this.errorMsg = errorMsg;
 	}
-	
+
 	public String getStackTrace() {
 		return stackTrace;
 	}
