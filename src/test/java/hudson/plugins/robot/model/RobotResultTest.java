@@ -17,20 +17,15 @@ package hudson.plugins.robot.model;
 
 import hudson.plugins.robot.RobotParser;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
+import hudson.plugins.robot.RobotParserTest;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 
 public class RobotResultTest {
@@ -346,6 +341,24 @@ public class RobotResultTest {
 		// passing null as `thisObject` should not matter, as the name resolving fails first
 		// due to getName() returning `null`
 		caseResult.getRelativePackageName(null);
+	}
 
+	@Test
+	public void testCaseResultsShouldBeCorrectlySet() throws  Exception {
+		File directory = new File(RobotParserTest.class.getResource("robot7").toURI());
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("inline_var_output.xml", null, null);
+		result = remoteOperation.invoke(directory, null);
+		result.tally(null);
+
+		RobotSuiteResult suite = result.getSuite("Rf7");
+		RobotCaseResult caseResult = suite.getCase("Test Inline Var");
+
+		// suite results
+		assertEquals(35.0, suite.getDuration(), 0.01);
+
+		// case results
+		assertEquals("2023-11-13T15:33:07.168330", caseResult.getStarttime());
+		assertEquals(0.001748, caseResult.getElapsedtime(), 0.01);
+		assertNull(caseResult.getEndtime());
 	}
 }
