@@ -254,6 +254,7 @@ public class RobotPublisher extends Recorder implements Serializable,
 		if (build.getResult() != Result.ABORTED) {
 			PrintStream logger = listener.getLogger();
 			logger.println(Messages.robot_publisher_started());
+			logger.println(Messages.robot_publisher_only_critical());
 			logger.println(Messages.robot_publisher_parsing());
 			RobotResult result;
 
