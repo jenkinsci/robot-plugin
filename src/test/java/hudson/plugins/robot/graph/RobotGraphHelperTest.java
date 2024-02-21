@@ -51,6 +51,8 @@ public class RobotGraphHelperTest extends TestCase {
 		c.setTimeInMillis(0L);
 		when(mockBuild1.getTimestamp()).thenReturn(c);
 		when(mockBuild2.getTimestamp()).thenReturn(c);
+		when(mockBuild1.getDisplayName()).thenReturn("build 1");
+		when(mockBuild2.getDisplayName()).thenReturn("build 2");
 
 		// set up some results chains
 		mockResult1 = spy(result);
