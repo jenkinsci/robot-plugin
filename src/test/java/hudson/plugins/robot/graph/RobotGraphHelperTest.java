@@ -21,7 +21,6 @@ import hudson.plugins.robot.model.RobotResult;
 import junit.framework.TestCase;
 
 import java.io.File;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import static org.mockito.Mockito.*;
@@ -51,6 +50,8 @@ public class RobotGraphHelperTest extends TestCase {
 		c.setTimeInMillis(0L);
 		when(mockBuild1.getTimestamp()).thenReturn(c);
 		when(mockBuild2.getTimestamp()).thenReturn(c);
+		when(mockBuild1.getDisplayName()).thenReturn("1.2.3");
+		when(mockBuild2.getDisplayName()).thenReturn("3.2.1");
 
 		// set up some results chains
 		mockResult1 = spy(result);
@@ -81,6 +82,14 @@ public class RobotGraphHelperTest extends TestCase {
 				mockResult2, false, false, false, false, false, xLabelFormat,10);
 
 		assertEquals(2, notlimitedResultsGraph.getDataset().getColumnCount());
+	}
+
+	public void testShouldShowCustomLabel() throws Exception {
+		RobotGraph customLabelGraph = RobotGraphHelper.createTestResultsGraphForTestObject(
+				mockResult2, false, false, false, false, false, "$display_name",0);
+
+		assertEquals("3.2.1", customLabelGraph.getDataset().getColumnKey(0).toString());
+		assertEquals("1.2.3", customLabelGraph.getDataset().getColumnKey(1).toString());
 	}
 
 	public void testShouldLimitDurationGraphDataSet() throws Exception {

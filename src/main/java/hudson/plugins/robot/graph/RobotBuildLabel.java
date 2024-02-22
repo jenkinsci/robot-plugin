@@ -19,6 +19,7 @@ public class RobotBuildLabel implements Comparable<RobotBuildLabel>
 
     private String formatBuildLabel(String format, Date startTime) {
         String pattern = format.replace("$build",""+run.number);
+        pattern = pattern.replace("$display_name", run.getDisplayName());
         return new SimpleDateFormat(pattern).format(startTime);
     }
 

@@ -124,8 +124,8 @@ public class RobotParser {
 						String value = reader.getAttributeValue(null, "schemaversion");
 						value = value == null ? "0" : value;
 						schemaVersion = Integer.parseInt(value);
-// RF schemaVersion does not follow major version number. 
-// schemaVersion 5 == RF7.0 
+						// RF schemaVersion does not follow major version number.
+						// schemaVersion 5 == RF7.0
 						if (schemaVersion >= 5) {
 							startLocalName = "start";
 							elapsedLocalName = "elapsed";
