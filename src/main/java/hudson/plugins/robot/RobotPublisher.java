@@ -270,10 +270,10 @@ public class RobotPublisher extends Recorder implements Serializable,
 
 				// Check if log and report files exist
 				FilePath outputDir = new FilePath(workspace, expandedOutputPath);
-				if (!new FilePath(outputDir, expandedLogFileName).exists()) {
+				if (outputDir.list(expandedLogFileName).length == 0) {
 					logger.println(Messages.robot_publisher_file_not_found() + " " + expandedLogFileName);
 				}
-				if (!new FilePath(outputDir, expandedReportFileName).exists()) {
+				if (outputDir.list(expandedReportFileName).length == 0) {
 					logger.println(Messages.robot_publisher_file_not_found() + " " + expandedReportFileName);
 				}
 
