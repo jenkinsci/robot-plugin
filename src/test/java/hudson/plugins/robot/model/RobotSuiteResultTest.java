@@ -47,7 +47,7 @@ public class RobotSuiteResultTest {
 	public void shouldReturnEmptyCollectionIfNoChildren(){
 		RobotSuiteResult result = new RobotSuiteResult();
 		assertNotNull("Return value was null", result.getChildSuites());
-		assertTrue("Collection was not empty", result.getChildSuites().size() == 0);
+        assertEquals("Collection was not empty", 0, result.getChildSuites().size());
 	}
 
 	@Test
@@ -94,6 +94,6 @@ public class RobotSuiteResultTest {
 	public void shouldReturnEmptyCollectionIfNoTestCases() throws DocumentException {
 		RobotSuiteResult result = new RobotSuiteResult();
 		assertNotNull("Return value was null", result.getCaseResults());
-		assertTrue("Collection was not empty", result.getCaseResults().size() == 0);
+        assertEquals("Collection was not empty", 0, result.getCaseResults().size());
 	}
 }

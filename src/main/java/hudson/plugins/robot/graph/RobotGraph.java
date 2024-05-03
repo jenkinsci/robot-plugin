@@ -15,7 +15,6 @@
 */
 package hudson.plugins.robot.graph;
 
-import hudson.model.AbstractBuild;
 import hudson.model.Run;
 import hudson.util.Graph;
 import hudson.util.ShiftedCategoryAxis;
