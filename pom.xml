@@ -37,7 +37,7 @@
 	</developers>
 
 	<properties>
-		<jenkins.version>2.440.3</jenkins.version>
+		<jenkins.version>2.414.3</jenkins.version>
 		<maven-git-code-format.version>1.25</maven-git-code-format.version>
 	</properties>
 
@@ -51,7 +51,7 @@
 		<dependencies>
 			<dependency>
 				<groupId>io.jenkins.tools.bom</groupId>
-				<artifactId>bom-2.440.x</artifactId>
+				<artifactId>bom-2.414.x</artifactId>
 				<version>2950.va_633b_f42f759</version>
 				<scope>import</scope>
 				<type>pom</type>
@@ -194,6 +194,7 @@
 		<dependency>
 			<groupId>io.jenkins.plugins</groupId>
 			<artifactId>asm-api</artifactId>
+			<version>9.6-3.v2e1fa_b_338cd7</version>
 		</dependency>
 		<dependency>
 			<groupId>org.kohsuke</groupId>
