@@ -20,7 +20,6 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
-import hudson.matrix.MatrixBuild;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 

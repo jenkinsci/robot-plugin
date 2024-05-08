@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
 		<artifactId>plugin</artifactId>
-		<version>4.32</version>
+		<version>4.81</version>
 	</parent>
 
 	<artifactId>robot</artifactId>
@@ -37,13 +37,8 @@
 	</developers>
 
 	<properties>
-		<jenkins.version>2.346.3</jenkins.version>
-		<junit.version>1166.va_436e268e972</junit.version>
-		<token-macro.version>2.6</token-macro.version>
+		<jenkins.version>2.414.3</jenkins.version>
 		<maven-git-code-format.version>1.25</maven-git-code-format.version>
-		<script-security.version>1229.v4880b_b_e905a_6</script-security.version>
-		<blueocean-rest-impl.version>1.25.0</blueocean-rest-impl.version>
-		<java.level>8</java.level>
 	</properties>
 
 	<scm>
@@ -56,8 +51,8 @@
 		<dependencies>
 			<dependency>
 				<groupId>io.jenkins.tools.bom</groupId>
-				<artifactId>bom-2.346.x</artifactId>
-				<version>1742.vb_70478c1b_25f</version>
+				<artifactId>bom-2.414.x</artifactId>
+				<version>2950.va_633b_f42f759</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
@@ -76,7 +71,6 @@
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins.workflow</groupId>
@@ -119,19 +113,16 @@
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
 			<artifactId>token-macro</artifactId>
-			<version>${token-macro.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>io.jenkins.blueocean</groupId>
 			<artifactId>blueocean-rest-impl</artifactId>
-			<version>${blueocean-rest-impl.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
 			<artifactId>script-security</artifactId>
-			<version>${script-security.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -146,9 +137,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.12.0</version>
+			<groupId>io.jenkins.plugins</groupId>
+			<artifactId>commons-lang3-api</artifactId>
 		</dependency>
 
 		<!-- RequireUpperBounds -->
@@ -202,20 +192,9 @@
 			<artifactId>jcl-over-slf4j</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-tree</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-analysis</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-util</artifactId>
+			<groupId>io.jenkins.plugins</groupId>
+			<artifactId>asm-api</artifactId>
+			<version>9.6-3.v2e1fa_b_338cd7</version>
 		</dependency>
 		<dependency>
 			<groupId>org.kohsuke</groupId>
