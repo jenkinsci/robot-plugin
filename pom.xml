@@ -38,7 +38,6 @@
 
 	<properties>
 		<jenkins.version>2.414.3</jenkins.version>
-		<maven-git-code-format.version>1.25</maven-git-code-format.version>
 	</properties>
 
 	<scm>
