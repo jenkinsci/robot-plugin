@@ -11,7 +11,7 @@
 	<name>Robot Framework plugin</name>
 	<description>Shows Robot Framework test results in project</description>
 	<packaging>hpi</packaging>
-	<url>https://github.com/jenkinsci/robot-plugin/blob/master/doc/README.md</url>
+	<url>https://github.com/jenkinsci/robot-plugin</url>
 
 	<developers>
 		<developer>
@@ -42,7 +42,7 @@
 
 	<scm>
 		<connection>scm:git:ssh://github.com/jenkinsci/robot-plugin.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/jenkinsci/robot-plugin.git</developerConnection>
+		<developerConnection>scm:git:git@github.com:jenkinsci/robot-plugin.git</developerConnection>
 		<url>https://www.github.com/jenkinsci/robot-plugin</url>
 		<tag>HEAD</tag>
 	</scm>
@@ -202,10 +202,6 @@
 		<dependency>
 			<groupId>org.jenkins-ci</groupId>
 			<artifactId>annotation-indexer</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.github.spotbugs</groupId>
-			<artifactId>spotbugs-annotations</artifactId>
 		</dependency>
 
 	</dependencies>
