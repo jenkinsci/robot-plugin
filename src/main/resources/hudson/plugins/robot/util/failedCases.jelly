@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>	
+<?xml version="1.0" encoding="UTF-8"?>
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util">
     <j:if test="${!it.allFailedCases.isEmpty()}">
@@ -17,13 +17,15 @@
             </tr>
             <j:forEach var="case" items="${it.allFailedCases}">
                 <j:set var="fullName" value="${case.getRelativePackageName(it)}" />
+                <j:set var="relativeId" value="${case.getRelativeId(it)}" />
+                <j:set var="escapedName" value="${h.escape(fullName)}" />
                 <tr>
                     <td class="pane">
-                        <a id="${h.escape(fullName)}-showlink" href="javascript:showStackTrace('${h.jsStringEscape(h.escape(fullName))}','${h.jsStringEscape(case.getRelativeId(it))}/summary')" class="expand"></a>
-                        <a id="${h.escape(fullName)}-hidelink" style="display:none" href="javascript:hideStackTrace('${h.jsStringEscape(h.escape(fullName))}')" class="collapse"></a>
+                        <a id="${escapedName}-showlink" href="#" onclick="javascript:showStackTrace('${h.jsStringEscape(escapedName)}','${h.jsStringEscape(relativeId)}/summary')" class="expand"></a>
+                        <a id="${escapedName}-hidelink" href="#" onclick="javascript:hideStackTrace('${h.jsStringEscape(escapedName)}')" style="display:none" class="collapse"></a>
                         <st:nbsp/>
-                        <a href="${case.getRelativeId(it)}"><small>${case.getRelativeParent(it)}</small>${case.name}</a>
-                        <div id="${h.escape(fullName)}" class="hidden" style="display:none">
+                        <a href="${relativeId}"><small>${case.getRelativeParent(it)}</small>${case.name}</a>
+                        <div id="${escapedName}" class="hidden" style="display:none">
                             ${%Loading...}
                         </div>
                     </td>
