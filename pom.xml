@@ -196,6 +196,6 @@
 	</issueManagement>
 	<ciManagement>
 		<system>Jenkins</system>
-		<url>https://ci.jenkins.io/blue/organizations/jenkins/Plugins%2Frobot-plugin</url>
+		<url>https://ci.jenkins.io/job/Plugins/job/robot-plugin/</url>
 	</ciManagement>
 </project>
