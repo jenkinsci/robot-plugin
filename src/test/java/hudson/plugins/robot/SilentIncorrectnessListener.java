@@ -1,6 +1,6 @@
 package hudson.plugins.robot;
 
-import com.gargoylesoftware.htmlunit.IncorrectnessListener;
+import org.htmlunit.IncorrectnessListener;
 
 /*
  * get rid of verbose warnings in system tests

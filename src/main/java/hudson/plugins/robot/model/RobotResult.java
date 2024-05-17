@@ -23,6 +23,7 @@ import hudson.plugins.robot.RobotBuildAction;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -222,7 +223,7 @@ public class RobotResult extends RobotTestObject {
 
 	private static double roundToDecimals(double value, int decimals){
 		BigDecimal bd = new BigDecimal(Double.toString(value));
-		bd = bd.setScale(decimals, BigDecimal.ROUND_DOWN);
+		bd = bd.setScale(decimals, RoundingMode.DOWN);
 		return bd.doubleValue();
 	}
 

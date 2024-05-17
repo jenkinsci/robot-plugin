@@ -85,6 +85,7 @@ public class RobotGraphHelper {
 					upperbound = failed.intValue() + passed.intValue();
 			}
 
+
 			RobotBuildLabel label = new RobotBuildLabel(testObject,labelFormat);
 
 			values.add(passed);
@@ -119,7 +120,7 @@ public class RobotGraphHelper {
 	 * @return Created graph
 	 */
 	public static RobotGraph createDurationGraphForTestObject(RobotTestObject rootObject, boolean hd, int maxBuildsToShow, String labelFormat, boolean preview) {
-		DataSetBuilder<String, RobotBuildLabel> builder = new DataSetBuilder<String, RobotBuildLabel>();
+		DataSetBuilder<String, RobotBuildLabel> builder = new DataSetBuilder<>();
 
 		int scale = 1;
 		int buildsLeftToShow = maxBuildsToShow > 0? maxBuildsToShow: -1;
