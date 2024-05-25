@@ -11,7 +11,7 @@
 	<name>Robot Framework plugin</name>
 	<description>Shows Robot Framework test results in project</description>
 	<packaging>hpi</packaging>
-	<url>https://github.com/jenkinsci/robot-plugin</url>
+	<url>https://github.com/jenkinsci/robot-plugin/blob/master/doc/README.md</url>
 
 	<developers>
 		<developer>
@@ -192,10 +192,10 @@
 	</pluginRepositories>
 	<issueManagement>
 		<system>Jira</system>
-		<url>https://issues.jenkins-ci.org/issues/?jql=component%20%3D%20robot-plugin</url>
+		<url>https://issues.jenkins.io/issues/?jql=component%3Drobot-plugin</url>
 	</issueManagement>
 	<ciManagement>
 		<system>Jenkins</system>
-		<url>https://ci.jenkins.io/blue/organizations/jenkins/Plugins%2Frobot-plugin</url>
+		<url>https://ci.jenkins.io/job/Plugins/job/robot-plugin/</url>
 	</ciManagement>
 </project>

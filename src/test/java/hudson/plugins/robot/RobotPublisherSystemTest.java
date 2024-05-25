@@ -15,7 +15,6 @@
  */
 package hudson.plugins.robot;
 
-
 import hudson.matrix.MatrixProject;
 import hudson.model.AbstractBuild;
 import hudson.model.FreeStyleProject;
