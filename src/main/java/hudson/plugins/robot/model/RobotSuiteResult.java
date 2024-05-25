@@ -438,7 +438,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * @return Found Object
 	 */
 	public RobotTestObject findObjectById(String id) {
-		if(id.indexOf("/") >= 0){
+		if(id.contains("/")){
 			String suiteName = id.substring(0, id.indexOf("/"));
 			String childId = id.substring(id.indexOf("/")+1, id.length());
 			RobotSuiteResult suite = children.get(suiteName);

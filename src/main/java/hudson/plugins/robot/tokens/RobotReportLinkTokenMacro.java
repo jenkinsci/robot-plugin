@@ -5,7 +5,6 @@ import hudson.FilePath;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.model.AbstractBuild;
-import hudson.model.Hudson;
 import hudson.plugins.robot.RobotBuildAction;
 import jenkins.model.Jenkins;
 
