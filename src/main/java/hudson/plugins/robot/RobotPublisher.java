@@ -36,13 +36,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.annotation.Nonnull;
 import javax.servlet.ServletException;
 
 import jenkins.tasks.SimpleBuildStep;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class RobotPublisher extends Recorder implements Serializable,
 		MatrixAggregatable, SimpleBuildStep {
@@ -250,7 +252,9 @@ public class RobotPublisher extends Recorder implements Serializable,
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void perform(Run<?, ?> build, @Nonnull FilePath workspace, @Nonnull EnvVars buildEnv, @Nonnull Launcher launcher, @Nonnull TaskListener listener) throws InterruptedException, IOException {
+        @SuppressFBWarnings(value = "DCN_NULLPOINTER_EXCEPTION",
+                            justification = "Lower risk to suppress the warning than to stop catching the null pointer exception")
+	public void perform(Run<?, ?> build, @NonNull FilePath workspace, @NonNull EnvVars buildEnv, @NonNull Launcher launcher, @NonNull TaskListener listener) throws InterruptedException, IOException {
 		if (build.getResult() != Result.ABORTED) {
 			PrintStream logger = listener.getLogger();
 			logger.println(Messages.robot_publisher_started());

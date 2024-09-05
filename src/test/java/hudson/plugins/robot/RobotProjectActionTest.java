@@ -46,6 +46,8 @@ public class RobotProjectActionTest extends TestCase {
 		FreeStyleBuild build2 = spy(build);
 		when(p.getLastBuild()).thenReturn(build2);
 		doReturn(null).when(build2).getPreviousBuild();
+		doReturn(null).when(build2).getAction(RobotBuildAction.class);
+		doReturn(null).when(build2).getAction(AggregatedRobotAction.class);
 
 		RobotProjectAction action = new RobotProjectAction(p);
 		assertFalse(action.isDisplayGraph());

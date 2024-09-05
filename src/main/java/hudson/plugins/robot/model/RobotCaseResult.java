@@ -204,7 +204,7 @@ public class RobotCaseResult extends RobotTestObject{
 
 	public String getCommaSeparatedTags(){
 		List<String> tags = getTags();
-		if (tags.size()==0)
+		if (tags.isEmpty())
 			return "";
 		else {
 			StringBuilder buf = new StringBuilder();

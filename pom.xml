@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
 		<artifactId>plugin</artifactId>
-		<version>4.32</version>
+		<version>4.82</version>
 	</parent>
 
 	<artifactId>robot</artifactId>
@@ -37,18 +37,12 @@
 	</developers>
 
 	<properties>
-		<jenkins.version>2.346.3</jenkins.version>
-		<junit.version>1166.va_436e268e972</junit.version>
-		<token-macro.version>2.6</token-macro.version>
-		<maven-git-code-format.version>1.25</maven-git-code-format.version>
-		<script-security.version>1229.v4880b_b_e905a_6</script-security.version>
-		<blueocean-rest-impl.version>1.25.0</blueocean-rest-impl.version>
-		<java.level>8</java.level>
+		<jenkins.version>2.414.3</jenkins.version>
 	</properties>
 
 	<scm>
 		<connection>scm:git:ssh://github.com/jenkinsci/robot-plugin.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/jenkinsci/robot-plugin.git</developerConnection>
+		<developerConnection>scm:git:git@github.com:jenkinsci/robot-plugin.git</developerConnection>
 		<url>https://www.github.com/jenkinsci/robot-plugin</url>
 		<tag>HEAD</tag>
 	</scm>
@@ -56,8 +50,8 @@
 		<dependencies>
 			<dependency>
 				<groupId>io.jenkins.tools.bom</groupId>
-				<artifactId>bom-2.346.x</artifactId>
-				<version>1742.vb_70478c1b_25f</version>
+				<artifactId>bom-2.414.x</artifactId>
+				<version>2982.vdce2153031a_0</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
@@ -76,7 +70,6 @@
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins.workflow</groupId>
@@ -119,19 +112,16 @@
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
 			<artifactId>token-macro</artifactId>
-			<version>${token-macro.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>io.jenkins.blueocean</groupId>
 			<artifactId>blueocean-rest-impl</artifactId>
-			<version>${blueocean-rest-impl.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
 			<artifactId>script-security</artifactId>
-			<version>${script-security.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -146,89 +136,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.12.0</version>
-		</dependency>
-
-		<!-- RequireUpperBounds -->
-		<dependency>
-			<groupId>org.jenkins-ci.plugins</groupId>
-			<artifactId>jackson2-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins</groupId>
-			<artifactId>display-url-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins</groupId>
-			<artifactId>scm-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins</groupId>
-			<artifactId>variant</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins</groupId>
-			<artifactId>credentials</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci</groupId>
-			<artifactId>symbol-annotation</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins</groupId>
-			<artifactId>cloudbees-folder</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>io.jenkins.plugins</groupId>
-			<artifactId>snakeyaml-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>log4j-over-slf4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-jdk14</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-tree</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-analysis</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-util</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.kohsuke</groupId>
-			<artifactId>access-modifier-annotation</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci</groupId>
-			<artifactId>annotation-indexer</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.github.spotbugs</groupId>
-			<artifactId>spotbugs-annotations</artifactId>
+			<artifactId>commons-lang3-api</artifactId>
 		</dependency>
 
 	</dependencies>
@@ -252,15 +161,6 @@
 						<version>1.8.1</version>
 					</dependency>
 				</dependencies>
-			</plugin>
-			<plugin>
-				<groupId>com.github.spotbugs</groupId>
-				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>3.1.12</version>
-				<configuration>
-					<threshold>Low</threshold>
-					<effort>Max</effort>
-				</configuration>
 			</plugin>
 		</plugins>
 
@@ -292,10 +192,10 @@
 	</pluginRepositories>
 	<issueManagement>
 		<system>Jira</system>
-		<url>https://issues.jenkins-ci.org/issues/?jql=component%20%3D%20robot-plugin</url>
+		<url>https://issues.jenkins.io/issues/?jql=component%3Drobot-plugin</url>
 	</issueManagement>
 	<ciManagement>
 		<system>Jenkins</system>
-		<url>https://ci.jenkins.io/blue/organizations/jenkins/Plugins%2Frobot-plugin</url>
+		<url>https://ci.jenkins.io/job/Plugins/job/robot-plugin/</url>
 	</ciManagement>
 </project>
