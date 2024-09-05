@@ -1,12 +1,12 @@
 [![Jenkins Plugin](https://img.shields.io/jenkins/plugin/v/robot.svg)](https://plugins.jenkins.io/robot)
 [![Jenkins.io Build Status](https://ci.jenkins.io/buildStatus/icon?job=Plugins%2Frobot-plugin%2Fmaster)](https://ci.jenkins.io/job/Plugins/job/robot-plugin/job/master/)
-[![Jenkins Plugin Installs](https://img.shields.io/jenkins/plugin/i/robot.svg?color=blue)](https://plugins.jenkins.io/robot)  
+[![Jenkins Plugin Installs](https://img.shields.io/jenkins/plugin/i/robot.svg?color=blue)](https://plugins.jenkins.io/robot)
 
 ## Description
 
 This plugin collects and publishes [Robot
 Framework](http://robotframework.org/ "Robot Framework Home")
-test results in Jenkins.  
+test results in Jenkins.
 Preconditions: all "suggested plugins" are "installed" in Jenkins.
 
 [Issue
@@ -70,7 +70,7 @@ Tracker](https://issues.jenkins-ci.org/issues/?jql=project+%3D+JENKINS+AND+compo
 
 1. Run your tests in a similar way as you would normally by using the `sh` step.
 2. Call the plugin with either the general `step` or directly by calling `robot` (only from
-   version 2.0 onwards): `robot outputPath: '.', logFileName: 'log.html', outputFileName: 
+   version 2.0 onwards): `robot outputPath: '.', logFileName: 'log.html', outputFileName:
    'output.xml', reportFileName: 'report.hml', passThreshold: 100, unstableThreshold: 75.0`
 
 #### Configuring direct links to log files
@@ -142,19 +142,19 @@ Prerequisites: token-macro plugin and email-ext plugin installed.
 3.  Now you can use the following Robot variables in your custom result
     email:
 
--   `${ROBOT_FAILEDCASES}` - Expands to list of failed Robot cases. Each
-    case on its own line.
--   `${ROBOT_PASSPERCENTAGE, onlyCritical}` - Expands to pass percentage
-    of tests. (passed / total \* 100 %),  
-    onlyCritical - True if only critical tests should be calculated in
-    percentage. Defaults to false.
--   `${ROBOT_PASSRATIO, onlyCritical}` Expands to build result in 'passed
-    / total' format.  
-    onlyCritical - True if only critical tests should be calculated in
-    percentage. Defaults to false.
--   `${ROBOT_REPORTLINK}` - If logfile link is configured in the Robot
-    plugin this link will point to that file for the build. Else show
-    link to Robot reports directory for the build.
+    -   `${ROBOT_FAILEDCASES}` - Expands to list of failed Robot cases. Each
+        case on its own line.
+    -   `${ROBOT_PASSPERCENTAGE, onlyCritical}` - Expands to pass percentage
+        of tests. (passed / total \* 100 %),
+        onlyCritical - True if only critical tests should be calculated in
+        percentage. Defaults to false.
+    -   `${ROBOT_PASSRATIO, onlyCritical}` - Expands to build result in 'passed
+        / total' format.
+        onlyCritical - True if only critical tests should be calculated in
+        percentage. Defaults to false.
+    -   `${ROBOT_REPORTLINK}` - If logfile link is configured in the Robot
+        plugin this link will point to that file for the build. Else show
+        link to Robot reports directory for the build.
 
 #### Displaying test numbers in build radiator views etc.
 
@@ -182,7 +182,7 @@ security vulnerabilities**.
 
 The plugin supports both Robot Framework 3.x and 4.x output files. However, in order to support both, the plugin
 shows some extra information for both. [In Robot Framework 4.0 test criticality was removed and "SKIP" status was added](https://github.com/robotframework/robotframework/blob/master/doc/releasenotes/rf-4.0.rst). So for 3.x the
-results overview will show a `Skipped` column, which will always be 0 and for Robot Frameowork 4.x output files
+results overview will show a `Skipped` column, which will always be 0 and for Robot Framework 4.x output files
 the `Critical tests` row will always be 0.
 
 Skipped tests aren't taken into account when calculating pass percentage, but they are calculated to the total
