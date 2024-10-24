@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>	
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Copyright 2008-2014 Nokia Solutions and Networks Oy
 
@@ -25,10 +25,10 @@ limitations under the License.
             <a href="${from.urlName}">
                 <img id="passfailgraph" src="" title="Browse results" width="500" height="200"/>
             </a><br/>
-            <p><label><input type="checkbox" id="zoomToChanges" onclick="redrawPassFailGraph('${from.urlName}/');"/>Zoom to changes</label></p>
-            <p><label><input type="checkbox" id="failedOnly" onclick="redrawPassFailGraph('${from.urlName}/');"/>Show only failed</label></p>
-            <p><label><input type="checkbox" id="criticalOnly" onclick="redrawPassFailGraph('${from.urlName}/');"/>Show only critical</label></p>
-            <p><label><input min="0" max="9999" step="1" placeholder="all" value="" type="number" id="maxBuildsToShow" onchange="redrawPassFailGraph('${from.urlName}/');"/>Max builds</label></p>
+            <p><label><input type="checkbox" id="zoomToChanges"/>Zoom to changes</label></p>
+            <p><label><input type="checkbox" id="failedOnly"/>Show only failed</label></p>
+            <p><label><input type="checkbox" id="criticalOnly"/>Show only critical</label></p>
+            <p><label><input min="0" max="9999" step="1" placeholder="all" value="" type="number" id="maxBuildsToShow"/>Max builds</label></p>
             <br/><p style="float:right"><a id="passfailgraph_hd_link" href="">Show bigger image</a></p>
         </div>
         <script>initPassFailGraph('${from.urlName}/');</script>

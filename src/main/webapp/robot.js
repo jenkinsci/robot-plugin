@@ -3,13 +3,29 @@ function initPassFailGraph(target) {
     var failedOnly = getCookie("RobotResult_failedOnly", "false");
     var criticalOnly = getCookie("RobotResult_criticalOnly", "false");
     var maxBuildsToShow = getCookie("RobotResult_maxBuildsToShow", 0);
-    if (document.getElementById("zoomToChanges"))
-        document.getElementById("zoomToChanges").checked = (mode == "true");
-    if (document.getElementById("failedOnly"))
-        document.getElementById("failedOnly").checked = (failedOnly == "true");
-    if (document.getElementById("criticalOnly"))
-        document.getElementById("criticalOnly").checked = (criticalOnly == "true");
+
+    var element = document.getElementById("zoomToChanges");
+    if (element) {
+        element.checked = (mode == "true");
+        element.addEventListener("click", redrawPassFailGraph(target));
+    }
+
+    element = document.getElementById("failedOnly");
+    if (element) {
+        element.checked = (failedOnly == "true");
+        element.addEventListener("click", redrawPassFailGraph(target));
+    }
+
+    element = document.getElementById("criticalOnly");
+    if (element) {
+        element.checked = (criticalOnly == "true");
+        element.addEventListener("click", redrawPassFailGraph(target));
+    }
+
+    element = document.getElementById("maxBuildsToShow");
     setMaxBuildsToShow(maxBuildsToShow);
+    element.addEventListener("change",  redrawPassFailGraph(target));
+
     setPassFailGraphSrc(target, mode, failedOnly, criticalOnly, maxBuildsToShow);
 }
 
