@@ -25,7 +25,7 @@ limitations under the License.
             <a href="${from.urlName}">
                 <img id="passfailgraph" src="" title="Browse results" width="500" height="200"/>
             </a><br/>
-            <span id="robot-fromurl-id" data-url="${from.urlName}"></span>
+            <span id="robot-fromurl-id" data-url="${from.urlName}/"></span>
             <p><label><input type="checkbox" id="zoomToChanges"/>Zoom to changes</label></p>
             <p><label><input type="checkbox" id="failedOnly"/>Show only failed</label></p>
             <p><label><input type="checkbox" id="criticalOnly"/>Show only critical</label></p>
