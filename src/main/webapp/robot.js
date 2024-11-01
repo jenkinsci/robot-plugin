@@ -135,3 +135,19 @@ document.addEventListener("DOMContentLoaded", function(){
             initDurationGraph(url);
     }
 });
+
+document.addEventListener("DOMContentLoaded", function(){
+    document.querySelectorAll('.robot-expand').forEach(function(element) {
+            element.addEventListener('click', function(event) {
+                event.preventDefault();
+                showStackTrace(event.target.dataset.escapedName, event.target.dataset.relativeId);
+            });
+        });
+
+    document.querySelectorAll('.robot-collapse').forEach(function(element) {
+        element.addEventListener('click', function(event) {
+            event.preventDefault();
+            hideStackTrace(event.target.dataset.escapedName);
+        });
+    });
+});
