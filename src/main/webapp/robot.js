@@ -49,8 +49,9 @@ function setDurationGraphSrc(target, maxBuildsToShow) {
     setLinks("durationgraph", href);
 }
 
-function redrawPassFailGraph(target) {
+function redrawPassFailGraph() {
     var mode = false;
+    var target = document.getElementById("robot-fromurl-id").getAttribute("data-url");
     if (document.getElementById("zoomToChanges")) {
         mode = Boolean(document.getElementById('zoomToChanges').checked).toString();
         setCookie("RobotResult_zoom",mode, 365);
@@ -72,7 +73,8 @@ function redrawPassFailGraph(target) {
     setPassFailGraphSrc(target, mode, failedOnly, criticalOnly, maxBuildsToShow);
 }
 
-function redrawDurationGraph(target) {
+function redrawDurationGraph() {
+    var target = document.getElementById("robot-fromurl-id").getAttribute("data-url");
     var maxBuildsToShow = getMaxBuildsToShow();
     setDurationGraphSrc(target, maxBuildsToShow);
 }
@@ -112,3 +114,38 @@ function hideStackTrace(id) {
     document.getElementById(id + "-showlink").style.display = "";
     document.getElementById(id + "-hidelink").style.display = "none";
 }
+
+document.addEventListener("DOMContentLoaded", function(){
+    var element = document.getElementById("robot-fromurl-id");
+    if (element) {
+        var url = element.getAttribute("data-url");
+
+        ["zoomToChanges", "failedOnly", "criticalOnly"].forEach(function(id) {
+            if (document.getElementById(id))
+                document.getElementById(id).addEventListener("click", redrawPassFailGraph);
+        });
+
+        if (document.getElementById("maxBuildsToShow")) {
+            document.getElementById("maxBuildsToShow").addEventListener("change", redrawPassFailGraph);
+            if (url == "")
+                document.getElementById("maxBuildsToShow").addEventListener("change", redrawDurationGraph);
+        }
+        initPassFailGraph(url);
+        if (url == "")
+            initDurationGraph(url);
+    }
+
+    document.querySelectorAll('.robot-expand').forEach(function(element) {
+            element.addEventListener('click', function(event) {
+                event.preventDefault();
+                showStackTrace(event.target.dataset.escapedName, event.target.dataset.relativeId);
+            });
+        });
+
+    document.querySelectorAll('.robot-collapse').forEach(function(element) {
+        element.addEventListener('click', function(event) {
+            event.preventDefault();
+            hideStackTrace(event.target.dataset.escapedName);
+        });
+    });
+});

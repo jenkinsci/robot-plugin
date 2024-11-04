@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>	
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Copyright 2008-2014 Nokia Solutions and Networks Oy
 
@@ -59,14 +59,13 @@ limitations under the License.
         <a id="passfailgraph_hd" href="">
           <img id="passfailgraph" src="" title="Show bigger image" width="500" height="200"/>
         </a><br/>
-        <p><label><input type="checkbox" id="zoomToChanges" onclick="redrawPassFailGraph('');"/>Zoom to changes</label></p>
-        <p><label><input type="checkbox" id="failedOnly" onclick="redrawPassFailGraph('');"/>Show only failed</label></p>
-        <p><label><input type="checkbox" id="criticalOnly" onclick="redrawPassFailGraph('');"/>Show only critical</label></p>
-        <p><label><input min="0" step="1" max="9999" value="" placeholder="all" type="number" id="maxBuildsToShow"
-                         onchange="redrawPassFailGraph(''); redrawDurationGraph('');"/>Max builds</label></p>
+        <span id="robot-fromurl-id" data-url=""></span>
+        <p><label><input type="checkbox" id="zoomToChanges"/>Zoom to changes</label></p>
+        <p><label><input type="checkbox" id="failedOnly"/>Show only failed</label></p>
+        <p><label><input type="checkbox" id="criticalOnly"/>Show only critical</label></p>
+        <p><label><input min="0" step="1" max="9999" value="" placeholder="all" type="number" id="maxBuildsToShow"/>Max builds</label></p>
         <br/><p style="float:right"><a id="passfailgraph_hd_link" href="">Show bigger image</a></p>
        </div>
-       <script>initPassFailGraph('');</script>
        <div style="float:left; margin: 20px; border: 1px solid #ccc; padding: 10px;">
         <h3>Duration Trend</h3>
           <a id="durationgraph_hd" href="">
@@ -76,7 +75,6 @@ limitations under the License.
         </div>
        <div style="clear:both;"></div>
       </div>
-      <script>initDurationGraph('');</script>
       <j:if test="${!it.caseResults.isEmpty()}">
       <h2>Test Cases</h2>
       <table class="pane sortable">

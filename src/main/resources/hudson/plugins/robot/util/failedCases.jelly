@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util">
+    <script src="${rootURL}/plugin/robot/robot.js"/>
     <j:if test="${!it.allFailedCases.isEmpty()}">
         <style>
             td.pane {
@@ -21,8 +22,8 @@
                 <j:set var="escapedName" value="${h.escape(fullName)}" />
                 <tr>
                     <td class="pane">
-                        <a id="${escapedName}-showlink" href="#" onclick="javascript:showStackTrace('${h.jsStringEscape(escapedName)}','${h.jsStringEscape(relativeId)}/summary')" class="expand"></a>
-                        <a id="${escapedName}-hidelink" href="#" onclick="javascript:hideStackTrace('${h.jsStringEscape(escapedName)}')" style="display:none" class="collapse"></a>
+                        <a id="${escapedName}-showlink" href="#" class="robot-expand" data-escaped-name="${escapedName}" data-relative-id="${relativeId}/summary"></a>
+                        <a id="${escapedName}-hidelink" href="#" style="display:none" class="robot-collapse" data-escaped-name="${escapedName}"></a>
                         <st:nbsp/>
                         <a href="${relativeId}"><small>${case.getRelativeParent(it)}</small>${case.name}</a>
                         <div id="${escapedName}" class="hidden" style="display:none">
