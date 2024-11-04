@@ -134,9 +134,7 @@ document.addEventListener("DOMContentLoaded", function(){
         if (url == "")
             initDurationGraph(url);
     }
-});
 
-document.addEventListener("DOMContentLoaded", function(){
     document.querySelectorAll('.robot-expand').forEach(function(element) {
             element.addEventListener('click', function(event) {
                 event.preventDefault();
