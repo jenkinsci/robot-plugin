@@ -52,20 +52,6 @@ limitations under the License.
       <th>Pass %</th>
     </tr>
     <tr>
-      <th>Critical tests</th>
-      <td class="table-upper-row" style="border-left:0px;">${attrs.action.result.criticalTotal}</td>
-      <td class="table-upper-row">
-        <j:set var="criticalFails" value="pass" />
-        <j:if test="${attrs.action.result.criticalFailed > 0}">
-           <j:set var="criticalFails" value="fail" />
-        </j:if>
-        <span class="${criticalFails}">${attrs.action.result.criticalFailed}</span>
-      </td>
-      <td class="table-upper-row">${attrs.action.result.criticalPassed}</td>
-      <td class="table-upper-row">0</td>
-      <td class="table-upper-row">${attrs.action.criticalPassPercentage}</td>
-    </tr>
-    <tr>
       <th>All tests</th>
       <td style="border-left:0px;">${attrs.action.result.overallTotal}</td>
       <td>

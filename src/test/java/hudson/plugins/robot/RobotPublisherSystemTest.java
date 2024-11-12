@@ -475,12 +475,7 @@ public class RobotPublisherSystemTest {
 	private void verifyTotalsTable(HtmlPage page, int totalTests, int totalFailed, int totalSkipped, String totalPercents,
 			int totalCritical, int criticalFailed, String criticalPercents) {
 		HtmlTable table = page.getHtmlElementById("robot-summary-table");
-		String expectedTable = "<tableclass=\"table\"id=\"robot-summary-table\"><tbody><tr><th/><th>Total</th><th>Failed</th><th>Passed</th><th>Skipped</th><th>Pass%</th></tr><tr><th>Criticaltests</th>"
-				+ "<tdclass=\"table-upper-row\"style=\"border-left:0px;\">" + totalCritical + "</td>"
-				+ "<tdclass=\"table-upper-row\"><spanclass=\"" + (criticalFailed == 0 ? "pass" : "fail") + "\">" + criticalFailed + "</span></td>"
-				+ "<tdclass=\"table-upper-row\">" + (totalCritical - totalFailed) + "</td>"
-				+ "<tdclass=\"table-upper-row\">0</td>"
-				+ "<tdclass=\"table-upper-row\">" + criticalPercents + "</td></tr>"
+		String expectedTable = "<tableclass=\"table\"id=\"robot-summary-table\"><tbody><tr><th/><th>Total</th><th>Failed</th><th>Passed</th><th>Skipped</th><th>Pass%</th></tr>"
 				+ "<tr><th>Alltests</th><tdstyle=\"border-left:0px;\">" + totalTests + "</td>"
 				+ "<td><spanclass=\"" + (totalFailed == 0 ? "pass" : "fail") + "\">" + totalFailed + "</span></td>"
 				+ "<td>" + (totalTests - totalFailed) + "</td>"
