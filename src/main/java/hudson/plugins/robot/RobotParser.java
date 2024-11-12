@@ -293,7 +293,7 @@ public class RobotParser {
 			caseResult.setLogFile(this.logFileName);
 			//parse attributes
 			caseResult.setName(reader.getAttributeValue(null, "name"));
-			setCriticalityIfAvailable(reader, caseResult);
+			//setCriticalityIfAvailable(reader, caseResult);
 			caseResult.setId(reader.getAttributeValue(null, "id"));
 			//parse test tags
 			caseResult.setDescription("");
@@ -346,7 +346,7 @@ public class RobotParser {
 			if (schemaVersion >= 5) {
 				caseResult.setElapsedTime(reader.getAttributeValue(null, elapsedLocalName));
 			}
-			setCriticalityIfAvailable(reader, caseResult);
+//			setCriticalityIfAvailable(reader, caseResult);
 			while(reader.hasNext()){
 				reader.next();
 				if(reader.isCharacters()){

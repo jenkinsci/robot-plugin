@@ -29,8 +29,6 @@ public class RobotPassRatioTokenMacroTest extends TestCase {
 		
 		Mockito.when(result.getOverallPassed()).thenReturn(6l);
 		Mockito.when(result.getOverallTotal()).thenReturn(13l);
-		Mockito.when(result.getCriticalPassed()).thenReturn(6l);
-		Mockito.when(result.getCriticalTotal()).thenReturn(13l);
 		Mockito.when(action.getResult()).thenReturn(result);
 		Mockito.when(build.getAction(RobotBuildAction.class)).thenReturn(action);
 	}

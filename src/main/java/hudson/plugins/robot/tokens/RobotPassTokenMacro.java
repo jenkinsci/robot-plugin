@@ -32,10 +32,7 @@ public class RobotPassTokenMacro extends DataBoundTokenMacro {
 		RobotBuildAction action = context.getAction(RobotBuildAction.class);
 		if(action!=null){
 			RobotResult result = action.getResult();
-			if(onlyCritical)
-				return Long.toString(result.getCriticalPassed());
-			else
-				return Long.toString(result.getOverallPassed());
+			return Long.toString(result.getOverallPassed());
 		}
 		return "";
 	}

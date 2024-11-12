@@ -31,10 +31,7 @@ public class RobotFailTokenMacro extends DataBoundTokenMacro {
 		RobotBuildAction action = context.getAction(RobotBuildAction.class);
 		if(action!=null){
 			RobotResult result = action.getResult();
-			if(onlyCritical)
-				return Long.toString(result.getCriticalFailed());
-			else
-				return Long.toString(result.getOverallFailed());
+			return Long.toString(result.getOverallFailed());
 		}
 		return "";
 	}
