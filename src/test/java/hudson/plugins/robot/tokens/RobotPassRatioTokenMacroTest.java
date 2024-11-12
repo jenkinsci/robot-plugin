@@ -29,8 +29,8 @@ public class RobotPassRatioTokenMacroTest extends TestCase {
 		
 		Mockito.when(result.getOverallPassed()).thenReturn(6l);
 		Mockito.when(result.getOverallTotal()).thenReturn(13l);
-		Mockito.when(result.getCriticalPassed()).thenReturn(5l);
-		Mockito.when(result.getCriticalTotal()).thenReturn(5l);
+		Mockito.when(result.getCriticalPassed()).thenReturn(6l);
+		Mockito.when(result.getCriticalTotal()).thenReturn(13l);
 		Mockito.when(action.getResult()).thenReturn(result);
 		Mockito.when(build.getAction(RobotBuildAction.class)).thenReturn(action);
 	}
@@ -41,7 +41,7 @@ public class RobotPassRatioTokenMacroTest extends TestCase {
 	
 	public void testTokenConversionWithCritical() throws MacroEvaluationException, IOException, InterruptedException{
 		token.onlyCritical = true;
-		assertEquals("5 / 5",token.evaluate(build, listener, macroName));
+		assertEquals("6 / 13",token.evaluate(build, listener, macroName));
 	}
 	
 	public void testTokenConversionWithAll() throws MacroEvaluationException, IOException, InterruptedException{

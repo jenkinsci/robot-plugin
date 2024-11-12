@@ -86,33 +86,30 @@ public class RobotResult extends RobotTestObject {
 	 * Get number of passed critical tests.
 	 * @return number of passed critical tests
 	 */
+	@Deprecated
 	@Exported
 	public long getCriticalPassed(){
-		if(overallStats == null) return criticalPassed;
-		if(overallStats.isEmpty()) return 0;
-		return overallStats.get(0).getPass();
+		return this.getOverallPassed();
 	}
 
 	/**
 	 * Get number of failed critical tests.
 	 * @return number of failed critical tests
 	 */
+	@Deprecated
 	@Exported
 	public long getCriticalFailed(){
-		if(overallStats == null) return criticalFailed;
-		if( overallStats.isEmpty()) return 0;
-		return overallStats.get(0).getFail();
+		return this.getOverallFailed();
 	}
 
 	/**
 	 * Get total number of critical tests.
 	 * @return total number of critical tests
 	 */
+	@Deprecated
 	@Exported
 	public long getCriticalTotal(){
-		if(overallStats == null) return criticalFailed + criticalPassed;
-		if(overallStats.isEmpty()) return 0;
-		return overallStats.get(0).getTotal();
+		return this.getOverallTotal();
 	}
 
 	/**
@@ -424,8 +421,8 @@ public class RobotResult extends RobotTestObject {
 			failed += suite.getFailed();
 			passed += suite.getPassed();
 			skipped += suite.getSkipped();
-			criticalFailed += suite.getCriticalFailed();
-			criticalPassed += suite.getCriticalPassed();
+			criticalFailed += suite.getFailed();
+			criticalPassed += suite.getPassed();
 			duration += suite.getDuration();
 			newMap.put(suite.getDuplicateSafeName(), suite);
 		}

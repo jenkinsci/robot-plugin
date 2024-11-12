@@ -23,6 +23,7 @@ import java.util.List;
 import hudson.plugins.robot.RobotParserTest;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -92,8 +93,9 @@ public class RobotResultTest {
 		assertNotNull(result.getSuite("Somecases_1"));
 	}
 
+	@Deprecated
 	@Test
-	//TODO; should add tests for all parsed fields? Refactor name to parsertest
+	@Ignore
 	public void testShouldParseCriticalCases(){
 		assertEquals(19, result.getCriticalTotal());
 	}
@@ -107,7 +109,9 @@ public class RobotResultTest {
 		assertEquals("Test failed miserably!", errorMsg.trim());
 	}
 
+	@Deprecated
 	@Test
+	@Ignore
 	public void testShouldParseNewCriticalCases() throws Exception{
 
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml", null, null);
@@ -127,12 +131,16 @@ public class RobotResultTest {
 		assertEquals(10, result.getOverallFailed());
 	}
 
+	@Deprecated
 	@Test
+	@Ignore
 	public void testShouldParseFailedCriticalCases(){
 		assertEquals(9, result.getCriticalFailed());
 	}
 
+	@Deprecated
 	@Test
+	@Ignore
 	public void testShouldParseFailedNewCriticalCases() throws Exception{
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml", null, null);
 		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("new_critical_output.xml").toURI()).getParentFile(), null);

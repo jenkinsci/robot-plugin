@@ -162,24 +162,27 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * Get number of passed critical tests
 	 * @return number of passed critical tests
 	 */
+	@Deprecated
 	public long getCriticalPassed() {
-		return criticalPassed;
+		return this.getPassed();
 	}
 
 	/**
 	 * Get number of failed critical tests
 	 * @return number of failed critical tests
 	 */
+	@Deprecated
 	public long getCriticalFailed() {
-		return criticalFailed;
+		return this.getFailed();
 	}
 
 	/**
 	 * Get number of all critical tests
 	 * @return number of all critical tests
 	 */
+	@Deprecated
 	public int getCriticalTotal() {
-		return criticalPassed + criticalFailed;
+		return this.getTotal();
 	}
 
 	public void setSchemaVersion(int version) {
@@ -424,8 +427,8 @@ public class RobotSuiteResult extends RobotTestObject {
 			failed += suite.getFailed();
 			passed += suite.getPassed();
 			skipped += suite.getSkipped();
-			criticalFailed += suite.getCriticalFailed();
-			criticalPassed += suite.getCriticalPassed();
+			criticalFailed += suite.getFailed();
+			criticalPassed += suite.getPassed();
 			duration += suite.getDuration();
 			newSuites.put(suite.getDuplicateSafeName(), suite);
 		}
