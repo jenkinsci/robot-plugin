@@ -113,6 +113,7 @@ public class RobotResultTest {
 	@Deprecated
 	@Test
 	@Ignore
+	// TODO: remove test when criticality is removed
 	public void testShouldParseNewCriticalCases() throws Exception{
 
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml", null, null);
