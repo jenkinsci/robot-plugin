@@ -59,7 +59,7 @@ public class RobotProjectActionTest extends TestCase {
 		when(build.getProject()).thenReturn(p);
 		when(build.getRootDir()).thenReturn(tmpDir);
 		RobotResult result = mock(RobotResult.class);
-		RobotBuildAction buildAction = new RobotBuildAction(build, result, "", null, null, null, false, "");
+		RobotBuildAction buildAction = new RobotBuildAction(build, result, "", null, null, null, false, "", false);
 		when(build.getAction(RobotBuildAction.class)).thenReturn(buildAction);
 		when(p.getLastBuild()).thenReturn(build);
 
@@ -75,7 +75,7 @@ public class RobotProjectActionTest extends TestCase {
 		when(buildWithAction.getProject()).thenReturn(p);
 		when(buildWithAction.getRootDir()).thenReturn(tmpDir);
 		RobotResult result = mock(RobotResult.class);
-		RobotBuildAction buildAction = new RobotBuildAction(buildWithAction, result, "", null, null, null, false, "");
+		RobotBuildAction buildAction = new RobotBuildAction(buildWithAction, result, "", null, null, null, false, "", false);
 		when(buildWithAction.getAction(RobotBuildAction.class)).thenReturn(buildAction);
 
 		when(p.getLastBuild()).thenReturn(lastBuild);

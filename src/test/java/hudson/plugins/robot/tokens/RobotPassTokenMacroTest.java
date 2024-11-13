@@ -26,7 +26,6 @@ public class RobotPassTokenMacroTest extends TestCase {
 		RobotResult result = Mockito.mock(RobotResult.class);
 		
 		Mockito.when(result.getOverallPassed()).thenReturn(6l);
-		Mockito.when(result.getCriticalPassed()).thenReturn(5l);
 		Mockito.when(action.getResult()).thenReturn(result);
 		Mockito.when(build.getAction(RobotBuildAction.class)).thenReturn(action);
 	}
@@ -34,10 +33,11 @@ public class RobotPassTokenMacroTest extends TestCase {
 	public void testAcceptsName(){
 		assertTrue(token.acceptsMacroName(macroName));
 	}
-	
+
+// TODO: remove test when criticality is removed
 	public void testTokenConversionWithCritical() throws MacroEvaluationException, IOException, InterruptedException{
 		token.onlyCritical = true;
-		assertEquals("5",token.evaluate(build, listener, macroName));
+		assertEquals("6",token.evaluate(build, listener, macroName));
 	}
 	
 	public void testTokenConversionWithAll() throws MacroEvaluationException, IOException, InterruptedException{

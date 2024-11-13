@@ -56,20 +56,20 @@ public class RobotPublisherSystemTest {
 	@Test
 	public void testRoundTripConfig() throws Exception {
 		FreeStyleProject p = j.jenkins.createProject(FreeStyleProject.class, "testRoundTripConfig");
-		RobotPublisher before = new RobotPublisher(null, "a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png",
+		RobotPublisher before = new RobotPublisher(null, "a", "b", false, "c", "d", 11, 27, true, false,"dir1/*.jpg, dir2/*.png",
 				false, "");
 		p.getPublishersList().add(before);
 		j.configRoundtrip(p);
 		RobotPublisher after = p.getPublishersList().get(RobotPublisher.class);
 		assertThat(
-				"outputPath,outputFileName,reportFileName,logFileName,passThreshold,unstableThreshold,onlyCritical,otherFiles",
+				"outputPath,outputFileName,reportFileName,logFileName,passThreshold,unstableThreshold,onlyCritical,countSkippedTests,otherFiles",
 				before, samePropertyValuesAs(after));
 	}
 
 	@Test
 	public void testConfigView() throws Exception {
 		FreeStyleProject p = j.jenkins.createProject(FreeStyleProject.class, "testConfigView");
-		RobotPublisher before = new RobotPublisher(null, "a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png",
+		RobotPublisher before = new RobotPublisher(null, "a", "b", false, "c", "d", 11, 27, true, false,"dir1/*.jpg, dir2/*.png",
 				false, "");
 		p.getPublishersList().add(before);
 		HtmlPage page = j.createWebClient().getPage(p, "configure");
@@ -86,8 +86,8 @@ public class RobotPublisherSystemTest {
 		WebAssert.assertInputContainsValue(page, "_.unstableThreshold", "27.0");
 		WebAssert.assertInputPresent(page, "_.passThreshold");
 		WebAssert.assertInputContainsValue(page, "_.passThreshold", "11.0");
-		WebAssert.assertInputPresent(page, "_.onlyCritical");
-		WebAssert.assertInputContainsValue(page, "_.onlyCritical", "on");
+		WebAssert.assertInputPresent(page, "_.countSkippedTests");
+		WebAssert.assertInputContainsValue(page, "_.countSkippedTests", "on");
 		WebAssert.assertInputPresent(page, "_.otherFiles");
 		WebAssert.assertInputContainsValue(page, "_.otherFiles", "dir1/*.jpg,dir2/*.png");
 	}
@@ -475,12 +475,7 @@ public class RobotPublisherSystemTest {
 	private void verifyTotalsTable(HtmlPage page, int totalTests, int totalFailed, int totalSkipped, String totalPercents,
 			int totalCritical, int criticalFailed, String criticalPercents) {
 		HtmlTable table = page.getHtmlElementById("robot-summary-table");
-		String expectedTable = "<tableclass=\"table\"id=\"robot-summary-table\"><tbody><tr><th/><th>Total</th><th>Failed</th><th>Passed</th><th>Skipped</th><th>Pass%</th></tr><tr><th>Criticaltests</th>"
-				+ "<tdclass=\"table-upper-row\"style=\"border-left:0px;\">" + totalCritical + "</td>"
-				+ "<tdclass=\"table-upper-row\"><spanclass=\"" + (criticalFailed == 0 ? "pass" : "fail") + "\">" + criticalFailed + "</span></td>"
-				+ "<tdclass=\"table-upper-row\">" + (totalCritical - totalFailed) + "</td>"
-				+ "<tdclass=\"table-upper-row\">0</td>"
-				+ "<tdclass=\"table-upper-row\">" + criticalPercents + "</td></tr>"
+		String expectedTable = "<tableclass=\"table\"id=\"robot-summary-table\"><tbody><tr><th/><th>Total</th><th>Failed</th><th>Passed</th><th>Skipped</th><th>Pass%</th></tr>"
 				+ "<tr><th>Alltests</th><tdstyle=\"border-left:0px;\">" + totalTests + "</td>"
 				+ "<td><spanclass=\"" + (totalFailed == 0 ? "pass" : "fail") + "\">" + totalFailed + "</span></td>"
 				+ "<td>" + (totalTests - totalFailed) + "</td>"

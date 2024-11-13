@@ -32,13 +32,14 @@ import org.junit.Test;
 
 public class RobotPublisherTest {
 	private final boolean onlyCritical = false;
+	private final boolean countSkipped = false;
 
 	@Before
 	public void setUp() throws Exception {
 	}
 
 	private RobotPublisher getRobotPublisher(double passThreshold, double unstableThreshold) {
-		return new RobotPublisher(null, "", "", false, "", "", passThreshold, unstableThreshold, onlyCritical, "", false, "");
+		return new RobotPublisher(null, "", "", false, "", "", passThreshold, unstableThreshold, onlyCritical, countSkipped, "", false, "");
 	}
 
 	@Test
@@ -141,5 +142,5 @@ public class RobotPublisherTest {
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("xxe_output.xml", null, null);
 		RobotResult result = remoteOperation.invoke(new File(RobotPublisherTest.class.getResource("xxe_output.xml").toURI()).getParentFile(), null);
 	}
-	
+
 }

@@ -312,15 +312,15 @@ public class RobotCaseResult extends RobotTestObject{
 		return 0;
 	}
 
+	@Deprecated
 	@Override
 	public long getCriticalFailed() {
-		if((!isPassed() && !isSkipped()) && isCritical()) return 1;
-		return 0;
+		return this.getFailed();
 	}
 
+	@Deprecated
 	@Override
 	public long getCriticalPassed() {
-		if(isPassed() && isCritical()) return 1;
-		return 0;
+		return this.getPassed();
 	}
 }

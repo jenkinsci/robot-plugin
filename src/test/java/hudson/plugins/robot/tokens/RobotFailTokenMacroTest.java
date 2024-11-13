@@ -26,7 +26,6 @@ public class RobotFailTokenMacroTest extends TestCase {
 		RobotResult result = Mockito.mock(RobotResult.class);
 		
 		Mockito.when(result.getOverallFailed()).thenReturn(6l);
-		Mockito.when(result.getCriticalFailed()).thenReturn(5l);
 		Mockito.when(action.getResult()).thenReturn(result);
 		Mockito.when(build.getAction(RobotBuildAction.class)).thenReturn(action);
 	}
@@ -37,7 +36,7 @@ public class RobotFailTokenMacroTest extends TestCase {
 	
 	public void testTokenConversionWithCritical() throws MacroEvaluationException, IOException, InterruptedException{
 		token.onlyCritical = true;
-		assertEquals("5",token.evaluate(build, listener, macroName));
+		assertEquals("6",token.evaluate(build, listener, macroName));
 	}
 	
 	public void testTokenConversionWithAll() throws MacroEvaluationException, IOException, InterruptedException{

@@ -39,13 +39,14 @@ public class RobotPassPercentageTokenMacroTest extends TestCase {
 		assertTrue(new RobotPassPercentageTokenMacro().acceptsMacroName(macroName));
 	}
 	
+	// TODO: remove test when criticality is removed
 	public void testTokenConversionWithOnlyCritical() throws MacroEvaluationException, IOException, InterruptedException{
-		token.onlyCritical = true;
+		token.countSkippedTests = true;
 		assertEquals("55.0",token.evaluate(build, listener, macroName));
 	}
 	
 	public void testTokenConversionWithAll() throws MacroEvaluationException, IOException, InterruptedException{
-		token.onlyCritical = false;
+		token.countSkippedTests = false;
 		assertEquals("41.0",token.evaluate(build, listener, macroName));
 	}
 }

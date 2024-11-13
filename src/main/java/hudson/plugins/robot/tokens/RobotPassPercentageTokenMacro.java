@@ -16,11 +16,8 @@ import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 @Extension(optional = true)
 public class RobotPassPercentageTokenMacro extends DataBoundTokenMacro {
 
-	/**
-	 * If true return only pass percentage of critical tests
-	 */
 	@Parameter
-	public boolean onlyCritical;
+	public boolean countSkippedTests;
 	
 	@Override
 	public String evaluate(AbstractBuild<?, ?> context, TaskListener listener,
@@ -37,7 +34,7 @@ public class RobotPassPercentageTokenMacro extends DataBoundTokenMacro {
 
 		if (action!=null){
 			RobotResult result = action.getResult();
-			return String.valueOf(result.getPassPercentage(onlyCritical));
+			return String.valueOf(result.getPassPercentage(countSkippedTests));
 		}
 		return "";
 	}

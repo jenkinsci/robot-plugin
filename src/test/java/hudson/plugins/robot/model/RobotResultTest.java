@@ -23,6 +23,7 @@ import java.util.List;
 import hudson.plugins.robot.RobotParserTest;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -92,8 +93,10 @@ public class RobotResultTest {
 		assertNotNull(result.getSuite("Somecases_1"));
 	}
 
+	@Deprecated
 	@Test
-	//TODO; should add tests for all parsed fields? Refactor name to parsertest
+	@Ignore
+        // TODO: remove test when criticality is removed
 	public void testShouldParseCriticalCases(){
 		assertEquals(19, result.getCriticalTotal());
 	}
@@ -107,7 +110,10 @@ public class RobotResultTest {
 		assertEquals("Test failed miserably!", errorMsg.trim());
 	}
 
+	@Deprecated
 	@Test
+	@Ignore
+	// TODO: remove test when criticality is removed
 	public void testShouldParseNewCriticalCases() throws Exception{
 
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml", null, null);
@@ -127,12 +133,17 @@ public class RobotResultTest {
 		assertEquals(10, result.getOverallFailed());
 	}
 
+	@Deprecated
 	@Test
+	@Ignore
 	public void testShouldParseFailedCriticalCases(){
 		assertEquals(9, result.getCriticalFailed());
 	}
 
+	@Deprecated
 	@Test
+	@Ignore
+	// TODO: remove test when criticality is removed
 	public void testShouldParseFailedNewCriticalCases() throws Exception{
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml", null, null);
 		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("new_critical_output.xml").toURI()).getParentFile(), null);
@@ -360,5 +371,23 @@ public class RobotResultTest {
 		assertEquals("2023-11-13T15:33:07.168330", caseResult.getStarttime());
 		assertEquals(0.001748, caseResult.getElapsedtime(), 0.01);
 		assertNull(caseResult.getEndtime());
+	}
+
+	@Test
+	public void testGetPassPercentageWithoutSkippedTests() throws Exception {
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("robot4_skip.xml", null, null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("robot4_skip.xml").toURI()).getParentFile(), null);
+		result.tally(null);
+
+		assertEquals(66.6, result.getPassPercentage(false), 0);
+	}
+
+	@Test
+	public void testGetPassPercentageWithSkippedTests() throws Exception {
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("robot4_skip.xml", null, null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("robot4_skip.xml").toURI()).getParentFile(), null);
+		result.tally(null);
+
+		assertEquals(33.3, result.getPassPercentage(true), 0);
 	}
 }

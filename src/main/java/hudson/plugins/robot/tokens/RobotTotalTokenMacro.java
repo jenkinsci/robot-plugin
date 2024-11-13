@@ -32,10 +32,7 @@ public class RobotTotalTokenMacro extends DataBoundTokenMacro {
 		RobotBuildAction action = context.getAction(RobotBuildAction.class);
 		if(action!=null){
 			RobotResult result = action.getResult();
-			if(onlyCritical)
-				return Long.toString(result.getCriticalTotal());
-			else
-				return Long.toString(result.getOverallTotal());
+			return Long.toString(result.getOverallTotal());
 		}
 		return "";
 	}

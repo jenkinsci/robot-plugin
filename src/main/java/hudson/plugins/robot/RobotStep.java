@@ -38,6 +38,7 @@ public class RobotStep extends Step {
 	private @CheckForNull String[] otherFiles;
 	private boolean enableCache = true;
 	private boolean onlyCritical = true;
+	private boolean countSkippedTests = false;
 	private @CheckForNull String overwriteXAxisLabel;
 
 	
@@ -95,6 +96,8 @@ public class RobotStep extends Step {
 		return this.onlyCritical;
 	}
 
+	public boolean getCountSkippedTests() { return this.countSkippedTests; }
+
 	public String getOverwriteXAxisLabel() {
 		return this.overwriteXAxisLabel;
 	}
@@ -143,7 +146,12 @@ public class RobotStep extends Step {
 	public void setOnlyCritical(boolean onlyCritical) {
 		this.onlyCritical = onlyCritical;
 	}
-	
+
+	@DataBoundSetter
+	public void setCountSkippedTests(boolean countSkippedTests) {
+		this.countSkippedTests = countSkippedTests;
+	}
+
 	@DataBoundSetter
 	public void setOtherFiles(String otherFiles) {
 		otherFiles = Util.fixEmpty(otherFiles);

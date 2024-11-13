@@ -65,6 +65,8 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	private RobotResult result;
 	private String xAxisLabel;
 
+	private boolean countSkippedTests;
+
 	static {
 		XSTREAM.alias("result",RobotResult.class);
 		XSTREAM.alias("suite",RobotSuiteResult.class);
@@ -83,7 +85,8 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	 * @param enableCache Whether we want to enable caching or not
 	 */
 	public RobotBuildAction(Run<?, ?> build, RobotResult result,
-			String outputPath, TaskListener listener, String logFileLink, String logHtmlLink, boolean enableCache, String xAxisLabel) {
+			String outputPath, TaskListener listener, String logFileLink, String logHtmlLink, boolean enableCache, String xAxisLabel,
+							boolean countSkippedTests) {
 		super();
 		super.onAttached(build);
 		this.build = build;
@@ -92,6 +95,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		this.logHtmlLink = logHtmlLink;
 		this.enableCache = enableCache;
 		this.xAxisLabel = xAxisLabel;
+		this.countSkippedTests = countSkippedTests;
 		setResult(result, listener);
 	}
 
@@ -332,5 +336,13 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 
 	public List<RobotCaseResult> getAllTests() {
 		return getResult().getAllCases();
+	}
+
+	public boolean isCountSkippedTests() {
+		return countSkippedTests;
+	}
+
+	public void setCountSkippedTests(boolean countSkippedTests) {
+		this.countSkippedTests = countSkippedTests;
 	}
 }

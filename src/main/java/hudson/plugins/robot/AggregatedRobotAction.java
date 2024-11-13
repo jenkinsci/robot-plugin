@@ -109,33 +109,34 @@ public class AggregatedRobotAction implements Action {
 
 		private static final long serialVersionUID = 1L;
 		private final transient AggregatedRobotAction parent;
-		private int passed, failed, skipped, criticalPassed, criticalFailed;
+		private int passed, failed, skipped;
 
 		public AggregatedRobotResult(AggregatedRobotAction parent) {
 			this.parent = parent;
 		}
 
 		public void addResult(RobotResult result) {
-			criticalFailed += result.getCriticalFailed();
-			criticalPassed += result.getCriticalPassed();
 			failed += result.getOverallFailed();
 			passed += result.getOverallPassed();
 			skipped += result.getOverallSkipped();
 		}
 
+		@Deprecated
 		@Override
 		public long getCriticalPassed() {
-			return criticalPassed;
+			return this.getOverallPassed();
 		}
 
+		@Deprecated
 		@Override
 		public long getCriticalFailed() {
-			return criticalFailed;
+			return this.getOverallFailed();
 		}
 
+		@Deprecated
 		@Override
 		public long getCriticalTotal() {
-			return criticalFailed + criticalPassed;
+			return this.getOverallTotal();
 		}
 
 		@Override
