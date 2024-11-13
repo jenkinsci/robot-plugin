@@ -96,6 +96,7 @@ public class RobotResultTest {
 	@Deprecated
 	@Test
 	@Ignore
+        // TODO: remove test when criticality is removed
 	public void testShouldParseCriticalCases(){
 		assertEquals(19, result.getCriticalTotal());
 	}
