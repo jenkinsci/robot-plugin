@@ -369,4 +369,22 @@ public class RobotResultTest {
 		assertEquals(0.001748, caseResult.getElapsedtime(), 0.01);
 		assertNull(caseResult.getEndtime());
 	}
+
+	@Test
+	public void testGetPassPercentageWithoutSkippedTests() throws Exception {
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("robot4_skip.xml", null, null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("robot4_skip.xml").toURI()).getParentFile(), null);
+		result.tally(null);
+
+		assertEquals(66.6, result.getPassPercentage(false), 0);
+	}
+
+	@Test
+	public void testGetPassPercentageWithSkippedTests() throws Exception {
+		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("robot4_skip.xml", null, null);
+		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("robot4_skip.xml").toURI()).getParentFile(), null);
+		result.tally(null);
+
+		assertEquals(33.3, result.getPassPercentage(true), 0);
+	}
 }

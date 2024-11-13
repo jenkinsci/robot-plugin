@@ -142,5 +142,5 @@ public class RobotPublisherTest {
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("xxe_output.xml", null, null);
 		RobotResult result = remoteOperation.invoke(new File(RobotPublisherTest.class.getResource("xxe_output.xml").toURI()).getParentFile(), null);
 	}
-	
+
 }
