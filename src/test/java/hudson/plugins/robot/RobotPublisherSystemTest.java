@@ -56,20 +56,20 @@ public class RobotPublisherSystemTest {
 	@Test
 	public void testRoundTripConfig() throws Exception {
 		FreeStyleProject p = j.jenkins.createProject(FreeStyleProject.class, "testRoundTripConfig");
-		RobotPublisher before = new RobotPublisher(null, "a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png",
+		RobotPublisher before = new RobotPublisher(null, "a", "b", false, "c", "d", 11, 27, true, false,"dir1/*.jpg, dir2/*.png",
 				false, "");
 		p.getPublishersList().add(before);
 		j.configRoundtrip(p);
 		RobotPublisher after = p.getPublishersList().get(RobotPublisher.class);
 		assertThat(
-				"outputPath,outputFileName,reportFileName,logFileName,passThreshold,unstableThreshold,onlyCritical,otherFiles",
+				"outputPath,outputFileName,reportFileName,logFileName,passThreshold,unstableThreshold,onlyCritical,countSkippedTests,otherFiles",
 				before, samePropertyValuesAs(after));
 	}
 
 	@Test
 	public void testConfigView() throws Exception {
 		FreeStyleProject p = j.jenkins.createProject(FreeStyleProject.class, "testConfigView");
-		RobotPublisher before = new RobotPublisher(null, "a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png",
+		RobotPublisher before = new RobotPublisher(null, "a", "b", false, "c", "d", 11, 27, true, false,"dir1/*.jpg, dir2/*.png",
 				false, "");
 		p.getPublishersList().add(before);
 		HtmlPage page = j.createWebClient().getPage(p, "configure");
@@ -86,8 +86,8 @@ public class RobotPublisherSystemTest {
 		WebAssert.assertInputContainsValue(page, "_.unstableThreshold", "27.0");
 		WebAssert.assertInputPresent(page, "_.passThreshold");
 		WebAssert.assertInputContainsValue(page, "_.passThreshold", "11.0");
-		WebAssert.assertInputPresent(page, "_.onlyCritical");
-		WebAssert.assertInputContainsValue(page, "_.onlyCritical", "on");
+		WebAssert.assertInputPresent(page, "_.countSkippedTests");
+		WebAssert.assertInputContainsValue(page, "_.countSkippedTests", "on");
 		WebAssert.assertInputPresent(page, "_.otherFiles");
 		WebAssert.assertInputContainsValue(page, "_.otherFiles", "dir1/*.jpg,dir2/*.png");
 	}

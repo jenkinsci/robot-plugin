@@ -32,13 +32,14 @@ import org.junit.Test;
 
 public class RobotPublisherTest {
 	private final boolean onlyCritical = false;
+	private final boolean countSkipped = false;
 
 	@Before
 	public void setUp() throws Exception {
 	}
 
 	private RobotPublisher getRobotPublisher(double passThreshold, double unstableThreshold) {
-		return new RobotPublisher(null, "", "", false, "", "", passThreshold, unstableThreshold, onlyCritical, "", false, "");
+		return new RobotPublisher(null, "", "", false, "", "", passThreshold, unstableThreshold, onlyCritical, countSkipped, "", false, "");
 	}
 
 	@Test

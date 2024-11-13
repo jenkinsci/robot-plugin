@@ -54,7 +54,10 @@ limitations under the License.
            <f:textbox />
     </f:entry>
     <f:entry field="onlyCritical">
-        <f:checkbox default="true"/>${%thresholds.onlycritical}
+        <f:checkbox default="true"/>${%thresholds.onlyCritical}
+    </f:entry>
+    <f:entry field="countSkippedTests">
+        <f:checkbox default="false"/>${%thresholds.countSkippedTests}
     </f:entry>
     </table>
   </f:entry>

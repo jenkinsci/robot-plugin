@@ -187,19 +187,15 @@ public class RobotResult extends RobotTestObject {
 
 	/**
 	 * Returns pass percentage of passed tests per total tests.
-	 * @param onlyCritical true if only critical tests are to be calculated
+	 * @param countSkipped true if skipped tests should be included in calculating total tests
 	 * @return Percentage value rounded to 1 decimal
 	 */
-	public double getPassPercentage(boolean onlyCritical) {
+	public double getPassPercentage(boolean countSkipped) {
 		long passed, total;
-		if(onlyCritical) {
-			passed = getCriticalPassed();
-			total = getCriticalTotal();
-		} else {
-			passed = getOverallPassed();
-			// Skipped tests don't count towards pass percentage
-			total = getOverallTotal() - getOverallSkipped();
-		}
+		passed = getOverallPassed();
+		total = getOverallTotal();
+		if (!countSkipped)
+			total -= getOverallSkipped();
 
 		if(total == 0) return 100;
 

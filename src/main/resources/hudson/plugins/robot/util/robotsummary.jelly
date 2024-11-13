@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>	
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Copyright 2008-2014 Nokia Solutions and Networks Oy
 
@@ -15,66 +15,83 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util">
-  <st:attribute name="action" use="required"/>
-  <style type="text/css">
-  #robot-summary-table {
-    text-align: center;
-    border-collapse: collapse;
-  }
-  #robot-summary-table th {
-      font-weight: normal;
-      padding: 3px;
-  }
-  #robot-summary-table td {
-      font-weight: bold;
-      border-left: 1px solid #888;
-      margin: 0px;
-      padding: 3px;
-  }
-  #robot-summary-table .table-upper-row {
-      border-bottom: 1px solid #888;
-  }
-  #robot-summary-table .fail {
-      color: #f00;
-  }
-  #robot-summary-table .pass {
-      color: #0f0;
-  }
-  </style>
-  <table class="table" id="robot-summary-table">
-    <tr>
-      <th></th>
-      <th>Total</th>
-      <th>Failed</th>
-      <th>Passed</th>
-      <th>Skipped</th>
-      <th>Pass %</th>
-    </tr>
-    <tr>
-      <th>All tests</th>
-      <td style="border-left:0px;">${attrs.action.result.overallTotal}</td>
-      <td>
-        <j:set var="totalFails" value="pass" />
-        <j:if test="${attrs.action.result.overallFailed > 0}">
-           <j:set var="totalFails" value="fail" />
-        </j:if>
-        <span class="${totalFails}">${attrs.action.result.overallFailed}</span>
-      </td>
-      <td>${attrs.action.result.overallPassed}</td>
-      <td>${attrs.action.result.overallSkipped}</td>
-      <td>${attrs.action.overallPassPercentage}</td>
-    </tr>
-  </table>
-  <p>
-  <ul>
-  <li><a href="${rootURL}/${attrs.action.owner.url}${attrs.action.urlName}">Browse results</a></li>
-  <j:if test="${attrs.action.logFileLink != null}">
-    <li><a href="${rootURL}/${attrs.action.owner.url}${attrs.action.urlName}/report/${attrs.action.logFileLink}">Open ${attrs.action.logFileLink}</a></li>
-  </j:if>
-  <j:if test="${attrs.action.logHtmlLink != null}">
-    <li><a href="${rootURL}/${attrs.action.owner.url}${attrs.action.urlName}/report/${attrs.action.logHtmlLink}">Open ${attrs.action.logHtmlLink}</a></li>
-  </j:if>
-  </ul>
-  </p>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util">
+    <st:attribute name="action" use="required"/>
+    <style type="text/css">
+        #robot-summary-table {
+        text-align: center;
+        border-collapse: collapse;
+        }
+        #robot-summary-table th {
+        font-weight: normal;
+        padding: 3px;
+        }
+        #robot-summary-table td {
+        font-weight: bold;
+        border-left: 1px solid #888;
+        margin: 0px;
+        padding: 3px;
+        }
+        #robot-summary-table .table-upper-row {
+        border-bottom: 1px solid #888;
+        }
+        #robot-summary-table .fail {
+        color: #f00;
+        }
+        #robot-summary-table .pass {
+        color: #0f0;
+        }
+    </style>
+    <table class="table" id="robot-summary-table">
+        <tr>
+            <th></th>
+            <th>Total</th>
+            <th>Failed</th>
+            <th>Passed</th>
+            <th>Skipped</th>
+            <th>Pass %</th>
+        </tr>
+        <tr>
+            <th>All tests</th>
+            <td style="border-left:0px;">${attrs.action.result.overallTotal}</td>
+            <td>
+                <j:set var="totalFails" value="pass"/>
+                <j:if test="${attrs.action.result.overallFailed > 0}">
+                    <j:set var="totalFails" value="fail"/>
+                </j:if>
+                <span class="${totalFails}">${attrs.action.result.overallFailed}</span>
+            </td>
+            <td>${attrs.action.result.overallPassed}</td>
+            <td>${attrs.action.result.overallSkipped}</td>
+            <td>
+                <j:set var="totalPassPercentage" value="${attrs.action.overallPassPercentage}"/>
+                <j:if test="${attrs.action.countSkippedTests}">
+                    <j:set var="totalPassPercentage" value="${attrs.action.criticalPassPercentage}"/>
+                </j:if>
+                ${totalPassPercentage}
+            </td>
+        </tr>
+    </table>
+    <p>
+        <ul>
+            <li>
+                <a href="${rootURL}/${attrs.action.owner.url}${attrs.action.urlName}">Browse results</a>
+            </li>
+            <j:if test="${attrs.action.logFileLink != null}">
+                <li>
+                    <a href="${rootURL}/${attrs.action.owner.url}${attrs.action.urlName}/report/${attrs.action.logFileLink}">
+                        Open ${attrs.action.logFileLink}
+                    </a>
+                </li>
+            </j:if>
+            <j:if test="${attrs.action.logHtmlLink != null}">
+                <li>
+                    <a href="${rootURL}/${attrs.action.owner.url}${attrs.action.urlName}/report/${attrs.action.logHtmlLink}">
+                        Open ${attrs.action.logHtmlLink}
+                    </a>
+                </li>
+            </j:if>
+        </ul>
+    </p>
 </j:jelly>
