@@ -96,6 +96,7 @@ public class RobotResultTest {
 	@Deprecated
 	@Test
 	@Ignore
+        // TODO: remove test when criticality is removed
 	public void testShouldParseCriticalCases(){
 		assertEquals(19, result.getCriticalTotal());
 	}
@@ -112,6 +113,7 @@ public class RobotResultTest {
 	@Deprecated
 	@Test
 	@Ignore
+	// TODO: remove test when criticality is removed
 	public void testShouldParseNewCriticalCases() throws Exception{
 
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml", null, null);
@@ -141,6 +143,7 @@ public class RobotResultTest {
 	@Deprecated
 	@Test
 	@Ignore
+	// TODO: remove test when criticality is removed
 	public void testShouldParseFailedNewCriticalCases() throws Exception{
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml", null, null);
 		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("new_critical_output.xml").toURI()).getParentFile(), null);
