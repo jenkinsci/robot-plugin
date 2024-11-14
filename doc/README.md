@@ -105,6 +105,9 @@ the page and the sidebar link from previous versions have been removed.
 
 ### Configuring Robot overall pass/fail to show in the project list
 
+The list view column showing the overall pass/fail and duration trend should be visible
+by default in the project list. If it's not visible, you can add it by following these steps:
+
 1.  Go to Jenkins front page
 2.  Select the + sign in the top tabs of the project listing to create a
     new view or go to
@@ -134,17 +137,17 @@ Prerequisites: token-macro plugin and email-ext plugin installed.
 
     -   `${ROBOT_FAILEDCASES}` - Expands to list of failed Robot cases. Each
         case on its own line.
-    -   `${ROBOT_PASSPERCENTAGE, onlyCritical}` - Expands to pass percentage
-        of tests. (passed / total \* 100 %),
-        onlyCritical - True if only critical tests should be calculated in
-        percentage. Defaults to false.
-    -   `${ROBOT_PASSRATIO, onlyCritical}` - Expands to build result in 'passed
-        / total' format.
-        onlyCritical - True if only critical tests should be calculated in
-        percentage. Defaults to false.
+    -  `${ROBOT_FAILED}` - Expands to count of failed cases.
+    -   `${ROBOT_PASSPERCENTAGE, countSkippedTests}` - Expands to pass percentage
+        of tests. (passed / total \* 100 %).
+        `countSkippedTests` is an optional parameter that can be used to include skipped tests in the total count.
+    -   `${ROBOT_PASSRATIO}` - Expands to build result in 'passed
+        / total' format. This total includes skipped test cases.
+    -   `${ROBOT_PASSED}` - Expands to count of passed cases.
     -   `${ROBOT_REPORTLINK}` - If logfile link is configured in the Robot
         plugin this link will point to that file for the build. Else show
         link to Robot reports directory for the build.
+    -  `${ROBOT_TOTAL}` - Expands to total count of test cases. This total includes skipped test cases.
 
 ### Displaying test numbers in build radiator views etc.
 
