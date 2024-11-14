@@ -59,7 +59,7 @@ Tracker](https://issues.jenkins-ci.org/issues/?jql=project+%3D+JENKINS+AND+compo
 7.  If your output files are named differently than default (i.e.
     output.xml, report.html and log.html) specify the filenames by
     pressing the "Advanced..." button and writing the names in relevant
-    fields. The fields support wildcards `*` and `?`.
+    fields. The fields support wildcards `*` and `?`.
 8.  If you have other artifacts such as screenshots that you want to
     persist for viewing later in the logs you must configure them under
     "Advanced... -\> Other files to copy". The field accepts comma
