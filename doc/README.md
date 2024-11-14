@@ -75,42 +75,17 @@ Tracker](https://issues.jenkins-ci.org/issues/?jql=project+%3D+JENKINS+AND+compo
 
 #### Configuring direct links to log files
 
-##### Version 1.3.0
+##### Version 1.3.0+
 
 Links are automatically generated to whatever files are configured to
 "Report html" and "Log html" in the plugin configuration. Links to log
 and report HTMLs are now only in the summary sections in the middle of
 the page and the sidebar link from previous versions have been removed.
 
-##### Version 1.2.3 and earlier
-
-From version 1.2 it's possible to configure a direct link from both
-side panel and project/build page summaries to chosen file persisted with
-the build. If no file is configured the link won't show up. Steps to do
-this are as follows:
-
-1.  Go to project configuration
-2.  Configure the name of the file to be linked to Log/Report link field
-3.  Make sure that you are saving the actual file you want to link with
-    the build by checking the filenames/masks configured in the fields
-    behind "Advanced..." button. By default these are output.xml,
-    report.html and log.html which are the Robot Framework default names
-4.  Save the configuration and run a build. The links are persisted per
-    build in order to withstand changes in file naming. Thus the links
-    won't appear in builds that exist already.
-5.  Links should appear in the project/build summaries and in build
-    side panel.
-
-NOTE: After configuration change etc. the link will appear also in
-project side panel, but for now it doesn't appear there right after the
-build. Conversely, the project view side panel link won't go away until
-after configuration change/resave in project. We're working on a
-solution to this.
-
 ![sidepanel link](images/sidepanel.png)
 *side panel link*
 
-![summary link](images/robot_4_table.png)
+![summary link](images/robot_summary_table.png)
 *Summary link*
 
 #### Configuring Robot overall pass/fail to show in the project list
