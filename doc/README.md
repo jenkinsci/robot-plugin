@@ -135,12 +135,13 @@ Prerequisites: token-macro plugin and email-ext plugin installed.
 3.  Now you can use the following Robot variables in your custom result
     email:
 
-    -   `${ROBOT_FAILEDCASES}` - Expands to list of failed Robot cases. Each
+    -   `${ROBOT_FAILEDCASES, addErrorMessages}` - Expands to list of failed Robot cases. Each
         case on its own line.
+       `addErrorMessages` is an optional parameter that can be used to include error messages in the output. Default value is `false`.
     -  `${ROBOT_FAILED}` - Expands to count of failed cases.
     -   `${ROBOT_PASSPERCENTAGE, countSkippedTests}` - Expands to pass percentage
         of tests. (passed / total \* 100 %).
-        `countSkippedTests` is an optional parameter that can be used to include skipped tests in the total count.
+        `countSkippedTests` is an optional parameter that can be used to include skipped tests in the total count. Default value is `false`.
     -   `${ROBOT_PASSRATIO}` - Expands to build result in 'passed
         / total' format. This total includes skipped test cases.
     -   `${ROBOT_PASSED}` - Expands to count of passed cases.
