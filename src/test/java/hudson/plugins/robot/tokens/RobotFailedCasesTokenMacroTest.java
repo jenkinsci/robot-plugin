@@ -36,10 +36,12 @@ public class RobotFailedCasesTokenMacroTest extends TestCase {
 		
 		RobotCaseResult case1 = Mockito.mock(RobotCaseResult.class);
 		Mockito.when(case1.getRelativePackageName(result)).thenReturn("Failcases.subcases.Failure1");
-		
+		Mockito.when(case1.getErrorMsg()).thenReturn("Case1 failed");
+
 		RobotCaseResult case2 = Mockito.mock(RobotCaseResult.class);
 		Mockito.when(case2.getRelativePackageName(result)).thenReturn("Morefails.Failure2");
-		
+		Mockito.when(case2.getErrorMsg()).thenReturn("Case2 failed");
+
 		failedList.add(case1);
 		failedList.add(case2);
 		
@@ -52,7 +54,12 @@ public class RobotFailedCasesTokenMacroTest extends TestCase {
 		assertTrue(new RobotFailedCasesTokenMacro().acceptsMacroName(macroName));
 	}
 	
-	public void testTokenConversion() throws MacroEvaluationException, IOException, InterruptedException{
+	public void testTokenConversionWithoutMessages() throws MacroEvaluationException, IOException, InterruptedException{
 		assertEquals("Failcases.subcases.Failure1\nMorefails.Failure2",token.evaluate(build, listener, macroName));
+	}
+
+	public void testTokenConversionWithMessages() throws MacroEvaluationException, IOException, InterruptedException{
+		token.addErrorMessages = true;
+		assertEquals("Failcases.subcases.Failure1: Case1 failed\nMorefails.Failure2: Case2 failed",token.evaluate(build, listener, macroName));
 	}
 }

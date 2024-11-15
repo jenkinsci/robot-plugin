@@ -17,6 +17,9 @@ import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 @Extension(optional = true)
 public class RobotFailedCasesTokenMacro extends DataBoundTokenMacro {
 
+	@Parameter
+	public boolean addErrorMessages;
+
 	@Override
 	public String evaluate(AbstractBuild<?, ?> context, TaskListener listener,
 			String macroName) throws MacroEvaluationException, IOException,
@@ -35,6 +38,9 @@ public class RobotFailedCasesTokenMacro extends DataBoundTokenMacro {
 			String newline = "";
 			for (RobotCaseResult failedCase : result.getAllFailedCases()){
 				builder.append(newline).append(failedCase.getRelativePackageName(result));
+				if (addErrorMessages && failedCase.getErrorMsg() != null && !failedCase.getErrorMsg().isEmpty()) {
+					builder.append(": ").append(failedCase.getErrorMsg());
+				}
 				newline = "\n";
 			}
 
