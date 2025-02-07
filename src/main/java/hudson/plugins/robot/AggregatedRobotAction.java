@@ -24,10 +24,11 @@ import hudson.plugins.robot.model.RobotResult;
 import hudson.util.ChartUtil;
 import hudson.util.Graph;
 import org.apache.commons.lang.StringUtils;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.StaplerRequest2;
+import org.kohsuke.stapler.StaplerResponse2;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.util.Calendar;
 
 public class AggregatedRobotAction implements Action {
@@ -82,7 +83,7 @@ public class AggregatedRobotAction implements Action {
 	 * @param rsp The used StaplerResponse
 	 * @throws IOException thrown exception
 	 */
-	public void doGraph(StaplerRequest req, StaplerResponse rsp)
+	public void doGraph(StaplerRequest2 req, StaplerResponse2 rsp)
 			throws IOException {
 		if (ChartUtil.awtProblemCause != null) {
 			rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
@@ -96,10 +97,10 @@ public class AggregatedRobotAction implements Action {
 		String label = getChildBuildAction(build).getxAxisLabel();
 		String labelFormat = StringUtils.isBlank(label) ? RobotConfig.getInstance().getXAxisLabelFormat() : label;
 		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(getResult(),
-				Boolean.valueOf(req.getParameter("zoomSignificant")),
-				false, Boolean.valueOf(req.getParameter("hd")),
-				Boolean.valueOf(req.getParameter("failedOnly")),
-				Boolean.valueOf(req.getParameter("criticalOnly")),
+				Boolean.parseBoolean(req.getParameter("zoomSignificant")),
+				false, Boolean.parseBoolean(req.getParameter("hd")),
+				Boolean.parseBoolean(req.getParameter("failedOnly")),
+				Boolean.parseBoolean(req.getParameter("criticalOnly")),
 				labelFormat,
 				Integer.parseInt(req.getParameter("maxBuildsToShow")));
 		g.doPng(req, rsp);
@@ -107,6 +108,7 @@ public class AggregatedRobotAction implements Action {
 
 	public static class AggregatedRobotResult extends RobotResult {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 		private final transient AggregatedRobotAction parent;
 		private int passed, failed, skipped;

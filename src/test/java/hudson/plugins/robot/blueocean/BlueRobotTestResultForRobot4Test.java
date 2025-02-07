@@ -14,7 +14,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static org.mockito.Mockito.doReturn;
@@ -97,7 +96,7 @@ public class BlueRobotTestResultForRobot4Test {
         Result blueResult = factory.getBlueTestResults(mockBuild, mockReachable);
         return StreamSupport.stream(blueResult.results.spliterator(), false)
                 .filter(element -> element.getName().equals(filterCondition))
-                .collect(Collectors.toList()).get(0);
+                .toList().get(0);
     }
 
 

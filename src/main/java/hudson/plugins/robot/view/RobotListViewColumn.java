@@ -12,7 +12,7 @@ import hudson.views.ListViewColumn;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class RobotListViewColumn extends ListViewColumn {
 
@@ -79,7 +79,7 @@ public class RobotListViewColumn extends ListViewColumn {
 		if (job instanceof Job) {
 			Run<?,?> build = ((Job<?,?>)job).getLastCompletedBuild();
 			if(build != null) {
-				RobotBuildAction action = (RobotBuildAction)build.getAction(RobotBuildAction.class);
+				RobotBuildAction action = build.getAction(RobotBuildAction.class);
 				if(action != null) {
 					return action.getResult();
 				}

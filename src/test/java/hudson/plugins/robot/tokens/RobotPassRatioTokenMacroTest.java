@@ -18,31 +18,31 @@ public class RobotPassRatioTokenMacroTest extends TestCase {
 	private RobotPassRatioTokenMacro token;
 	private AbstractBuild<?,?> build;
 	private TaskListener listener;
-	
+
 	public void setUp(){
 		token = new RobotPassRatioTokenMacro();
 		build = Mockito.mock(AbstractBuild.class);
 		listener = Mockito.mock(TaskListener.class);
-		
+
 		RobotBuildAction action = Mockito.mock(RobotBuildAction.class);
 		RobotResult result = Mockito.mock(RobotResult.class);
-		
-		Mockito.when(result.getOverallPassed()).thenReturn(6l);
-		Mockito.when(result.getOverallTotal()).thenReturn(13l);
+
+		Mockito.when(result.getOverallPassed()).thenReturn(6L);
+		Mockito.when(result.getOverallTotal()).thenReturn(13L);
 		Mockito.when(action.getResult()).thenReturn(result);
 		Mockito.when(build.getAction(RobotBuildAction.class)).thenReturn(action);
 	}
-	
+
 	public void testAcceptsName(){
 		assertTrue(new RobotPassRatioTokenMacro().acceptsMacroName(macroName));
 	}
-	
+
         // TODO: remove test when criticality is removed
 	public void testTokenConversionWithCritical() throws MacroEvaluationException, IOException, InterruptedException{
 		token.onlyCritical = true;
 		assertEquals("6 / 13",token.evaluate(build, listener, macroName));
 	}
-	
+
 	public void testTokenConversionWithAll() throws MacroEvaluationException, IOException, InterruptedException{
 		token.onlyCritical = false;
 		assertEquals("6 / 13",token.evaluate(build, listener, macroName));

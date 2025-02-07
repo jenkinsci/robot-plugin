@@ -21,6 +21,7 @@ import hudson.plugins.robot.graph.RobotGraphHelper;
 import hudson.util.Graph;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,11 +31,12 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.StaplerRequest2;
+import org.kohsuke.stapler.StaplerResponse2;
 
 public class RobotCaseResult extends RobotTestObject{
 
+	@Serial
 	private static final long serialVersionUID = -8075680639442547520L;
 
 	private static final Logger LOGGER = Logger.getLogger(RobotCaseResult.class.getName());
@@ -283,7 +285,7 @@ public class RobotCaseResult extends RobotTestObject{
 	 * @param rsp StaplerResponse
 	 * @throws IOException thrown exception
 	 */
-	public void doGraph(StaplerRequest req, StaplerResponse rsp)
+	public void doGraph(StaplerRequest2 req, StaplerResponse2 rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
 		String label = getParentAction().getxAxisLabel();

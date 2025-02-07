@@ -28,6 +28,7 @@ import hudson.remoting.VirtualChannel;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,6 +53,7 @@ public class RobotParser {
 	public static final class RobotParserCallable implements
 	FilePath.FileCallable<RobotResult> {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 		private final String outputFileLocations;
 		private final String logFileName;
@@ -95,19 +97,16 @@ public class RobotParser {
 				String dirFromFileGLOB = new File(file).getParent();
 				if(dirFromFileGLOB != null)
 					baseDirectory = new File(baseDirectory, dirFromFileGLOB);
-				FileInputStream inputStream = new FileInputStream(reportFile);
-				try {
-					XMLStreamReader reader = factory.createXMLStreamReader(inputStream, "UTF-8");
-					try {
-						parseResult(result, reader, baseDirectory);
-					} finally {
-						reader.close();
-					}
-				} catch (XMLStreamException e1) {
-					throw new IOException("Parsing of output xml failed!", e1);
-				} finally {
-					inputStream.close();
-				}
+                try (FileInputStream inputStream = new FileInputStream(reportFile)) {
+                    XMLStreamReader reader = factory.createXMLStreamReader(inputStream, "UTF-8");
+                    try {
+                        parseResult(result, reader, baseDirectory);
+                    } finally {
+                        reader.close();
+                    }
+                } catch (XMLStreamException e1) {
+                    throw new IOException("Parsing of output xml failed!", e1);
+                }
 			}
 			return result;
 		}
@@ -196,23 +195,20 @@ public class RobotParser {
 		private RobotSuiteResult getSplitXMLSuite(RobotTestObject parent, File baseDirectory, String path) throws XMLStreamException, IOException {
 			XMLInputFactory factory = XMLInputFactory.newInstance();
 			factory.setProperty(XMLInputFactory.IS_COALESCING, Boolean.TRUE);
-			FileInputStream inputStream = new FileInputStream(new File(baseDirectory, path));
-			try {
-				XMLStreamReader splitReader = factory.createXMLStreamReader(inputStream, "UTF-8");
-				try {
-					while(splitReader.hasNext()){
-						splitReader.next();
-						if(splitReader.isStartElement() && "suite".equals(splitReader.getLocalName())) {
-							return processSuite(splitReader, parent, baseDirectory);
-						}
-					}
-					throw xmlException("Illegal split xml output. Could not find suite element.", splitReader);
-				} finally {
-					splitReader.close();
-				}
-			} finally {
-				inputStream.close();
-			}
+            try (FileInputStream inputStream = new FileInputStream(new File(baseDirectory, path))) {
+                XMLStreamReader splitReader = factory.createXMLStreamReader(inputStream, "UTF-8");
+                try {
+                    while (splitReader.hasNext()) {
+                        splitReader.next();
+                        if (splitReader.isStartElement() && "suite".equals(splitReader.getLocalName())) {
+                            return processSuite(splitReader, parent, baseDirectory);
+                        }
+                    }
+                    throw xmlException("Illegal split xml output. Could not find suite element.", splitReader);
+                } finally {
+                    splitReader.close();
+                }
+            }
 		}
 
 		private String ignoreUntilStarts(XMLStreamReader reader, String... elements) throws XMLStreamException {
@@ -281,9 +277,7 @@ public class RobotParser {
 			if (level > 0) {
 				spaces.append("\n");
 			}
-			for (int i = 0; i < level; i++) {
-				spaces.append("  ");
-			}
+            spaces.append("  ".repeat(Math.max(0, level)));
 			return spaces.toString();
 		}
 

@@ -30,8 +30,7 @@ public class RobotBuildLabel implements Comparable<RobotBuildLabel>
 
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof RobotBuildLabel))    return false;
-        RobotBuildLabel that = (RobotBuildLabel) o;
+        if(!(o instanceof RobotBuildLabel that))    return false;
         return run==that.run;
     }
 

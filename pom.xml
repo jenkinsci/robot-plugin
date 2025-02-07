@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
 		<artifactId>plugin</artifactId>
-		<version>4.82</version>
+		<version>5.7</version>
 	</parent>
 
 	<artifactId>robot</artifactId>
@@ -38,8 +38,8 @@
 
 	<properties>
 		<!-- https://www.jenkins.io/doc/developer/plugin-development/choosing-jenkins-baseline/ -->
-		<jenkins.baseline>2.414</jenkins.baseline>
-		<jenkins.version>${jenkins.baseline}.3</jenkins.version>
+		<jenkins.baseline>2.479</jenkins.baseline>
+		<jenkins.version>${jenkins.baseline}.1</jenkins.version>
 	</properties>
 
 	<scm>
@@ -53,7 +53,7 @@
 			<dependency>
 				<groupId>io.jenkins.tools.bom</groupId>
 				<artifactId>bom-${jenkins.baseline}.x</artifactId>
-				<version>2982.vdce2153031a_0</version>
+				<version>4051.v78dce3ce8b_d6</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
@@ -68,10 +68,6 @@
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins</groupId>
-			<artifactId>junit</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins.workflow</groupId>

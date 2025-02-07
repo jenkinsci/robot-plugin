@@ -23,10 +23,10 @@ import hudson.util.ChartUtil;
 import java.io.IOException;
 import java.util.Calendar;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.StaplerRequest2;
+import org.kohsuke.stapler.StaplerResponse2;
 
 public class RobotProjectAction implements Action {
 
@@ -53,11 +53,8 @@ public class RobotProjectAction implements Action {
 	 * @return true if there are any builds in the associated project.
 	 */
 	public boolean isDisplayGraph() {
-		if (getLastBuildAction() != null)
-			return true;
-
-		return false;
-	}
+        return getLastBuildAction() != null;
+    }
 
 	/**
 	 * Return the action of last build associated with robot
@@ -66,7 +63,7 @@ public class RobotProjectAction implements Action {
 	public Action getLastBuildAction(){
 		Run<?, ?> lastBuild = getLastBuildWithRobot();
 		if(lastBuild != null){
-			RobotBuildAction action = (RobotBuildAction)lastBuild.getAction(RobotBuildAction.class);
+			RobotBuildAction action = lastBuild.getAction(RobotBuildAction.class);
 			if (action == null)
 				return lastBuild.getAction(AggregatedRobotAction.class);
 			return action;
@@ -81,7 +78,7 @@ public class RobotProjectAction implements Action {
 	 * @throws IOException thrown exception
 	 * @throws ServletException thrown exception
 	 */
-	public void doGraph(StaplerRequest req, StaplerResponse rsp)
+	public void doGraph(StaplerRequest2 req, StaplerResponse2 rsp)
 			throws IOException, ServletException {
 		if (ChartUtil.awtProblemCause != null) {
 			rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
@@ -109,7 +106,7 @@ public class RobotProjectAction implements Action {
 	 * @param rsp StaplerResponse
 	 * @throws IOException thrown exception
 	 */
-	public void doIndex(StaplerRequest req, StaplerResponse rsp)
+	public void doIndex(StaplerRequest2 req, StaplerResponse2 rsp)
 			throws IOException {
 		Run<?,?> lastBuild = getLastBuildWithRobot();
 		if (lastBuild == null) {
@@ -122,9 +119,9 @@ public class RobotProjectAction implements Action {
 
 
 	private Run<?, ?> getLastBuildWithRobot() {
-		Run<?, ?> lastBuild = (Run<?, ?>) project.getLastBuild();
+		Run<?, ?> lastBuild = project.getLastBuild();
 		while (lastBuild != null
-				&& (lastBuild.getAction(RobotBuildAction.class) == null 
+				&& (lastBuild.getAction(RobotBuildAction.class) == null
 				&& lastBuild.getAction(AggregatedRobotAction.class) == null)) {
 			lastBuild = lastBuild.getPreviousBuild();
 		}

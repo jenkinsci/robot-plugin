@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>	
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Copyright 2008-2014 Nokia Solutions and Networks Oy
 
@@ -19,7 +19,7 @@ limitations under the License.
   <l:header />
   <l:side-panel>
     <l:tasks>
-      <j:set var="buildUrl" value="${h.decompose(request)}" />
+      <j:set var="buildUrl" value="${h.decompose(request2)}" />
       <st:include it="${it.owner}" page="tasks.jelly" optional="true"/>
       <st:include it="${it.owner}" page="actions.jelly" optional="true" />
       <j:if test="${it.owner.previousBuild!=null}">

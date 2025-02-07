@@ -17,6 +17,7 @@ package hudson.plugins.robot.model;
 
 import hudson.plugins.robot.RobotBuildAction;
 
+import java.io.Serial;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,10 +28,11 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerRequest2;
 
 public class RobotSuiteResult extends RobotTestObject {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOGGER = Logger.getLogger(RobotSuiteResult.class.getName());
@@ -123,7 +125,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	 */
 	public Collection<RobotCaseResult> getCaseResults() {
 		if(caseResults != null) {
-			List<RobotCaseResult> res = new ArrayList(caseResults.values());
+			List<RobotCaseResult> res = new ArrayList<>(caseResults.values());
 			res.sort(new RobotCaseComparator());
 			return res;
 		}
@@ -298,8 +300,8 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * @param rsp StaplerResponse
 	 * @return suite or case result by url encoded name
 	 */
-	public Object getDynamic(String token, StaplerRequest req,
-							 StaplerRequest rsp) {
+	public Object getDynamic(String token, StaplerRequest2 req,
+							 StaplerRequest2 rsp) {
 		if ((token) == null)
 			return this;
 		if (getCase(token) != null)
@@ -334,7 +336,7 @@ public class RobotSuiteResult extends RobotTestObject {
 		for(RobotSuiteResult suite : getChildSuites()) {
 			failedCases.addAll(suite.getAllFailedCases());
 		}
-		Collections.sort(failedCases, new RobotCaseComparator());
+		failedCases.sort(new RobotCaseComparator());
 		return failedCases;
 	}
 
@@ -350,7 +352,7 @@ public class RobotSuiteResult extends RobotTestObject {
 		for(RobotSuiteResult suite : getChildSuites()) {
 			passedCases.addAll(suite.getAllPassedCases());
 		}
-		Collections.sort(passedCases, new RobotCaseComparator());
+		passedCases.sort(new RobotCaseComparator());
 		return passedCases;
 	}
 
@@ -366,7 +368,7 @@ public class RobotSuiteResult extends RobotTestObject {
 		for(RobotSuiteResult suite : getChildSuites()) {
 			skippedCases.addAll(suite.getAllSkippedCases());
 		}
-		Collections.sort(skippedCases, new RobotCaseComparator());
+		skippedCases.sort(new RobotCaseComparator());
 		return skippedCases;
 	}
 
@@ -375,8 +377,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	 * @return all cases in this suite and its child suites
 	 */
 	public List<RobotCaseResult> getAllCases() {
-		List<RobotCaseResult> cases = new ArrayList<>();
-		cases.addAll(getCaseResults());
+        List<RobotCaseResult> cases = new ArrayList<>(getCaseResults());
 		for(RobotSuiteResult suite : getChildSuites()){
 			cases.addAll(suite.getAllCases());
 		}
@@ -443,7 +444,7 @@ public class RobotSuiteResult extends RobotTestObject {
 	public RobotTestObject findObjectById(String id) {
 		if(id.contains("/")){
 			String suiteName = id.substring(0, id.indexOf("/"));
-			String childId = id.substring(id.indexOf("/")+1, id.length());
+			String childId = id.substring(id.indexOf("/")+1);
 			RobotSuiteResult suite = children.get(suiteName);
 			return suite.findObjectById(childId);
 		} else if(getSuite(id) != null){
