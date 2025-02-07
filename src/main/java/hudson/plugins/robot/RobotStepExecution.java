@@ -1,5 +1,6 @@
 package hudson.plugins.robot;
 
+import java.io.Serial;
 import java.util.logging.Logger;
 
 import hudson.EnvVars;
@@ -15,10 +16,11 @@ public class RobotStepExecution extends SynchronousNonBlockingStepExecution<Void
 
 	private static final Logger logger = Logger.getLogger(RobotStepExecution.class.getName());
 
-	private static final long serialVersionUID = 1L;
+	@Serial
+    private static final long serialVersionUID = 1L;
 
 	private transient final RobotStep step;
-    
+
     RobotStepExecution(RobotStep step, StepContext context) {
         super(context);
         this.step = step;

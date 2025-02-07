@@ -5,7 +5,6 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 import java.io.File;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.junit.Before;
@@ -32,7 +31,7 @@ public class BlueRobotTestResultTest {
 		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("output.xml", null, null);
 		result = remoteOperation.invoke(new File(BlueRobotTestResultTest.class.getResource("output.xml").toURI()).getParentFile(), null);
 		result.tally(null);
-		
+
 		mockBuild = mock(FreeStyleBuild.class);
 		mockAction = mock(RobotBuildAction.class);
 		mockReachable = mock(Reachable.class);
@@ -80,6 +79,6 @@ public class BlueRobotTestResultTest {
 		Result blueResult = factory.getBlueTestResults(mockBuild, mockReachable);
 		return StreamSupport.stream(blueResult.results.spliterator(), false)
 				.filter(element -> element.getName().equals(filterCondition))
-				.collect(Collectors.toList()).get(0);
+				.toList().get(0);
 	}
 }

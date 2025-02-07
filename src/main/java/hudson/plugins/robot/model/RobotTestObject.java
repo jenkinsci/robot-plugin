@@ -25,16 +25,18 @@ import hudson.util.ChartUtil;
 import hudson.util.Graph;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Calendar;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.StaplerRequest2;
+import org.kohsuke.stapler.StaplerResponse2;
 
 public abstract class RobotTestObject extends AbstractModelObject implements Serializable{
 
+	@Serial
 	private static final long serialVersionUID = -3191755290679194469L;
 
 	private transient RobotBuildAction parentAction;
@@ -85,11 +87,11 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	}
 
 	public boolean getHasLog() {
-		return this.logFile != null && !"".equals(this.logFile);
+		return this.logFile != null && !this.logFile.isEmpty();
 	}
 
 	public boolean getHasReport() {
-		return this.reportFile != null && !"".equals(this.reportFile);
+		return this.reportFile != null && !this.reportFile.isEmpty();
 	}
 
 	/**
@@ -196,7 +198,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	 * @return true if modified, false otherwise
 	 * @throws IOException thrown exception
 	 */
-	protected boolean isNeedToGenerate(StaplerRequest req, StaplerResponse rsp)
+	protected boolean isNeedToGenerate(StaplerRequest2 req, StaplerResponse2 rsp)
 			throws IOException {
 		if (ChartUtil.awtProblemCause != null) {
 			rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
@@ -205,10 +207,8 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 
 		Calendar t = getOwner().getTimestamp();
 
-		if (req.checkIfModified(t, rsp))
-			return false;
-		return true;
-	}
+        return !req.checkIfModified(t, rsp);
+    }
 
 	/**
 	 * Get duration of this testobject run
@@ -259,7 +259,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	 * @param rsp StaplerResponse
 	 * @throws IOException thrown exception
 	 */
-	public void doGraph(StaplerRequest req, StaplerResponse rsp)
+	public void doGraph(StaplerRequest2 req, StaplerResponse2 rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
 		String label = parentAction.getxAxisLabel();
@@ -280,7 +280,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	 * @param rsp StaplerResponse
 	 * @throws IOException thrown exception
 	 */
-	public void doDurationGraph(StaplerRequest req, StaplerResponse rsp)
+	public void doDurationGraph(StaplerRequest2 req, StaplerResponse2 rsp)
 			throws IOException {
 		if(!isNeedToGenerate(req, rsp)) return;
 		String label = parentAction.getxAxisLabel();

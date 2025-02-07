@@ -22,6 +22,7 @@ import hudson.model.Run;
 import hudson.plugins.robot.RobotBuildAction;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -31,11 +32,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 
 import org.apache.commons.lang.StringUtils;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.StaplerRequest2;
+import org.kohsuke.stapler.StaplerResponse2;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
 
@@ -47,6 +48,7 @@ import org.kohsuke.stapler.export.ExportedBean;
 @ExportedBean
 public class RobotResult extends RobotTestObject {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private String timeStamp;
@@ -66,7 +68,7 @@ public class RobotResult extends RobotTestObject {
 	public RobotTestObject findObjectById(String id){
 		if (id.contains("/")) {
 			String suiteName = id.substring(0, id.indexOf("/"));
-			String childId = id.substring(id.indexOf("/")+1, id.length());
+			String childId = id.substring(id.indexOf("/")+1);
 			RobotSuiteResult suite = suites.get(suiteName);
 			return suite.findObjectById(childId);
 		} else return null;
@@ -271,7 +273,7 @@ public class RobotResult extends RobotTestObject {
 			return suites.values();
 		return Collections.emptyList();
 	}
-	
+
 	@Exported
 	public List<String> getExecutedSuites() {
 		List<String> executedSuites = new ArrayList<>();
@@ -284,9 +286,9 @@ public class RobotResult extends RobotTestObject {
 			}
 			executedSuites.add(name);
 		}
-		return executedSuites;	
+		return executedSuites;
 	}
-	
+
 
 	/**
 	 * Get all testsuites related to result.
@@ -312,7 +314,7 @@ public class RobotResult extends RobotTestObject {
 			List<RobotCaseResult> failedCases = suite.getAllFailedCases();
 			allFailedCases.addAll(failedCases);
 		}
-		Collections.sort(allFailedCases, new RobotCaseComparator());
+		allFailedCases.sort(new RobotCaseComparator());
 		return allFailedCases;
 	}
 
@@ -326,7 +328,7 @@ public class RobotResult extends RobotTestObject {
 			List<RobotCaseResult> passedCases = suite.getAllPassedCases();
 			allPassedCases.addAll(passedCases);
 		}
-		Collections.sort(allPassedCases, new RobotCaseComparator());
+		allPassedCases.sort(new RobotCaseComparator());
 		return allPassedCases;
 	}
 
@@ -340,7 +342,7 @@ public class RobotResult extends RobotTestObject {
 			List<RobotCaseResult> skippedCases = suite.getAllSkippedCases();
 			allSkippedCases.addAll(skippedCases);
 		}
-		Collections.sort(allSkippedCases, new RobotCaseComparator());
+		allSkippedCases.sort(new RobotCaseComparator());
 		return allSkippedCases;
 	}
 
@@ -432,7 +434,7 @@ public class RobotResult extends RobotTestObject {
 	 * @param rsp StaplerResponse
 	 * @return object represented by url-string
 	 */
-	public Object getDynamic(String token, StaplerRequest req, StaplerResponse rsp){
+	public Object getDynamic(String token, StaplerRequest2 req, StaplerResponse2 rsp){
 		return suites.get(token);
 	}
 
@@ -445,7 +447,7 @@ public class RobotResult extends RobotTestObject {
 	 * @throws InterruptedException thrown exception
 	 * @return DirectoryBrowserSupport for the report or null
 	 */
-	public DirectoryBrowserSupport doReport(StaplerRequest req, StaplerResponse rsp)
+	public DirectoryBrowserSupport doReport(StaplerRequest2 req, StaplerResponse2 rsp)
 			throws IOException, ServletException, InterruptedException {
 		RobotBuildAction parent = getParentAction();
 		FilePath robotDir = null;
@@ -510,14 +512,14 @@ public class RobotResult extends RobotTestObject {
 	}
 
 	public Api getApi() { return new Api(this); }
-	
+
 	public List<RobotCaseResult> getAllCases() {
 		List<RobotCaseResult> allCases = new ArrayList<>();
 		for (RobotSuiteResult suite : getSuites()) {
 			List<RobotCaseResult> cases = suite.getAllCases();
 			allCases.addAll(cases);
 		}
-		Collections.sort(allCases, new RobotCaseComparator());
+		allCases.sort(new RobotCaseComparator());
 		return allCases;
 	}
 }
