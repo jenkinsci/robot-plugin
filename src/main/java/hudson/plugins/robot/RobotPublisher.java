@@ -32,11 +32,12 @@ import hudson.util.FormValidation;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 
 import jenkins.tasks.SimpleBuildStep;
 import org.apache.commons.lang.StringUtils;
@@ -49,6 +50,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public class RobotPublisher extends Recorder implements Serializable,
         MatrixAggregatable, SimpleBuildStep {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     protected static final String DEFAULT_REPORT_FILE = "report.html";
@@ -441,7 +443,6 @@ public class RobotPublisher extends Recorder implements Serializable,
         /**
          * {@inheritDoc}
          */
-        @SuppressWarnings("rawtypes")
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> aClass) {
             return true;
@@ -493,10 +494,7 @@ public class RobotPublisher extends Recorder implements Serializable,
         private boolean isPercentageValue(String value) {
             try {
                 double doubleValue = Double.parseDouble(value);
-                if (doubleValue <= 100 && doubleValue >= 0)
-                    return true;
-                else
-                    return false;
+                return doubleValue <= 100 && doubleValue >= 0;
             } catch (NumberFormatException e) {
                 return false;
             }

@@ -16,29 +16,29 @@ public class RobotTotalTokenMacroTest extends TestCase {
 	private RobotTotalTokenMacro token;
 	private AbstractBuild<?,?> build;
 	private TaskListener listener;
-	
+
 	public void setUp(){
 		token = new RobotTotalTokenMacro();
 		build = Mockito.mock(AbstractBuild.class);
 		listener = Mockito.mock(TaskListener.class);
-		
+
 		RobotBuildAction action = Mockito.mock(RobotBuildAction.class);
 		RobotResult result = Mockito.mock(RobotResult.class);
-		
-		Mockito.when(result.getOverallTotal()).thenReturn(6l);
+
+		Mockito.when(result.getOverallTotal()).thenReturn(6L);
 		Mockito.when(action.getResult()).thenReturn(result);
 		Mockito.when(build.getAction(RobotBuildAction.class)).thenReturn(action);
 	}
-	
+
 	public void testAcceptsName(){
 		assertTrue(token.acceptsMacroName(macroName));
 	}
-	
+
 	public void testTokenConversionWithCritical() throws MacroEvaluationException, IOException, InterruptedException{
 		token.onlyCritical = true;
 		assertEquals("6",token.evaluate(build, listener, macroName));
 	}
-	
+
 	public void testTokenConversionWithAll() throws MacroEvaluationException, IOException, InterruptedException{
 		token.onlyCritical = false;
 		assertEquals("6",token.evaluate(build, listener, macroName));
