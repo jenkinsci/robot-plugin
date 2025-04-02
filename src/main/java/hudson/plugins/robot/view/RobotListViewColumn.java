@@ -60,7 +60,7 @@ public class RobotListViewColumn extends ListViewColumn {
 	}
 
 	public String getLogUrl(Item job) {
-		return getRobotPath(job)+"report/log.html";
+		return getRobotPath(job)+"report/report.html#totals";
 	}
 
 	public String getTrendUrl(Item job) {
