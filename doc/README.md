@@ -64,8 +64,8 @@ Tracker](https://issues.jenkins-ci.org/issues/?jql=project+%3D+JENKINS+AND+compo
     persist for viewing later in the logs you must configure them under
     "Advanced... -\> Other files to copy". The field accepts comma
     separated list of files and supports wildcards `*` and `?`.
-9.  Set thresholds and optionally disable thresholds for critical tests
-    only to count every test in the pass percentage.
+9.  Set thresholds and optionally include thresholds for skipped tests
+    to count every test in the pass percentage.
 
 ### Pipeline configuration
 
@@ -85,8 +85,6 @@ Tracker](https://issues.jenkins-ci.org/issues/?jql=project+%3D+JENKINS+AND+compo
         otherFiles: 'screenshot-*.png'
    )
     ```
-
-**NOTE!** `onlyCritical` parameter has been deprecated and will be removed in the future. It has no effect on the results.
 
 ### Configuring direct links to log files
 
@@ -174,8 +172,6 @@ security vulnerabilities**.
 
 ## Robot Framework 4.x+ compatibility
 
-:heavy_exclamation_mark: As we're preparing to drop support for RF 3.x, the `onlyCritical` flag has been deprecated and no
-longer has any effect. It will be removed in the future, but for now it's available for the transition period.
 A new flag `countSkippedTests` has been added to the pipeline step to allow users to choose whether to count skipped
 tests in the pass percentage calculation.
 

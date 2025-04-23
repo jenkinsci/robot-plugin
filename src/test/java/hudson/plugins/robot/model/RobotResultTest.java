@@ -93,14 +93,6 @@ public class RobotResultTest {
 		assertNotNull(result.getSuite("Somecases_1"));
 	}
 
-	@Deprecated
-	@Test
-	@Ignore
-        // TODO: remove test when criticality is removed
-	public void testShouldParseCriticalCases(){
-		assertEquals(19, result.getCriticalTotal());
-	}
-
 	@Test
 	public void testShouldParseFailMessages(){
 		RobotSuiteResult suite = result.getSuite("Othercases & Testcases");
@@ -108,19 +100,6 @@ public class RobotResultTest {
 		RobotCaseResult caseResult = childSuite.getCase("Failer");
 		String errorMsg = caseResult.getErrorMsg();
 		assertEquals("Test failed miserably!", errorMsg.trim());
-	}
-
-	@Deprecated
-	@Test
-	@Ignore
-	// TODO: remove test when criticality is removed
-	public void testShouldParseNewCriticalCases() throws Exception{
-
-		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml", null, null);
-		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("new_critical_output.xml").toURI()).getParentFile(), null);
-		result.tally(null);
-
-		assertEquals(14, result.getCriticalTotal());
 	}
 
 	@Test
@@ -131,25 +110,6 @@ public class RobotResultTest {
 	@Test
 	public void testShouldParseFailedCases(){
 		assertEquals(10, result.getOverallFailed());
-	}
-
-	@Deprecated
-	@Test
-	@Ignore
-	public void testShouldParseFailedCriticalCases(){
-		assertEquals(9, result.getCriticalFailed());
-	}
-
-	@Deprecated
-	@Test
-	@Ignore
-	// TODO: remove test when criticality is removed
-	public void testShouldParseFailedNewCriticalCases() throws Exception{
-		RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml", null, null);
-		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("new_critical_output.xml").toURI()).getParentFile(), null);
-		result.tally(null);
-
-		assertEquals(7, result.getCriticalFailed());
 	}
 
 	@Test
@@ -201,18 +161,6 @@ public class RobotResultTest {
 		RobotCaseResult caseResult = subSuite.getCase("Example test 2");
 
 		assertEquals("s1-s1-t2", caseResult.getId());
-	}
-
-	@Test
-	public void testShouldParseCriticalityFromStatusInsteadOfTest() throws Exception{
-		 RobotParser.RobotParserCallable remoteOperation = new RobotParser.RobotParserCallable("new_critical_output.xml", null, null);
-		result = remoteOperation.invoke(new File(RobotSuiteResultTest.class.getResource("new_critical_output.xml").toURI()).getParentFile(), null);
-		result.tally(null);
-
-		RobotSuiteResult suite = result.getSuite("Othercases & Testcases");
-		RobotCaseResult caseResult = suite.getCase("Hello");
-
-		assertFalse("Case shouldn't be critical", caseResult.isCritical());
 	}
 
 	@Test

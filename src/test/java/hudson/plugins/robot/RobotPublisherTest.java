@@ -31,7 +31,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class RobotPublisherTest {
-	private final boolean onlyCritical = false;
 	private final boolean countSkipped = false;
 
 	@Before
@@ -39,7 +38,7 @@ public class RobotPublisherTest {
 	}
 
 	private RobotPublisher getRobotPublisher(double passThreshold, double unstableThreshold) {
-		return new RobotPublisher(null, "", "", false, "", "", passThreshold, unstableThreshold, onlyCritical, countSkipped, "", false, "");
+		return new RobotPublisher(null, "", "", false, "", "", passThreshold, unstableThreshold,  countSkipped, "", false, "");
 	}
 
 	@Test
@@ -58,7 +57,7 @@ public class RobotPublisherTest {
 		AbstractBuild<?,?> mockBuild = mock(FreeStyleBuild.class);
 
 		when(mockBuild.getResult()).thenReturn(Result.SUCCESS);
-		when(mockResult.getPassPercentage(onlyCritical)).thenReturn(100.0);
+		when(mockResult.getPassPercentage(countSkipped)).thenReturn(100.0);
 
 		Assert.assertEquals(Result.SUCCESS, publisher.getBuildResult(mockBuild, mockResult));
 	}
@@ -70,7 +69,7 @@ public class RobotPublisherTest {
 		AbstractBuild<?,?> mockBuild = mock(FreeStyleBuild.class);
 
 		when(mockBuild.getResult()).thenReturn(Result.FAILURE);
-		when(mockResult.getPassPercentage(onlyCritical)).thenReturn(100.0);
+		when(mockResult.getPassPercentage(countSkipped)).thenReturn(100.0);
 
 		Assert.assertEquals(Result.FAILURE, publisher.getBuildResult(mockBuild, mockResult));
 	}
@@ -82,7 +81,7 @@ public class RobotPublisherTest {
 		AbstractBuild<?,?> mockBuild = mock(FreeStyleBuild.class);
 
 		when(mockBuild.getResult()).thenReturn(Result.SUCCESS);
-		when(mockResult.getPassPercentage(onlyCritical)).thenReturn(49.9);
+		when(mockResult.getPassPercentage(countSkipped)).thenReturn(49.9);
 
 		Assert.assertEquals(Result.FAILURE, publisher.getBuildResult(mockBuild, mockResult));
 	}
@@ -94,7 +93,7 @@ public class RobotPublisherTest {
 		AbstractBuild<?,?> mockBuild = mock(FreeStyleBuild.class);
 
 		when(mockBuild.getResult()).thenReturn(Result.SUCCESS);
-		when(mockResult.getPassPercentage(onlyCritical)).thenReturn(89.9);
+		when(mockResult.getPassPercentage(countSkipped)).thenReturn(89.9);
 
 		Assert.assertEquals(Result.UNSTABLE, publisher.getBuildResult(mockBuild, mockResult));
 	}
@@ -106,7 +105,7 @@ public class RobotPublisherTest {
 		AbstractBuild<?,?> mockBuild = mock(FreeStyleBuild.class);
 
 		when(mockBuild.getResult()).thenReturn(Result.SUCCESS);
-		when(mockResult.getPassPercentage(onlyCritical)).thenReturn(90.0);
+		when(mockResult.getPassPercentage(countSkipped)).thenReturn(90.0);
 
 		Assert.assertEquals(Result.SUCCESS, publisher.getBuildResult(mockBuild, mockResult));
 	}

@@ -249,10 +249,6 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 
 	public abstract int getSkipped();
 
-	public abstract long getCriticalPassed();
-
-	public abstract long getCriticalFailed();
-
 	/**
 	 * Return robot trend graph in the request.
 	 * @param req StaplerRequest
@@ -268,7 +264,6 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 				Boolean.parseBoolean(req.getParameter("zoomSignificant")),
 				false, Boolean.parseBoolean(req.getParameter("hd")),
 				Boolean.parseBoolean(req.getParameter("failedOnly")),
-				Boolean.parseBoolean(req.getParameter("criticalOnly")),
 				labelFormat,
 				Integer.parseInt(req.getParameter("maxBuildsToShow")));
 		g.doPng(req, rsp);

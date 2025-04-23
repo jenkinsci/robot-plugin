@@ -1,16 +1,13 @@
 function initPassFailGraph(target) {
     var mode = getCookie("RobotResult_zoom", "true");
     var failedOnly = getCookie("RobotResult_failedOnly", "false");
-    var criticalOnly = getCookie("RobotResult_criticalOnly", "false");
     var maxBuildsToShow = getCookie("RobotResult_maxBuildsToShow", 0);
     if (document.getElementById("zoomToChanges"))
         document.getElementById("zoomToChanges").checked = (mode == "true");
     if (document.getElementById("failedOnly"))
         document.getElementById("failedOnly").checked = (failedOnly == "true");
-    if (document.getElementById("criticalOnly"))
-        document.getElementById("criticalOnly").checked = (criticalOnly == "true");
     setMaxBuildsToShow(maxBuildsToShow);
-    setPassFailGraphSrc(target, mode, failedOnly, criticalOnly, maxBuildsToShow);
+    setPassFailGraphSrc(target, mode, failedOnly, maxBuildsToShow);
 }
 
 function initDurationGraph(target) {
@@ -34,11 +31,10 @@ function setLinks(graph, href) {
     document.getElementById(graph).src = href;
 }
 
-function setPassFailGraphSrc(target, mode, failedOnly, criticalOnly, maxBuildsToShow) {
+function setPassFailGraphSrc(target, mode, failedOnly, maxBuildsToShow) {
     var href = target + "graph?" +
                "zoomSignificant=" + mode +
                "&failedOnly=" + failedOnly +
-               "&criticalOnly=" + criticalOnly +
                "&maxBuildsToShow=" + maxBuildsToShow;
     setLinks("passfailgraph", href)
 }
@@ -61,16 +57,11 @@ function redrawPassFailGraph() {
         failedOnly = Boolean(document.getElementById('failedOnly').checked).toString();
         setCookie("RobotResult_failedOnly",failedOnly, 365);
     }
-    var criticalOnly = false;
-    if (document.getElementById("criticalOnly")) {
-        criticalOnly = Boolean(document.getElementById('criticalOnly').checked).toString();
-        setCookie("RobotResult_criticalOnly",criticalOnly, 365);
-    }
     var maxBuildsToShow = getMaxBuildsToShow();
     setMaxBuildsToShow(maxBuildsToShow);
     setCookie("RobotResult_maxBuildsToShow",maxBuildsToShow, 365);
 
-    setPassFailGraphSrc(target, mode, failedOnly, criticalOnly, maxBuildsToShow);
+    setPassFailGraphSrc(target, mode, failedOnly, maxBuildsToShow);
 }
 
 function redrawDurationGraph() {
@@ -120,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function(){
     if (element) {
         var url = element.getAttribute("data-url");
 
-        ["zoomToChanges", "failedOnly", "criticalOnly"].forEach(function(id) {
+        ["zoomToChanges", "failedOnly"].forEach(function(id) {
             if (document.getElementById(id))
                 document.getElementById(id).addEventListener("click", redrawPassFailGraph);
         });

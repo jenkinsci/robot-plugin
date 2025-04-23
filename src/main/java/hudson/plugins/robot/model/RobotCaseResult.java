@@ -43,7 +43,6 @@ public class RobotCaseResult extends RobotTestObject{
 
 	private boolean passed;
 	private boolean skipped;
-	private boolean critical;
 	private String errorMsg;
 	private String name;
 	private String description;
@@ -174,10 +173,6 @@ public class RobotCaseResult extends RobotTestObject{
 		this.skipped = skipped;
 	}
 
-	public void setCritical(boolean critical) {
-		this.critical = critical;
-	}
-
 	public String getDisplayName() {
 		return getName();
 	}
@@ -192,10 +187,6 @@ public class RobotCaseResult extends RobotTestObject{
 
 	public boolean isSkipped() {
 		return skipped;
-	}
-
-	public boolean isCritical() {
-		return critical;
 	}
 
 	public List<String> getTags(){
@@ -291,7 +282,7 @@ public class RobotCaseResult extends RobotTestObject{
 		String label = getParentAction().getxAxisLabel();
 		String labelFormat = StringUtils.isBlank(label) ? RobotConfig.getInstance().getXAxisLabelFormat() : label;
 		Graph g = RobotGraphHelper.createTestResultsGraphForTestObject(this, false, true,
-				  Boolean.parseBoolean(req.getParameter("hd")), false, false, labelFormat,
+				  Boolean.parseBoolean(req.getParameter("hd")), false, labelFormat,
 				  Integer.parseInt(req.getParameter("maxBuildsToShow")));
 		g.doPng(req, rsp);
 	}
@@ -312,17 +303,5 @@ public class RobotCaseResult extends RobotTestObject{
 	public int getSkipped() {
 		if (isSkipped()) return 1;
 		return 0;
-	}
-
-	@Deprecated
-	@Override
-	public long getCriticalFailed() {
-		return this.getFailed();
-	}
-
-	@Deprecated
-	@Override
-	public long getCriticalPassed() {
-		return this.getPassed();
 	}
 }

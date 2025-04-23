@@ -53,9 +53,6 @@ limitations under the License.
     <f:entry title="&lt;img src=&quot;${rootURL}/images/16x16/blue.gif&quot;/&gt; %" field="passThreshold">
            <f:textbox />
     </f:entry>
-    <f:entry field="onlyCritical">
-        <f:checkbox default="true"/>${%thresholds.onlyCritical}
-    </f:entry>
     <f:entry field="countSkippedTests">
         <f:checkbox default="false"/>${%thresholds.countSkippedTests}
     </f:entry>

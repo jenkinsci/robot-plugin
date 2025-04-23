@@ -73,7 +73,6 @@ public class RobotPublisher extends Recorder implements Serializable,
     final private boolean enableCache;
 
     //Default to true
-    private boolean onlyCritical = true;
     private boolean countSkippedTests = false;
 
     /**
@@ -87,7 +86,6 @@ public class RobotPublisher extends Recorder implements Serializable,
      * @param logFileName          Name of Robot log html
      * @param passThreshold        Threshold of test pass percentage for successful builds
      * @param unstableThreshold    Threshold of test pass percentage for unstable builds
-     * @param onlyCritical         True if only critical tests are included in pass percentage
      * @param otherFiles           Other files to be saved
      * @param enableCache          True if caching is used
      */
@@ -95,7 +93,7 @@ public class RobotPublisher extends Recorder implements Serializable,
     public RobotPublisher(String archiveDirName, String outputPath, String outputFileName,
                           boolean disableArchiveOutput, String reportFileName, String logFileName,
                           double passThreshold, double unstableThreshold,
-                          boolean onlyCritical, boolean countSkippedTests, String otherFiles, boolean enableCache, String overwriteXAxisLabel) {
+                          boolean countSkippedTests, String otherFiles, boolean enableCache, String overwriteXAxisLabel) {
         this.archiveDirName = archiveDirName;
         this.outputPath = outputPath;
         this.outputFileName = outputFileName;
@@ -104,7 +102,6 @@ public class RobotPublisher extends Recorder implements Serializable,
         this.passThreshold = passThreshold;
         this.unstableThreshold = unstableThreshold;
         this.logFileName = logFileName;
-        this.onlyCritical = onlyCritical;
         this.countSkippedTests = countSkippedTests;
         this.enableCache = enableCache;
         this.overwriteXAxisLabel = overwriteXAxisLabel;
@@ -203,15 +200,6 @@ public class RobotPublisher extends Recorder implements Serializable,
     }
 
     /**
-     * Gets if only critical tests should be accounted for the thresholds.
-     *
-     * @return true if only critical tests should be accounted for the thresholds
-     */
-    public boolean getOnlyCritical() {
-        return onlyCritical;
-    }
-
-    /**
      * Gets if skipped tests should be counted in the thresholds.
      *
      * @return true if skipped tests should be counted in the thresholds
@@ -274,7 +262,6 @@ public class RobotPublisher extends Recorder implements Serializable,
         if (build.getResult() != Result.ABORTED) {
             PrintStream logger = listener.getLogger();
             logger.println(Messages.robot_publisher_started());
-            logger.println(Messages.robot_publisher_only_critical());
             logger.println(Messages.robot_publisher_parsing());
             RobotResult result;
 

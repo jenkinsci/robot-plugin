@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>	
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core">
-  <dt>$${ROBOT_PASSED, onlyCritical}</dt>
+  <dt>$${ROBOT_PASSED}</dt>
   <dd>
     Expands to build number of passed tests.
-    <ul>
-        <li><i>onlyCritical</i> - True if number should contain only critical passed tests.<br />Defaults to false.</li>
-    </ul>
   </dd>
 </j:jelly>

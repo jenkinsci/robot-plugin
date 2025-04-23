@@ -67,28 +67,28 @@ public class RobotGraphHelperTest extends TestCase {
 
 	public void testShouldLimitResultsGraphDataSet() throws Exception {
 		RobotGraph limitedResultsGraph = RobotGraphHelper.createTestResultsGraphForTestObject(
-				mockResult2, false, false, false, false, false, xLabelFormat,1);
+				mockResult2, false, false, false, false, xLabelFormat,1);
 
 		assertEquals(1, limitedResultsGraph.getDataset().getColumnCount());
 	}
 
 	public void testShouldReturnAllResultsGraphDataIfNotLimited() throws Exception {
 		RobotGraph notlimitedResultsGraph = RobotGraphHelper.createTestResultsGraphForTestObject(
-				mockResult2, false, false, false, false, false, xLabelFormat,0);
+				mockResult2, false, false, false, false, xLabelFormat,0);
 
 		assertEquals(2, notlimitedResultsGraph.getDataset().getColumnCount());
 	}
 
 	public void testShouldReturnAllResultsGraphDataIfLimitIsBiggerThanDataAmount() throws Exception {
 		RobotGraph notlimitedResultsGraph = RobotGraphHelper.createTestResultsGraphForTestObject(
-				mockResult2, false, false, false, false, false, xLabelFormat,10);
+				mockResult2, false, false, false, false, xLabelFormat,10);
 
 		assertEquals(2, notlimitedResultsGraph.getDataset().getColumnCount());
 	}
 
 	public void testShouldShowCustomLabel() throws Exception {
 		RobotGraph customLabelGraph = RobotGraphHelper.createTestResultsGraphForTestObject(
-				mockResult2, false, false, false, false, false, "$display_name",0);
+				mockResult2, false, false, false, false, "$display_name",0);
 
 		assertEquals("3.2.1", customLabelGraph.getDataset().getColumnKey(0).toString());
 		assertEquals("1.2.3", customLabelGraph.getDataset().getColumnKey(1).toString());

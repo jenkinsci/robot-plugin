@@ -28,7 +28,6 @@ limitations under the License.
             <span id="robot-fromurl-id" data-url="${from.urlName}/"></span>
             <p><label><input type="checkbox" id="zoomToChanges"/>Zoom to changes</label></p>
             <p><label><input type="checkbox" id="failedOnly"/>Show only failed</label></p>
-            <p><label><input type="checkbox" id="criticalOnly"/>Show only critical</label></p>
             <p><label><input min="0" max="9999" step="1" placeholder="all" value="" type="number" id="maxBuildsToShow"/>Max builds</label></p>
             <br/><p style="float:right"><a id="passfailgraph_hd_link" href="">Show bigger image</a></p>
         </div>

@@ -37,14 +37,7 @@ public class RobotPassRatioTokenMacroTest extends TestCase {
 		assertTrue(new RobotPassRatioTokenMacro().acceptsMacroName(macroName));
 	}
 
-        // TODO: remove test when criticality is removed
-	public void testTokenConversionWithCritical() throws MacroEvaluationException, IOException, InterruptedException{
-		token.onlyCritical = true;
-		assertEquals("6 / 13",token.evaluate(build, listener, macroName));
-	}
-
 	public void testTokenConversionWithAll() throws MacroEvaluationException, IOException, InterruptedException{
-		token.onlyCritical = false;
 		assertEquals("6 / 13",token.evaluate(build, listener, macroName));
 	}
 }

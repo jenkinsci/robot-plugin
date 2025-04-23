@@ -29,22 +29,13 @@ limitations under the License.
           <j:set var="total_status" value="PASS" />
       </j:otherwise>
     </j:choose>
-    <j:choose>
-      <j:when test="${it.criticalFailed > 0}">
-          <j:set var="status" value="FAIL" />
-      </j:when>
-      <j:otherwise>
-          <j:set var="status" value="PASS" />
-      </j:otherwise>
-    </j:choose>
     <j:set var="prevresult" value="${it.previousResult}" />
       <h1 class="${status}">Robot Framework Test Results</h1>
       <table class="summary">
       <tbody>
         <tr><th>Executed:</th><td>${it.timeStamp}</td></tr>
         <tr><th>Duration:</th><td>${it.humanReadableDuration} (${it.getDurationDiff(prevresult)})</td></tr>
-        <tr><th>Status:</th><td>${it.criticalTotal} critical test, ${it.criticalPassed} passed, <span class="${status}">${it.criticalFailed}</span> failed, 0 skipped<br/>
-                              ${it.overallTotal} test total (${h.getDiffString(it.total - prevresult.total)}), ${it.passed} passed, <span class="${total_status}">${it.failed}</span> failed, ${it.skipped} skipped</td></tr>
+        <tr><th>Status:</th><td>${it.overallTotal} test total (${h.getDiffString(it.total - prevresult.total)}), ${it.passed} passed, <span class="${total_status}">${it.failed}</span> failed, ${it.skipped} skipped</td></tr>
         <tr><th>Results:</th><td>
                              <j:if test="${it.hasReport}"><a href="${rootURL}/${it.parentAction.owner.url}${it.parentAction.urlName}/report/${it.reportFile}">${it.reportFile}</a><br/></j:if>
                              <j:if test="${it.hasLog}"><a href="${rootURL}/${it.parentAction.owner.url}${it.parentAction.urlName}/report/${it.logFile}">${it.logFile}</a><br/></j:if>
@@ -61,7 +52,6 @@ limitations under the License.
         <span id="robot-fromurl-id" data-url=""></span>
         <p><label><input type="checkbox" id="zoomToChanges"/>Zoom to changes</label></p>
         <p><label><input type="checkbox" id="failedOnly"/>Show only failed</label></p>
-        <p><label><input type="checkbox" id="criticalOnly"/>Show only critical</label></p>
         <p><label><input min="0" max="9999" step="1" placeholder="all" value="" type="number" id="maxBuildsToShow"/>Max builds</label></p>
         <br/><p style="float:right"><a id="passfailgraph_hd_link" href="">Show bigger image</a></p>
        </div>

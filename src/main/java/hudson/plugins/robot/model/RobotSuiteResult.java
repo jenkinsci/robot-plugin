@@ -48,8 +48,6 @@ public class RobotSuiteResult extends RobotTestObject {
 	private transient int failed;
 	private transient int passed;
 	private transient int skipped;
-	private transient int criticalPassed;
-	private transient int criticalFailed;
 
 	private int schemaVersion;
 
@@ -158,33 +156,6 @@ public class RobotSuiteResult extends RobotTestObject {
 	 */
 	public int getTotal() {
 		return passed + failed + skipped;
-	}
-
-	/**
-	 * Get number of passed critical tests
-	 * @return number of passed critical tests
-	 */
-	@Deprecated
-	public long getCriticalPassed() {
-		return this.getPassed();
-	}
-
-	/**
-	 * Get number of failed critical tests
-	 * @return number of failed critical tests
-	 */
-	@Deprecated
-	public long getCriticalFailed() {
-		return this.getFailed();
-	}
-
-	/**
-	 * Get number of all critical tests
-	 * @return number of all critical tests
-	 */
-	@Deprecated
-	public int getCriticalTotal() {
-		return this.getTotal();
 	}
 
 	public void setSchemaVersion(int version) {
@@ -401,19 +372,15 @@ public class RobotSuiteResult extends RobotTestObject {
 		failed = 0;
 		passed = 0;
 		skipped = 0;
-		criticalPassed = 0;
-		criticalFailed = 0;
 		duration = 0;
 
 		HashMap<String, RobotCaseResult> newCases = new HashMap<>();
 		for(RobotCaseResult caseResult : getCaseResults()) {
 			if(caseResult.isPassed()) {
-				if(caseResult.isCritical()) criticalPassed++;
 				passed++;
 			} else if(caseResult.isSkipped()) {
 				skipped++;
 			} else {
-				if(caseResult.isCritical()) criticalFailed++;
 				failed++;
 			}
 			duration += caseResult.getDuration();
@@ -428,8 +395,6 @@ public class RobotSuiteResult extends RobotTestObject {
 			failed += suite.getFailed();
 			passed += suite.getPassed();
 			skipped += suite.getSkipped();
-			criticalFailed += suite.getFailed();
-			criticalPassed += suite.getPassed();
 			duration += suite.getDuration();
 			newSuites.put(suite.getDuplicateSafeName(), suite);
 		}
