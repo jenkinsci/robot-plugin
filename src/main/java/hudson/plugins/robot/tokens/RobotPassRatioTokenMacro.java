@@ -16,8 +16,9 @@ import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
 @Extension(optional = true)
 public class RobotPassRatioTokenMacro extends DataBoundTokenMacro {
 
+	// Default to true to retain previous behavior, false to ignore skipped tests as part of the total
 	@Parameter
-	public boolean countSkippedTests;
+	public boolean countSkippedTests = true;
 
 	@Override
 	public String evaluate(AbstractBuild<?, ?> context, TaskListener listener,

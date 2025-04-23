@@ -140,8 +140,9 @@ Prerequisites: token-macro plugin and email-ext plugin installed.
     -   `${ROBOT_PASSPERCENTAGE, countSkippedTests}` - Expands to pass percentage
         of tests. (passed / total \* 100 %).
         `countSkippedTests` is an optional parameter that can be used to include skipped tests in the total count. Default value is `false`.
-    -   `${ROBOT_PASSRATIO}` - Expands to build result in 'passed
-        / total' format. This total includes skipped test cases.
+    -   `${ROBOT_PASSRATIO, countSkippedTests}` - Expands to build result in 'passed
+        / total' format.
+        `countSkippedTests` is an optional parameter that can be used to include skipped tests in the total count. Default value is `True`.
     -   `${ROBOT_PASSED}` - Expands to count of passed cases.
     -   `${ROBOT_REPORTLINK}` - If logfile link is configured in the Robot
         plugin this link will point to that file for the build. Else show
