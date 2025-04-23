@@ -176,7 +176,9 @@ security vulnerabilities**.
 A new flag `countSkippedTests` has been added to the pipeline step to allow users to choose whether to count skipped
 tests in the pass percentage calculation.
 
-The plugin still supports RF 3.x, but no longer takes criticality into account. If you want to use RF 3.x with criticality, please downgrade to the last major version (4.0.0)
+## Robot Framework <3.0 compatibility
+
+If you want to use RF 3.x with criticality, please downgrade to the major version 4.0.0. Plugin versions 5.x support RF 3.x as well, but no longer takes criticality into account.
 
 ## Overall Screenshots
 
