@@ -1,46 +1,49 @@
 package hudson.plugins.robot.tokens;
 
-import hudson.model.TaskListener;
 import hudson.model.AbstractBuild;
+import hudson.model.TaskListener;
 import hudson.plugins.robot.RobotBuildAction;
 import hudson.plugins.robot.model.RobotResult;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import junit.framework.TestCase;
+class RobotPassPercentageTokenMacroTest {
 
-import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
-import org.mockito.Mockito;
+    private static final String macroName = "ROBOT_PASSPERCENTAGE";
 
-public class RobotPassPercentageTokenMacroTest extends TestCase {
+    private RobotPassPercentageTokenMacro token;
+    private AbstractBuild<?, ?> build;
+    private TaskListener listener;
+    private RobotBuildAction action;
 
-	private static final String macroName = "ROBOT_PASSPERCENTAGE";
-	
-	private RobotPassPercentageTokenMacro token;
-	private AbstractBuild<?,?> build;
-	private TaskListener listener;
-	private RobotBuildAction action;
-	
-	public void setUp(){
-		token = new RobotPassPercentageTokenMacro();		
-		build = Mockito.mock(AbstractBuild.class);
-		listener = Mockito.mock(TaskListener.class);
-		action = Mockito.mock(RobotBuildAction.class);
-		
-		RobotResult result = Mockito.mock(RobotResult.class);
-		
-		Mockito.when(result.getPassPercentage(true)).thenReturn(55.0);
-		Mockito.when(result.getPassPercentage(false)).thenReturn(41.0);
-		Mockito.when(action.getResult()).thenReturn(result);
-		Mockito.when(build.getAction(RobotBuildAction.class)).thenReturn(action);
-	}
-	
-	public void testAcceptsName(){
-		assertTrue(new RobotPassPercentageTokenMacro().acceptsMacroName(macroName));
-	}
-	
-	public void testTokenConversionWithAll() throws MacroEvaluationException, IOException, InterruptedException{
-		token.countSkippedTests = false;
-		assertEquals("41.0",token.evaluate(build, listener, macroName));
-	}
+    @BeforeEach
+    void setUp() {
+        token = new RobotPassPercentageTokenMacro();
+        build = mock(AbstractBuild.class);
+        listener = mock(TaskListener.class);
+        action = mock(RobotBuildAction.class);
+
+        RobotResult result = mock(RobotResult.class);
+
+        when(result.getPassPercentage(true)).thenReturn(55.0);
+        when(result.getPassPercentage(false)).thenReturn(41.0);
+        when(action.getResult()).thenReturn(result);
+        when(build.getAction(RobotBuildAction.class)).thenReturn(action);
+    }
+
+    @Test
+    void testAcceptsName() {
+        assertTrue(new RobotPassPercentageTokenMacro().acceptsMacroName(macroName));
+    }
+
+    @Test
+    void testTokenConversionWithAll() throws Exception {
+        token.countSkippedTests = false;
+        assertEquals("41.0", token.evaluate(build, listener, macroName));
+    }
 }
