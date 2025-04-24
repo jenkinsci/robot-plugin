@@ -1,43 +1,46 @@
 package hudson.plugins.robot.tokens;
 
-import hudson.model.TaskListener;
 import hudson.model.AbstractBuild;
+import hudson.model.TaskListener;
 import hudson.plugins.robot.RobotBuildAction;
 import hudson.plugins.robot.model.RobotResult;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import junit.framework.TestCase;
+class RobotPassRatioTokenMacroTest {
 
-import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
-import org.mockito.Mockito;
+    private static final String macroName = "ROBOT_PASSRATIO";
+    private RobotPassRatioTokenMacro token;
+    private AbstractBuild<?, ?> build;
+    private TaskListener listener;
 
-public class RobotPassRatioTokenMacroTest extends TestCase {
+    @BeforeEach
+    void setUp() {
+        token = new RobotPassRatioTokenMacro();
+        build = mock(AbstractBuild.class);
+        listener = mock(TaskListener.class);
 
-	private static final String macroName = "ROBOT_PASSRATIO";
-	private RobotPassRatioTokenMacro token;
-	private AbstractBuild<?,?> build;
-	private TaskListener listener;
+        RobotBuildAction action = mock(RobotBuildAction.class);
+        RobotResult result = mock(RobotResult.class);
 
-	public void setUp(){
-		token = new RobotPassRatioTokenMacro();
-		build = Mockito.mock(AbstractBuild.class);
-		listener = Mockito.mock(TaskListener.class);
+        when(result.getOverallPassed()).thenReturn(6L);
+        when(result.getOverallTotal()).thenReturn(13L);
+        when(action.getResult()).thenReturn(result);
+        when(build.getAction(RobotBuildAction.class)).thenReturn(action);
+    }
 
-		RobotBuildAction action = Mockito.mock(RobotBuildAction.class);
-		RobotResult result = Mockito.mock(RobotResult.class);
+    @Test
+    void testAcceptsName() {
+        assertTrue(new RobotPassRatioTokenMacro().acceptsMacroName(macroName));
+    }
 
-		Mockito.when(result.getOverallPassed()).thenReturn(6L);
-		Mockito.when(result.getOverallTotal()).thenReturn(13L);
-		Mockito.when(action.getResult()).thenReturn(result);
-		Mockito.when(build.getAction(RobotBuildAction.class)).thenReturn(action);
-	}
-
-	public void testAcceptsName(){
-		assertTrue(new RobotPassRatioTokenMacro().acceptsMacroName(macroName));
-	}
-
-	public void testTokenConversionWithAll() throws MacroEvaluationException, IOException, InterruptedException{
-		assertEquals("6 / 13",token.evaluate(build, listener, macroName));
-	}
+    @Test
+    void testTokenConversionWithAll() throws Exception {
+        assertEquals("6 / 13", token.evaluate(build, listener, macroName));
+    }
 }

@@ -4,37 +4,42 @@ import hudson.model.AbstractBuild;
 import hudson.model.TaskListener;
 import hudson.plugins.robot.RobotBuildAction;
 import hudson.plugins.robot.model.RobotResult;
-import junit.framework.TestCase;
-import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-public class RobotTotalTokenMacroTest extends TestCase {
+class RobotTotalTokenMacroTest {
 
-	private static final String macroName = "ROBOT_TOTAL";
-	private RobotTotalTokenMacro token;
-	private AbstractBuild<?,?> build;
-	private TaskListener listener;
+    private static final String macroName = "ROBOT_TOTAL";
+    private RobotTotalTokenMacro token;
+    private AbstractBuild<?, ?> build;
+    private TaskListener listener;
 
-	public void setUp(){
-		token = new RobotTotalTokenMacro();
-		build = Mockito.mock(AbstractBuild.class);
-		listener = Mockito.mock(TaskListener.class);
+    @BeforeEach
+    void setUp() {
+        token = new RobotTotalTokenMacro();
+        build = mock(AbstractBuild.class);
+        listener = mock(TaskListener.class);
 
-		RobotBuildAction action = Mockito.mock(RobotBuildAction.class);
-		RobotResult result = Mockito.mock(RobotResult.class);
+        RobotBuildAction action = mock(RobotBuildAction.class);
+        RobotResult result = mock(RobotResult.class);
 
-		Mockito.when(result.getOverallTotal()).thenReturn(6L);
-		Mockito.when(action.getResult()).thenReturn(result);
-		Mockito.when(build.getAction(RobotBuildAction.class)).thenReturn(action);
-	}
+        when(result.getOverallTotal()).thenReturn(6L);
+        when(action.getResult()).thenReturn(result);
+        when(build.getAction(RobotBuildAction.class)).thenReturn(action);
+    }
 
-	public void testAcceptsName(){
-		assertTrue(token.acceptsMacroName(macroName));
-	}
+    @Test
+    void testAcceptsName() {
+        assertTrue(token.acceptsMacroName(macroName));
+    }
 
-	public void testTokenConversionWithAll() throws MacroEvaluationException, IOException, InterruptedException{
-		assertEquals("6",token.evaluate(build, listener, macroName));
-	}
+    @Test
+    void testTokenConversionWithAll() throws Exception {
+        assertEquals("6", token.evaluate(build, listener, macroName));
+    }
 }
