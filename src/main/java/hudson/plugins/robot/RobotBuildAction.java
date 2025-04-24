@@ -200,10 +200,10 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	}
 
 	/**
-	 * Get ratio of passed tests per total tests. Accounts for only critical tests run.
+	 * Get ratio of passed tests per total tests. Accounts for all tests run and skipped.
 	 * @return percent number
 	 */
-	public double getCriticalPassPercentage() {
+	public double getPassPercentageWithSkipped() {
 		return getResult().getPassPercentage(true);
 	}
 
@@ -282,7 +282,6 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 				Boolean.parseBoolean(req.getParameter("zoomSignificant")), false,
 				Boolean.parseBoolean(req.getParameter("hd")),
 				Boolean.parseBoolean(req.getParameter("failedOnly")),
-				Boolean.parseBoolean(req.getParameter("criticalOnly")),
 				labelFormat,
 				Integer.parseInt(maxBuildsReq));
 		g.doPng(req, rsp);

@@ -36,7 +36,6 @@ public class RobotGraphHelper {
 	 * Create a test result trend graph. The graph will ignore builds with no robot results.
 	 * @param significantData True if graph has significant data
 	 * @param binarydata Binary data
-	 * @param criticalOnly True if graph only critical tests
 	 * @param hd True if you want a larger image
 	 * @param labelFormat Label format
 	 * @param rootObject The dataset will be taken from rootObject backwards.
@@ -51,7 +50,6 @@ public class RobotGraphHelper {
 																 boolean binarydata,
 																 boolean hd,
 																 boolean failedOnly,
-																 boolean criticalOnly,
 																 String labelFormat,
 																 int maxBuildsToShow) {
 		List<Number> values = new ArrayList<>();
@@ -65,14 +63,14 @@ public class RobotGraphHelper {
 			 testObject != null && buildsLeftToShow != 0;
 			 testObject = testObject.getPreviousResult(), buildsLeftToShow--)
 		{
-			Number failed =  !criticalOnly ? testObject.getFailed() : testObject.getCriticalFailed();
+			Number failed =  testObject.getFailed();
 			Number passed = 0;
 			Number skipped = 0;
 			int compareLowerBoundTo;
 			if ( failedOnly) {
 			    compareLowerBoundTo = failed.intValue();
 			} else {
-			    passed = !criticalOnly ? testObject.getPassed() : testObject.getCriticalPassed();
+			    passed = testObject.getPassed();
 			    skipped = testObject.getSkipped();
 			    compareLowerBoundTo = passed.intValue();
 			}

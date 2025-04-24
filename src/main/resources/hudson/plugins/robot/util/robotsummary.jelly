@@ -67,7 +67,7 @@ limitations under the License.
             <td>
                 <j:set var="totalPassPercentage" value="${attrs.action.overallPassPercentage}"/>
                 <j:if test="${attrs.action.countSkippedTests}">
-                    <j:set var="totalPassPercentage" value="${attrs.action.criticalPassPercentage}"/>
+                    <j:set var="totalPassPercentage" value="${attrs.action.getPassPercentageWithSkipped}"/>
                 </j:if>
                 ${totalPassPercentage}
             </td>

@@ -37,7 +37,6 @@ public class RobotStep extends Step {
 	private double unstableThreshold;
 	private @CheckForNull String[] otherFiles;
 	private boolean enableCache = true;
-	private boolean onlyCritical = true;
 	private boolean countSkippedTests = false;
 	private @CheckForNull String overwriteXAxisLabel;
 
@@ -92,10 +91,6 @@ public class RobotStep extends Step {
 		return this.enableCache;
 	}
 	
-	public boolean getOnlyCritical() {
-		return this.onlyCritical;
-	}
-
 	public boolean getCountSkippedTests() { return this.countSkippedTests; }
 
 	public String getOverwriteXAxisLabel() {
@@ -142,11 +137,6 @@ public class RobotStep extends Step {
 		this.enableCache = enableCache;
 	}
 	
-	@DataBoundSetter
-	public void setOnlyCritical(boolean onlyCritical) {
-		this.onlyCritical = onlyCritical;
-	}
-
 	@DataBoundSetter
 	public void setCountSkippedTests(boolean countSkippedTests) {
 		this.countSkippedTests = countSkippedTests;

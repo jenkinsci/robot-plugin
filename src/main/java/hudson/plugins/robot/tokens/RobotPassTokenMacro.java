@@ -15,9 +15,6 @@ import java.io.IOException;
 @Extension(optional = true)
 public class RobotPassTokenMacro extends DataBoundTokenMacro {
 
-	@Parameter
-	public boolean onlyCritical;
-
 	@Override
 	public String evaluate(AbstractBuild<?, ?> context, TaskListener listener,
 			String macroName) throws MacroEvaluationException, IOException,

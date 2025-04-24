@@ -64,8 +64,8 @@ Tracker](https://issues.jenkins-ci.org/issues/?jql=project+%3D+JENKINS+AND+compo
     persist for viewing later in the logs you must configure them under
     "Advanced... -\> Other files to copy". The field accepts comma
     separated list of files and supports wildcards `*` and `?`.
-9.  Set thresholds and optionally disable thresholds for critical tests
-    only to count every test in the pass percentage.
+9.  Set thresholds and optionally include thresholds for skipped tests
+    to count every test in the pass percentage.
 
 ### Pipeline configuration
 
@@ -85,8 +85,6 @@ Tracker](https://issues.jenkins-ci.org/issues/?jql=project+%3D+JENKINS+AND+compo
         otherFiles: 'screenshot-*.png'
    )
     ```
-
-**NOTE!** `onlyCritical` parameter has been deprecated and will be removed in the future. It has no effect on the results.
 
 ### Configuring direct links to log files
 
@@ -142,8 +140,9 @@ Prerequisites: token-macro plugin and email-ext plugin installed.
     -   `${ROBOT_PASSPERCENTAGE, countSkippedTests}` - Expands to pass percentage
         of tests. (passed / total \* 100 %).
         `countSkippedTests` is an optional parameter that can be used to include skipped tests in the total count. Default value is `false`.
-    -   `${ROBOT_PASSRATIO}` - Expands to build result in 'passed
-        / total' format. This total includes skipped test cases.
+    -   `${ROBOT_PASSRATIO, countSkippedTests}` - Expands to build result in 'passed
+        / total' format.
+        `countSkippedTests` is an optional parameter that can be used to include skipped tests in the total count. Default value is `True`.
     -   `${ROBOT_PASSED}` - Expands to count of passed cases.
     -   `${ROBOT_REPORTLINK}` - If logfile link is configured in the Robot
         plugin this link will point to that file for the build. Else show
@@ -174,12 +173,12 @@ security vulnerabilities**.
 
 ## Robot Framework 4.x+ compatibility
 
-:heavy_exclamation_mark: As we're preparing to drop support for RF 3.x, the `onlyCritical` flag has been deprecated and no
-longer has any effect. It will be removed in the future, but for now it's available for the transition period.
 A new flag `countSkippedTests` has been added to the pipeline step to allow users to choose whether to count skipped
 tests in the pass percentage calculation.
 
-The plugin still supports RF 3.x, but no longer takes criticality into account. If you want to use RF 3.x with criticality, please downgrade to the last major version (4.0.0)
+## Robot Framework <3.0 compatibility
+
+If you want to use RF 3.x with criticality, please downgrade to the major version 4.0.0. Plugin versions 5.x support RF 3.x as well, but no longer takes criticality into account.
 
 ## Overall Screenshots
 

@@ -29,22 +29,13 @@ limitations under the License.
           <j:set var="total_status" value="PASS" />
       </j:otherwise>
     </j:choose>
-    <j:choose>
-      <j:when test="${it.criticalFailed > 0}">
-          <j:set var="status" value="FAIL" />
-      </j:when>
-      <j:otherwise>
-          <j:set var="status" value="PASS" />
-      </j:otherwise>
-    </j:choose>
     <j:set var="prevresult" value="${it.previousResult}" />
       <table class="summary">
       <tbody>
         <tr><th class="${status}">TEST SUITE:</th><td><strong>${it.name}</strong></td></tr>
         <tr><th>Description:</th><td>${it.description}</td></tr>
         <tr><th>Duration:</th><td>${it.humanReadableDuration} (${it.getDurationDiff(prevresult)})</td></tr>
-        <tr><th>Status:</th><td>${it.criticalTotal} critical test, ${it.criticalPassed} passed, <span class="${status}">${it.criticalFailed}</span> failed, 0 skipped<br/>
-                              ${it.total} test total (${h.getDiffString(it.total - prevresult.total)}), ${it.passed} passed, <span class="${total_status}">${it.failed}</span> failed, ${it.skipped} skipped</td></tr>
+        <tr><th>Status:</th><td>${it.total} test total (${h.getDiffString(it.total - prevresult.total)}), ${it.passed} passed, <span class="${total_status}">${it.failed}</span> failed, ${it.skipped} skipped</td></tr>
         <j:if test="${it.hasReport}">
           <tr><th>Report File:</th><td><a href="${rootURL}/${it.parentAction.owner.url}${it.parentAction.urlName}/report/${it.reportFile}#suites?${it.id}">${it.reportFile}</a></td></tr>
         </j:if>
@@ -62,7 +53,6 @@ limitations under the License.
         <span id="robot-fromurl-id" data-url=""></span>
         <p><label><input type="checkbox" id="zoomToChanges"/>Zoom to changes</label></p>
         <p><label><input type="checkbox" id="failedOnly"/>Show only failed</label></p>
-        <p><label><input type="checkbox" id="criticalOnly"/>Show only critical</label></p>
         <p><label><input min="0" step="1" max="9999" value="" placeholder="all" type="number" id="maxBuildsToShow"/>Max builds</label></p>
         <br/><p style="float:right"><a id="passfailgraph_hd_link" href="">Show bigger image</a></p>
        </div>
@@ -80,7 +70,6 @@ limitations under the License.
       <table class="pane sortable">
         <tr>
             <td class="pane-header" title="Test case name. Click to sort.">Name</td>
-            <td class="pane-header" style="text-align:center;" title="Criticality. Click to sort.">Crit.</td>
             <td class="pane-header" style="text-align:center;" title="Status. Click to sort.">Status</td>
             <td class="pane-header" title="Duration and difference to previous build. Click to sort.">Duration <span style="font-size:0.8em">(diff)</span></td>
         </tr>
@@ -100,7 +89,6 @@ limitations under the License.
 
         <tr>
          <td class="pane"><a href="${case.getRelativeId(it)}">${case.name}</a></td>
-         <td class="pane" style="text-align:center;"><j:if test="${case.isCritical()}">yes</j:if><j:if test="${!case.isCritical()}">no</j:if></td>
          <td class="pane ${status}" style="text-align:center;">${status}</td>
          <td class="pane">${case.humanReadableDuration}<span style="font-size:0.8em">(${case.getDurationDiff(prevcase)})</span></td>
         </tr>

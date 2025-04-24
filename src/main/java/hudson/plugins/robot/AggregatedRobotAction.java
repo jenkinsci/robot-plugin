@@ -61,10 +61,6 @@ public class AggregatedRobotAction implements Action {
 		return aggregatedResult.getPassPercentage(false);
 	}
 
-	public double getCriticalPassPercentage() {
-		return aggregatedResult.getPassPercentage(true);
-	}
-
 	public String getIconFileName() {
 		return "/plugin/robot/robot.png";
 	}
@@ -100,7 +96,6 @@ public class AggregatedRobotAction implements Action {
 				Boolean.parseBoolean(req.getParameter("zoomSignificant")),
 				false, Boolean.parseBoolean(req.getParameter("hd")),
 				Boolean.parseBoolean(req.getParameter("failedOnly")),
-				Boolean.parseBoolean(req.getParameter("criticalOnly")),
 				labelFormat,
 				Integer.parseInt(req.getParameter("maxBuildsToShow")));
 		g.doPng(req, rsp);
@@ -121,24 +116,6 @@ public class AggregatedRobotAction implements Action {
 			failed += result.getOverallFailed();
 			passed += result.getOverallPassed();
 			skipped += result.getOverallSkipped();
-		}
-
-		@Deprecated
-		@Override
-		public long getCriticalPassed() {
-			return this.getOverallPassed();
-		}
-
-		@Deprecated
-		@Override
-		public long getCriticalFailed() {
-			return this.getOverallFailed();
-		}
-
-		@Deprecated
-		@Override
-		public long getCriticalTotal() {
-			return this.getOverallTotal();
 		}
 
 		@Override

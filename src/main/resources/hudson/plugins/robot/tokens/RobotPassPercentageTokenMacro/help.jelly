@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>	
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core">
-  <dt>$${ROBOT_PASSPERCENTAGE, onlyCritical}</dt>
+  <dt>$${ROBOT_PASSPERCENTAGE, countSkipped}</dt>
   <dd>
     Expands to pass percentage of tests. (passed / total * 100 %)
     <ul>
-        <li><i>onlyCritical</i> - True if only critical tests should be calculated in percentage<br />Defaults to false.</li>
+        <li><i>countSkipped</i> - True if also skipped tests should be calculated in percentage<br />Defaults to false.</li>
     </ul>
   </dd>
 </j:jelly>

@@ -34,13 +34,7 @@ public class RobotTotalTokenMacroTest extends TestCase {
 		assertTrue(token.acceptsMacroName(macroName));
 	}
 
-	public void testTokenConversionWithCritical() throws MacroEvaluationException, IOException, InterruptedException{
-		token.onlyCritical = true;
-		assertEquals("6",token.evaluate(build, listener, macroName));
-	}
-
 	public void testTokenConversionWithAll() throws MacroEvaluationException, IOException, InterruptedException{
-		token.onlyCritical = false;
 		assertEquals("6",token.evaluate(build, listener, macroName));
 	}
 }

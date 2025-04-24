@@ -53,7 +53,7 @@ public class RobotResult extends RobotTestObject {
 
 	private String timeStamp;
 
-	private transient int passed, failed, skipped, criticalPassed, criticalFailed;
+	private transient int passed, failed, skipped;
 
 	//backwards compatibility with old builds
 	private transient List<RobotResultStatistics> overallStats;
@@ -82,36 +82,6 @@ public class RobotResult extends RobotTestObject {
 	@Override
 	public String getDescription() {
 		return "";
-	}
-
-	/**
-	 * Get number of passed critical tests.
-	 * @return number of passed critical tests
-	 */
-	@Deprecated
-	@Exported
-	public long getCriticalPassed(){
-		return this.getOverallPassed();
-	}
-
-	/**
-	 * Get number of failed critical tests.
-	 * @return number of failed critical tests
-	 */
-	@Deprecated
-	@Exported
-	public long getCriticalFailed(){
-		return this.getOverallFailed();
-	}
-
-	/**
-	 * Get total number of critical tests.
-	 * @return total number of critical tests
-	 */
-	@Deprecated
-	@Exported
-	public long getCriticalTotal(){
-		return this.getOverallTotal();
 	}
 
 	/**
@@ -160,7 +130,7 @@ public class RobotResult extends RobotTestObject {
 
 	/**
 	 * Get pass/fail stats by category.
-	 * @return List containing 'critical tests' and 'all tests'
+	 * @return List containing 'all tests'
 	 */
 	public List<RobotResultStatistics> getStatsByCategory() {
 		return overallStats;
@@ -407,8 +377,6 @@ public class RobotResult extends RobotTestObject {
 		failed = 0;
 		passed = 0;
 		skipped = 0;
-		criticalPassed = 0;
-		criticalFailed = 0;
 		duration = 0;
 
 		Collection<RobotSuiteResult> newSuites = getSuites();
@@ -419,8 +387,6 @@ public class RobotResult extends RobotTestObject {
 			failed += suite.getFailed();
 			passed += suite.getPassed();
 			skipped += suite.getSkipped();
-			criticalFailed += suite.getFailed();
-			criticalPassed += suite.getPassed();
 			duration += suite.getDuration();
 			newMap.put(suite.getDuplicateSafeName(), suite);
 		}

@@ -287,7 +287,6 @@ public class RobotParser {
 			caseResult.setLogFile(this.logFileName);
 			//parse attributes
 			caseResult.setName(reader.getAttributeValue(null, "name"));
-			//setCriticalityIfAvailable(reader, caseResult);
 			caseResult.setId(reader.getAttributeValue(null, "id"));
 			//parse test tags
 			caseResult.setDescription("");
@@ -340,7 +339,6 @@ public class RobotParser {
 			if (schemaVersion >= 5) {
 				caseResult.setElapsedTime(reader.getAttributeValue(null, elapsedLocalName));
 			}
-//			setCriticalityIfAvailable(reader, caseResult);
 			while(reader.hasNext()){
 				reader.next();
 				if(reader.isCharacters()){
@@ -572,13 +570,6 @@ public class RobotParser {
 				reader.next();
 			}
 			return stringBuilder.toString();
-		}
-
-		private static void setCriticalityIfAvailable(XMLStreamReader reader, RobotCaseResult caseResult) {
-			String criticality = reader.getAttributeValue(null, "critical");
-			if (criticality != null) {
-				caseResult.setCritical(criticality.equals("yes"));
-			}
 		}
 
 		@Override
