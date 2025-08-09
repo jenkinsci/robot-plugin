@@ -68,6 +68,9 @@ limitations under the License.
       <div style="margin-bottom=20px;">
         <u:failedCases />
       </div>
+      <div style="margin-bottom=20px;">
+        <u:skippedCases />
+      </div>
 
       <h2>Test Suites</h2>
       <table class="pane sortable">
