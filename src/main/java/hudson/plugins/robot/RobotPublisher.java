@@ -34,8 +34,12 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serial;
 import java.io.Serializable;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import jakarta.servlet.ServletException;
 
@@ -46,6 +50,8 @@ import org.kohsuke.stapler.QueryParameter;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+import jenkins.model.ArtifactManager;
 
 public class RobotPublisher extends Recorder implements Serializable,
         MatrixAggregatable, SimpleBuildStep {
@@ -287,16 +293,16 @@ public class RobotPublisher extends Recorder implements Serializable,
                 if (!DEFAULT_JENKINS_ARCHIVE_DIR.equalsIgnoreCase(getArchiveDirName())) {
                     logger.println(Messages.robot_publisher_copying());
                     //Save configured Robot files (including split output) to build dir
-                    copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","));
+                    copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","), launcher, listener);
 
                     if (!getDisableArchiveOutput()) {
-                        copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedOutputFileName}), ","));
+                        copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedOutputFileName}), ","), launcher, listener);
                     }
 
                     //Save other configured files to build dir
                     if (StringUtils.isNotBlank(getOtherFiles())) {
                         String filemask = buildEnv.expand(getOtherFiles());
-                        copyFilesToBuildDir(build, workspace, expandedOutputPath, filemask);
+                        copyFilesToBuildDir(build, workspace, expandedOutputPath, filemask, launcher, listener);
                     }
                     logger.println(Messages.robot_publisher_done());
                 }
@@ -354,6 +360,39 @@ public class RobotPublisher extends Recorder implements Serializable,
         FilePath destDir = new FilePath(new FilePath(build.getRootDir()),
                 getArchiveDirName());
         srcDir.copyRecursiveTo(filemaskToCopy, destDir);
+    }
+
+    public void copyFilesToBuildDir(Run<?, ?> build, FilePath workspace,
+                                    String inputPath, String artifactsFilemask, Launcher launcher, TaskListener listener) throws IOException, InterruptedException {
+        FilePath srcDir = new FilePath(workspace, inputPath);
+        FilePath[] artifactFiles = srcDir.list(artifactsFilemask);
+
+        Map<String, String> artifacts = new HashMap<>();
+        for (FilePath file : artifactFiles) {
+            // Use relative path as artifact name
+            String pathInArchiveArea = getRelativePath(srcDir, file);
+            String pathInWorkspaceArea = getRelativePath(workspace, file);
+            artifacts.put(pathInArchiveArea, pathInWorkspaceArea);
+        }
+
+        // This will automatically use the configured artifact manager (S3, etc.)
+        ArtifactManager artifactManager = build.pickArtifactManager();
+        artifactManager.archive(srcDir, launcher, (BuildListener)listener, artifacts);
+        if (artifacts.isEmpty()) {
+            listener.getLogger().println("No artifacts to archive");
+        } else {
+            for (Map.Entry<String,String> artifact : artifacts.entrySet()) {
+                listener.getLogger().println("The artifact to archive: " + artifact.getKey() + "->" + artifact.getValue());
+            }
+        }
+    }
+
+    private String getRelativePath(FilePath path1, FilePath path2) {
+        Path javaPath1 = Paths.get(path1.getRemote());
+        Path javaPath2 = Paths.get(path2.getRemote());
+        Path relativeJavaPath = javaPath1.relativize(javaPath2);
+
+        return relativeJavaPath.toString();
     }
 
     /**
