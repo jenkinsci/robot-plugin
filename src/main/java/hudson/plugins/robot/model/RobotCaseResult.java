@@ -54,6 +54,7 @@ public class RobotCaseResult extends RobotTestObject{
 
 	private RobotSuiteResult parent;
 	private int failedSince;
+	private int skippedSince;
 
 	/**
 	 * Difference between string timevalues in format yyyyMMdd HH:mm:ss.SS (Java DateFormat).
@@ -232,6 +233,24 @@ public class RobotCaseResult extends RobotTestObject{
 		return failedSince;
 	}
 
+	public int getSkippedSince() {
+		if (skippedSince == 0 && isSkipped()) {
+			RobotCaseResult previous = getPreviousResult();
+			if(previous != null && previous.isSkipped())
+				this.skippedSince = previous.getSkippedSince();
+			else if (getOwner() != null) {
+				this.skippedSince = getOwner().getNumber();
+			} else {
+				LOGGER.warn("trouble calculating getSkippedSince. We've got prev, but no owner.");
+			}
+		}
+		return skippedSince;
+	}
+
+	public void setSkippedSince(int skippedSince) {
+		this.skippedSince = skippedSince;
+	}
+
 	public void setFailedSince(int failedSince) {
 		this.failedSince = failedSince;
 	}
@@ -259,14 +278,24 @@ public class RobotCaseResult extends RobotTestObject{
 	}
 
 	/**
-	 * Get the number of builds this test case has failed for
+	 * Gives the run that this case first skipped in
+	 * @return run object
+	 */
+	public Run<?,?> getSkippedSinceRun() {
+		return getOwner().getParent().getBuildByNumber(getSkippedSince());
+	}
+
+	/**
+	 * Get the number of builds this test case has failed/skipped for
 	 * @return number of builds
 	 */
 	public int getAge(){
 		if(isPassed()) return 0;
 		Run<?,?> owner = getOwner();
-		if(owner != null)
-			return getOwner().getNumber() - getFailedSince() + 1;
+		if(owner != null) {
+			int previousStatusBuild = isSkipped() ? getSkippedSince() : getFailedSince();
+			return getOwner().getNumber() - previousStatusBuild + 1;
+		}
 		else return 0;
 	}
 

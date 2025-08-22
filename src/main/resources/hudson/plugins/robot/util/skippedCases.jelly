@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util">
+    <script src="${rootURL}/plugin/robot/robot.js"/>
+    <j:if test="${!it.allSkippedCases.isEmpty()}">
+        <style>
+            td.pane {
+                vertical-align: top;
+            }
+        </style>
+        <h2>Skipped Test Cases</h2>
+        <table class="pane sortable">
+            <tr>
+                <td class="pane-header" title="Test case name. Click to sort.">Name</td>
+                <td class="pane-header" title="Duration. Click to sort.">Duration</td>
+                <td class="pane-header" style="text-align:center;" title="Number of skipped builds. Click to sort.">Age</td>
+            </tr>
+            <j:forEach var="case" items="${it.allSkippedCases}">
+                <j:set var="fullName" value="${case.getRelativePackageName(it)}" />
+                <j:set var="relativeId" value="${case.getRelativeId(it)}" />
+                <j:set var="escapedName" value="${h.escape(fullName)}" />
+                <tr>
+                    <td class="pane">
+                        <a id="${escapedName}-showlink" href="#" class="robot-expand" data-escaped-name="${escapedName}" data-relative-id="${relativeId}/summary"></a>
+                        <a id="${escapedName}-hidelink" href="#" style="display:none" class="robot-collapse" data-escaped-name="${escapedName}"></a>
+                        <st:nbsp/>
+                        <a href="${relativeId}"><small>${case.getRelativeParent(it)}</small>${case.name}</a>
+                        <div id="${escapedName}" class="hidden" style="display:none">
+                            ${%Loading...}
+                        </div>
+                    </td>
+                    <td class="pane">${case.humanReadableDuration}</td>
+                    <td class="pane" style="text-align:center;">
+                        <j:if test="${case.skippedSinceRun != null}">
+                            <a href="${rootURL}/${case.skippedSinceRun.url}">${case.age}</a>
+                        </j:if>
+                        <j:if test="${case.skippedSinceRun == null}">
+                            ${case.age}
+                        </j:if>
+                    </td>
+                </tr>
+            </j:forEach>
+        </table>
+    </j:if>
+</j:jelly>
