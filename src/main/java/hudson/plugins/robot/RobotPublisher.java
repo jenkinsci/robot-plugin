@@ -77,6 +77,7 @@ public class RobotPublisher extends Recorder implements Serializable,
     private String[] otherFiles;
     final private String overwriteXAxisLabel;
     final private boolean enableCache;
+    final private boolean useArtifactManager;
 
     //Default to true
     private boolean countSkippedTests = false;
@@ -94,12 +95,13 @@ public class RobotPublisher extends Recorder implements Serializable,
      * @param unstableThreshold    Threshold of test pass percentage for unstable builds
      * @param otherFiles           Other files to be saved
      * @param enableCache          True if caching is used
+     * @param useArtifactManager   True if Artifact Manager is used
      */
     @DataBoundConstructor
     public RobotPublisher(String archiveDirName, String outputPath, String outputFileName,
                           boolean disableArchiveOutput, String reportFileName, String logFileName,
                           double passThreshold, double unstableThreshold,
-                          boolean countSkippedTests, String otherFiles, boolean enableCache, String overwriteXAxisLabel) {
+                          boolean countSkippedTests, String otherFiles, boolean enableCache, String overwriteXAxisLabel, boolean useArtifactManager) {
         this.archiveDirName = archiveDirName;
         this.outputPath = outputPath;
         this.outputFileName = outputFileName;
@@ -111,6 +113,7 @@ public class RobotPublisher extends Recorder implements Serializable,
         this.countSkippedTests = countSkippedTests;
         this.enableCache = enableCache;
         this.overwriteXAxisLabel = overwriteXAxisLabel;
+        this.useArtifactManager = useArtifactManager;
 
         if (otherFiles != null) {
             String[] filemasks = otherFiles.split(",");
@@ -242,6 +245,15 @@ public class RobotPublisher extends Recorder implements Serializable,
     }
 
     /**
+     * Gets value of useArtifactManager
+     *
+     * @return true if Artifact Manager is used
+     */
+    public boolean getUseArtifactManager() {
+        return useArtifactManager;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -292,17 +304,17 @@ public class RobotPublisher extends Recorder implements Serializable,
 
                 if (!DEFAULT_JENKINS_ARCHIVE_DIR.equalsIgnoreCase(getArchiveDirName())) {
                     logger.println(Messages.robot_publisher_copying());
-                    //Save configured Robot files (including split output) to build dir
-                    copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","), launcher, listener);
+                    //Save configured Robot files (including split output) to destination dir
+                    copyFilesToDestination(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedReportFileName, expandedLogFileName, logFileJavascripts}), ","), launcher, listener);
 
                     if (!getDisableArchiveOutput()) {
-                        copyFilesToBuildDir(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedOutputFileName}), ","), launcher, listener);
+                        copyFilesToDestination(build, workspace, expandedOutputPath, StringUtils.join(modifyMasksforSplittedOutput(new String[]{expandedOutputFileName}), ","), launcher, listener);
                     }
 
-                    //Save other configured files to build dir
+                    //Save other configured files to destination dir
                     if (StringUtils.isNotBlank(getOtherFiles())) {
                         String filemask = buildEnv.expand(getOtherFiles());
-                        copyFilesToBuildDir(build, workspace, expandedOutputPath, filemask, launcher, listener);
+                        copyFilesToDestination(build, workspace, expandedOutputPath, filemask, launcher, listener);
                     }
                     logger.println(Messages.robot_publisher_done());
                 }
@@ -345,7 +357,29 @@ public class RobotPublisher extends Recorder implements Serializable,
     }
 
     /**
-     * Copy files with given filemasks from input path relative to build into specific build file archive dir
+     * Copy files with given filemasks from input path relative to build into
+     * local build archive dir or artifact manager destination
+     *
+     * @param build          The Jenkins run
+     * @param workspace      Build workspace
+     * @param inputPath      Base path for copy. Relative to build workspace.
+     * @param filemaskToCopy List of Ant GLOB style filemasks to copy from dirs specified at inputPathMask
+     * @param launcher       A way to start processes
+     * @param listener       A place to send output
+     * @throws IOException          thrown exception
+     * @throws InterruptedException thrown exception
+     */
+    public void copyFilesToDestination(Run<?, ?> build, FilePath workspace, String inputPath, String filemaskToCopy,
+                                       Launcher launcher, TaskListener listener) throws IOException, InterruptedException {
+        if (getUseArtifactManager()) {
+            archiveFilesToDestination(build, workspace, inputPath, filemaskToCopy, launcher, listener);
+        } else {
+            copyFilesToBuildDir(build, workspace, inputPath, filemaskToCopy);
+        }
+    }
+
+    /**
+     * Copy files with given filemasks from input path relative to build into local build file archive dir
      *
      * @param build          The Jenkins run
      * @param inputPath      Base path for copy. Relative to build workspace.
@@ -357,13 +391,24 @@ public class RobotPublisher extends Recorder implements Serializable,
     public void copyFilesToBuildDir(Run<?, ?> build, FilePath workspace,
                                     String inputPath, String filemaskToCopy) throws IOException, InterruptedException {
         FilePath srcDir = new FilePath(workspace, inputPath);
-        FilePath destDir = new FilePath(new FilePath(build.getRootDir()),
-                getArchiveDirName());
+        FilePath destDir = new FilePath(new FilePath(build.getRootDir()), getArchiveDirName());
         srcDir.copyRecursiveTo(filemaskToCopy, destDir);
     }
 
-    public void copyFilesToBuildDir(Run<?, ?> build, FilePath workspace,
-                                    String inputPath, String artifactsFilemask, Launcher launcher, TaskListener listener) throws IOException, InterruptedException {
+    /**
+     * Copy files with given filemasks from input path relative to Artifact Manager
+     *
+     * @param build                 The Jenkins run
+     * @param workspace             Build workspace
+     * @param inputPath             Base path for copy. Relative to build workspace.
+     * @param artifactsFilemask     List of Ant GLOB style filemasks to copy from dirs specified at inputPathMask
+     * @param launcher              A way to start processes
+     * @param listener              A place to send output
+     * @throws IOException          thrown exception
+     * @throws InterruptedException thrown exception
+     */
+    public void archiveFilesToDestination(Run<?, ?> build, FilePath workspace, String inputPath, String artifactsFilemask,
+                                          Launcher launcher, TaskListener listener) throws IOException, InterruptedException {
         FilePath srcDir = new FilePath(workspace, inputPath);
         FilePath[] artifactFiles = srcDir.list(artifactsFilemask);
 

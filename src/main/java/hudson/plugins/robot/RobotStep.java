@@ -39,6 +39,7 @@ public class RobotStep extends Step {
 	private boolean enableCache = true;
 	private boolean countSkippedTests = false;
 	private @CheckForNull String overwriteXAxisLabel;
+	private boolean useArtifactManager = false;
 
 	
 	
@@ -96,7 +97,11 @@ public class RobotStep extends Step {
 	public String getOverwriteXAxisLabel() {
 		return this.overwriteXAxisLabel;
 	}
-	
+
+	public boolean getUseArtifactManager() {
+		return this.useArtifactManager;
+	}
+
 	@DataBoundSetter
 	public void setArchiveDirName(String archiveDirName) {
 		this.archiveDirName = Util.fixEmpty(archiveDirName);
@@ -157,6 +162,11 @@ public class RobotStep extends Step {
 	@DataBoundSetter
 	public void setOverwriteXAxisLabel(String overwriteXAxisLabel) {
 		this.overwriteXAxisLabel = overwriteXAxisLabel;
+	}
+
+	@DataBoundSetter
+	public void setUseArtifactManager(boolean useArtifactManager) {
+		this.useArtifactManager = useArtifactManager;
 	}
 
 	@Override
