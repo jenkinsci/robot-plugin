@@ -334,6 +334,10 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		return "robot";
 	}
 
+	public String getReportUrlName() {
+		return getUseArtifactManager() ? "artifact/" : getUrlName() + "/report/";
+	}
+
 	public List<RobotCaseResult> getAllTests() {
 		return getResult().getAllCases();
 	}
