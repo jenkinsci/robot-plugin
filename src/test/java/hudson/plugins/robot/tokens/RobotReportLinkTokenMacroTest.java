@@ -41,17 +41,31 @@ class RobotReportLinkTokenMacroTest {
     }
 
     @Test
-    void testTokenConversionWithoutLogLink() throws Exception {
+    void testLocalTokenConversionWithoutLogLink() throws Exception {
         action = new RobotBuildAction(build, result, "", listener, null, null, false, "", false, false);
         when(build.getAction(RobotBuildAction.class)).thenReturn(action);
         assertEquals("job/robotjob/1/robot/report/", token.evaluate(build, listener, macroName));
     }
 
     @Test
-    void testTokenConversionWithLogLink() throws Exception {
+    void testLocalTokenConversionWithLogLink() throws Exception {
         action = new RobotBuildAction(build, result, "", listener, "log.html", null, false, "", false, false);
         when(build.getAction(RobotBuildAction.class)).thenReturn(action);
         assertEquals("job/robotjob/1/robot/report/log.html", token.evaluate(build, listener, macroName));
+    }
+
+    @Test
+    void testArtifactTokenConversionWithoutLogLink() throws Exception {
+        action = new RobotBuildAction(build, result, "", listener, null, null, false, "", false, true);
+        when(build.getAction(RobotBuildAction.class)).thenReturn(action);
+        assertEquals("job/robotjob/1/artifact/", token.evaluate(build, listener, macroName));
+    }
+
+    @Test
+    void testArtifactTokenConversionWithLogLink() throws Exception {
+        action = new RobotBuildAction(build, result, "", listener, "log.html", null, false, "", false, true);
+        when(build.getAction(RobotBuildAction.class)).thenReturn(action);
+        assertEquals("job/robotjob/1/artifact/log.html", token.evaluate(build, listener, macroName));
     }
 }
 
