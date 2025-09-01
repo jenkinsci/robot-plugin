@@ -80,14 +80,14 @@ limitations under the License.
             </li>
             <j:if test="${attrs.action.logFileLink != null}">
                 <li>
-                    <a href="${rootURL}/${attrs.action.owner.url}${attrs.action.urlName}/report/${attrs.action.logFileLink}">
+                    <a href="${rootURL}/${attrs.action.owner.url}${attrs.action.reportUrlName}${attrs.action.logFileLink}">
                         Open ${attrs.action.logFileLink}
                     </a>
                 </li>
             </j:if>
             <j:if test="${attrs.action.logHtmlLink != null}">
                 <li>
-                    <a href="${rootURL}/${attrs.action.owner.url}${attrs.action.urlName}/report/${attrs.action.logHtmlLink}">
+                    <a href="${rootURL}/${attrs.action.owner.url}${attrs.action.reportUrlName}${attrs.action.logHtmlLink}">
                         Open ${attrs.action.logHtmlLink}
                     </a>
                 </li>

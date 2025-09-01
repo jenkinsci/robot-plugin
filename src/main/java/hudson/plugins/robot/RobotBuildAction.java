@@ -65,6 +65,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	private String xAxisLabel;
 
 	private boolean countSkippedTests;
+	private boolean useArtifactManager;
 
 	static {
 		XSTREAM.alias("result",RobotResult.class);
@@ -85,7 +86,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 	 */
 	public RobotBuildAction(Run<?, ?> build, RobotResult result,
 			String outputPath, TaskListener listener, String logFileLink, String logHtmlLink, boolean enableCache, String xAxisLabel,
-							boolean countSkippedTests) {
+							boolean countSkippedTests, boolean useArtifactManager) {
 		super();
 		super.onAttached(build);
 		this.build = build;
@@ -95,6 +96,7 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		this.enableCache = enableCache;
 		this.xAxisLabel = xAxisLabel;
 		this.countSkippedTests = countSkippedTests;
+		this.useArtifactManager = useArtifactManager;
 		setResult(result, listener);
 	}
 
@@ -332,6 +334,10 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 		return "robot";
 	}
 
+	public String getReportUrlName() {
+		return getUseArtifactManager() ? "artifact/" : getUrlName() + "/report/";
+	}
+
 	public List<RobotCaseResult> getAllTests() {
 		return getResult().getAllCases();
 	}
@@ -342,5 +348,9 @@ public class RobotBuildAction extends AbstractTestResultAction<RobotBuildAction>
 
 	public void setCountSkippedTests(boolean countSkippedTests) {
 		this.countSkippedTests = countSkippedTests;
+	}
+
+	public boolean getUseArtifactManager() {
+		return useArtifactManager;
 	}
 }

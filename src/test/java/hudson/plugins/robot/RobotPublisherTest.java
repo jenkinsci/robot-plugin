@@ -135,7 +135,7 @@ class RobotPublisherTest {
     }
 
     private RobotPublisher getRobotPublisher(double passThreshold, double unstableThreshold) {
-        return new RobotPublisher(null, "", "", false, "", "", passThreshold, unstableThreshold, countSkipped, "", false, "");
+        return new RobotPublisher(null, "", "", false, "", "", passThreshold, unstableThreshold, countSkipped, "", false, "", false);
     }
 
 }

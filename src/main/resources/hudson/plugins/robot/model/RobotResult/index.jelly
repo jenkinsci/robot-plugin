@@ -37,8 +37,8 @@ limitations under the License.
         <tr><th>Duration:</th><td>${it.humanReadableDuration} (${it.getDurationDiff(prevresult)})</td></tr>
         <tr><th>Status:</th><td>${it.overallTotal} test total (${h.getDiffString(it.total - prevresult.total)}), ${it.passed} passed, <span class="${total_status}">${it.failed}</span> failed, ${it.skipped} skipped</td></tr>
         <tr><th>Results:</th><td>
-                             <j:if test="${it.hasReport}"><a href="${rootURL}/${it.parentAction.owner.url}${it.parentAction.urlName}/report/${it.reportFile}">${it.reportFile}</a><br/></j:if>
-                             <j:if test="${it.hasLog}"><a href="${rootURL}/${it.parentAction.owner.url}${it.parentAction.urlName}/report/${it.logFile}">${it.logFile}</a><br/></j:if>
+                             <j:if test="${it.hasReport}"><a href="${rootURL}/${it.parentAction.owner.url}${it.parentAction.reportUrlName}${it.reportFile}">${it.reportFile}</a><br/></j:if>
+                             <j:if test="${it.hasLog}"><a href="${rootURL}/${it.parentAction.owner.url}${it.parentAction.reportUrlName}${it.logFile}">${it.logFile}</a><br/></j:if>
                              <a href="report">Original result files</a>
             </td></tr>
       </tbody>

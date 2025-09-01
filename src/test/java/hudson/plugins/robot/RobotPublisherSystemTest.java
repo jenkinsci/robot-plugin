@@ -66,7 +66,7 @@ class RobotPublisherSystemTest {
     void testRoundTripConfig() throws Exception {
         FreeStyleProject p = j.jenkins.createProject(FreeStyleProject.class, "testRoundTripConfig");
         RobotPublisher before = new RobotPublisher(null, "a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png",
-                false, "");
+                false, "", false);
         p.getPublishersList().add(before);
         j.configRoundtrip(p);
         RobotPublisher after = p.getPublishersList().get(RobotPublisher.class);
@@ -79,7 +79,7 @@ class RobotPublisherSystemTest {
     void testConfigView() throws Exception {
         FreeStyleProject p = j.jenkins.createProject(FreeStyleProject.class, "testConfigView");
         RobotPublisher before = new RobotPublisher(null, "a", "b", false, "c", "d", 11, 27, true, "dir1/*.jpg, dir2/*.png",
-                false, "");
+                false, "", false);
         p.getPublishersList().add(before);
         HtmlPage page = j.createWebClient().getPage(p, "configure");
         assertTextPresent(page, "Publish Robot Framework");

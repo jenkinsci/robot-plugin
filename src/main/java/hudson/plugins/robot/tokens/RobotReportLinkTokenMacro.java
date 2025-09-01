@@ -31,9 +31,9 @@ public class RobotReportLinkTokenMacro extends DataBoundTokenMacro {
 		if (action!=null){
 			String rootURL = (Jenkins.getInstanceOrNull() != null) ? Jenkins.get().getRootUrl() : "";
 			if (action.getLogFileLink() == null)
-				return rootURL + context.getUrl()+ action.getUrlName() + "/report/";
+				return rootURL + context.getUrl()+ action.getReportUrlName();
 			else
-				return rootURL + context.getUrl()+ action.getUrlName() + "/report/" + action.getLogFileLink();
+				return rootURL + context.getUrl()+ action.getReportUrlName() + action.getLogFileLink();
 		}
 		return "";
 	}

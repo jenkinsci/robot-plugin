@@ -44,6 +44,9 @@ limitations under the License.
     <f:entry title="${%advanced.overwriteXAxisLabel}" description="${%advanced.overwriteXAxisLabel.description}" field="overwriteXAxisLabel">
       <f:textbox />
     </f:entry>
+    <f:entry title="${%advanced.useArtifactManager}" description="${%advanced.useArtifactManager.description}" field="useArtifactManager">
+      <f:checkbox default="false"/>
+    </f:entry>
   </f:advanced>
   <f:entry title="${%thresholds.label}" help="/plugin/robot/help-thresholds.html">
     <table width="100%">
