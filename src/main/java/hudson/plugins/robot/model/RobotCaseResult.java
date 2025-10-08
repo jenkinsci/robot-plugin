@@ -118,12 +118,14 @@ public class RobotCaseResult extends RobotTestObject{
 			return duration;
 		if (elapsedtime != 0)
 			return Double.valueOf(elapsedtime * 1000).longValue(); // convert seconds to milliseconds
-		try{
-			return timeDifference(this.starttime, this.endtime);
-		} catch (ParseException e){
-			LOGGER.warn("Couldn't parse duration for test case " + name);
-			return 0;
+		if (StringUtils.isNotEmpty(this.endtime)) {
+			try {
+				return timeDifference(this.starttime, this.endtime);
+			} catch (ParseException e) {
+				LOGGER.warn("Couldn't parse duration for test case " + name);
+			}
 		}
+		return 0;
 	}
 
 	public String getStarttime() {
