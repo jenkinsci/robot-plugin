@@ -15,6 +15,7 @@
  */
 package hudson.plugins.robot;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.AbortException;
 import hudson.FilePath;
 import hudson.Util;
@@ -469,6 +470,7 @@ public class RobotParser {
 			return stackTrace.toString();
 		}
 
+        @SuppressFBWarnings("SF_SWITCH_FALLTHROUGH")
 		private String processKeyword(XMLStreamReader reader, int nestedCount) throws XMLStreamException {
 			StringBuilder stackTrace = new StringBuilder();
 			String kw = reader.getAttributeValue(null, "name");
@@ -485,6 +487,7 @@ public class RobotParser {
 						case "arguments":
 						case "arg":
 							stackTrace.append(processArgs(reader));
+                            // TODO: Refactor processArgs, so it won't return <kw> element and we can break out of this switch case normally and remove the SuppressFBWarnings above
 							continue;	// processArgs returns with us already in <kw>. We don't want to use reader.next()
 						case "for":
 						case "while":
