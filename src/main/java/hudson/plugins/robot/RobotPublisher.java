@@ -416,9 +416,8 @@ public class RobotPublisher extends Recorder implements Serializable,
         Map<String, String> artifacts = new HashMap<>();
         for (FilePath file : artifactFiles) {
             // Use relative path as artifact name
-            String pathInArchiveArea = getRelativePath(srcDir, file);
-            String pathInWorkspaceArea = getRelativePath(workspace, file);
-            artifacts.put(pathInArchiveArea, pathInWorkspaceArea);
+            String relativePath = getRelativePath(srcDir, file);
+            artifacts.put(relativePath, relativePath);
         }
 
         // This will automatically use the configured artifact manager (S3, etc.)
