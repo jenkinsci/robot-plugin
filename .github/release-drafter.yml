@@ -1,4 +1,4 @@
-_extends: .github
+_extends: github:jenkinsci/.github:/.github/release-drafter.yml
 name-template: $NEXT_PATCH_VERSION
 tag-template: robot-$NEXT_VERSION_VERSION
 version-template: $MAJOR.$MINOR.$PATCH
