@@ -1,7 +1,7 @@
 function initPassFailGraph(target) {
     var mode = getCookie("RobotResult_zoom", "true");
     var failedOnly = getCookie("RobotResult_failedOnly", "false");
-    var maxBuildsToShow = getCookie("RobotResult_maxBuildsToShow", 0);
+    var maxBuildsToShow = getCookie("RobotResult_maxBuildsToShow", 10);
     if (document.getElementById("zoomToChanges"))
         document.getElementById("zoomToChanges").checked = (mode == "true");
     if (document.getElementById("failedOnly"))
@@ -11,7 +11,7 @@ function initPassFailGraph(target) {
 }
 
 function initDurationGraph(target) {
-    var maxBuildsToShow = getCookie("RobotResult_maxBuildsToShow", 0);
+    var maxBuildsToShow = getCookie("RobotResult_maxBuildsToShow", 10);
     setDurationGraphSrc(target, maxBuildsToShow);
 }
 

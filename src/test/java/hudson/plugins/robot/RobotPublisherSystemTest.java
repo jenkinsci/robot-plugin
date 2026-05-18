@@ -347,7 +347,7 @@ class RobotPublisherSystemTest {
         assertTextPresent(page, "Hello, world! != Good bye, world!");
         assertTextPresent(page, "0:00:00.001 (+0:00:00.001)");
         assertElementPresentByXPath(page,
-                "//div[@id='main-panel']//img[@src='durationGraph?maxBuildsToShow=0']");
+                "//div[@id='main-panel']//img[@src='durationGraph?maxBuildsToShow=10']");
 
         page = wc.goTo("job/robot/1/robot/Testcases%20&%20Othercases/Othercases/Contains%20string");
         assertTextPresent(page, "PASS");
