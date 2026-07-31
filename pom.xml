@@ -15,11 +15,6 @@
 
 	<developers>
 		<developer>
-			<id>jpiironen</id>
-			<name>Janne Piironen</name>
-			<email>janne.piironen@gmail.com</email>
-		</developer>
-		<developer>
 			<id>aleksisimell</id>
 			<name>Aleksi Simell</name>
 			<email>aleksi.simell@eficode.com</email>
@@ -28,11 +23,6 @@
 			<id>tattoo</id>
 			<name>Tatu Kairi</name>
 			<email>tatu.kairi@eficode.com</email>
-		</developer>
-		<developer>
-			<id>hifi</id>
-			<name>Juho Saarinen</name>
-			<email>juho.saarinen@eficode.com</email>
 		</developer>
 	</developers>
 
