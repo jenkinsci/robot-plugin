@@ -29,8 +29,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Calendar;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DurationFormatUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.kohsuke.stapler.StaplerRequest2;
 import org.kohsuke.stapler.StaplerResponse2;
 
@@ -223,7 +223,7 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 	 * @return Duration in human readable form
 	 */
 	public String getHumanReadableDuration(){
-		return DurationFormatUtils.formatDurationHMS(getDuration());
+		return DurationFormatUtils.formatDuration(getDuration(), "H:mm:ss.SSS");
 	}
 
 	/**
@@ -237,8 +237,8 @@ public abstract class RobotTestObject extends AbstractModelObject implements Ser
 		if (comparable != null)
 			diff = duration - comparable.getDuration();
 		if (diff == 0) return "\u00B10";
-		else if (diff > 0) return "+" + DurationFormatUtils.formatDurationHMS(Math.abs(diff));
-		else return "-" + DurationFormatUtils.formatDurationHMS(Math.abs(diff));
+		else if (diff > 0) return "+" + DurationFormatUtils.formatDuration(Math.abs(diff), "H:mm:ss.SSS");
+		else return "-" + DurationFormatUtils.formatDuration(Math.abs(diff), "H:mm:ss.SSS");
 	}
 
 	public abstract RobotTestObject getPreviousResult();
