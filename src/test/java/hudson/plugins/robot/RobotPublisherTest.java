@@ -16,6 +16,7 @@
 package hudson.plugins.robot;
 
 import com.ctc.wstx.exc.WstxLazyException;
+import hudson.FilePath;
 import hudson.model.AbstractBuild;
 import hudson.model.FreeStyleBuild;
 import hudson.model.Result;
@@ -23,9 +24,10 @@ import hudson.plugins.robot.model.RobotResult;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.io.TempDir;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -134,8 +136,32 @@ class RobotPublisherTest {
                 remoteOperation.invoke(new File(RobotPublisherTest.class.getResource("xxe_output.xml").toURI()).getParentFile(), null));
     }
 
+    @Test
+    void testSanitizeArchiveShouldPassWithRelativePaths(@TempDir Path tempDir) throws Exception {
+        RobotPublisher publisher = getRobotPublisher();
+        FilePath mockWorkspace = new FilePath(tempDir.toFile());
+
+        assertTrue(publisher.isPathConfined(mockWorkspace, "my-dir"));
+        assertTrue(publisher.isPathConfined(mockWorkspace, "."));
+        assertTrue(publisher.isPathConfined(mockWorkspace, "another-dir/my-dir"));
+    }
+
+    @Test
+    void testSanitizeArchiveShouldFailWithRelativePaths(@TempDir Path tempDir) throws Exception {
+        RobotPublisher publisher = getRobotPublisher();
+        FilePath mockWorkspace = new FilePath(tempDir.toFile());
+
+        assertFalse(publisher.isPathConfined(mockWorkspace, "/absolute/path"));
+        assertFalse(publisher.isPathConfined(mockWorkspace, "../.."));
+        assertFalse(publisher.isPathConfined(mockWorkspace, "dir/../.."));
+    }
+
     private RobotPublisher getRobotPublisher(double passThreshold, double unstableThreshold) {
         return new RobotPublisher(null, "", "", false, "", "", passThreshold, unstableThreshold, countSkipped, "", false, "", false);
+    }
+
+    private RobotPublisher getRobotPublisher() {
+        return new RobotPublisher(null, "", "", false, "", "", 100, 100, countSkipped, "", false, "", false);
     }
 
 }

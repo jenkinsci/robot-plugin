@@ -30,10 +30,7 @@ import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import hudson.util.FormValidation;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.Serial;
-import java.io.Serializable;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -66,7 +63,7 @@ public class RobotPublisher extends Recorder implements Serializable,
     private static final String DEFAULT_OUTPUT_FILE = "output.xml";
     private static final String DEFAULT_LOG_FILE = "log.html";
 
-    final private String archiveDirName;
+    private String archiveDirName;
     final private String outputPath;
     final private String reportFileName;
     final private String logFileName;
@@ -302,6 +299,8 @@ public class RobotPublisher extends Recorder implements Serializable,
                     logger.println(Messages.robot_publisher_file_not_found() + " " + expandedReportFileName);
                 }
 
+                sanitizeArchive(workspace, logger);
+
                 if (!DEFAULT_JENKINS_ARCHIVE_DIR.equalsIgnoreCase(getArchiveDirName())) {
                     logger.println(Messages.robot_publisher_copying());
                     //Save configured Robot files (including split output) to destination dir
@@ -504,6 +503,33 @@ public class RobotPublisher extends Recorder implements Serializable,
         return Result.FAILURE;
     }
 
+    protected boolean isPathConfined(FilePath workspace, String value) {
+        if (value == null || value.isBlank()) {
+            return true;
+        }
+
+        Path normalizedRelative = Path.of(value).normalize();
+        if (normalizedRelative.startsWith("..") || normalizedRelative.isAbsolute()) {
+            return false;
+        }
+
+        try {
+            return workspace.isDescendant(value);
+        } catch (IOException | InterruptedException | IllegalArgumentException e) {
+            // Handle unresolvable paths or security exceptions
+            return false;
+        }
+    }
+
+    private void sanitizeArchive(FilePath workspace, PrintStream logger) throws IOException {
+        String archive = getArchiveDirName();
+        if (!isPathConfined(workspace, archive)) {
+            logger.println("WARNING! Given archive directory ("+ archive +") is not confined within build directory. "
+                    + "Using default archive directory instead: " + DEFAULT_ARCHIVE_DIR);
+            archiveDirName = DEFAULT_ARCHIVE_DIR;
+        }
+    }
+
     /**
      * Descriptor for the publisher
      */
@@ -560,6 +586,35 @@ public class RobotPublisher extends Recorder implements Serializable,
             else
                 return FormValidation.error(Messages
                         .robot_config_percentvalidation());
+        }
+
+        public FormValidation doCheckArchiveDirName(@QueryParameter String value)
+                throws IOException, ServletException {
+
+            if (StringUtils.isBlank(value)) {
+                return FormValidation.ok();
+            }
+
+            try {
+                Path inputPath = Paths.get(value);
+
+                // Reject absolute paths (e.g. /etc/passwd or C:\Windows)
+                if (inputPath.isAbsolute()) {
+                    return FormValidation.error(Messages.robot_config_archiveconfined());
+                }
+
+                Path normalizedPath = inputPath.normalize();
+
+                // Reject paths that start with '..' after normalization (e.g. '../../foo' or 'dir/../../bar')
+                if (normalizedPath.startsWith("..") || normalizedPath.toString().equals("..")) {
+                    return FormValidation.error(Messages.robot_config_archiveconfined());
+                }
+
+                return FormValidation.ok();
+
+            } catch (Exception e) {
+                return FormValidation.error("Invalid path syntax: " + e.getMessage());
+            }
         }
 
         private boolean isPercentageValue(String value) {
