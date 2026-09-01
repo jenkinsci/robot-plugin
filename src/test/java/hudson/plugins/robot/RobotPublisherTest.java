@@ -151,9 +151,15 @@ class RobotPublisherTest {
         RobotPublisher publisher = getRobotPublisher();
         FilePath mockWorkspace = new FilePath(tempDir.toFile());
 
+        // Linux Paths
         assertFalse(publisher.isPathConfined(mockWorkspace, "/absolute/path"));
         assertFalse(publisher.isPathConfined(mockWorkspace, "../.."));
         assertFalse(publisher.isPathConfined(mockWorkspace, "dir/../.."));
+
+        // Windows Paths
+        assertFalse(publisher.isPathConfined(mockWorkspace, "C:\\absolute\\path"));
+        assertFalse(publisher.isPathConfined(mockWorkspace, "C:/absolute/path"));
+        assertFalse(publisher.isPathConfined(mockWorkspace, "\\absolute\\path\\.."));
     }
 
     private RobotPublisher getRobotPublisher(double passThreshold, double unstableThreshold) {

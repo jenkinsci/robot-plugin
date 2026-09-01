@@ -507,8 +507,21 @@ public class RobotPublisher extends Recorder implements Serializable,
         if (value == null || value.isBlank()) {
             return true;
         }
+        // Make path OS agnostic
+        String sanitized = value.replace('\\', '/').trim();
+        Path normalizedRelative = Path.of(sanitized).normalize();
 
-        Path normalizedRelative = Path.of(value).normalize();
+        // Linux absolute or Win relative paths
+        if (sanitized.startsWith("/")) {
+            return false;
+        }
+
+        // Windows absolute paths
+        if (sanitized.matches("(?i)^[a-z]:.*") || sanitized.startsWith("//")) {
+            return false;
+        }
+
+        // Relative paths outside current directory
         if (normalizedRelative.startsWith("..") || normalizedRelative.isAbsolute()) {
             return false;
         }
