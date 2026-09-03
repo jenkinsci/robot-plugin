@@ -66,6 +66,19 @@ class RobotPublisherTest {
     }
 
     @Test
+    void testShouldFailWhenResultsWereNotReadInFull() {
+        RobotPublisher publisher = getRobotPublisher(0, 0);
+        RobotResult mockResult = mock(RobotResult.class);
+        AbstractBuild<?, ?> mockBuild = mock(FreeStyleBuild.class);
+
+        when(mockBuild.getResult()).thenReturn(Result.SUCCESS);
+        when(mockResult.getParseError()).thenReturn("Robot output file could not be read to the end: ...");
+        when(mockResult.getPassPercentage(countSkipped)).thenReturn(100.0);
+
+        assertEquals(Result.FAILURE, publisher.getBuildResult(mockBuild, mockResult));
+    }
+
+    @Test
     void testShouldFailWhenUnstableThresholdNotExceeded() {
         RobotPublisher publisher = getRobotPublisher(90, 50);
         RobotResult mockResult = mock(RobotResult.class);

@@ -61,6 +61,7 @@ public class RobotParser {
 		private final String reportFileName;
 
 		private int schemaVersion;
+		private final List<String> parseErrors = new ArrayList<>();
 		private String startLocalName = "starttime";
 		private String elapsedLocalName = "elapsedtime";
 		private String endLocalName = "endtime";
@@ -99,9 +100,10 @@ public class RobotParser {
 				if(dirFromFileGLOB != null)
 					baseDirectory = new File(baseDirectory, dirFromFileGLOB);
                 try (FileInputStream inputStream = new FileInputStream(reportFile)) {
-                    XMLStreamReader reader = factory.createXMLStreamReader(inputStream, "UTF-8");
+                    XMLStreamReader reader = RecoveringXMLStreamReader.recovering(factory.createXMLStreamReader(inputStream, "UTF-8"));
                     try {
                         parseResult(result, reader, baseDirectory);
+                        collectParseError(file, reader);
                     } finally {
                         reader.close();
                     }
@@ -109,7 +111,14 @@ public class RobotParser {
                     throw new IOException("Parsing of output xml failed!", e1);
                 }
 			}
+			result.setParseError(parseErrors.isEmpty() ? null : String.join("\n", parseErrors));
 			return result;
+		}
+
+		private void collectParseError(String file, XMLStreamReader reader) {
+			String message = RecoveringXMLStreamReader.parseError(reader);
+			if (message != null)
+				parseErrors.add(file + " " + message);
 		}
 
 		private RobotResult parseResult(RobotResult result, XMLStreamReader reader, File baseDirectory) throws XMLStreamException, IOException {
@@ -197,12 +206,14 @@ public class RobotParser {
 			XMLInputFactory factory = XMLInputFactory.newInstance();
 			factory.setProperty(XMLInputFactory.IS_COALESCING, Boolean.TRUE);
             try (FileInputStream inputStream = new FileInputStream(new File(baseDirectory, path))) {
-                XMLStreamReader splitReader = factory.createXMLStreamReader(inputStream, "UTF-8");
+                XMLStreamReader splitReader = RecoveringXMLStreamReader.recovering(factory.createXMLStreamReader(inputStream, "UTF-8"));
                 try {
                     while (splitReader.hasNext()) {
                         splitReader.next();
                         if (splitReader.isStartElement() && "suite".equals(splitReader.getLocalName())) {
-                            return processSuite(splitReader, parent, baseDirectory);
+                            RobotSuiteResult suite = processSuite(splitReader, parent, baseDirectory);
+                            collectParseError(path, splitReader);
+                            return suite;
                         }
                     }
                     throw xmlException("Illegal split xml output. Could not find suite element.", splitReader);

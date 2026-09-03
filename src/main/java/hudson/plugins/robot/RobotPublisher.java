@@ -292,6 +292,8 @@ public class RobotPublisher extends Recorder implements Serializable,
 
                 result = parse(expandedOutputFileName, expandedLogFileName, expandedReportFileName, expandedOutputPath, build, workspace, launcher, listener);
                 logger.println(Messages.robot_publisher_done());
+                if (result.getParseError() != null)
+                    logger.println(Messages.robot_publisher_parse_error() + " " + result.getParseError());
 
                 // Check if log and report files exist
                 FilePath outputDir = new FilePath(workspace, expandedOutputPath);
@@ -493,6 +495,10 @@ public class RobotPublisher extends Recorder implements Serializable,
     protected Result getBuildResult(Run<?, ?> build,
                                     RobotResult result) {
         if (build.getResult() != Result.FAILURE) {
+            //the test counts are incomplete when a file was not read to the end
+            if (result.getParseError() != null) {
+                return Result.FAILURE;
+            }
             double passPercentage = result.getPassPercentage(countSkippedTests);
             if (passPercentage < getUnstableThreshold()) {
                 return Result.FAILURE;
