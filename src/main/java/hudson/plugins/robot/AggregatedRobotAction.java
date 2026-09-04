@@ -23,7 +23,7 @@ import hudson.plugins.robot.graph.RobotGraphHelper;
 import hudson.plugins.robot.model.RobotResult;
 import hudson.util.ChartUtil;
 import hudson.util.Graph;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.StaplerRequest2;
 import org.kohsuke.stapler.StaplerResponse2;
 
