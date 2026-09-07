@@ -53,6 +53,8 @@ public class RobotResult extends RobotTestObject {
 
 	private String timeStamp;
 
+	private String parseError;
+
 	private transient int passed, failed, skipped;
 
 	//backwards compatibility with old builds
@@ -155,6 +157,22 @@ public class RobotResult extends RobotTestObject {
 	 */
 	public void setTimeStamp(String timeStamp) {
 		this.timeStamp = timeStamp;
+	}
+
+	/**
+	 * One line for each output file that could not be read to the end, each line
+	 * being the file name followed by the parser message. Null when every file
+	 * was read to the end. The results from a file that was not read to the end
+	 * do not include the tests after the point where reading stopped.
+	 * @return the parse errors, or null
+	 */
+	@Exported
+	public String getParseError() {
+		return parseError;
+	}
+
+	public void setParseError(String parseError) {
+		this.parseError = parseError;
 	}
 
 	/**
