@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The missing end tags are intentional. -->
+<robot generator="Robot 7.0 (Python 3.11.4 on linux)" generated="2026-08-27T10:00:00.000000" rpa="false" schemaversion="5">
+<suite id="s1" name="Truncated" source="/tmp/truncated/tests.robot">
+<test id="s1-t1" name="Completed Test" line="2">
+<kw name="Log" owner="BuiltIn">
+<arg>working</arg>
+<status status="PASS" start="2026-08-27T10:00:00.100000" elapsed="0.000100"/>
+</kw>
+<status status="PASS" start="2026-08-27T10:00:00.000000" elapsed="0.001000"/>
+</test>
+<te

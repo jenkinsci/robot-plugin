@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The missing end tags are intentional. -->
+<suite id="s1-s1" name="Part" source="/tmp/split/part.robot">
+<test id="s1-s1-t1" name="Completed Test" line="2">
+<kw name="Log" owner="BuiltIn">
+<arg>working</arg>
+<status status="PASS" start="2026-08-31T10:00:00.100000" elapsed="0.000100"/>
+</kw>
+<status status="PASS" start="2026-08-31T10:00:00.000000" elapsed="0.001000"/>
+</test>
+<test id="s1-s1-t2" name="Crashed Test" line="6">
+<kw name="Run Process" owner="Process">
+<arg>kill

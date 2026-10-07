@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The split file named in the suite src attribute is deliberately incomplete. -->
+<robot generator="Robot 7.0 (Python 3.11.4 on linux)" generated="2026-08-31T10:00:00.000000" rpa="false" schemaversion="5">
+<suite id="s1" name="Split" source="/tmp/split">
+<suite src="truncated_split_output-001.xml" name="Part" source="/tmp/split/part.robot">
+<status status="PASS" start="2026-08-31T10:00:00.000000" elapsed="0.002000"/>
+</suite>
+<status status="PASS" start="2026-08-31T10:00:00.000000" elapsed="0.003000"/>
+</suite>
+<statistics>
+<total>
+<stat pass="2" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="2" fail="0" skip="0" id="s1" name="Split">Split</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
