@@ -158,6 +158,23 @@ to have test results per Jenkins.
 >This means that in order to see the test results in other views you must
 set your unstable threshold so that the build never goes to failure.
 
+### Accepting partial/corrupted output files
+
+If the output file you are trying to process is corrupted, the robot parser by default throws
+an exception, and the plugin doesn't save any files. You can change the default behavior
+by enabling a more forgiving output file parser. It reports partial results and saves the files,
+but still fails the build if the output file is corrupted.
+
+This is controlled by setting the System Property `hudson.plugins.robot.recoverPartialOutput` to `true`
+in the Script Console, but a restart will clear it,
+```groovy
+// to enable
+System.setProperty("hudson.plugins.robot.recoverPartialOutput", "true")
+// to disable
+System.clearProperty("hudson.plugins.robot.recoverPartialOutput")
+```
+or add it to `JAVA_OPTS` to make it permanent.
+
 ### Log File Not Showing Properly
 
 ![](images/log_fail_open.png)
